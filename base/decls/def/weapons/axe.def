@@ -9,7 +9,7 @@ entityDef weapon_axe
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_axe.mdl"
 	"model_view"		"progs/v_axe.mdl"
-	"snd_acquire"		"mayhem_weapon.pickup"
+	"snd_acquire"		"weapon.pickup"
 	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"

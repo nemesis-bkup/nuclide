@@ -1794,10 +1794,10 @@ ncEntity::StartSound(string strSample, float channel, float flags, bool broadcas
 }
 
 bool
-ncEntity::StartSoundDef(string strSample, float channel, bool broadcast)
+ncEntity::StartSoundDef(string strSample, float targetChannel, bool willBroadcast)
 {
-	SndEntLog("%s (chan: %d bcast: %d)", strSample, channel, broadcast);
-	SoundDef_Play(this, channel, strSample);
+	SndEntLog("%s (chan: %d bcast: %d)", strSample, targetChannel, willBroadcast);
+	SoundDef_Play(this, targetChannel, strSample);
 	return (true);
 }
 

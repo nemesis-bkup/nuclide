@@ -457,3 +457,40 @@ CLPF_draw_SubPic(vector pos, vector displaySize, string material, vector sourceP
 {
 	drawsubpic(pos, displaySize, material, sourcePos, sourceSize, rgb, a, imageFlags);
 }
+
+ncSpectatorMode_t
+CLPF_spectating_Mode(void)
+{
+	/* TODO: cache on event basis */
+	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
+
+	if (spec) {
+		return (spec.m_spectatingMode);
+	}
+
+	return (SPECMODE_FREE);
+}
+
+string
+CLPF_spectating_LocalizedMode(void)
+{
+	/* TODO: cache on event basis */
+	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
+	if (spec) {
+		return (g_specmodes[spec.m_spectatingMode]);
+	}
+
+	return (g_specmodes[SPECMODE_FREE]);
+}
+
+string
+CLPF_spectating_Name(void)
+{
+	/* TODO: cache on event basis */
+	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
+	if (spec) {
+		return getplayerkeyvalue(spec.m_spectatingEntity - 1, "name");
+	}
+
+	return ("None");
+}

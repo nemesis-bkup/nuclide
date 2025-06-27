@@ -312,6 +312,12 @@ ncProjectile::SpawnKey(string keyName, string setValue)
 	case "snd_hitWorld":
 		m_sndHitWorld = ReadString(setValue);
 		break;
+	case "damage_delay":
+		m_damageDelay = ReadFloat(setValue);
+		break;
+	case "god":
+		flags |= FL_GODMODE;
+		break;
 	default:
 		super::SpawnKey(keyName, setValue);
 		break;
@@ -558,6 +564,11 @@ ncProjectile::Spawned(void)
 void
 ncProjectile::Touch(entity eToucher)
 {
+	if (m_timeUntilNextDamage > time) {
+		return;
+	}
+
+	m_timeUntilNextDamage = time + m_damageDelay;
 	m_vecImpactPos = trace_endpos;
 	m_lastPlaneNormal = trace_plane_normal;
 
@@ -578,6 +589,10 @@ ncProjectile::Touch(entity eToucher)
 		m_eMultiTarget = (ncSurfacePropEntity)eToucher;
 		m_iMultiValue = GetSubDefInt(m_defDamage, "damage");
 		_ApplyDamage();
+	}
+
+	if (flags & FL_GODMODE) {
+		return;
 	}
 
 	if (m_bDetonateOnWorld) {
@@ -1223,6 +1238,10 @@ ncProjectile::Launch(vector startPos, vector launchDir, float fuseOffset, float 
 		traileffectnum = particleeffectnum(m_partSmokeFly);
 	}
 
+	if (STRING_SET(m_partFXPath)) {
+		pointparticles(particleeffectnum(m_partFXPath), startPos, anglesToForward(angles), 1);
+	}
+
 	if (GetHealth() > 0) {
 		MakeVulnerable();
 	} else {
@@ -1268,6 +1287,29 @@ ncProjectile::Launch(vector startPos, vector launchDir, float fuseOffset, float 
 	StartSoundDef(m_sndFly, CHAN_BODY, true);
 	SendFlags = (-1);
 	//SendEntity = 0; /* HACK: remove this once Spike fixes CSQC-set traileffectnum etc. */
+}
+
+void
+ncProjectile::Input(entity eAct, string strInput, string strData)
+{
+	switch (strInput) {
+	case "Animate":
+		tokenize_console(strData);
+		int startFrame = stoi(argv(0));
+		int endFrame = stoi(argv(1));
+		float frameRate = stoi(argv(2));
+		Animate(startFrame, endFrame, frameRate);
+		break;
+	case "AnimateOnce":
+		tokenize_console(strData);
+		int startFrame2 = stoi(argv(0));
+		int endFrame2 = stoi(argv(1));
+		float frameRate2 = stoi(argv(2));
+		AnimateOnce(startFrame2, endFrame2, frameRate2);
+		break;
+	default:
+		super::Input(eAct, strInput, strData);
+	}
 }
 
 void
@@ -1330,9 +1372,9 @@ ncProjectile::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_BYTE(m_renderColor[1], PROJ_CHANGED_RENDERCOLOR)
 	SENDENTITY_BYTE(m_renderColor[2], PROJ_CHANGED_RENDERCOLOR)
 	SENDENTITY_BYTE(m_renderAmount, PROJ_CHANGED_RENDERAMT)
-	SENDENTITY_COLOR(m_vecLightColor[0], PROJ_CHANGED_RENDERCOLOR)
-	SENDENTITY_COLOR(m_vecLightColor[1], PROJ_CHANGED_RENDERCOLOR)
-	SENDENTITY_COLOR(m_vecLightColor[2], PROJ_CHANGED_RENDERCOLOR)
+	SENDENTITY_FLOAT(m_vecLightColor[0], PROJ_CHANGED_RENDERCOLOR)
+	SENDENTITY_FLOAT(m_vecLightColor[1], PROJ_CHANGED_RENDERCOLOR)
+	SENDENTITY_FLOAT(m_vecLightColor[2], PROJ_CHANGED_RENDERCOLOR)
 	SENDENTITY_FLOAT(m_flLightRadius, PROJ_CHANGED_RENDERAMT)
 
 	return (1);
@@ -1361,9 +1403,9 @@ ncProjectile::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_BYTE(m_renderColor[1], PROJ_CHANGED_RENDERCOLOR)
 	READENTITY_BYTE(m_renderColor[2], PROJ_CHANGED_RENDERCOLOR)
 	READENTITY_BYTE(m_renderAmount, PROJ_CHANGED_RENDERAMT)
-	READENTITY_COLOR(m_vecLightColor[0], PROJ_CHANGED_RENDERCOLOR)
-	READENTITY_COLOR(m_vecLightColor[1], PROJ_CHANGED_RENDERCOLOR)
-	READENTITY_COLOR(m_vecLightColor[2], PROJ_CHANGED_RENDERCOLOR)
+	READENTITY_FLOAT(m_vecLightColor[0], PROJ_CHANGED_RENDERCOLOR)
+	READENTITY_FLOAT(m_vecLightColor[1], PROJ_CHANGED_RENDERCOLOR)
+	READENTITY_FLOAT(m_vecLightColor[2], PROJ_CHANGED_RENDERCOLOR)
 	READENTITY_FLOAT(m_flLightRadius, PROJ_CHANGED_RENDERAMT)
 	setmodelindex(this, modelindex);
 	drawmask = MASK_ENGINE;
@@ -1372,6 +1414,8 @@ ncProjectile::ReceiveEntity(float flNew, float flChanged)
 void
 ncProjectile::postdraw(void)
 {
+	frame1time += frametime;
+
 	if (autocvar(cg_projectileLightFlare, 0) == 0) {
 		return;
 	}
@@ -1385,7 +1429,8 @@ float
 ncProjectile::predraw(void)
 {
 	if (m_flLightRadius > 0.0f) {
-		dynamiclight_add(origin, m_flLightRadius, m_vecLightColor);
+		dynamiclight_add(origin, m_flLightRadius, m_vecLightColor * 7.5f, 65, "", LFLAG_NOSHADOWS);
+		//printf("DLight: %v; rad: %f; color: %v\n", origin,  m_flLightRadius, m_vecLightColor);
 	}
 
 	if (traileffectnum) {

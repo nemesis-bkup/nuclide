@@ -36,7 +36,10 @@ entityDef player
 	"pm_walkspeed"			"180"
 	"pm_runspeed"			"320"
 	"pm_normalheight"		"56"
+	"pm_runfiring"			"0"
 	"model"					"progs/player.mdl"
+
+	"snd_jump"				"Player.Jump"
 
 	"act_idle"			"$PLAYER_IDLE"
 	"act_jump"			"$PLAYER_IDLE"

@@ -86,7 +86,6 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 	Decals_Init();
 	Way_Init();
 	Materials_Init();
-	MOTD_Init();
 	Commandmenu_Init();
 	Activities_Init();
 
@@ -258,6 +257,8 @@ CSQC_UpdateView(float w, float h, float focus)
 			g_vidsize[0] = w;
 			g_vidsize[1] = h;
 			ClientGame_InitDone();
+			MOTD_Init();
+			VGUI_ShowMOTD();
 			Sky_Update(true);
 		}
 	}

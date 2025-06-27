@@ -9,7 +9,7 @@ entityDef weapon_shotgun
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_shot1.mdl"
 	"model_view"		"progs/v_shot.mdl"
-	"snd_acquire"		"mayhem_weapon.pickup"
+	"snd_acquire"		"weapon.pickup"
 	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
@@ -45,6 +45,7 @@ entityDef projectile_shotgun
 	"damage"			"skill:plr_shotgun"
 	"hitscans"			"6"
 	"spread"			"0.08716 0.08716"
+	"fx_path"			"weapon_shotgun.tracer"
 //	"range"				"2048"
 }
 

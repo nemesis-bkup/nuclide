@@ -37,6 +37,10 @@ Platform_ConsoleCommand(string commandString, int wordCount)
 		localcmd(sprintf("set g_gametype \"singleplayer\"\nset sv_playerslots 2\nset coop 1\nset sv_background 1\nmap %s\n",
 			argv(1)));
 		break;
+	case "menu_refreshSavedGames":
+		Saves_Init();
+		SavesCallback_EntriesUpdated();
+		break;
 	case "listGameLibrary":
 		GameLibrary_DebugList();
 		break;
@@ -72,6 +76,7 @@ Platform_RegisterCommands(void)
 	registercommand("map_background");
 	registercommand("listGameLibrary");
 	registercommand("ap_userID");
+	registercommand("menu_refreshSavedGames");
 
 	/* online service */
 	registercommand("signOn");

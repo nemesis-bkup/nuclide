@@ -24,16 +24,7 @@ typedef enumflags
 	SPECFL_TYPE,
 } ncSpectatorFlags_t;
 
-typedef enum
-{
-	SPECMODE_DEATHCAM,
-	SPECMODE_LOCKEDCHASE,
-	SPECMODE_THIRDPERSON,
-	SPECMODE_FREE,
-	SPECMODE_FIRSTPERSON,
-	SPECMODE_FREEOVERVIEW,
-	SPECMODE_CHASEOVERVIEW
-} ncSpectatorMode_t;
+
 
 #ifdef CLIENT
 string g_specmodes[] = {

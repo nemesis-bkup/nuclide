@@ -469,7 +469,7 @@ GameLibrary_InitCustom(void)
 			continue;
 
 		gameinfo_count++;
-		printf("MANUAL: %S\n", gamedirname);
+		//printf("MANUAL: %S\n", gamedirname);
 	}
 
 	/* count the package installed mods after */

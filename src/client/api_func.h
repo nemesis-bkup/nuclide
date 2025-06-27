@@ -475,6 +475,16 @@ typedef struct
 var weaponAPI_t weapon; /**< Access weaponAPI_t functions using this variable. */
 
 
+/** Spectating library */
+typedef struct
+{
+	ncSpectatorMode_t Mode(void);
+	string LocalizedMode(void);
+	string Name(void);
+} spectatingAPI_t;
+var spectatingAPI_t spectating; /**< Access spectatingAPI_t functions using this variable. */
+
+
 /** @} */ // end of hudC
 
 /* To be implemented by HUD */
@@ -566,4 +576,8 @@ _client_main(void)
 	draw.Text_A= linkToClientProgs("Font_DrawText_A");
 	draw.Text_RGB= linkToClientProgs("Font_DrawText_RGB");
 	draw.Text_RGBA = linkToClientProgs("Font_DrawText_RGBA");
+
+	spectating.Mode = linkToClientProgs("CLPF_spectating_Mode");
+	spectating.LocalizedMode = linkToClientProgs("CLPF_spectating_LocalizedMode");
+	spectating.Name = linkToClientProgs("CLPF_spectating_Name");
 }

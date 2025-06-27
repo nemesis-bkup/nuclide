@@ -9,8 +9,8 @@ entityDef weapon_rocketlauncher
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_rock2.mdl"
 	"model_view"		"progs/v_rock2.mdl"
-	"snd_acquire"		"mayhem_weapon.pickup"
-	"snd_respawn"		"mayhem_item.respawn"
+	"snd_acquire"		"weapon.pickup"
+	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 
@@ -81,6 +81,7 @@ entityDef projectile_rocket
 
 	"def_damage"				"damage_rocketDirect"
 	"def_splash_damage"			"damage_rocketSplash"
+	"fx_path"			"weapon_shotgun.tracer"
 }
 
 entityDef damage_rocketDirect

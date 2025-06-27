@@ -318,6 +318,9 @@ Cmd_ParseServerCommand(void)
 	case "killAllBots":
 		Bot_KillAllBots();
 		break;
+	case "kickAllBots":
+		Bot_KickAllBots();
+		break;
 	case "resetAllBotsGoals":
 		Bot_ResetAllBotsGoals();
 		break;

@@ -533,6 +533,7 @@ Cmd_Parse(string sCMD)
 
 	/* client aliases for server commands */
 	case "addBot":
+	case "kickAllBots":
 	case "killAllBots":
 	case "resetAllBotsGoals":
 	case "killClass":
@@ -594,6 +595,17 @@ Cmd_Parse(string sCMD)
 	case "ragdollCreate":
 		ncRagdoll_Create(argv(1));
 		break;
+
+	/* can be overriden as well */
+	case "showClassSelectionMenu":
+		VGUI_ShowClassSelectionMenu(userinfo.GetInteger(pSeat->m_ePlayer, "*team"));
+		break;
+	case "showTeamSelectionMenu":
+		VGUI_ShowTeamSelectionMenu();
+		break;
+	case "showMOTD":
+		VGUI_ShowMOTD();
+		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
 	}
@@ -604,6 +616,9 @@ void
 Cmd_Init(void)
 {
 	InitStart();
+	registercommand("showClassSelectionMenu");
+	registercommand("showTeamSelectionMenu");
+	registercommand("showMOTD");
 
 	/* developer/debug commands */
 	registercommand("killAllBots");
@@ -633,6 +648,7 @@ Cmd_Init(void)
 
 	/* server commands */
 	registercommand("addBot");
+	registercommand("kickAllBots");
 	registercommand("addon");
 	registercommand("input");
 	registercommand("resetAllBotsGoals");

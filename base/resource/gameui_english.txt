@@ -1,0 +1,15 @@
+"lang" 
+{ 
+"Language" "English" 
+"Tokens" 
+{
+"WEAPON_AXE"		"Axe"
+"WEAPON_SHOTGUN"		"Shotgun"
+"WEAPON_SUPERSHOTGUN"		"Super Shotgun"
+"WEAPON_NAILGUN"		"Nailgun"
+"WEAPON_SUPERNAILGUN"		"Super Nailgun"
+"WEAPON_ROCKETLAUNCHER"		"Rocket Launcher"
+"WEAPON_GRENADELAUNCHER"		"Grenade Launcher"
+"WEAPON_LIGHTNING"		"Lightning"
+} 
+}

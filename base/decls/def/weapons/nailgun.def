@@ -9,8 +9,8 @@ entityDef weapon_nailgun
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_nail.mdl"
 	"model_view"		"progs/v_nail.mdl"
-	"snd_acquire"		"mayhem_weapon.pickup"
-	"snd_respawn"		"mayhem_item.respawn"
+	"snd_acquire"		"weapon.pickup"
+	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 	"animPrefix"		"nailgun"
@@ -78,11 +78,11 @@ entityDef projectile_nail
 	"model_detonate"		"weapon_nailgun.impact"
 	"decal_detonate"		"Impact.Shot"
 	"snd_explode"			"weapon_nailgun.ricochet"
-	"projectile_debris" 	"debris_nail"
 	"debris_count"			"1"
 	"debris_stick"			"1"
 	"debris_offset"			"-2 0 0"
 //	"range"					"6000"
+	"fx_path"			"weapon_shotgun.tracer"
 
 	"def_damage"			"damage_nailDirect"
 }

@@ -14,9 +14,10 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/* client-side storage */
 #ifdef CLIENT
-static string g_motd_body;
-static int g_motd_lines;
+static string g_motd_body; /* motd text body, with `\n` newline characters. */
+static int g_motd_lines; /* how many lines are in g_motd_body, saves tokenizing g_motd_body */
 #endif
 
 void
@@ -88,8 +89,11 @@ MOTD_LoadFromFile(string fileName)
 
 		ncLog("parsed %i lines from file %S", motdLines, fileName);
 	} else {
+		serverinfo.SetInteger("motdlines", 0i);
 		ncLog("Failed to parse motd from %S", MOTD_FILE);
 	}
+
+	networkEventBroadcast(EV_MOTD_CHANGED);
 }
 #endif
 
@@ -97,8 +101,13 @@ MOTD_LoadFromFile(string fileName)
 string
 MOTD_GetTextBody(void)
 {
+	/* force update if 0 */
+	if (g_motd_lines == 0i) {
+		MOTD_Init();
+	}
+
 	if (g_motd_lines > 0i) {
-		return g_motd_body;
+		return (g_motd_body);
 	} else {
 		return "Server advertises no message of the day.";
 	}

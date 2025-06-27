@@ -305,6 +305,7 @@ private:
 	string m_sndHealthtake;
 	string m_sndUseDeny;
 	string m_sndUseSuccess;
+	string m_sndJump;
 
 	/* recalculate these */
 	float m_actIdle;

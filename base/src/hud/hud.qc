@@ -43,21 +43,21 @@ HUD_Draw(void)
 		g_damageAlpha -= clframetime;
 	}
 
-	/* ammo */
-	if (weapon.AmmoRequired() == true) {
-		draw.RText([hudSize[0] - baseIconPadding - baseIconSize - baseIconPadding, iconPos[1]], ammoValue, FONT_HUD);
-	}
-
-	if (g_ammoPic != "") {
-		draw.Pic([hudSize[0] - baseIconPadding - baseIconSize, iconPos[1]], g_ammoPic, [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
-	}
-
 	/* health, armor icons */
 	draw.RText(iconPos + [-((baseIconSize/2) + (baseIconPadding/2)) - baseIconPadding, 0], healthValue, FONT_HUD);
 	draw.Pic(iconPos + [-((baseIconSize/2) + (baseIconPadding/2)), 0], "gfx/hud/health", [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
 
 	draw.Text(iconPos + [(baseIconSize/2) + (baseIconPadding/2) + baseIconSize + baseIconPadding, 0], armorValue, FONT_HUD);
 	draw.Pic(iconPos + [(baseIconSize/2) + (baseIconPadding/2), 0], "gfx/hud/armor", [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
+
+	/* ammo */
+	if (weapon.AmmoRequired() == true) {
+		iconPos[0] = (hudSize[0] - baseIconSize) - baseIconPadding;
+		iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
+		draw.Pic(iconPos, g_ammoPic, [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
+		iconPos[0] -= baseIconSize + baseIconPadding;
+		draw.RText(iconPos, ammoValue, FONT_HUD);
+	}
 }
 
 void
@@ -74,13 +74,33 @@ HUD_DamageReceived(vector damageLocation, int damagePoints, int damageFlags)
 }
 
 void
-HUD_DrawSpectator(vector hud_mins, vector hud_size)
+HUD_DrawSpectator(void)
 {
+	float palpha = 1.0f;
+	string strText;
 
+	vector hud_mins = screen.HUDMins();
+	vector hud_size = screen.HUDSize();
+	vector vecPos;
+
+	if (spectating.Mode() == SPECMODE_FREE) {
+		palpha = 0.5f;
+	}
+
+	strText = sprintf("Tracking: %s", spectating.Name());
+	vecPos[0] = hud_mins[0] + (hud_size[0] / 2) - (font.StringWidth(strText, true, FONT_HUD) / 2);
+	vecPos[1] = hud_mins[1] + hud_size[1] - 60;
+	draw.Text_A(vecPos, strText, palpha, FONT_HUD);
+
+	strText = sprintf("Mode: %s", spectating.LocalizedMode());
+	vecPos[0] = hud_mins[0] + (hud_size[0] / 2) - (font.StringWidth(strText, true, FONT_HUD) / 2);
+	vecPos[1] = hud_mins[1] + hud_size[1] - 40;
+	draw.Text_A(vecPos, strText, palpha, FONT_HUD);
 }
 
 void
 HUD_WeaponSwitched(string weaponName)
 {
-	g_ammoPic = entityDef.GetString(weaponName, "ammoIcon");
+	/* Here you could change the ammo icon based on the weapon you switched to */
+	g_ammoPic = "gfx/hud/armor";
 }

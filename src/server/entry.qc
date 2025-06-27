@@ -17,6 +17,7 @@
 static int g_ent_spawned;
 var bool g_gamemode_done = false;
 .bool gotData;
+var bool g_background = false;
 
 /** Called once every single tic on the server. */
 void
@@ -119,6 +120,10 @@ The `self` global is the client issuing the command.
 void
 ClientKill(void)
 {
+	if (g_background == true) {
+		return;
+	}
+
 	if (g_ents_initialized) {
 		g_grMode.PlayerKill((ncPlayer)self);
 	}
@@ -170,6 +175,13 @@ PutClientInServer(void)
 	/* we're officially in-game now. */
 	ourPlayer.team = TEAM_UNASSIGNED;
 
+	if (g_background == true) {
+		/* the game and its triggers start when the player is ready to see it */
+		self.health = 100;
+		self.classname = "player";
+		return;
+	}
+
 	if (g_ents_initialized) {
 		g_grMode.PlayerSpawn(ourPlayer);
 	}
@@ -194,9 +206,6 @@ PutClientInServer(void)
 			t.Trigger(ourPlayer, TRIG_TOGGLE);
 		}
 	}
-
-	/* the game and its triggers start when the player is ready to see it */
-	trigger_auto_trigger();
 
 	if (g_grMode.InIntermission() == true) {
 		g_grMode.IntermissionToPlayer(ourPlayer);
@@ -330,6 +339,12 @@ SV_RunClientCommand(void)
 		return;
 	}
 
+	trigger_auto_trigger();
+
+	if (g_background == true) {
+		return;
+	}
+
 	CheatersLament((ncPlayer)cl, input_angles, input_buttons, input_timelength);
 	cl.v_angle = input_angles;
 
@@ -360,6 +375,10 @@ SV_ParseClientCommand(string cmd)
 {
 	int argc;
 	ncClient theClient = (ncClient)self;
+
+	if (g_background == true) {
+		return;
+	}
 
 	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
 		addonEnum.ClientCommand(theClient, cmd);
@@ -437,6 +456,15 @@ init_respawn(void)
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_UNASSIGNED), "info_player_start");
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_SPECTATOR), "info_spectator_start");
 
+	/* append entities from external .add file */
+	string appendEntitiesFile = strcat("maps/", mapname, ".add");
+	if (fileExists(appendEntitiesFile)) {
+		loadfromfile(appendEntitiesFile);
+		ncError("Loading extra entities for %s from %S", mapname, appendEntitiesFile);
+	} else {
+		ncError("No entity additions exist for %s under %S", mapname, appendEntitiesFile);
+	}
+
 	if (g_ents_initialized) {
 		g_grMode.InitPostEnts();
 	}
@@ -473,17 +501,9 @@ initents(void)
 	MOTD_Init();
 	PMove_Init();
 
-#warning Move these into player decl
-	precache.Sound("Player.Death");
-	precache.Sound("Player.Pain");
-	precache.Sound("SprayCan.Paint");
-
-#warning These sound defs need renaming.
-	precache.Sound("damage_bullet.hit");
-	precache.Sound("step_ladder.left");
-	precache.Sound("step_ladder.right");
-
 	BodyQue_Init();
+
+	precache.Entity("player");
 
 	ncRuleDelegate::LinkProgs();
 	ncMapDelegate::LinkProgs();
@@ -492,12 +512,6 @@ initents(void)
 	Decals_Init();
 	Sentences_Init();
 	Activities_Init();
-
-	/* append entities from external .add file */
-	string appendEntitiesFile = strcat("maps/", mapname, ".add");
-	if (fileExists(appendEntitiesFile)) {
-		loadfromfile(appendEntitiesFile);
-	}
 
 	/* TODO: Make sure every entity calls Respawn inside the constructor, then
 	 * remove this */
@@ -510,8 +524,10 @@ initents(void)
 		/* trade them in. */
 		serverinfo.SetBool("background", true);
 		localcmd("sv_background 0\n");
+		g_background = true;
 	} else {
 		serverinfo.SetBool("background", false);
+		g_background = false;
 	}
 
 	/* the maxclients serverinfo key? yeah, that one lies to the client. so
@@ -584,7 +600,7 @@ is being executed.
 float
 SV_ShouldPause(float newstatus)
 {
-	if (serverinfo.GetFloat("background") == 1) {
+	if (g_background == 1) {
 		return (0);
 	}
 

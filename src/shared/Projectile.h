@@ -311,6 +311,8 @@ private:
 	vector m_vecDamageOffset;
 	vector m_vecImpactPos;
 	bool m_bThrown;
+	float m_timeUntilNextDamage;
+	float m_damageDelay;
 
 	float m_flLightOffset; /* TODO */
 	vector m_vecExplodeLightColor; /* TODO */

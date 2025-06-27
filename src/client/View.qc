@@ -379,6 +379,8 @@ ncView::UpdateView(void)
 	case VIEWMODE_SPECTATING:
 		spec = (ncSpectator)m_viewTarget;
 
+		drawfill(m_vecPosition, m_vecSize, [0.1, 0.1, 0.15], 1.0f, 0);
+
 		switch (spec.m_spectatingMode) {
 		case SPECMODE_DEATHCAM:
 			vector vecCamEnd;

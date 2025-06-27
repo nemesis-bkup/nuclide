@@ -177,6 +177,7 @@ ncActor::ReloadCachedAttributes(void)
 	m_sndDeath = GetSpawnString("snd_death");
 	m_sndFall = GetSpawnString("snd_fall");
 	m_sndPainSmall = GetSpawnString("snd_painSmall");
+	m_sndJump = GetSpawnString("snd_jump");
 
 	if (STRING_SET(m_sndPainSmall)) {
 		m_sndPainMedium = GetSpawnString("snd_painMedium");

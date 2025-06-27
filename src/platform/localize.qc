@@ -14,6 +14,8 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+hashtable g_hashLocale;
+
 static string
 localizeSuffixForLocale(string locale)
 {
@@ -101,10 +103,45 @@ localizeSuffixForLocale(string locale)
 string
 localize(string lookUpToken)
 {
-	return (lookUpToken);
+	string mat = "";
+
+	mat = (string)hash_get(g_hashLocale, lookUpToken);
+
+	if not (mat)
+		return lookUpToken;
+
+	return (mat);
 }
 
 var string g_localeFiles;
+
+void
+Locale_ParseFile(string pathToFile)
+{
+	filestream fileMaterial;
+	string sTemp;
+	string lookUpToken;
+	string localizedString;
+
+	fileMaterial = fopen(pathToFile, FILE_READ);
+
+	if (fileMaterial < 0) {
+		ncError("Missing file %s", pathToFile);
+		return;
+	}
+	//print(strcat("parsing material assignments from ", filename,"\n"));
+
+	while ((sTemp = fgets(fileMaterial))) {
+		/* tokenize and just parse this stuff in */
+		if (tokenize_console(sTemp) == 2) {
+			lookUpToken = strcat("#", argv(0));
+			localizedString = argv(1);
+			hash_add(g_hashLocale, lookUpToken, localizedString, EV_STRING);
+		}
+	}
+
+	fclose(fileMaterial);
+}
 
 void
 Locale_AddFile(string resourceName)
@@ -116,9 +153,11 @@ Locale_AddFile(string resourceName)
 	/* TODO: check if the file has already been added to the list */
 	if (fileExists(fileName) == true) {
 		g_localeFiles = sprintf("%s%s;", g_localeFiles, fileName);
+		Locale_ParseFile(fileName);
 	} else if (fileExists(fileNameFB)) {
 		ncWarning("Locale resource %S for %s not found. Falling back to english.", resourceName, languageCode);
 		g_localeFiles = sprintf("%s%s;", g_localeFiles, fileNameFB);
+		Locale_ParseFile(fileNameFB);
 	} else {
 		ncError("Locale resource %S not found.", resourceName);
 	}
@@ -129,12 +168,12 @@ Locale_Init(void)
 {
 	string gameDir = cvar_string("fs_game");
 
+	g_hashLocale = hash_createtab(2, EV_STRING | HASH_REPLACE);
+
 	g_localeFiles = "";
 
-#if 0
 	Locale_AddFile("gameui");
 	Locale_AddFile(gameDir);
-#endif
 }
 
 void
@@ -143,5 +182,6 @@ Locale_Reload(void)
 	for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
 		string fileToLoad = argv(i);
 		ncLog("Indexing locale resource %s\n", fileToLoad);
+		Locale_ParseFile(fileToLoad);
 	}
 }

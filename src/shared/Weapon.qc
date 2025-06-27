@@ -2103,30 +2103,7 @@ void
 ncWeapon::UpdateGUI(void)
 {
 #ifdef CLIENT
-	ncPlayer ourOwner = __NULL__;
-	static float baseIconSize = 32.0f;
-	static float baseIconPadding = 16.0f;
 
-	if (RequiresAmmo() == false) {
-		return;
-	}
-
-	ourOwner = (ncPlayer)GetOwner();
-
-	vector hudSize = g_view.GetHUDCanvasSize();
-	vector iconPos = g_view.GetHUDCanvasPos() + (hudSize / 2);
-	iconPos[0] = (hudSize[0] - baseIconSize) - baseIconPadding;
-	iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
-	drawpic(iconPos, "gfx/hud/armor", [baseIconSize, baseIconSize], [1,1,1], 1.0f);
-
-	iconPos[0] -= baseIconSize + baseIconPadding;
-	Font_DrawRText(iconPos, itos(ourOwner.GetReserveAmmo(m_primaryAmmoType)), FONT_16);
-
-	iconPos[0] -= baseIconSize + baseIconPadding;
-
-	if (m_weaponClipSize > 0i) {
-		Font_DrawRText(iconPos, itos(m_weaponClip), FONT_16);
-	}
 #endif
 }
 

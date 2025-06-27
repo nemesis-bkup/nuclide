@@ -21,6 +21,9 @@ damage.qc
 chat.qc
 textmenu.qc
 vgui.qc
+vgui_changeclass.qc
+vgui_chooseteam.qc
+vgui_motd.qc
 way.qc
 detailtex.qc
 shake.qc

@@ -9,8 +9,8 @@ entityDef weapon_lightning
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_light.mdl"
 	"model_view"		"progs/v_light.mdl"
-	"snd_acquire"		"mayhem_weapon.pickup"
-	"snd_respawn"		"mayhem_item.respawn"
+	"snd_acquire"		"weapon.pickup"
+	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 	"animPrefix"		"lightning"
@@ -55,5 +55,6 @@ entityDef projectile_lightning
 	"detonate_on_world" 	"0"
 	"decal_detonate"		"Impact.Gauss"
 	"model_detonate"		"fx_spark.main"
+	"fx_path"			"weapon_shotgun.tracer"
 //	"range"					"600"
 }

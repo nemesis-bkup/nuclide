@@ -641,13 +641,7 @@ void
 BotLib_Init(void)
 {
 	/* kill all old bots */
-	for (ncPlayer botChain = __NULL__;(botChain = (ncPlayer)nextent(botChain));) {
-		if (is.Bot(botChain)) {
-			botChain.SetInfoKey("*bot", "0");
-			dropclient(botChain);
-		}
-	}
-
+	Bot_KickAllBots();
 	BotProfile_Init();
 
 	/* this spawner manages the active bots */

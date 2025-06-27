@@ -367,6 +367,7 @@ Materials_Init(void)
 
 	/* save away the type of material formats we're dealing with */
 	switch (serverkeyfloat("*bspversion")) {
+	case 0:
 	case BSPVER_HL:
 	case 29:
 		g_materialsAreLegacy = true;

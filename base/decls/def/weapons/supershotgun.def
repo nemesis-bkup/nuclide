@@ -9,7 +9,7 @@ entityDef weapon_supershotgun
 	"spawnclass"		"ncWeapon"
 	"model"				"progs/g_shot.mdl"
 	"model_view"		"progs/v_shot2.mdl"
-	"snd_acquire"		"dmc_weapon.pickup"
+	"snd_acquire"		"weapon.pickup"
 	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
@@ -46,6 +46,7 @@ entityDef projectile_superShotgun
 	"hitscans"			"14"
 	"spread"			"0.08716 0.08716"
 //	"range"				"2048"
+	"fx_path"			"weapon_shotgun.tracer"
 }
 
 entityDef fireInfo_superShotgun

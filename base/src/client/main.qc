@@ -148,7 +148,7 @@ ClientGame_RendererRestart(string rstr)
 #define SCORE_HEADER_C [255/255,156/255,0]
 #define SCORE_LINE_C [255/255,200/255,0]
 
-var bool autocvar_cl_centerscores = false;
+var bool autocvar_cg_centerScores = true;
 var int g_scores_teamplay = 0;
 
 void
@@ -278,7 +278,7 @@ Scores_Draw(void)
 	
 	pl = (ncPlayer)pSeat->m_ePlayer;
 
-	if (autocvar_cl_centerscores) {
+	if (autocvar_cg_centerScores) {
 		int c = 10;
 		
 		/* calculate all valid entries */

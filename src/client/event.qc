@@ -325,6 +325,12 @@ Event_Parse(float type)
 	case EV_ENTITYEVENT:
 		EV_EntityEvent();
 		break;
+	case EV_MOTD_CHANGED:
+		MOTD_Init();
+		break;
+	case EV_GAME_SAVED:
+		localcmd("menu_refreshSavedGames\n");
+		break;
 	case EV_CHAT:
 		float fSender = readbyte();
 		float fTeam = readbyte();

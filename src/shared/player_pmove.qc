@@ -268,8 +268,14 @@ ncPlayer::Physics_Jump(void)
 			velocity[2] = PHY_DIVESPEED_LAVA;
 	} else {
 		/* standard jump here */
-		if (GetFlags() & FL_ONGROUND)
+		if (GetFlags() & FL_ONGROUND) {
 			velocity[2] += m_pmoveVars.pm_jumpheight;
+#ifdef SERVER
+			if (STRING_SET(m_sndJump)) {
+				StartSoundDef(m_sndJump, CHAN_BODY, true);
+			}
+#endif
+		}
 	}
 }
 
