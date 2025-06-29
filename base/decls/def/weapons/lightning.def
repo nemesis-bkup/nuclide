@@ -55,6 +55,6 @@ entityDef projectile_lightning
 	"detonate_on_world" 	"0"
 	"decal_detonate"		"Impact.Gauss"
 	"model_detonate"		"fx_spark.main"
-	"fx_path"			"weapon_shotgun.tracer"
+	"fx_path"			"weapon_nailgun.muzzleflash"
 //	"range"					"600"
 }

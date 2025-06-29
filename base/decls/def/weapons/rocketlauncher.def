@@ -81,7 +81,7 @@ entityDef projectile_rocket
 
 	"def_damage"				"damage_rocketDirect"
 	"def_splash_damage"			"damage_rocketSplash"
-	"fx_path"			"weapon_shotgun.tracer"
+	"fx_path"			"weapon_nailgun.muzzleflash"
 }
 
 entityDef damage_rocketDirect

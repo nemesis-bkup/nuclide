@@ -78,11 +78,12 @@ entityDef projectile_nail
 	"model_detonate"		"weapon_nailgun.impact"
 	"decal_detonate"		"Impact.Shot"
 	"snd_explode"			"weapon_nailgun.ricochet"
+	"smoke_fly"				"weapon_nailgun.trail"
 	"debris_count"			"1"
 	"debris_stick"			"1"
 	"debris_offset"			"-2 0 0"
 //	"range"					"6000"
-	"fx_path"			"weapon_shotgun.tracer"
+	"fx_path"			"weapon_nailgun.muzzleflash"
 
 	"def_damage"			"damage_nailDirect"
 }

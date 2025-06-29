@@ -77,7 +77,7 @@ entityDef projectile_grenade
 
 	"snd_explode"				"weapon_grenadelauncher.explode"
 	"snd_bounce"				"weapon_grenadelauncher.bounce"
-	"fx_path"					"weapon_shotgun.tracer"
+	"fx_path"					"weapon_nailgun.muzzleflash"
 
 //	"range"						"900" // Reference only, max throw distance
 

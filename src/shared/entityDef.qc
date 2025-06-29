@@ -504,7 +504,7 @@ EntityDef_Precaches(int index)
 
 		if (substring(keyName, 0, 4) == "snd_") {
 			precache.Sound(setValue);
-		} else if (substring(keyName, 0, 6) == "smoke_") {
+		} else if (substring(keyName, 0, 6) == "smoke_" || substring(keyName, 0, 3) == "fx_") {
 			particleeffectnum(setValue);
 		} else if (keyName == "model_detonate") {
 			particleeffectnum(setValue);

@@ -69,7 +69,8 @@ entityDef projectile_supernail
 	"debris_stick"			"1"
 	"debris_offset"			"-2 0 0"
 //	"range"					"6000"
-	"fx_path"			"weapon_shotgun.tracer"
+	"fx_path"			"weapon_nailgun.muzzleflash"
+	"smoke_fly"				"weapon_nailgun.trail"
 
 	"def_damage"			"damage_supernailDirect"
 }
