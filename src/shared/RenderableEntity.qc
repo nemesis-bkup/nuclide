@@ -1335,6 +1335,12 @@ ncRenderableEntity::Input(entity eAct, string strInput, string strData)
 		Event_SpawnDefAttachment(declName, attachmentID);
 #endif
 		break;
+	case "SetRenderMode":
+		SetRenderMode(stof(strData));
+		break;
+	case "SetRenderFX":
+		SetRenderMode(stof(strData));
+		break;
 	case "Color":
 		SetRenderColor(stov(strData));
 		break;

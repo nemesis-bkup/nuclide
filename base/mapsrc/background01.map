@@ -74,34 +74,22 @@
 {
 "classname" "info_player_deathmatch"
 }
-// entity 3
-{
-"classname" "point_message"
-"message" "Toggable white flickering dynamic light."
-"origin" "120.000000 128.000000 32.000000"
-}
 // entity 4
 {
 "classname" "light_dynamic"
 "brightness" "500"
-"_light" "0 255 0"
-"style" "1"
+"_light" "64 255 64"
+"style" "3"
 "targetname" "foobar1"
 "origin" "176.000000 72.000000 48.000000"
-}
-// entity 5
-{
-"classname" "point_message"
-"message" "Toggable red slow pulsing dynamic light."
-"origin" "120.000000 -64.000000 32.000000"
 }
 // entity 6
 {
 "classname" "light_dynamic"
 "brightness" "500"
 "start_active" "1"
-"_light" "255 0 0"
-"style" "2"
+"_light" "210 224 240"
+"style" "65"
 "targetname" "foobar2"
 "origin" "192.000000 -128.000000 64.000000"
 }
@@ -136,8 +124,8 @@
 "spawnflags" "1"
 "origin" "-16.000000 104.000000 -16.000000"
 "target" "train2"
-"lightcolor" "148 15 255"
-"style" "65"
+"lightcolor" "0 0 255"
+"style" "6"
 }
 // entity 11
 {
@@ -145,8 +133,8 @@
 "spawnflags" "1"
 "origin" "-16.000000 -96.000000 80.000000"
 "target" "train1"
-"lightcolor" "148 15 255"
-"style" "69"
+"lightcolor" "255 0 0"
+"style" "6"
 }
 // entity 12
 {
@@ -154,6 +142,7 @@
 "origin" "86 72 -29"
 "target" "vera"
 "targetname" "autocam"
+"wait"	"-1"
 }
 // entity 13
 {

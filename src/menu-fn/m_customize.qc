@@ -262,11 +262,13 @@ menu_customize_init(void)
 	cz_tbNetname.SetText(cvar_string("name"));
 	Widget_Add(fn_customize, cz_tbNetname);
 
-	cz_cxHQModels = spawn(CCheckBox);
-	cz_cxHQModels.SetPos(52,223);
-	cz_cxHQModels.SetValue(cvar("cl_himodels"));
-	cz_cxHQModels.SetCallback(cz_cxHQModelsChanged);
-	Widget_Add(fn_customize, cz_cxHQModels);
+	if (GameLibrary_GetInfo(GAMEINFO_NOHIMODELS) == false) {
+		cz_cxHQModels = spawn(CCheckBox);
+		cz_cxHQModels.SetPos(52,223);
+		cz_cxHQModels.SetValue(cvar("cl_himodels"));
+		cz_cxHQModels.SetCallback(cz_cxHQModelsChanged);
+		Widget_Add(fn_customize, cz_cxHQModels);
+	}
 
 	cz_cxEnableVoice = spawn(CCheckBox);
 	cz_cxEnableVoice.SetPos(52,351);
@@ -470,8 +472,11 @@ menu_customize_draw(void)
 	WLabel_Static(212, 140, m_reslbl[IDS_PLAYERINFO_NAME], 14, 14, [1,1,1],
 					1.0f, 0, font_label);
 
-	WField_Static(52 + 26, 225, "High quality models", 115, 64, [0.75, 0.75, 0.75],
+	if (GameLibrary_GetInfo(GAMEINFO_NOHIMODELS) == false) {
+		WField_Static(52 + 26, 225, "High quality models", 115, 64, [0.75, 0.75, 0.75],
 					1.0f, 3, font_label_b);
+	}
+
 	WField_Static(52 + 26, 353, "Enable voice in this mod.", 115, 64, [0.75, 0.75, 0.75],
 					1.0f, 3, font_label_b);
 	WField_Static(52 + 26, 393, "Use microphone for voice input.", 115, 64, [0.75, 0.75, 0.75],
@@ -481,7 +486,22 @@ menu_customize_draw(void)
 						1.0f, 0, font_label);
 
 	if (cvar("cl_voip_codec") == 2)
-	WField_Static(52, 393+40, "* Uses Opus sound codec. Copyright © 2012-2023 by Xiph.Org Foundation.", 128, 64, [0.75, 0.75, 0.75],
+	WField_Static(52, 393+40, "* Uses Opus sound codec. Copyright © 2012-2025 by Xiph.Org Foundation.", 148, 64, [0.75, 0.75, 0.75],
+					1.0f, 3, font_label);
+	else if (cvar("cl_voip_codec") == 3)
+	WField_Static(52, 393+40, "* Uses Speex (16 khz) codec. Copyright © 2002-2025 by Xiph.Org Foundation.", 148, 64, [0.75, 0.75, 0.75],
+					1.0f, 3, font_label);
+	else if (cvar("cl_voip_codec") == 4)
+	WField_Static(52, 393+40, "* Uses Speex (8 khz) codec. Copyright © 2002-2025 by Xiph.Org Foundation.", 148, 64, [0.75, 0.75, 0.75],
+					1.0f, 3, font_label);
+	else if (cvar("cl_voip_codec") == 5)
+	WField_Static(52, 393+40, "* Uses Speex (32 khz) codec. Copyright © 2002-2025 by Xiph.Org Foundation.", 148, 64, [0.75, 0.75, 0.75],
+					1.0f, 3, font_label);
+	else if (cvar("cl_voip_codec") == 0)
+	WField_Static(52, 393+40, "* Uses Speex codec. Copyright © 2002-2025 by Xiph.Org Foundation.", 148, 64, [0.75, 0.75, 0.75],
+					1.0f, 3, font_label);
+	else
+	WField_Static(52, 393+40, "* Voice will be sent uncompressed with current codec setting.", 148, 64, [0.75, 0.75, 0.75],
 					1.0f, 3, font_label);
 
 	WLabel_Static(213, 377 - 16, "Voice Transmit Volume *", 14, 14, [1,1,1],

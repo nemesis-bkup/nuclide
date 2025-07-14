@@ -154,6 +154,7 @@ Locale_AddFile(string resourceName)
 	if (fileExists(fileName) == true) {
 		g_localeFiles = sprintf("%s%s;", g_localeFiles, fileName);
 		Locale_ParseFile(fileName);
+		ncError("Loading %S (%S)", fileName, languageCode);
 	} else if (fileExists(fileNameFB)) {
 		ncWarning("Locale resource %S for %s not found. Falling back to english.", resourceName, languageCode);
 		g_localeFiles = sprintf("%s%s;", g_localeFiles, fileNameFB);

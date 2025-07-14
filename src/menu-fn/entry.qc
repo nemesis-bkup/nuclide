@@ -112,10 +112,6 @@ m_draw(vector screensize)
 {
 	static float oldtime;
 
-	if (!g_input_received) {
-		return;
-	}
-
 	frametime = time - oldtime;
 
 	/* don't attempt to draw unless we're done loading everything */
@@ -130,7 +126,7 @@ m_draw(vector screensize)
 		return;
 	}
 
-	Background_Draw((g_vidsize / 2) - [320,240], [640,480]);
+	Background_Draw((g_vidsize / 2) - [320,240], [640,480], false);
 
 	#if 0
 	/* water mark for version info */

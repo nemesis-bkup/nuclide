@@ -187,9 +187,16 @@ CLPF_team_GetCount(void)
 }
 
 bool
-CLPF_weapon_IsValid(entity weaponEntity)
+CLPF_weapon_IsValid(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon && weapon._isItem == true && weapon._isWeapon == true) {
 		return (true);
@@ -199,9 +206,16 @@ CLPF_weapon_IsValid(entity weaponEntity)
 }
 
 string
-CLPF_weapon_GetTitle(entity weaponEntity)
+CLPF_weapon_GetTitle(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponTitle);
@@ -211,9 +225,16 @@ CLPF_weapon_GetTitle(entity weaponEntity)
 }
 
 string
-CLPF_weapon_GetIcon(entity weaponEntity)
+CLPF_weapon_GetIcon(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDIcon);
@@ -223,9 +244,16 @@ CLPF_weapon_GetIcon(entity weaponEntity)
 }
 
 string
-CLPF_weapon_GetSelectedIcon(entity weaponEntity)
+CLPF_weapon_GetSelectedIcon(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDIconSel);
@@ -235,9 +263,16 @@ CLPF_weapon_GetSelectedIcon(entity weaponEntity)
 }
 
 int
-CLPF_weapon_GetSlot(entity weaponEntity)
+CLPF_weapon_GetSlot(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDSlot);
@@ -247,9 +282,16 @@ CLPF_weapon_GetSlot(entity weaponEntity)
 }
 
 int
-CLPF_CLPF_weapon_GetSlotPos(entity weaponEntity)
+CLPF_CLPF_weapon_GetSlotPos(entity activeWeapon)
 {
-	ncWeapon weapon = (ncWeapon)weaponEntity;
+	ncActor owner = (ncActor)pSeat->m_ePlayer;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDSlotPos);
@@ -259,10 +301,16 @@ CLPF_CLPF_weapon_GetSlotPos(entity weaponEntity)
 }
 
 int
-CLPF_weapon_GetClip(void)
+CLPF_weapon_GetClip(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponClip);
@@ -272,10 +320,16 @@ CLPF_weapon_GetClip(void)
 }
 
 int
-CLPF_weapon_MaxAmmo(void)
+CLPF_weapon_MaxAmmo(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		if (weapon.m_primaryAmmoType >= 0) {
@@ -287,10 +341,16 @@ CLPF_weapon_MaxAmmo(void)
 }
 
 int
-CLPF_CLPF_weapon_GetClipSize(void)
+CLPF_CLPF_weapon_GetClipSize(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_weaponClipSize);
@@ -300,10 +360,16 @@ CLPF_CLPF_weapon_GetClipSize(void)
 }
 
 bool
-CLPF_weapon_UsesSecondaryAmmo(void)
+CLPF_weapon_UsesSecondaryAmmo(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return weapon.UsesSecondaryAmmo();
@@ -313,10 +379,16 @@ CLPF_weapon_UsesSecondaryAmmo(void)
 }
 
 int
-CLPF_weapon_GetAmmo1(void)
+CLPF_weapon_GetAmmo1(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return owner.GetReserveAmmo(weapon.m_primaryAmmoType);
@@ -326,10 +398,16 @@ CLPF_weapon_GetAmmo1(void)
 }
 
 int
-CLPF_weapon_GetAmmo2(void)
+CLPF_weapon_GetAmmo2(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return owner.GetReserveAmmo(weapon.m_secondaryAmmoType);
@@ -339,10 +417,16 @@ CLPF_weapon_GetAmmo2(void)
 }
 
 bool
-CLPF_weapon_AmmoRequired(void)
+CLPF_weapon_AmmoRequired(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon = owner.m_activeWeapon;
+	ncWeapon weapon;
+
+	if (activeWeapon == __NULL__) {
+		weapon = owner.m_activeWeapon;
+	} else {
+		weapon = (ncWeapon)activeWeapon;
+	}
 
 	if (weapon) {
 		return (weapon.m_fiAmmoRequired);
@@ -493,4 +577,110 @@ CLPF_spectating_Name(void)
 	}
 
 	return ("None");
+}
+
+int
+CLPF_atlasPic_Load(string atlasPicName)
+{
+	return ncInterfaceSpriteSheet::Load(atlasPicName);
+}
+
+void
+CLPF_atlasPic_Draw(int atlasPic, vector drawAtPos, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::Draw(atlasPic, drawAtPos, forceAdditive);
+}
+
+void
+CLPF_atlasPic_Draw_A(int atlasPic, vector drawAtPos, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::Draw_RGB(atlasPic, drawAtPos, picAlpha, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawTop_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawTop_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, picAlpha, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawBottom_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawBottom_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, picAlpha, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawLeft_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawLeft_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, picAlpha, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawRight_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawRight_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, picAlpha, forceAdditive);
+}
+
+
+
+
+void
+CLPF_atlasPic_DrawTop_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawTop_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, 1.0f, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawBottom_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawBottom_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, 1.0f, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawLeft_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawLeft_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, 1.0f, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawRight_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::DrawRight_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, 1.0f, forceAdditive);
+}
+
+
+void
+CLPF_atlasPic_Draw_RGBA(int atlasPic, vector drawAtPos, vector picColor, float picAlpha, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::Draw_RGBA(atlasPic, drawAtPos, picColor, picAlpha, forceAdditive);
+}
+
+void
+CLPF_atlasPic_Draw_RGB(int atlasPic, vector drawAtPos, vector picColor, bool forceAdditive)
+{
+	ncInterfaceSpriteSheet::Draw_RGB(atlasPic, drawAtPos, picColor, forceAdditive);
+}
+
+void
+CLPF_atlasPic_DrawCrosshair(int atlasPic)
+{
+	ncInterfaceSpriteSheet::DrawCrosshair(atlasPic);
+}
+
+float
+CLPF_atlasPic_GetWidth(int atlasPic)
+{
+	return ncInterfaceSpriteSheet::GetWidth(atlasPic);
+}
+
+float
+CLPF_atlasPic_GetHeight(int atlasPic)
+{
+	return ncInterfaceSpriteSheet::GetHeight(atlasPic);
+}
+
+vector
+CLPF_atlasPic_GetSize(int atlasPic)
+{
+	return ncInterfaceSpriteSheet::GetSize(atlasPic);
 }

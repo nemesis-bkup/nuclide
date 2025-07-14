@@ -802,7 +802,7 @@ ncWeapon::ReloadCachedAttributes(void)
 	m_altAlternates = GetDefBool("altAlternates");
 
 #ifdef CLIENT
-	m_weaponTitle = Titles_GetTextBody(substring(GetDefString("inv_name"), 1, -1));
+	m_weaponTitle = localize(GetDefString("inv_name"));
 #else
 	m_weaponTitle = GetDefString("inv_name");
 #endif

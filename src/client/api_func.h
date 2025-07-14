@@ -387,60 +387,60 @@ typedef struct
 
 @param weaponRef is the weapon entity to reference
 @return whether the weapon entity reference is valid to the current player.*/
-	bool IsValid(entity weaponRef);
+	bool IsValid(entity weaponRef = __NULL__);
 /** Returns the title of the weapon specified.
 
 @param weaponRef is the weapon entity to reference
 @return string value containing a localized weapon name.*/
-	string GetTitle(entity weaponRef);
+	string GetTitle(entity weaponRef = __NULL__);
 /** Returns the slot number of the weapon specified.
 
 @param weaponRef is the weapon entity to reference
 @return integer value containing the inventory slot the weapon is in. */
-	int GetSlot(entity weaponRef);
+	int GetSlot(entity weaponRef = __NULL__);
 /** Returns if the slot position of the weapon specified.
 
 @param weaponRef is the weapon entity to reference
 @return integer value containing the position within an inventory slot that the weapon is in. */
-	int GetSlotPos(entity weaponRef);
+	int GetSlotPos(entity weaponRef = __NULL__);
 /** Returns the inventory icons of the weapon specified.
 
 @param weaponRef is the weapon entity to reference
 @return string value containing the material/image of the weapon inventory icon.*/
-	string GetIcon(entity weaponRef);
+	string GetIcon(entity weaponRef = __NULL__);
 /** Returns the selected variant inventory icons of the weapon specified.
 
 @param weaponRef is the weapon entity to reference
 @return string value containing the material/image of the selected weapon inventory icon.*/
-	string GetSelectedIcon(entity weaponRef);
+	string GetSelectedIcon(entity weaponRef = __NULL__);
 /** Returns if the current/active weapons present reserve ammo.
 
 @return integer value of the present reserve ammo.*/
-	int GetAmmo1(void);
+	int GetAmmo1(entity weaponRef = __NULL__);
 /** Returns if the current/active weapons present reserve ammo, but for the second ammo type.
 
 @return integer value of the present reserve ammo.*/
-	int GetAmmo2(void);
+	int GetAmmo2(entity weaponRef = __NULL__);
 /** Returns if the current/active weapons present clip/magazine size.
 
 @return integer value of the present clip/magazine size.*/
-	int GetClip(void);
+	int GetClip(entity weaponRef = __NULL__);
 /** Returns if the current/active weapons maximum clip/magazine size.
 
 @return integer value of the maximum clip/magazine size.*/
-	int GetClipSize(void);
+	int GetClipSize(entity weaponRef = __NULL__);
 /** Returns if the maximum reserve ammo.
 
 @return integer value of the maximum ammo size.*/
-	int MaxAmmo(void);
+	int MaxAmmo(entity weaponRef = __NULL__);
 /** Returns if the current/active weapon item in the player's inventory makes use of a secondary ammo type.
 
 @return **true** when it supports a second ammo type.*/
-	bool UsesSecondaryAmmo(void);
+	bool UsesSecondaryAmmo(entity weaponRef = __NULL__);
 /** Returns if the current/active weapon item in the player's inventory requires ammo.
 
 @return **true** when it requires ammo.*/
-	bool AmmoRequired(void);
+	bool AmmoRequired(entity weaponRef = __NULL__);
 
 /** Returns the current/active weapon item in the player's inventory.
 
@@ -484,6 +484,31 @@ typedef struct
 } spectatingAPI_t;
 var spectatingAPI_t spectating; /**< Access spectatingAPI_t functions using this variable. */
 
+/** atlasPic library */
+typedef struct
+{
+	int Load(string atlasPicName); /* loads a permanent handle for the named atlas pic */
+	void Draw(int atlasPic, vector drawAtPos, bool forceAdditive);
+	void Draw_A(int atlasPic, vector drawAtPos, float picAlpha, bool forceAdditive);
+	void Draw_RGBA(int atlasPic, vector drawAtPos, vector picColor, float picAlpha, bool forceAdditive);
+	void DrawTop_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive);
+	void DrawBottom_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive);
+	void DrawLeft_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive);
+	void DrawRight_RGBA(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, float picAlpha, bool forceAdditive);
+
+
+	void DrawTop_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive);
+	void DrawBottom_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive);
+	void DrawLeft_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive);
+	void DrawRight_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive);
+
+	void Draw_RGB(int atlasPic, vector drawAtPos, vector picColor, bool forceAdditive);
+	void DrawCrosshair(int atlasPic);
+	float GetWidth(int atlasPic);
+	float GetHeight(int atlasPic);
+	vector GetSize(int atlasPic);
+} atlasPicAPI_t;
+var atlasPicAPI_t atlasPic; /**< Access atlasPicAPI_t functions using this variable. */
 
 /** @} */ // end of hudC
 
@@ -580,4 +605,24 @@ _client_main(void)
 	spectating.Mode = linkToClientProgs("CLPF_spectating_Mode");
 	spectating.LocalizedMode = linkToClientProgs("CLPF_spectating_LocalizedMode");
 	spectating.Name = linkToClientProgs("CLPF_spectating_Name");
+
+	atlasPic.Load = linkToClientProgs("CLPF_atlasPic_Load");
+	atlasPic.Draw = linkToClientProgs("CLPF_atlasPic_Draw");
+	atlasPic.Draw_A = linkToClientProgs("CLPF_atlasPic_Draw_A");
+	atlasPic.Draw_RGB = linkToClientProgs("CLPF_atlasPic_Draw_RGB");
+	atlasPic.Draw_RGBA = linkToClientProgs("CLPF_atlasPic_Draw_RGBA");
+	atlasPic.DrawTop_RGBA = linkToClientProgs("CLPF_atlasPic_DrawTop_RGBA");
+	atlasPic.DrawBottom_RGBA = linkToClientProgs("CLPF_atlasPic_DrawBottom_RGBA");
+	atlasPic.DrawLeft_RGBA = linkToClientProgs("CLPF_atlasPic_DrawLeft_RGBA");
+	atlasPic.DrawRight_RGBA = linkToClientProgs("CLPF_atlasPic_DrawRight_RGBA");
+
+	atlasPic.DrawTop_RGB = linkToClientProgs("CLPF_atlasPic_DrawTop_RGB");
+	atlasPic.DrawBottom_RGB = linkToClientProgs("CLPF_atlasPic_DrawBottom_RGB");
+	atlasPic.DrawLeft_RGB = linkToClientProgs("CLPF_atlasPic_DrawLeft_RGB");
+	atlasPic.DrawRight_RGB = linkToClientProgs("CLPF_atlasPic_DrawRight_RGB");
+
+	atlasPic.DrawCrosshair = linkToClientProgs("CLPF_atlasPic_DrawCrosshair");
+	atlasPic.GetWidth = linkToClientProgs("CLPF_atlasPic_GetWidth");
+	atlasPic.GetHeight = linkToClientProgs("CLPF_atlasPic_GetHeight");
+	atlasPic.GetSize = linkToClientProgs("CLPF_atlasPic_GetSize");
 }

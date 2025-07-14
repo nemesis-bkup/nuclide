@@ -18,7 +18,7 @@ entityDef weapon_nailgun
 	// weapon specific
 	"def_fireInfo"		"fireInfo_nailgun"
 	"def_altFireInfo"	"fireInfo_nailgunAlt"
-	"inv_name"			"Nailgun"
+	"inv_name"			"#WEAPON_NAILGUN"
 	"ammoType"			"ammo_nails"
 	"inv_ammo_nails"	"30"
 	"ammoRequired"		"1"

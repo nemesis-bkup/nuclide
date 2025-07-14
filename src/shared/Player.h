@@ -161,6 +161,7 @@ public:
 	virtual void Physics_InputPreMove(void);
 	virtual void Physics_InputPostMove(void);
 	virtual void Physics_Run(void);
+	virtual void Physics_InputSprint(void);
 	
 	virtual bool IsFakeSpectator(void);
 	virtual bool IsRealSpectator(void);

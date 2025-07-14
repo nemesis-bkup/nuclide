@@ -1,3 +1,21 @@
+// these are the material
+// overrides for classic BSP
+// levels, like Q1/HL BSP
+//
+// the letters in the first row
+// correspond to the surfaceproperties
+// defined within `decls/typeinfo/hlmat.decl`
+// so if you want to add a new type of material
+// ensure it is defined within your scripts/surfaceproperties
+// text definitions, then assign a unique character to the `hlmat.decl`.
+//
+// keep in mind that this file is parsed
+// and treated like it is in Half-Life (1998)
+// for compatibility reasons
+// 
+// if you want your custom level to ship its own
+// material file, you can save it under `maps/yourlevel.mat`
+
 // metal
 M AQPIPE12
 M AQPIPE13

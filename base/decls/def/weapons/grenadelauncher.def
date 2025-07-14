@@ -16,7 +16,7 @@ entityDef weapon_grenadelauncher
 
 	// weapon specific
 	"def_fireInfo"		"fireInfo_grenadeLauncher"
-	"inv_name"			"Grenade Launcher"
+	"inv_name"			"#WEAPON_GRENADELAUNCHER"
 	"ammoType"			"ammo_rockets"
 	"inv_ammo_rockets"	"5"
 	"ammoRequired"		"1"

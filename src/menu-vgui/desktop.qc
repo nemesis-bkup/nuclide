@@ -178,3 +178,8 @@ void Desktop_CanvasChanged ( void )
 	g_uiDesktop.Reposition();
 }
 
+void
+Desktop_Add( vguiWidget toAdd )
+{
+	g_uiDesktop.Add(toAdd);
+}

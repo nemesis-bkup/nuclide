@@ -249,6 +249,11 @@ ncSpectator::InputNext(void)
 		return;
 	}
 
+	/* don't allow switching players in free mode, as we're not tracking anything */
+	if (m_spectatingMode == SPECMODE_FREE || m_spectatingMode == SPECMODE_FREEOVERVIEW) {
+		return;
+	}
+
 	if (m_spectatingMode == SPECMODE_DEATHCAM && m_flDeathCam < time) {
 		m_spectatingMode = SPECMODE_THIRDPERSON;
 		InputNext();

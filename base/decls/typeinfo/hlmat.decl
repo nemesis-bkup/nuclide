@@ -1,3 +1,8 @@
+// these characters are referenced
+// within sound/materials.txt
+// go there to add new map texture to material
+// lookups.
+
 typeInfo material
 {
 	"C" "gs_material_concrete"

@@ -31,6 +31,7 @@ createinet_btnok_start(void)
 		localcmd(sprintf("set sv_playerslots %S\n", create_tbMaxplayers.m_text));
 		localcmd(sprintf("set password %S\n", create_tbPassword.m_text));
 		localcmd(sprintf("set g_gametype %S\n", gameType));
+		localcmd(sprintf("set ui_maxclients %S\n", create_tbMaxplayers.m_text));
 
 		if (cvar("ui_fillServer") > 0) {
 			localcmd(sprintf("set bot_minClients %S\n", create_tbMaxplayers.m_text));

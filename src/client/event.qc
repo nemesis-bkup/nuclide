@@ -196,7 +196,13 @@ EV_Pickup(void)
 {
 	int entityDefID = readint();
 	string itemClass = EntityDef_NameFromNetID(entityDefID);
-	ncLog("Player picked up item %S", itemClass);
+	string itemName = localize(EntityDef_GetKeyValue(itemClass, "inv_name"));
+
+	if (STRING_SET(itemName)) {
+		ncLog("Player picked up item %S (%S)", itemName, itemClass);
+	} else {
+		ncLog("Player picked up unnamed item (%S)", itemClass);
+	}
 
 	if (EntityDef_GetKeyValue(itemClass, "pickupFlash") == "1") {
 		localcmd("bf\n");

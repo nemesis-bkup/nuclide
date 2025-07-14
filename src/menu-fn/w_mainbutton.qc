@@ -94,76 +94,76 @@ enum
 string g_mainbtn_sheets[MAIN_BUTTONS];
 
 string g_mainbtn_text[MAIN_BUTTONS] = {
-	_("IDS_BTN_NEWGAME"),
-	_("IDS_BTN_RESUME"),
-	_("IDS_BTN_TRAINING"),
-	_("IDS_BTN_CONFIGURE"),
-	_("IDS_BTN_LOAD"),
-	_("IDS_BTN_LOADSAVE"),
-	_("IDS_BTN_README"),
-	_("IDS_BTN_QUIT"),
-	_("IDS_BTN_MULTIPLAYER"),
-	_("IDS_BTN_EASY"),
-	_("IDS_BTN_MEDIUM"),
-	_("IDS_BTN_HARD"),
-	_("IDS_BTN_SAVE"),
-	_("IDS_BTN_LOAD"),
-	_("IDS_BTN_CANCEL"),
-	_("IDS_BTN_OPTIONS"),
-	_("IDS_BTN_VIDEO"),
-	_("IDS_BTN_AUDIO"),
-	_("IDS_BTN_CONTROLS"),
-	_("IDS_BTN_DONE"),
-	_("IDS_BTN_QUICK"),
-	_("IDS_BTN_RESTORE"),
-	_("IDS_BTN_OK"),
-	_("IDS_BTN_OPTIONS"),
-	_("IDS_BTN_MODES"),
-	_("IDS_BTN_ADVANCED"),
-	_("IDS_BTN_ORDER"),
-	_("IDS_BTN_DELETE"),
-	_("IDS_BTN_BROWSE"),
-	_("IDS_BTN_CHATMODE"),
-	_("IDS_BTN_LAN"),
-	_("IDS_BTN_CUSTOMIZE"),
-	_("IDS_BTN_SKIP"),
-	_("IDS_BTN_EXIT"),
-	_("IDS_BTN_CONNECT"),
-	_("IDS_BTN_REFRESH"),
-	_("IDS_BTN_FILTER"),
-	_("IDS_BTN_FIND"),
-	_("IDS_BTN_CREATE"),
-	_("IDS_BTN_CREATESV"),
-	_("IDS_BTN_CHAT"),
-	_("IDS_BTN_ROOM"),
-	_("IDS_BTN_SEARCH"),
-	_("IDS_BTN_SERVERS"),
-	_("IDS_BTN_JOIN"),
-	_("IDS_BTN_FINDGAME"),
-	_("IDS_BTN_CREATE"),
-	_("IDS_BTN_JOIN"),
-	_("IDS_BTN_SEARCH"),
-	_("IDS_BTN_FINDGAME"),
-	_("IDS_BTN_START"),
-	_("IDS_BTN_INFO"),
-	_("IDS_BTN_UPDATE"),
-	_("IDS_BTN_ADDSERVER"),
-	_("IDS_BTN_DISCONNECT"),
-	_("IDS_BTN_CONSOLE"),
-	_("IDS_BTN_GORE"),
-	_("IDS_BTN_UPDATELIST"),
-	_("IDS_BTN_VISIT"),
-	_("IDS_BTN_PREVIEWS"),
-	_("IDS_BTN_ADVANCEDSVR"),
-	_("IDS_BTN_3DINFO"),
-	_("IDS_BTN_CUSTOMGAME"),
-	_("IDS_BTN_ACTIVATE"),
-	_("IDS_BTN_INSTALL"),
-	_("IDS_BTN_VISIT"),
-	_("IDS_BTN_REFRESHMODS"),
-	_("IDS_BTN_DEACTIVATE"),
-	_("IDS_BTN_SPECTATE"),
-	_("IDS_BTN_SPECTATEGAMES"),
+	"#IDS_BTN_NEWGAME",
+	"#IDS_BTN_RESUME",
+	"#IDS_BTN_TRAINING",
+	"#IDS_BTN_CONFIGURE",
+	"#IDS_BTN_LOAD",
+	"#IDS_BTN_LOADSAVE",
+	"#IDS_BTN_README",
+	"#IDS_BTN_QUIT",
+	"#IDS_BTN_MULTIPLAYER",
+	"#IDS_BTN_EASY",
+	"#IDS_BTN_MEDIUM",
+	"#IDS_BTN_HARD",
+	"#IDS_BTN_SAVE",
+	"#IDS_BTN_LOAD",
+	"#IDS_BTN_CANCEL",
+	"#IDS_BTN_OPTIONS",
+	"#IDS_BTN_VIDEO",
+	"#IDS_BTN_AUDIO",
+	"#IDS_BTN_CONTROLS",
+	"#IDS_BTN_DONE",
+	"#IDS_BTN_QUICK",
+	"#IDS_BTN_RESTORE",
+	"#IDS_BTN_OK",
+	"#IDS_BTN_OPTIONS",
+	"#IDS_BTN_MODES",
+	"#IDS_BTN_ADVANCED",
+	"#IDS_BTN_ORDER",
+	"#IDS_BTN_DELETE",
+	"#IDS_BTN_BROWSE",
+	"#IDS_BTN_CHATMODE",
+	"#IDS_BTN_LAN",
+	"#IDS_BTN_CUSTOMIZE",
+	"#IDS_BTN_SKIP",
+	"#IDS_BTN_EXIT",
+	"#IDS_BTN_CONNECT",
+	"#IDS_BTN_REFRESH",
+	"#IDS_BTN_FILTER",
+	"#IDS_BTN_FIND",
+	"#IDS_BTN_CREATE",
+	"#IDS_BTN_CREATESV",
+	"#IDS_BTN_CHAT",
+	"#IDS_BTN_ROOM",
+	"#IDS_BTN_SEARCH",
+	"#IDS_BTN_SERVERS",
+	"#IDS_BTN_JOIN",
+	"#IDS_BTN_FINDGAME",
+	"#IDS_BTN_CREATE",
+	"#IDS_BTN_JOIN",
+	"#IDS_BTN_SEARCH",
+	"#IDS_BTN_FINDGAME",
+	"#IDS_BTN_START",
+	"#IDS_BTN_INFO",
+	"#IDS_BTN_UPDATE",
+	"#IDS_BTN_ADDSERVER",
+	"#IDS_BTN_DISCONNECT",
+	"#IDS_BTN_CONSOLE",
+	"#IDS_BTN_GORE",
+	"#IDS_BTN_UPDATELIST",
+	"#IDS_BTN_VISIT",
+	"#IDS_BTN_PREVIEWS",
+	"#IDS_BTN_ADVANCEDSVR",
+	"#IDS_BTN_3DINFO",
+	"#IDS_BTN_CUSTOMGAME",
+	"#IDS_BTN_ACTIVATE",
+	"#IDS_BTN_INSTALL",
+	"#IDS_BTN_VISIT",
+	"#IDS_BTN_REFRESHMODS",
+	"#IDS_BTN_DEACTIVATE",
+	"#IDS_BTN_SPECTATE",
+	"#IDS_BTN_SPECTATEGAMES",
 };
 
 class CMainButton:CWidget
@@ -175,6 +175,7 @@ class CMainButton:CWidget
 	virtual void(void) m_execute = 0;
 	
 	int m_length;
+	string m_localizedText;
 
 	void(void) CMainButton;
 	virtual void(void) Draw;
@@ -190,6 +191,7 @@ CMainButton::CMainButton(void)
 {
 	m_alpha = 1.0f;
 	m_length = 156;
+	m_localizedText = "";
 }
 
 #define BUTTON_OFFSET (1.0f / 3.0f)
@@ -225,16 +227,16 @@ CMainButton::Draw(void)
 	} else {
 		drawfont = Font_GetID(font_label_p);
 		if (!m_execute) {
-			Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], g_mainbtn_text[m_bitmap], col_button_disabled, 1.0, font_button);
+			Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], m_localizedText, col_button_disabled, 1.0, font_button);
 			return;
 		}
 		if (m_click) {
-			Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], g_mainbtn_text[m_bitmap], col_button_click, 1.0, font_button);
+			Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], m_localizedText, col_button_click, 1.0, font_button);
 			return;
 		}
 
-		Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], g_mainbtn_text[m_bitmap], col_button_bg, 1.0, font_button);
-		Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], g_mainbtn_text[m_bitmap], col_button_select, 1 - m_alpha, font_button);
+		Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], m_localizedText, col_button_bg, 1.0, font_button);
+		Font_DrawText_RGBA([g_menuofs[0]+m_x,g_menuofs[1]+m_y], m_localizedText, col_button_select, 1 - m_alpha, font_button);
 	}
 
 	if (m_hover) {
@@ -270,6 +272,7 @@ void
 CMainButton::SetImage(int i)
 {
 	m_bitmap = i;
+	m_localizedText = localize(g_mainbtn_text[m_bitmap]);
 }
 void
 CMainButton::SetLength(int i)

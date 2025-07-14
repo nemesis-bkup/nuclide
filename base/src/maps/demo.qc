@@ -1,6 +1,6 @@
 #pragma PROGS_DAT  "../../maps/demo.dat"
 
-#include "../../../src/server/api.h"
+#include "../../../src/rules.src"
 
 void
 CSEv_TriggerTarget_s(string toTrigger)

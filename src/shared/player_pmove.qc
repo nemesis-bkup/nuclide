@@ -529,18 +529,9 @@ ncPlayer::Physics_InputPreMove(void)
 	}
 }
 
-/* timers get processed here after physics are run */
 void
-ncPlayer::Physics_InputPostMove(void)
+ncPlayer::Physics_InputSprint(void)
 {
-	float punch;
-
-	/* timers, these are predicted and shared across client and server */
-	m_timeUntilNextAttack = max(0, m_timeUntilNextAttack - input_timelength);
-	m_timeUntilReloaded = max(0, m_timeUntilReloaded - input_timelength);
-	m_timeUntilNextIdle = max(0, m_timeUntilNextIdle - input_timelength);
-	m_weaponAnimTime += input_timelength;
-
 	if (input_buttons & INPUT_SPRINT) {
 		m_currentStamina += input_timelength;
 	} else {
@@ -558,6 +549,21 @@ ncPlayer::Physics_InputPostMove(void)
 		input_buttons &= ~INPUT_SECONDARY;
 		input_buttons &= ~INPUT_RELOAD;
 	}
+}
+
+/* timers get processed here after physics are run */
+void
+ncPlayer::Physics_InputPostMove(void)
+{
+	float punch;
+
+	/* timers, these are predicted and shared across client and server */
+	m_timeUntilNextAttack = max(0, m_timeUntilNextAttack - input_timelength);
+	m_timeUntilReloaded = max(0, m_timeUntilReloaded - input_timelength);
+	m_timeUntilNextIdle = max(0, m_timeUntilNextIdle - input_timelength);
+	m_weaponAnimTime += input_timelength;
+
+	Physics_InputSprint();
 
 	//printf("stamina: %f\n", m_currentStamina);
 

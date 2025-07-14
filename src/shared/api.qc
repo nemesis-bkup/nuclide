@@ -872,6 +872,7 @@ spawnClass(string className, vector desiredPos)
 	newEntity.classname = className;
 	newEntity.SetOrigin(desiredPos);
 	newEntity.Spawn();
+	newEntity.SetOrigin(desiredPos);
 #endif
 
 	return (newEntity);

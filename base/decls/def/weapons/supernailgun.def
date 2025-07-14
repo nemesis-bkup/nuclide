@@ -17,7 +17,7 @@ entityDef weapon_supernailgun
 
 	// weapon specific
 	"def_fireInfo"		"fireInfo_superNailgun"
-	"inv_name"			"Super Nailgun"
+	"inv_name"			"#WEAPON_SUPERNAILGUN"
 	"ammoType"			"ammo_nails"
 	"inv_ammo_nails"	"30"
 	"ammoRequired"		"2"
@@ -52,7 +52,7 @@ entityDef fireInfo_superNailgun
 entityDef projectile_supernail
 {
 	"spawnclass"			"ncProjectile"
-	"model"					"progs/spike.mdl"
+	"model"					"progs/s_spike.mdl"
 	"offset"				"24 0 -8"
 	"mins"					"0 0 0"
 	"maxs"					"0 0 0"

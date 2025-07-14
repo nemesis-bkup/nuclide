@@ -16,7 +16,7 @@ entityDef weapon_shotgun
 
 	// weapon specific
 	"def_fireInfo"		"fireInfo_shotgun"
-	"inv_name"			"Shotgun"
+	"inv_name"			"#WEAPON_SHOTGUN"
 	"ammoType"			"ammo_shells"
 	"ammoRequired"		"1"
 	"ammoPerShot"		"1"
