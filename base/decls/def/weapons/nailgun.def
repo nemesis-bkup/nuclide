@@ -46,7 +46,6 @@ entityDef fireInfo_nailgun
 	"def_onFire"		"projectile_nailLeft"
 	"fireRate"			"0.1"
 	"punchSpring"		"-0.5 2 -2"
-	"model_flash"		"sprites/muzzleflash.spr"
 }
 
 entityDef fireInfo_nailgunAlt
@@ -54,7 +53,6 @@ entityDef fireInfo_nailgunAlt
 	"def_onFire"		"projectile_nailRight"
 	"fireRate"			"0.1"
 	"punchSpring"		"-0.5 -2 2"
-	"model_flash"		"sprites/muzzleflash.spr"
 }
 
 entityDef debris_nail

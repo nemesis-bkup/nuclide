@@ -82,8 +82,9 @@ ncActor::SetAnimationPrefix(string animPrefix)
 	m_torsoFirst = gettagindex(this, GetDefString("torsoStart"));
 	m_torsoLast = gettagindex(this, GetDefString("torsoEnd"));
 
+#if 0
 	EntLog("Activity Set for prefix %S:", animPrefix);
-	EntLog("\tm_boneSpine: %d", m_boneSpine);
+	EntLog("\tm_boneSpine: %i", m_boneSpine);
 	EntLog("\tm_actIdle: %d", m_actIdle);
 	EntLog("\tm_actIdleCrouch: %d", m_actIdleCrouch);
 	EntLog("\tm_actIdleProne: %d", m_actIdleProne);
@@ -95,6 +96,7 @@ ncActor::SetAnimationPrefix(string animPrefix)
 	EntLog("\tm_actDraw: %d", m_actDraw);
 	EntLog("\tm_actAttack: %d", m_actAttack);
 	EntLog("\tm_actReload: %d", m_actReload);
+#endif
 }
 
 void
@@ -711,7 +713,7 @@ ncActor::Input(entity eAct, string strInput, string strData)
 			float currentDist = distance(pl.origin, this.origin);
 
 			if (currentDist < bestDist) {
-				firstPlayer = pl;
+				firstPlayer = (ncEntity)pl;
 				bestDist = currentDist;
 			}
 		}
@@ -745,10 +747,10 @@ ncActor::Input(entity eAct, string strInput, string strData)
 		}
 		break;
 	case "GoToSpotInRadius":
-		vector spot1 = ncNavInfo::FindEmptySpotNearPosition(this, GetOrigin(), 128.0f, stof(strData));
+		vector spot2 = ncNavInfo::FindEmptySpotNearPosition(this, GetOrigin(), 128.0f, stof(strData));
 
-		if (vlen(spot1) > 0.0f) {
-			RouteToPosition(spot1);
+		if (vlen(spot2) > 0.0f) {
+			RouteToPosition(spot2);
 		} else {
 			CancelSchedule();
 		}
@@ -1421,7 +1423,7 @@ ncActor::AddedItemCallback(ncItem itemAdded)
 {
 #ifdef SERVER
 	if (!m_activeWeapon) {
-		if (itemAdded.IsWeapon()) {
+		if (is.Weapon(itemAdded)) {
 			SwitchToExactWeapon((ncWeapon)itemAdded);
 		}
 	}
@@ -1494,7 +1496,7 @@ ncActor::GiveExactItem(ncItem theItem)
 	}
 
 	/* items (not weapons) may not be added permanently by default */
-	if (canCarry == false && linkedList.IsWeapon() == false) {
+	if (canCarry == false && is.Weapon(linkedList) == false) {
 		RemoveItem(theItem.declclass);
 	}
 
@@ -1574,7 +1576,7 @@ ncActor::GiveItem(string itemName)
 	}
 
 	/* items (not weapons) may not be added permanently by default */
-	if (canCarry == false && linkedList.IsWeapon() == false) {
+	if (canCarry == false && is.Weapon(linkedList) == false) {
 		RemoveItem(itemName);
 	}
 
@@ -1611,7 +1613,7 @@ ncActor::SwitchToBestWeapon(bool ignoreActive)
 		}
 
 		/* inventory item may not be a weapon */
-		if (linkedList.IsWeapon()) {
+		if (is.Weapon(linkedList)) {
 			string weaponName = linkedList.declclass;
 			float weight;
 
@@ -1725,14 +1727,17 @@ ncActor::RemoveAllItems(bool ignoreWeapons)
 		}
 
 		/* respect weapon filter */
-		if (!(ignoreWeapons && linkedList.IsWeapon() == true)) {
+		if (!(ignoreWeapons && is.Weapon(linkedList) == true)) {
 			/* is this our active weapon? give it a chance to do work first */
 			if (m_activeWeapon == linkedList) {
 				m_activeWeapon._SwitchedFromCallback();
 				m_activeWeapon = __NULL__;
 			}
 
-			RemoveItem(linkedList.declclass);
+			if (is.Item(linkedList) == true) {
+				RemoveItem(linkedList.declclass);
+			}
+
 			linkedList = nextItem;
 			continue;
 		}
@@ -1765,7 +1770,7 @@ ncActor::RemoveAllWeapons(void)
 			break;
 		}
 
-		if (linkedList.IsWeapon() == true) {
+		if (is.Weapon(linkedList) == true) {
 			/* is this our active weapon? give it a chance to do work first */
 			if (m_activeWeapon == linkedList) {
 				m_activeWeapon._SwitchedFromCallback();
@@ -1824,7 +1829,7 @@ ncActor::SwitchToWeapon(string weaponName)
 void
 ncActor::SwitchToExactWeapon(ncWeapon item)
 {
-	if (item.IsWeapon() == false) {
+	if (is.Weapon(item) == false) {
 		return;
 	}
 
@@ -1871,7 +1876,7 @@ ncActor::SortWeaponChain(void)
 			continue;
 		}
 
-		if (itemChain.IsWeapon() == true) {
+		if (is.Weapon(itemChain) == true) {
 			hudSlot = itemChain.m_weaponHUDSlot;
 			hudPos = itemChain.m_weaponHUDSlotPos;
 			itemChain.m_nextWeapon = __NULL__;
@@ -1902,7 +1907,7 @@ ncActor::SortWeaponChain(void)
 					continue;
 				}
 
-				if (itemChain.IsWeapon() == true) {
+				if (is.Weapon(itemChain) == true) {
 					hudSlot = itemChain.m_weaponHUDSlot;
 					hudPos = itemChain.m_weaponHUDSlotPos;
 

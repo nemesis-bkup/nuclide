@@ -93,21 +93,21 @@ _ncError(string functionName, string msg)
 {
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^7: %s\n", CG_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", CG_ERROR, time, functionName, msg));
 	else
-		print(sprintf("%s ^1%s^7: %s\n", CG_ERROR, functionName, msg));
+		print(sprintf("%s ^1%s^1: %s\n", CG_ERROR, functionName, msg));
 #endif
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^7: %s\n", SV_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", SV_ERROR, time, functionName, msg));
 	else
-		print(sprintf("%s ^1%s^7: %s\n", SV_ERROR, functionName, msg));
+		print(sprintf("%s ^1%s^1: %s\n", SV_ERROR, functionName, msg));
 #endif
 #ifdef MENU
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^7: %s\n", UI_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", UI_ERROR, time, functionName, msg));
 	else
-		print(sprintf("%s ^1%s^7: %s\n", UI_ERROR, functionName, msg));
+		print(sprintf("%s ^1%s^1: %s\n", UI_ERROR, functionName, msg));
 #endif
 }
 
@@ -116,21 +116,21 @@ _ncWarning(string functionName, string msg)
 {
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^7: %s\n", CG_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", CG_WARNING, time, functionName, msg));
 	else
-		print(sprintf("%s ^3%s^7: %s\n", CG_WARNING, functionName, msg));
+		print(sprintf("%s ^3%s^1: %s\n", CG_WARNING, functionName, msg));
 #endif
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^7: %s\n", SV_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", SV_WARNING, time, functionName, msg));
 	else
-		print(sprintf("%s ^3%s^7: %s\n", SV_WARNING, functionName, msg));
+		print(sprintf("%s ^3%s^1: %s\n", SV_WARNING, functionName, msg));
 #endif
 #ifdef MENU
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^7: %s\n", UI_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", UI_WARNING, time, functionName, msg));
 	else
-		print(sprintf("%s ^3%s^7: %s\n", UI_WARNING, functionName, msg));
+		print(sprintf("%s ^3%s^1: %s\n", UI_WARNING, functionName, msg));
 #endif
 }
 
@@ -275,6 +275,20 @@ Util_ExtensionFromString(string inputString)
 	return substring(inputString, modelNameLength - 3, modelNameLength);
 }
 
+bool
+wordInString(string fullString, string wordToFind)
+{
+	int wordCount = tokenize(fullString);
+
+	for (int i = 0; i < wordCount; i++) {
+		if (wordToFind == argv(i)) {
+			return (true);
+		}
+	}
+
+	return (false);
+}
+
 void
 CallSpawnfuncByName(entity target, string className)
 {
@@ -286,5 +300,6 @@ CallSpawnfuncByName(entity target, string className)
 }
 
 .string spawnclass;
+.float team_info;
 
 /** @} */ // end of common

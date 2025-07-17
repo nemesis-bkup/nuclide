@@ -14,8 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#warning Rename to SurfaceKit
-
 /** @defgroup surfdata Surface Data
     @brief Interactive surface properties.
     @ingroup shared
@@ -196,13 +194,13 @@ typedef enum
 	SURFDATA_FX_BULLETIMPACTID
 } surfinfo_t;
 
-/* initialized SurfaceKit */
+/* initialized SurfData */
 void SurfData_Init(void);
 
-/* Prepares an object for SurfaceKit initialization */
+/* Prepares an object for SurfData initialization */
 void SurfData_SetStage(string type);
 
-/* Finishes initialization, returns valid SurfaceKit id */
+/* Finishes initialization, returns valid SurfData id */
 int SurfData_Finish(void);
 
 int SurfData_TexToSurfData(string tex_name);

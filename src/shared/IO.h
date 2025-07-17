@@ -324,15 +324,15 @@ _NSEntWarning(string className, string functionName, float edictNum, string warn
 {
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s (%d)^7: %s\n", SVENT_WARNING, time, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^9%f ^3%s (%d)^1: %s\n", SVENT_WARNING, time, functionName, edictNum, warnMessage));
 	else
-		print(sprintf("%s ^3%s (%d)^7: %s\n", SVENT_WARNING, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^3%s (%d)^1: %s\n", SVENT_WARNING, functionName, edictNum, warnMessage));
 #endif
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s (%d)^7: %s\n", CGENT_WARNING, time, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^9%f ^3%s (%d)^1: %s\n", CGENT_WARNING, time, functionName, edictNum, warnMessage));
 	else
-		print(sprintf("%s ^3%s (%d)^7: %s\n", CGENT_WARNING, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^3%s (%d)^1: %s\n", CGENT_WARNING, functionName, edictNum, warnMessage));
 #endif
 }
 
@@ -341,15 +341,15 @@ _NSEntError(string className, string functionName, float edictNum, string warnMe
 {
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s (id: %d)^7: %s\n", SVENT_ERROR, time, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^9%f ^1%s (id: %d)^1: %s\n", SVENT_ERROR, time, functionName, edictNum, warnMessage));
 	else
-		print(sprintf("%s ^1%s (id: %d)^7: %s\n", SVENT_ERROR, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^1%s (id: %d)^1: %s\n", SVENT_ERROR, functionName, edictNum, warnMessage));
 #endif
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s (id: %d)^7: %s\n", CGENT_ERROR, time, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^9%f ^1%s (id: %d)^1: %s\n", CGENT_ERROR, time, functionName, edictNum, warnMessage));
 	else
-		print(sprintf("%s ^1%s (id: %d)^7: %s\n", CGENT_ERROR, functionName, edictNum, warnMessage));
+		print(sprintf("%s ^1%s (id: %d)^1: %s\n", CGENT_ERROR, functionName, edictNum, warnMessage));
 #endif
 }
 

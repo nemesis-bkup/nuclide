@@ -1,0 +1,16 @@
+"lang" 
+{ 
+"Language" "German" 
+"Tokens" 
+{ 
+"MAYHEM_Chapter1_Title"		"LQ Episode 0"
+"WEAPON_AXE"				"Axt"
+"WEAPON_SHOTGUN"			"Scrotflinte"
+"WEAPON_SUPERSHOTGUN"		"Super Scrotflinte"
+"WEAPON_NAILGUN"			"Nagelschiesser"
+"WEAPON_SUPERNAILGUN"		"Super Nagelschiesser"
+"WEAPON_ROCKETLAUNCHER"		"Raketenwerfer"
+"WEAPON_GRENADELAUNCHER"	"Granatenwerfer"
+"WEAPON_LIGHTNING"			"Donnerwaffe"
+} 
+}

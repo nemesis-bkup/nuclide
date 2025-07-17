@@ -72,6 +72,9 @@ HUDProgs_Draw(void)
 	if (g_flHUDProgs > 0) {
 		if (g_hudDraw) {
 			externset(g_flHUDProgs, clframetime, "clframetime");
+			externset(g_flHUDProgs, frametime, "frametime");
+			externset(g_flHUDProgs, time, "time");
+			externset(g_flHUDProgs, cltime, "cltime");
 			g_hudDraw();
 		}
 	}

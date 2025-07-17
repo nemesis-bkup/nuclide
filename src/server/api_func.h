@@ -96,6 +96,8 @@ typedef struct
 {
 	/** Ends the current map. Resulting in the scores and intermission screens being shown. */
 	void EndMap(void);
+	/** Ends the current map in the specified number of seconds. */
+	void EndMapDelayed(float);
 	/** Force loads the next map/level in the rotation. If none is set, the map will restart.*/
 	void LoadNextMap(void);
 	/** Removed any temporary game entities from the game, and resets the state of the level to the default state. */
@@ -240,6 +242,7 @@ void
 _server_main(void)
 {
 	game.EndMap = linkToServerProgs("SVPF_game_EndMap");
+	game.EndMapDelayed = linkToServerProgs("SVPF_game_EndMapDelayed");
 	game.LoadNextMap = linkToServerProgs("SVPF_game_LoadNextMap");
 	game.CleanUpMap = linkToServerProgs("SVPF_game_CleanUpMap");
 	game.GetMap = linkToServerProgs("SVPF_game_GetMap");

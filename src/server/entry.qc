@@ -505,8 +505,8 @@ initents(void)
 
 	precache.Entity("player");
 
-	ncRuleDelegate::LinkProgs();
-	ncMapDelegate::LinkProgs();
+	currentRule.LinkProgs();
+	currentMap.LinkProgs();
 
 	Game_Worldspawn();
 	Decals_Init();
@@ -534,8 +534,8 @@ initents(void)
 	 * let's add our own that we can actually trust. */
 	serverinfo.SetInteger("sv_playerslots", cvars.GetInteger("sv_playerslots"));
 
-	currentRule = ncRuleDelegate::ActiveInstance();
-	currentMap = ncMapDelegate::ActiveInstance();
+	currentRule = currentRule.ActiveInstance();
+	currentMap = currentMap.ActiveInstance();
 	currentRule.Precache();
 	currentMap.Precache();
 

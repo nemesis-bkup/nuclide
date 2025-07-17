@@ -670,8 +670,6 @@ void
 ncSurfacePropEntity::BreakModel(int damage, vector dir, int location)
 {
 	float explosionMagnitude, explosionRadius;
-	string gibeffect;
-	int breakcount;
 	float speedValue;
 
 	m_timeOfDeath = time;

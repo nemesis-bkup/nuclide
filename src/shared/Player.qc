@@ -412,6 +412,7 @@ ncPlayer::ProcessInput(void)
 
 	if (wasfreed(m_activeWeapon) || m_activeWeapon._isWeapon != true) {
 		m_activeWeapon = __NULL__;
+		return;
 	}
 
 	if (!m_activeWeapon) {
@@ -1076,67 +1077,7 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 		}
 	}
 
-	if (pSeat->m_ePlayer == this) {
-		if (activeweapon != 0) {
-			m_activeWeapon = findentity(world, ::entnum, activeweapon);
-		} else {
-			m_activeWeapon = __NULL__;
-		}
 
-		if (vehicle_entnum != 0) {
-			vehicle = findentity(world, ::entnum, vehicle_entnum);
-		} else {
-			vehicle = __NULL__;
-		}
-
-		if (m_itemStart != 0) {
-			m_itemList = findentity(world, ::entnum, m_itemStart);
-		} else {
-			m_itemList = __NULL__;
-		}
-
-		/* this should be better. */
-		for (ncItem items = world; (items = findfloat(items, ::_isItem, true));) {
-			entity oldOwner = items.owner;
-
-			if (items.owner_entnum != 0) {
-				items.owner = findentity(world, ::entnum, items.owner_entnum);
-			} else {
-				items.owner = __NULL__;
-			}
-
-			if (items.owner != oldOwner && items.owner == this) {
-				items._AddedCallback();
-			}
-
-			if (items.chain_entnum != 0) {
-				items.m_nextItem = (ncItem)findentity(world, ::entnum, items.chain_entnum);
-			} else {
-				items.m_nextItem = __NULL__;
-			}
-
-			if (items._isWeapon == true) {
-				ncWeapon ourWeapon = (ncWeapon)items;
-
-				if (ourWeapon.m_nextWeapon_entnum != 0) {
-					ourWeapon.m_nextWeapon = findentity(world, ::entnum, ourWeapon.m_nextWeapon_entnum);
-				} else {
-					ourWeapon.m_nextWeapon = __NULL__;
-				}
-
-				if (ourWeapon.m_prevWeapon_entnum != 0) {
-					ourWeapon.m_prevWeapon = findentity(world, ::entnum, ourWeapon.m_prevWeapon_entnum);
-				} else {
-					ourWeapon.m_prevWeapon = __NULL__;
-				}
-			} else {
-				items.m_nextWeapon = __NULL__;
-				items.m_prevWeapon = __NULL__;
-			}
-		}
-
-		SortWeaponChain();
-	}
 
 	if (flChanged & PLAYER_SIZE) {
 		setsize(this, mins, maxs);
@@ -1161,14 +1102,13 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 void
 ncPlayer::PredictPreFrame(void)
 {
-	if (m_activeWeapon) {
-		m_activeWeapon.owner = this;
-		m_activeWeapon.PredictPreFrame();
-	}
-
 	if (vehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPreFrame();
+	}
+
+	for (ncItem items = __NULL__; (items = (ncItem)findfloat(items, ::_isItem, true));) {
+		items.PredictPreFrame();
 	}
 
 	SAVE_STATE(modelindex)
@@ -1247,7 +1187,6 @@ ncPlayer::PredictPostFrame(void)
 	ROLL_BACK(friction)
 	ROLL_BACK(m_timeSinceJump)
 	ROLL_BACK(m_timeSinceTeleport)
-	ROLL_BACK(m_itemList)
 	ROLL_BACK(m_weaponAnimSequence)
 	ROLL_BACK(health)
 	ROLL_BACK(armor)
@@ -1265,11 +1204,9 @@ ncPlayer::PredictPostFrame(void)
 	ROLL_BACK(m_timeUntilNextAttack)
 	ROLL_BACK(m_timeUntilNextIdle)
 	ROLL_BACK(m_timeUntilReloaded)
-	ROLL_BACK(vehicle_entnum)
 	ROLL_BACK(m_spectatingEntity)
 	ROLL_BACK(m_spectatingMode)
 	ROLL_BACK(m_spectatingFlags)
-	ROLL_BACK(activeweapon)
 	ROLL_BACK(anim_top)
 	ROLL_BACK(anim_top_delay)
 	ROLL_BACK(anim_top_time)
@@ -1277,19 +1214,40 @@ ncPlayer::PredictPostFrame(void)
 	ROLL_BACK(anim_bottom_time)
 	ROLL_BACK(sndindex_idle)
 
-	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
-		m_ammoTypes[i] = m_ammoTypes_net[i];
-	}
+	/* make sure to relink these */
+	ROLL_BACK(vehicle_entnum)
+	ROLL_BACK(activeweapon)
+	ROLL_BACK(m_itemList)
 
-	if (m_activeWeapon) {
-		if (m_activeWeapon.PredictPostFrame) {
-			m_activeWeapon.PredictPostFrame();
-		}
+	for (ncItem items = __NULL__; (items = (ncItem)findfloat(items, ::_isItem, true));) {
+		items.PredictPostFrame();
 	}
 
 	if (vehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPostFrame();
+	}
+
+	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
+		m_ammoTypes[i] = m_ammoTypes_net[i];
+	}
+
+	if (activeweapon != 0) {
+		m_activeWeapon = (ncWeapon)findentity(world, ::entnum, activeweapon);
+	} else {
+		m_activeWeapon = __NULL__;
+	}
+
+	if (vehicle_entnum != 0) {
+		vehicle = findentity(world, ::entnum, vehicle_entnum);
+	} else {
+		vehicle = __NULL__;
+	}
+
+	if (m_itemStart != 0) {
+		m_itemList = (ncItem)findentity(world, ::entnum, m_itemStart);
+	} else {
+		m_itemList = __NULL__;
 	}
 }
 #else

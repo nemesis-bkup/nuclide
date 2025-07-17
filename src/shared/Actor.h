@@ -178,6 +178,7 @@ public:
 	virtual void AddedItemCallback(ncItem);
 	virtual void SpawnKey(string,string);
 	virtual void ReloadCachedAttributes(void);
+	virtual void SetAnimationPrefix(string animPrefix);
 
 #ifdef CLIENT
 	virtual void ReceiveEvent(float eventID);
@@ -326,6 +327,8 @@ private:
 	int m_boneSpine;
 	int m_torsoFirst;
 	int m_torsoLast;
+
+	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
 };
 
 /* for now here to make debugging easier */

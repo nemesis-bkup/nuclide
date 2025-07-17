@@ -27,7 +27,7 @@ entityDef weapon_supershotgun
 	"snd_fire"			"weapon_supershotgun.shoot"
 	"snd_empty"			"weapon.empty"
 
-//	"msg_obituary"		"%s ate two loads of %s's buckshot."
+	"msg_obituary"		"%s ate two loads of %s's buckshot."
 
 	// ncWeapon specific
 	"hudSlot"			"2"
@@ -55,5 +55,4 @@ entityDef fireInfo_superShotgun
 	"ammoPerShot"		"2"
 	"fireRate"			"0.7"
 	"punchSpring"		"-5 0 0"
-	"model_flash"		"sprites/muzzleflash.spr"
 }

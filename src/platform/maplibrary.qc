@@ -270,7 +270,7 @@ ModeLibrary_Init(void)
 	}
 	search_end(mapsearch);
 
-	g_modeLibrary = (mapLibrary_t *)memalloc(sizeof(mapLibrary_t) * g_modeLibrary_count);
+	g_modeLibrary = (modeLibrary_t *)memalloc(sizeof(modeLibrary_t) * g_modeLibrary_count);
 
 	/* let's do it again, but this time we'll sort the data into our array */
 	mapsearch = search_begin("progs/*.dat", SEARCH_NAMESORT | SEARCH_FULLPACKAGE | SEARCH_MULTISEARCH, TRUE);

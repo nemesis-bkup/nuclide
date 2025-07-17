@@ -1099,6 +1099,12 @@ SHPF_precache_Model(string modelPath)
 		return (0i);
 	}
 
+	float existingID = getmodelindex(modelPath, true);
+	if (!existingID) {
+		ncLog("***** allocating model %S", modelPath);
+	}
+
+
 	modelPath = Util_FixModel(modelPath);
 	precache_model(modelPath);
 	PropData_ForModel(modelPath);

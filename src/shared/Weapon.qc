@@ -58,12 +58,12 @@ ncWeapon::_AddedCallback(void)
 
 	super::_AddedCallback();
 
-	ReloadCachedAttributes();
-
 	/* we have no active weapon, and this is our pick */
 	if (!ourOwner.m_activeWeapon) {
 		ourOwner.SwitchToExactWeapon(this);
 	}
+
+	ourOwner.SortWeaponChain();
 }
 
 void
@@ -281,6 +281,8 @@ void
 ncWeapon::Spawned(void)
 {
 	super::Spawned();
+
+	ReloadCachedAttributes();
 
 	if (m_weaponClipStartSize > 0i) {
 		m_weaponClip = m_weaponClipStartSize;
@@ -724,8 +726,6 @@ ncWeapon::PredictPreFrame(void)
 		return;
 	}
 
-	SAVE_STATE(m_nextWeapon)
-	SAVE_STATE(m_prevWeapon)
 	SAVE_STATE(modelindex)
 	SAVE_STATE(origin)
 	SAVE_STATE(angles)
@@ -752,7 +752,9 @@ ncWeapon::PredictPreFrame(void)
 	SAVE_STATE(m_weaponIsFiring)
 	SAVE_STATE(m_weaponOverheating)
 	SAVE_STATE(m_burstCount)
-	SAVE_STATE(owner)
+
+	SAVE_STATE(m_nextWeapon)
+	SAVE_STATE(m_prevWeapon)
 }
 
 void
@@ -760,8 +762,6 @@ ncWeapon::PredictPostFrame(void)
 {
 	super::PredictPostFrame();
 
-	ROLL_BACK(m_nextWeapon)
-	ROLL_BACK(m_prevWeapon)
 	ROLL_BACK(modelindex)
 	ROLL_BACK(origin)
 	ROLL_BACK(angles)
@@ -788,7 +788,22 @@ ncWeapon::PredictPostFrame(void)
 	ROLL_BACK(m_weaponIsFiring)
 	ROLL_BACK(m_weaponOverheating)
 	ROLL_BACK(m_burstCount)
-	ROLL_BACK(owner)
+
+	/* relink these */
+	ROLL_BACK(m_nextWeapon)
+	ROLL_BACK(m_prevWeapon)
+
+	if (m_nextWeapon_entnum != 0) {
+		m_nextWeapon = (ncWeapon)findentity(world, ::entnum, m_nextWeapon_entnum);
+	} else {
+		m_nextWeapon = __NULL__;
+	}
+
+	if (m_prevWeapon_entnum != 0) {
+		m_prevWeapon = (ncWeapon)findentity(world, ::entnum, m_prevWeapon_entnum);
+	} else {
+		m_prevWeapon = __NULL__;
+	}
 }
 
 #endif
@@ -1090,7 +1105,7 @@ ncWeapon::EjectBrass(void)
 	brassOffset += anglesToRight(viewAngle) * brassSpawnOffset[1];
 	brassOffset += anglesToUp(viewAngle) * brassSpawnOffset[2];
 		
-	ncEntity brass = ents.Create(m_fiBrassDef, ourOwner.GetEyePos() + brassOffset);
+	ncEntity brass = (ncEntity)ents.Create(m_fiBrassDef, ourOwner.GetEyePos() + brassOffset);
 	brass.SetAngles(viewAngle);
 	brass.SetVelocity(ourOwner.GetVelocity() + brassVelocity);
 	brass.SetMovetype(MOVETYPE_BOUNCE);
@@ -1127,7 +1142,7 @@ ncWeapon::EjectCartridge(void)
 	brassOffset += anglesToRight(viewAngle) * brassSpawnOffset[1];
 	brassOffset += anglesToUp(viewAngle) * brassSpawnOffset[2];
 
-	ncEntity brass = ents.Create(m_fiCartridgeDef, ourOwner.GetEyePos() + brassOffset);
+	ncEntity brass = (ncEntity)ents.Create(m_fiCartridgeDef, ourOwner.GetEyePos() + brassOffset);
 	brass.SetAngles(viewAngle);
 	brass.SetVelocity(ourOwner.GetVelocity() + brassVelocity);
 	brass.SetMovetype(MOVETYPE_BOUNCE);
@@ -1143,7 +1158,6 @@ void
 ncWeapon::FiredWeaponAttack(string fireInfo)
 {
 	ncPlayer ourOwner = (ncPlayer)GetOwner();
-	ourOwner.AttackByDef(fireInfo, false);
 	_SetWeaponState(WEAPONSTATE_IDLE);
 
 	if (m_fiKnockBack) {
@@ -1158,6 +1172,8 @@ ncWeapon::FiredWeaponAttack(string fireInfo)
 #ifdef SERVER
 	ScheduleThink(EjectBrass, m_fiBrassDelay * 0.01f);
 #endif
+
+	ourOwner.AttackByDef(fireInfo, false);
 }
 
 void
@@ -1178,13 +1194,14 @@ ncWeapon::ReleasedWeaponAttack(string fireInfo)
 #endif
 	}
 
-	ourOwner.AttackByDef(fireInfo, true);
 	_SetWeaponState(WEAPONSTATE_RELEASED);
 
 	/* knockback */
 	if (m_fiKnockBackRelease) {
 		ourOwner.AddVelocity(anglesToForward(ourOwner.v_angle) * -m_fiKnockBackRelease);
 	}
+
+	ourOwner.AttackByDef(fireInfo, true);
 }
 
 void
@@ -1224,7 +1241,9 @@ ncWeapon::Attack(string fireInfo)
 
 	/* Remove when empty */
 	if (m_fiRemoveOnEmpty == true && HasReserveAmmo() == false && m_weaponClipSize <= 0i) {
+#ifdef SERVER
 		ourOwner.RemoveItem(classname);
+#endif
 		return;
 	}
 
@@ -1813,7 +1832,6 @@ ncWeapon::Reload(void)
 	float reloadAnimation = -1;
 	float reloadEndAnimation = -1;
 	float reloadTime;
-	string ammoType;
 	int ammoTypeID;
 	float reloadStartAct = -1;
 
@@ -1890,7 +1908,7 @@ ncWeapon::Reload(void)
 #endif
 
 #ifdef SERVER
-	ncTimer foo = foo.TemporaryTimer(this, EjectCartridge, m_fiCartridgeDelay * 0.01f, false);
+	ncTimer foobar = foobar.TemporaryTimer(this, EjectCartridge, m_fiCartridgeDelay * 0.01f, false);
 #endif
 
 	ourOwner.sndindex_idle = 0;
@@ -1991,7 +2009,9 @@ ncWeapon::_WeaponStoppedFiring(void)
 
 		/* Remove when empty, but not when we're supposed to be detonating on fire */
 		if (!STRING_SET(m_fiDetonateOnFire) && m_fiRemoveOnEmpty && HasReserveAmmo() == false && m_weaponClipSize <= 0i) {
+#ifdef SERVER
 			ourOwner.RemoveItem(classname);
+#endif
 			return;
 		}
 	}

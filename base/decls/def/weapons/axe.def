@@ -7,7 +7,6 @@ entityDef weapon_axe
 	"editor_rotatable"	"1"
 
 	"spawnclass"		"ncWeapon"
-	"model"				"progs/g_axe.mdl"
 	"model_view"		"progs/v_axe.mdl"
 	"snd_acquire"		"weapon.pickup"
 	"snd_respawn"		"item.respawn"

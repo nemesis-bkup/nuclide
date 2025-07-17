@@ -8,8 +8,8 @@ entityDef domination_area
     "team_cancap_3"	"1"
     "team_startcap_2"	"1"
     "team_startcap_3"	"1"
-    "team_numcap_2"	"3"
-    "team_numcap_3"	"3"
+    "team_numcap_2"	"1"
+    "team_numcap_3"	"1"
     "area_time_to_cap"	"1"
     "renderfx" "$RFX_GLOWSHELL"
 
@@ -21,4 +21,41 @@ entityDef domination_area
     "OnBreakTeam2"	"!rules,Break,2,0,-1"
     "OnBreakTeam1"	"!self,Color,255 255 255,0,-1"
     "OnBreakTeam2"	"!self,Color,255 255 255,0,-1"
+}
+
+entityDef domination_icon
+{
+	"spawnclass" "info_waypoint"
+	"image" "logos/fte"
+	"text" "Domination Point"
+}
+
+entityDef domination_team1win
+{
+	"spawnclass"	"game_text"
+	"message"	"Enforcers Dominate!"
+	"x"		"-1"
+	"y"		"-1"
+	"fadein"	"0.5"
+	"fadeout"	"0.5"
+	"holdtime"	"4"
+	"color"		"255 0 0"
+	"color2"	"255 0 0"
+	"spawnflags"	"1"
+	"targetname"	"dom_message_team1"
+}
+
+entityDef domination_team2win
+{
+	"spawnclass"	"game_text"
+	"message"	"Rangers Dominate!"
+	"x"		"-1"
+	"y"		"-1"
+	"fadein"	"0.5"
+	"fadeout"	"0.5"
+	"holdtime"	"4"
+	"color"		"0 0 255"
+	"color2"	"0 0 255"
+	"spawnflags"	"1"
+	"targetname"	"dom_message_team2"
 }

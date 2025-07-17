@@ -168,7 +168,7 @@ vguiScrollBar::Input(float type, float x, float y, float devid)
 	}
 
 	if (m_listItemMax <= 0) {
-		return;
+		return (false);
 	}
 
 	if (barheight < 20)

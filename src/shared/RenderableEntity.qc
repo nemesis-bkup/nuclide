@@ -1362,9 +1362,9 @@ ncRenderableEntity::Input(entity eAct, string strInput, string strData)
 		EntLog("SetAnimation: %S (%d) on %S\n", strData, animFrame, model);
 		break;
 	case "PlayNamedSequence":
-		float animFrame = frameforname(modelindex, strData);
-		SetFrame(animFrame);
-		EntLog("PlayNamedSequence: %S (%d) on %S\n", strData, animFrame, model);
+		float sequenceNumber = frameforname(modelindex, strData);
+		SetFrame(sequenceNumber);
+		EntLog("PlayNamedSequence: %S (%d) on %S\n", strData, sequenceNumber, model);
 		frame1time = 0.0f;
 		break;
 	case "SetBody":

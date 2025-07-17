@@ -47,7 +47,6 @@ entityDef fireInfo_grenadeLauncher
 	"def_onFire"		"projectile_grenade"
 	"fireRate"			"0.6"
 	"punchSpring"		"-4 0 0"
-	"model_flash"		"sprites/muzzleflash.spr"
 }
 
 entityDef projectile_grenade

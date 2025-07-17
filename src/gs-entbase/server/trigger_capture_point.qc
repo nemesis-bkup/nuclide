@@ -14,6 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/* Point based version of trigger_capture_point invented by us */
 class
 trigger_capture_point:ncRenderableEntity
 {
@@ -256,16 +257,16 @@ trigger_capture_point::Event_StartCap(void)
 }
 
 void
-trigger_capture_point::Event_StartTeam(int team)
+trigger_capture_point::Event_StartTeam(int theTeam)
 {
-	EntLog("Capture started by team %i", team);
+	EntLog("Capture started by team %i", theTeam);
 	m_stateCapturing = true;
 	m_stateBreaking = false;
-	m_stateCapturingTeam = team;
+	m_stateCapturingTeam = theTeam;
 
-	if (team == 1) {
+	if (theTeam == 1) {
 		UseOutput(this, m_outputOnStartTeam1);
-	} else if (team == 2) {
+	} else if (theTeam == 2) {
 		UseOutput(this, m_outputOnStartTeam2);
 	}
 }
@@ -292,6 +293,7 @@ trigger_capture_point::Event_BreakTeam(int offensiveTeam)
 	m_stateBreaking = false;
 	m_stateBreakProgress = 0.0f;
 	m_stateOwnerTeam = 0i;
+	team_info = 0;
 }
 
 void
@@ -301,27 +303,28 @@ trigger_capture_point::Event_EndCap(void)
 }
 
 void
-trigger_capture_point::Event_CapTeam(int team)
+trigger_capture_point::Event_CapTeam(int theTeam)
 {
-	EntLog("Point captured by team %i", team);
+	EntLog("Point captured by team %i", theTeam);
 
 	m_stateCapturing = false;
 	m_stateCaptureProgress = 0.0f;
-	m_stateOwnerTeam = team;
+	m_stateOwnerTeam = theTeam;
+	team_info = theTeam;
 
-	if (team == 1) {
+	if (theTeam == 1) {
 		UseOutput(this, m_outputOnCapTeam1);
-	} else if (team == 2) {
+	} else if (theTeam == 2) {
 		UseOutput(this, m_outputOnCapTeam2);
 	}
 }
 
 void
-trigger_capture_point::Event_NumCappersChanged(int team)
+trigger_capture_point::Event_NumCappersChanged(int theTeam)
 {
-	if (team == 1) {
+	if (theTeam == 1) {
 		UseOutput(this, m_outputOnNumCappersChanged1);
-	} else if (team == 2) {
+	} else if (theTeam == 2) {
 		UseOutput(this, m_outputOnNumCappersChanged2);
 	}
 }
@@ -347,10 +350,12 @@ trigger_capture_point::CaptureThink(void)
 	m_stateTeam2Players = 0i;
 	m_statePlayerPower = 0i;
 
+
 	/* who is in our bounds? */
-	for (ncPlayer nextPlayer = __NULL__; (nextPlayer = next.Player(nextPlayer));) {
+	for (ncPlayer nextPlayer = __NULL__; (nextPlayer = (ncPlayer)next.Player(nextPlayer));) {
 		bool testPlayer = false;
 		float playerTeam = nextPlayer.GetTeam();
+		float distance = vlen(nextPlayer.origin - origin);
 
 		if (ourTeam == TEAM_ANY) {
 			testPlayer = true;
@@ -359,7 +364,7 @@ trigger_capture_point::CaptureThink(void)
 		}
 		
 		if (testPlayer == true) {
-			if (WithinBounds(nextPlayer)) {
+			if (distance <= 256) {
 				if (playerTeam == 1) {
 					m_stateTeam1Players++;
 				} else if (playerTeam == 2) {

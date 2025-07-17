@@ -219,4 +219,5 @@ ncSound
 ncSound::CreateAmbientSound(vector worldPosition, string sampleFX, float maxRadius, optional float minRadius = 0)
 {
 	ncSound ambientNoise = spawn(ncSound);
+	return (ambientNoise);
 }

@@ -134,7 +134,7 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 	string lastDecl = "";
 
 	/* find an existing dict in memory */
-	for (ncDict dictSearch = 0; (dictSearch = find(dictSearch, ::classname, "ncDict"));) {
+	for (ncDict dictSearch = 0; (dictSearch = (ncDict)find(dictSearch, ::classname, "ncDict"));) {
 		if (dictSearch.m_declPath == declName) {
 			return (dictSearch);
 		}

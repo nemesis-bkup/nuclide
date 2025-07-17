@@ -530,6 +530,14 @@ typedef struct
 
 	@param entityToCheck specifies the entity to check.*/
 	bool Bot(entity entityToCheck);
+	/** Returns true/false depending on if the entity is an item.
+
+	@param entityToCheck specifies the entity to check.*/
+	bool Item(entity entityToCheck);
+	/** Returns true/false depending on if the entity is a weapon.
+
+	@param entityToCheck specifies the entity to check.*/
+	bool Weapon(entity entityToCheck);
 } isAPI_t;
 isAPI_t is; /**< Access nextAPI_t functions using this variable. */
 
@@ -775,6 +783,8 @@ _shared_main(void)
 	is.Client = linkToSharedProgs("SHPF_is_Client");
 	is.Player = linkToSharedProgs("SHPF_is_Player");
 	is.Sentient = linkToSharedProgs("SHPF_is_Sentient");
+	is.Item = linkToSharedProgs("SHPF_is_Item");
+	is.Weapon = linkToSharedProgs("SHPF_is_Weapon");
 
 	/* helpful finder */
 	next.Actor = linkToSharedProgs("SHPF_next_Actor");

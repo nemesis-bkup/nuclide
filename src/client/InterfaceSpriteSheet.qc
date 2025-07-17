@@ -284,7 +284,7 @@ float
 ncInterfaceSpriteSheet::GetWidth(int spriteNum)
 {
 	if (spriteNum == -1i) {
-		return;
+		return -1;
 	}
 
 	return g_hlsprites[spriteNum].m_vecSize[0];
@@ -294,7 +294,7 @@ float
 ncInterfaceSpriteSheet::GetHeight(int spriteNum)
 {
 	if (spriteNum == -1i) {
-		return;
+		return -1;
 	}
 
 	return g_hlsprites[spriteNum].m_vecSize[1];
@@ -304,7 +304,7 @@ vector
 ncInterfaceSpriteSheet::GetSize(int spriteNum)
 {
 	if (spriteNum == -1i) {
-		return;
+		return [-1, -1, -1];
 	}
 
 	return g_hlsprites[spriteNum].m_vecSize;

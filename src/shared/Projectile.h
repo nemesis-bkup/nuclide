@@ -232,6 +232,7 @@ public:
 	virtual void Restore(string, string);
 
 	virtual void Trigger(entity, triggermode_t);
+	virtual void Input(entity,string,string);
 
 	nonvirtual void _FuseEnded(void);
 	nonvirtual void _Explode(entity);

@@ -67,6 +67,7 @@ ncProjectile::ncProjectile(void)
 	m_vecSpawnMaxs = g_vec_null;
 	m_flSpawnFrame = 0;
 	m_vecSpawnOrigin = g_vec_null;
+	m_thrustHandler = __NULL__;
 
 	/* ETQW-additions */
 	m_bIsBullet = false;
@@ -1105,6 +1106,11 @@ ncProjectile::_ThrustThink(void)
 	float newSpeed;
 	vector newVelocity;
 
+	/* the entity may have been invalidated */
+	if (wasfreed(this) || !owner) {
+		return;
+	}
+
 	currentVelocity = GetVelocity();
 	currentSpeed = vlen(currentVelocity);
 	newSpeed = (currentSpeed + (m_flThrust * frametime));
@@ -1144,6 +1150,7 @@ ncProjectile::_ThrustThink(void)
 	/* stop thrusting when we reach the end time */
 	if ((m_flThrustEnd > 0) && (GetSpawnAge() > m_flThrustEnd)) {
 		m_thrustHandler.Destroy(); /* invalidate */
+		m_thrustHandler = 0;
 		return;
 	}
 
@@ -1153,6 +1160,10 @@ ncProjectile::_ThrustThink(void)
 void
 ncProjectile::OnRemoveEntity(void)
 {
+	if (m_thrustHandler) {
+		m_thrustHandler.Destroy(); /* invalidate */
+		m_thrustHandler = 0;
+	}
 }
 
 void
@@ -1260,7 +1271,7 @@ ncProjectile::Launch(vector startPos, vector launchDir, float fuseOffset, float 
 	}
 
 	if (m_flThrust != 0 || m_bTrackEnemy == true) {
-		m_thrustHandler = ncTimer::TemporaryTimer(this, _ThrustThink, 0.0, true);
+		m_thrustHandler = m_thrustHandler.TemporaryTimer(this, _ThrustThink, 0.0, true);
 	}
 
 	string startFrame = GetSpawnString("animStartFrame");

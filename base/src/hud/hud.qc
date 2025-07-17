@@ -11,6 +11,14 @@ var int g_damageFlags;
 font_s FONT_HUD;
 var string g_ammoPic;
 
+#define KILLMESSAGE_LIMIT 5i
+#define KILLMESSAGE_TIME 4.0f
+
+int g_killMsgCount;
+float g_killMsgTime;
+string g_killMsgRecord[KILLMESSAGE_LIMIT];
+
+
 void
 HUD_Init(void)
 {
@@ -55,8 +63,36 @@ HUD_Draw(void)
 		iconPos[0] = (hudSize[0] - baseIconSize) - baseIconPadding;
 		iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
 		draw.Pic(iconPos, g_ammoPic, [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
-		iconPos[0] -= baseIconSize + baseIconPadding;
+		iconPos[0] -= baseIconPadding;
 		draw.RText(iconPos, ammoValue, FONT_HUD);
+		iconPos[1] += font.GetHeight(FONT_HUD);
+		draw.RText(iconPos, weapon.GetTitle(), FONT_HUD);
+	} else {
+		iconPos[0] = hudSize[0] - baseIconPadding;
+		iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
+		iconPos[1] += font.GetHeight(FONT_HUD);
+		draw.RText(iconPos, weapon.GetTitle(), FONT_HUD);
+	}
+
+	if (g_killMsgTime < time && g_killMsgCount > 0i) {
+		for (int i = 0i; i < (KILLMESSAGE_LIMIT-1i); i++) {
+			g_killMsgRecord[i] = g_killMsgRecord[i+1];
+		}
+
+		g_killMsgRecord[KILLMESSAGE_LIMIT-1] = "";
+		g_killMsgTime = time + KILLMESSAGE_TIME;
+		g_killMsgCount--;
+	}
+
+	if (g_killMsgCount <= 0i) {
+		return;
+	}
+
+	iconPos = hud_mins + [16, 16];
+
+	for (int i = 0i; i < g_killMsgCount; i++) {
+		draw.Text(iconPos, g_killMsgRecord[i], FONT_HUD);
+		iconPos[1] += font.GetHeight(FONT_HUD);
 	}
 }
 
@@ -81,7 +117,7 @@ HUD_DrawSpectator(void)
 
 	vector hud_mins = screen.HUDMins();
 	vector hud_size = screen.HUDSize();
-	vector vecPos;
+	vector vecPos = g_vec_null;
 
 	if (spectating.Mode() == SPECMODE_FREE) {
 		palpha = 0.5f;
@@ -103,4 +139,48 @@ HUD_WeaponSwitched(string weaponName)
 {
 	/* Here you could change the ammo icon based on the weapon you switched to */
 	g_ammoPic = "gfx/hud/armor";
+}
+
+
+void
+HUD_Obituary(string targetName, string attackerName, string weaponDef, string meansOfDeath)
+{
+	static void HUD_Obituary_Add(int id, string targetName, string attackerName, string weaponDef, string meansOfDeath) {
+		string killMsg = entityDef.GetString(weaponDef, "msg_obituary");
+		string killMsgGib = entityDef.GetString(weaponDef, "msg_gib");
+		string killMsgSelf = entityDef.GetString(weaponDef, "msg_suicide");
+
+		if (STRING_SET(killMsg)) {
+			g_killMsgRecord[id] = sprintf(killMsg, targetName, attackerName);
+		} else {
+			g_killMsgRecord[id] = sprintf("%s killed %s", attackerName, targetName);
+		}
+
+		if (wordInString(meansOfDeath, "self")) {
+			if (STRING_SET(killMsgSelf)) {
+				g_killMsgRecord[id] = sprintf(killMsgSelf, targetName, attackerName);
+			} else {
+				g_killMsgRecord[id] = sprintf("%s ended their own life.", targetName);
+			}
+		} else if (wordInString(meansOfDeath, "gib")) {
+			if (STRING_SET(killMsgGib)) {
+				g_killMsgRecord[id] = sprintf(killMsgGib, targetName, attackerName);
+			} else {
+				g_killMsgRecord[id] = sprintf("%s gibbed %s.", attackerName , targetName);
+			}
+		}
+	}
+
+	if (g_killMsgCount < KILLMESSAGE_LIMIT) {
+		HUD_Obituary_Add(g_killMsgCount, targetName, attackerName, weaponDef, meansOfDeath);
+		g_killMsgCount++;
+	} else {
+		for (int i = 0i; i < (KILLMESSAGE_LIMIT-1); i++) {
+			g_killMsgRecord[i] = g_killMsgRecord[i+1];
+		}
+
+		HUD_Obituary_Add(KILLMESSAGE_LIMIT-1, targetName, attackerName, weaponDef, meansOfDeath);
+	}
+
+	g_killMsgTime = time + KILLMESSAGE_TIME;
 }

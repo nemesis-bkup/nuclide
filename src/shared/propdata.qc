@@ -479,7 +479,7 @@ PropData_ForModel(string modelname)
 
 		if (fh < 0) {
 			g_propdata_count--;
-			ncLog("No PropData for model %S", modelname);
+			//ncLog("No PropData for model %S", modelname);
 			return -1i;
 		}
 

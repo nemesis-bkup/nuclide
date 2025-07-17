@@ -41,6 +41,8 @@
 #define PREDICTED_STRING_N(x) string x ##_net;
 
 #ifdef CLIENT
+var bool autocvar_net_showArrivals = false;
+
 #define NSENTITY_READENTITY(x, y) \
 	{ \
 		local x x ##_e = ( x )self;\
@@ -48,6 +50,8 @@
 		if (y == true) { \
 			self.classname = strcat("spawnfunc_", #x); \
 			callfunction(self.classname); \
+			if (autocvar_net_showArrivals)\
+			ncError("New entity appeared to client: %S", self.classname);\
 		} \
 		x ##receivedFlags = readfloat();\
 		x ##_e.ReceiveEntity( y, x ##receivedFlags );\
@@ -207,14 +211,8 @@ crossprint(string m)
 __wrap string
 precache_model(string m)
 {
-	if not (m) {
-		breakpoint();
-		return "";
-	}
-
-	if (m == "") {
-		breakpoint();
-		return "";
+	if (!STRING_SET(m)) {
+		return ("");
 	}
 
 	return prior(m);

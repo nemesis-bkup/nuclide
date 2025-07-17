@@ -32,6 +32,7 @@ ncItem::ncItem(void)
 	m_nextItem = __NULL__;
 	owner = __NULL__;
 	m_itemRespawn = 0;
+	m_oldOwner = __NULL__;
 }
 
 #ifdef SERVER
@@ -42,7 +43,6 @@ ncItem::Spawned(void)
 
 	precache.Sound(m_sndAcquire);
 	precache.Sound(m_sndRespawn);
-	pvsflags = PVSF_IGNOREPVS;
 	_isItem = true;
 }
 
@@ -323,6 +323,10 @@ ncItem::Touch(entity eToucher)
 {
 	ncPlayer pl;
 	bool removeFromMap = false;
+
+	if (owner) {
+		return;
+	}
 
 	if (is.Player(eToucher) == false) {
 		return;
@@ -606,10 +610,10 @@ ncItem::EvaluateEntity(void)
 
 	if (InInventory() == true) {
 		SetOrigin(owner.origin);
-		pvsflags = PVSF_IGNOREPVS;
+		pvsflags = PVSF_IGNOREPVS | PVSF_NOREMOVE;
 		modelindex = 0;
 	} else {
-		pvsflags = 0;
+		pvsflags = PVSF_NORMALPVS;
 	}
 }
 #endif
@@ -727,6 +731,28 @@ ncItem::PredictPostFrame(void)
 	ROLL_BACK(avelocity)
 	ROLL_BACK(owner)
 	ROLL_BACK(m_nextItem)
+
+
+	if (owner_entnum != 0) {
+		owner = findentity(world, ::entnum, owner_entnum);
+	} else {
+		owner = __NULL__;
+	}
+
+	if (owner != m_oldOwner) {
+		if (owner == pSeat->m_ePlayer) {
+			_AddedCallback();
+		}
+		m_oldOwner = owner;
+	}
+
+	if (chain_entnum != 0) {
+		m_nextItem = (ncItem)findentity(world, ::entnum, chain_entnum);
+	} else {
+		m_nextItem = __NULL__;
+	}
+
+
 }
 #endif
 
@@ -735,6 +761,7 @@ ncItem::OnRemoveEntity(void)
 {
 	m_nextItem = 0;
 	owner = 0;
+	m_oldOwner = 0;
 }
 
 void

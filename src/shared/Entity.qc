@@ -1977,8 +1977,9 @@ ncEntity::_ProjectileAttack(string defName, bool wasReleased)
 		attackDef = GetSubDefString(defName, "def_onFire");
 	}
 
+	EntLog("Launching %i %S at %v towards %v", numProjectiles, attackDef, GetEyePos(), GetViewAngle());
+
 	for (int i = 0i; i < numProjectiles; i++) {
-		EntLog("Launching %S at %v towards %v", attackDef, GetEyePos(), GetViewAngle());
 		ncAttack_SpawnDefAtPosition(attackDef, (ncActor)this, GetEyePos(), GetViewAngle());
 	}
 #endif

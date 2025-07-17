@@ -1,7 +1,3 @@
-#pragma PROGS_DAT  "../../maps/demo.dat"
-
-#include "../../../src/rules.src"
-
 void
 CSEv_TriggerTarget_s(string toTrigger)
 {

@@ -14,8 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#warning Rename to PropKit
-
 /** @defgroup propdata Prop Data
     @brief Moving, interactive object properties.
     @ingroup shared

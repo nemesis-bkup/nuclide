@@ -185,10 +185,11 @@ CMD_RespawnEntities(void)
 static void
 CMD_Spawn(void)
 {
+	ncActor spawnerEntity = (ncActor)self;
 	ncEntity unit = EntityDef_CreateClassname(argv(1));
-	makevectors(self.v_angle);
-	traceline(self.origin, self.origin + (v_forward * 1024), MOVE_NORMAL, self);
-	setorigin(unit, trace_endpos);
+	vector sourcePos = spawnerEntity.GetEyePos();
+	traceline(sourcePos, sourcePos + (anglesToForward(spawnerEntity.GetViewAngle()) * 1024.0f), MOVE_NORMAL, spawnerEntity);
+	setorigin(unit, trace_endpos + [0, 0, -unit.mins[2]]);
 }
 
 static void

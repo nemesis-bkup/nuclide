@@ -66,3 +66,19 @@ entityDef player_mp
 {
 	"inherit"			"player"
 }
+
+
+entityDef player_enforcer
+{
+	"inherit"		"player"
+	"model"			"progs/enforcer.mdl"
+	
+	"act_idle"		"$ENFORCER_IDLE"
+	"act_walk"		"$ENFORCER_WALK"
+	"act_run"		"$ENFORCER_RUN"
+	"act_smallFlinch"	"$ENFORCER_PAIN1,$ENFORCER_PAIN2"
+	"act_bigFlinch"		"$ENFORCER_PAIN3,$ENFORCER_PAIN4"
+	"act_dieSimple"		"$ENFORCER_DEATH,$ENFORCER_FDEATH"
+	"act_attack"		"$ENFORCER_ATTACK"
+
+}

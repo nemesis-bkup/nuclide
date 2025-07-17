@@ -14,8 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#warning Integrate ai_relationship, ai_task, ai_schedule
-
 var bool autocvar_ai_enable = true;
 var bool autocvar_ai_debugLogic = false;
 void

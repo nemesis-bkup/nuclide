@@ -319,6 +319,9 @@ public:
 	virtual void EvaluateEntity(void);
 	virtual float SendEntity(entity,float);
 	virtual void RestoreComplete(void);
+
+	virtual void EjectBrass(void);
+	virtual void EjectCartridge(void);
 #endif
 
 	virtual bool TestFireAbility(string);

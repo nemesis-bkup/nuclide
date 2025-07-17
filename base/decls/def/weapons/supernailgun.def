@@ -29,7 +29,7 @@ entityDef weapon_supernailgun
 	"snd_fire"			"weapon_supernailgun.shoot"
 	"snd_empty"			"weapon.empty"
 
-//	"msg_obituary"		"%s was punctured by %s."
+	"msg_obituary"		"%s was punctured by %s."
 
 	// ncWeapon specific
 	"hudSlot"			"4"
@@ -46,7 +46,6 @@ entityDef fireInfo_superNailgun
 	"def_onFire"		"projectile_supernail"
 	"fireRate"			"0.1"
 	"punchSpring"		"-2 0 0"
-	"model_flash"		"sprites/muzzleflash.spr"
 }
 
 entityDef projectile_supernail

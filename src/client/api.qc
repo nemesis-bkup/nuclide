@@ -594,7 +594,7 @@ CLPF_atlasPic_Draw(int atlasPic, vector drawAtPos, bool forceAdditive)
 void
 CLPF_atlasPic_Draw_A(int atlasPic, vector drawAtPos, float picAlpha, bool forceAdditive)
 {
-	ncInterfaceSpriteSheet::Draw_RGB(atlasPic, drawAtPos, picAlpha, forceAdditive);
+	ncInterfaceSpriteSheet::Draw_RGBA(atlasPic, drawAtPos, [1,1,1], picAlpha, forceAdditive);
 }
 
 void

@@ -234,6 +234,13 @@ CSQC_Update2D(float w, float h, bool focus)
 }
 
 
+var bool autocvar_overview_generate = false;
+var bool autocvar_overview_test = false;
+var float autocvar_overview_fov = 10.0f;
+var vector autocvar_overview_origin = [0,0,4096];
+var vector autocvar_overview_offset = [0,0,0];
+var float autocvar_overview_zoom = 1.0f;
+
 /** Called every single frame by the engine's renderer to construct a frame.
 This is for all clients on display. So we handle splitscreen/multiple-views
 in here.
@@ -295,7 +302,31 @@ CSQC_UpdateView(float w, float h, float focus)
 	}
 
 	/* this is running whenever we're doing 'buildcubemaps' */
-	if (g_iCubeProcess == TRUE) {
+	if (autocvar_overview_test == true) {
+		vector worldMins = -4096;
+		vector worldMaxs = 4096;
+		float totalWidth = 4096.0f;
+		float radFromFov = autocvar_overview_fov * (MATH_PI / 180.0f);
+		float newDistance = (totalWidth / 2.0f) / tan(radFromFov / 2.0f);
+		float zoomLevel = (4096 / world.size[0]);
+		vector worldCenter = -autocvar_overview_offset;
+		vector overviewOffset = [worldCenter[0], worldCenter[1], newDistance];
+
+		cvar_set("overview_newoffset", vtos(worldCenter));
+
+		setproperty(VF_DRAWENGINESBAR, (float)0);
+		setproperty(VF_DRAWCROSSHAIR, (float)0);
+		setproperty(VF_DRAWWORLD, (float)1);
+		setproperty(VF_MIN, [0,0]);
+		setproperty(VF_VIEWENTITY, player_localentnum);
+		setproperty(VF_ORIGIN, overviewOffset);
+		setproperty(VF_ANGLES, [90,0,0]);
+		setproperty(VF_CL_VIEWANGLES, [90,0,0]);
+		setproperty(VF_SIZE_X, 1024);
+		setproperty(VF_SIZE_Y, 768);
+		setproperty(VF_AFOV, autocvar_overview_fov * (1.0/autocvar_overview_zoom));
+		CSQC_RenderScene();
+	} else if (g_iCubeProcess == TRUE) {
 		setproperty(VF_DRAWENGINESBAR, (float)0);
 		setproperty(VF_DRAWCROSSHAIR, (float)0);
 		setproperty(VF_DRAWWORLD, (float)1);
@@ -440,7 +471,7 @@ CSQC_Input_Frame(void)
 	me = pSeat->m_ePlayer;
 
 	if (is.Player(me)) {
-		ncPlayer pl = (ncClient)me;
+		ncPlayer pl = (ncPlayer)me;
 
 		pl.SharedInputFrame();
 		float delayInputs = HUD_ClientInputFrame(input_buttons);

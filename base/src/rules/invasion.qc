@@ -41,6 +41,12 @@ AllowFlashlight(void)
 }
 
 void
+CodeCallback_Precaches(void)
+{
+	Util_SharedPrecaches();
+}
+
+void
 CodeCallback_StartGameType(void)
 {
 	precache.Entity(autocvar_invasion_monsterClass);
@@ -87,7 +93,10 @@ CodeCallback_PlayerDamage(entity playerEntity, entity inflictor, entity attacker
 void
 CodeCallback_PlayerKilled(entity playerEntity, entity inflictor, entity attacker, string weapon)
 {
-	combat.Obituary(playerEntity.netname, attacker.netname, weapon, "");
+	if (playerEntity == attacker)
+		combat.Obituary(playerEntity.netname, attacker.netname, weapon, "self");
+	else
+		combat.Obituary(playerEntity.netname, attacker.netname, weapon, "");
 
 	/* death-counter */
 	playerEntity.deaths++;
@@ -107,7 +116,10 @@ CodeCallback_PlayerKilled(entity playerEntity, entity inflictor, entity attacker
 void
 CodeCallback_NPCKilled(entity npcEntity, entity inflictor, entity attacker, string weapon)
 {
-	combat.Obituary(npcEntity.netname, attacker.netname, weapon, "");
+	if (npcEntity == attacker)
+		combat.Obituary(npcEntity.netname, attacker.netname, weapon, "self");
+	else
+		combat.Obituary(npcEntity.netname, attacker.netname, weapon, "");
 
 	/* update score-counter */
 	if (is.Player(attacker)) {

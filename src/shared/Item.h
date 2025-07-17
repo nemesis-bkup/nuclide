@@ -234,4 +234,5 @@ private:
 	ncItem m_nextItem;
 	ncItem m_nextItem_net;
 	entity owner_net;
+	entity m_oldOwner;
 };

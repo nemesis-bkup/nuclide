@@ -17,7 +17,6 @@ entityDef weapon_lightning
 
 	// weapon specific
 	"def_onFire"		"projectile_lightning"
-	"model_flash"		"sprites/muzzleflash3.spr"
 	"inv_ammo_cells"	"15"
 	"inv_name"			"#WEAPON_LIGHTNING"
 	"ammoType"			"ammo_cells"

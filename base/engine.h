@@ -86,8 +86,8 @@
 #define TERRAIN
 
 /* audio */
-#define AVAIL_DSOUND
-#undef AVAIL_OPENAL
+#undef AVAIL_DSOUND
+#define AVAIL_OPENAL
 #define AVAIL_OGGVORBIS
 #define HAVE_OPUS
 #define VOICECHAT

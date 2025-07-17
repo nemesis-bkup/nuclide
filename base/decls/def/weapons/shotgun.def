@@ -27,7 +27,7 @@ entityDef weapon_shotgun
 	"snd_fire"			"weapon_shotgun.shoot"
 	"snd_empty"			"weapon.empty"
 
-//	"msg_obituary"		"%s ate two loads of %s's buckshot."
+	"msg_obituary"		"%s ate two loads of %s's buckshot."
 
 	// ncWeapon specific
 	"hudSlot"			"1"
@@ -54,5 +54,4 @@ entityDef fireInfo_shotgun
 	"def_onFire"		"projectile_shotgun"
 	"fireRate"			"0.5"
 	"punchSpring"		"-5 0 0"
-	"model_flash"		"sprites/muzzleflash.spr"
 }

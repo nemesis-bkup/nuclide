@@ -28,6 +28,14 @@ SVPF_game_EndMap(void)
 }
 
 void
+SVPF_game_EndMapDelayed(float endTimer)
+{
+	entity timer = spawn();
+	timer.think = SVPF_game_EndMap;
+	timer.nextthink = time + bound(0.0f, endTimer, endTimer);
+}
+
+void
 SVPF_game_CleanUpMap(void)
 {
 	//localcmd("respawnEntities\n");

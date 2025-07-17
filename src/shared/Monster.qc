@@ -2372,11 +2372,11 @@ ncMonster::Input( entity entityActivator, string inputName, string dataField )
 		RouteToPosition(runToPos);
 		break;
 	case "RunToTargetWithinRadius":
-		vector runToEnemyPos = ncNavInfo::FindEmptySpotNearPosition(this, m_activeSchedule.GetTarget().origin, stof(dataField), 2024.0f);
+		vector runToTarPos = ncNavInfo::FindEmptySpotNearPosition(this, m_activeSchedule.GetTarget().origin, stof(dataField), 2024.0f);
 		m_flSequenceSpeed = GetRunSpeed();
 
-		if (vlen(runToEnemyPos) > 0.0f) {
-			RouteToPosition(runToEnemyPos);
+		if (vlen(runToTarPos) > 0.0f) {
+			RouteToPosition(runToTarPos);
 		} else {
 			CancelSchedule();
 		}
