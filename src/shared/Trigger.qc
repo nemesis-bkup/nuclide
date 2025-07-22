@@ -406,12 +406,18 @@ ncTrigger::Input(entity eAct, string strInput, string strData)
 void
 ncTrigger::SetTeam(float new_team)
 {
+	bool teamChanged = (team == new_team) ? (false) : (true);
 	team = new_team;
 
 	/* update the InfoKey too if it's a client entity */
 	if (is.Client(this)) {
 		ncClient client = (ncClient)this;
 		client.SetInfoKey("*team", sprintf("%d", new_team));
+
+		if (teamChanged) {
+			ncStats::JoinTeam(new_team, this);
+		}
+
 	}
 }
 

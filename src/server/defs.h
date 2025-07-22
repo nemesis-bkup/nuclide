@@ -20,7 +20,7 @@
 #include "Output.h"
 #include "GameRules.h"
 #include "skill.h"
-#include "logging.h"
+#include "Stats.h"
 
 #include "../nav/linkflags.h"
 #include "../nav/nodes.h"
@@ -127,7 +127,6 @@ ncEntity eActivator;
 .entity eUser;
 .float material;
 .float deaths;
-.float botinfo;
 
 /* in idTech the .owner field causes collisions to fail against set entity,
  * we don't want this all of the time. so use this as a fallback */

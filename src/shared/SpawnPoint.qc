@@ -20,6 +20,16 @@ ncSpawnPoint::ncSpawnPoint(void)
 }
 
 void
+ncSpawnPoint::Spawned(void)
+{
+	super::Spawned();
+
+#ifdef SERVER
+	ncHint::PlaceEntityHint(this, "SPAWN");
+#endif
+}
+
+void
 ncSpawnPoint::Respawn(void)
 {
 	vector newMins, newMaxs;
@@ -35,7 +45,7 @@ ncSpawnPoint::Respawn(void)
 	SetSolid(SOLID_BBOX);
 	SetSize(newMins, newMaxs);
 	SetOriginUnstick(GetSpawnVector("origin"));
-	SetBotTag(BOTINFO_SPAWNPOINT);
+	
 	SetSolid(SOLID_NOT);
 	SetMovetype(MOVETYPE_NONE);
 	Disappear();

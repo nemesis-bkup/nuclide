@@ -2209,8 +2209,13 @@ ncPlayer::Damage(entity inflictor, entity attacker, ncDict damageDecl, float dam
 
 	/* they died */
 	if (GetHealth() <= 0) {
-		rules.PlayerDeath(this, (ncActor)inflictor, (ncActor)attacker, damageDecl.GetString("weapon"));
+		int attackerOldScore = (int)attacker.frags;
+		int deadOldScore = (int)this.frags;
+		string attackerWeapon = damageDecl.GetString("weapon");
+		string deadWeapon = this.m_activeWeapon.declclass;
+		rules.PlayerDeath(this, (ncActor)inflictor, (ncActor)attacker, attackerWeapon);
 		Death(inflictor, attacker, (int)damagePoints, dmgDir, hitLocation, 0i);
+		ncStats::Kill(this, inflictor, attacker, attacker.frags - attackerOldScore, attackerWeapon, this.frags - deadOldScore, deadWeapon);
 	} else {
 		rules.PlayerPain(this, (ncActor)attacker, damageDecl);
 		Pain(inflictor, attacker, (int)damagePoints, dmgDir, hitLocation, 0i);

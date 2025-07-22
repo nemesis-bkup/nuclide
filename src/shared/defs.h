@@ -92,7 +92,6 @@ string __fullspawndata;
 
 #include "Decal.h"
 
-#include "../botlib/botinfo.h"
 #include "sentences.h"
 
 #include "IO.h"

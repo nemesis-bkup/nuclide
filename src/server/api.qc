@@ -25,6 +25,7 @@ SVPF_game_EndMap(void)
 {
 	ncRuleDelegate currentRule = ncRuleDelegate::ActiveInstance();
 	currentRule.IntermissionStart();
+	ncStats::EndGame("rules");
 }
 
 void
@@ -86,6 +87,7 @@ void
 SVPF_game_TeleportToSpawn(entity targetClient)
 {
 	Spawn_TeleportToSpawn(targetClient);
+	ncStats::Respawn(targetClient);
 }
 
 void
@@ -291,6 +293,8 @@ SVPF_combat_Obituary(string targetName, string attackerName, string weaponDef, s
 {
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EV_OBITUARY);
+
+	#warning TODO: we can optimise this further. weaponDef can be replaced with a decl id target and attacker can be id's if they occupy client slots.
 	WriteString(MSG_MULTICAST, targetName);
 	WriteString(MSG_MULTICAST, attackerName);
 	WriteString(MSG_MULTICAST, weaponDef);

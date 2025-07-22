@@ -75,9 +75,13 @@ ncRuleDelegate::Precache(void)
 void
 ncRuleDelegate::FrameStart(void)
 {
-	if (cvar("timelimit"))
-	if (time >= (cvar("timelimit") * 60)) {
-		IntermissionStart();
+	if (!m_iIntermission) {
+		if (cvar("timelimit")) {
+			if (time >= (cvar("timelimit") * 60)) {
+				ncStats::EndGame("timelimit");
+				IntermissionStart();
+			}
+		}
 	}
 
 	IntermissionCycle();

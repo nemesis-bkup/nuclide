@@ -1,7 +1,7 @@
 #includelist
 Output.qc
 plugins.qc
-logging.qc
+Stats.qc
 skill.qc
 spawn.qc
 GameRules.qc

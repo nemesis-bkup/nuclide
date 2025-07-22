@@ -2001,14 +2001,6 @@ ncEntity::AttackByDef(string defName, bool wasReleased)
 	return (true);
 }
 
-void
-ncEntity::SetBotTag(botInfo_t newTag)
-{
-#ifdef SERVER
-	botinfo = newTag;
-#endif
-}
-
 int
 ncEntity::GetSharedID(void)
 {

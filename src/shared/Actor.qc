@@ -648,6 +648,7 @@ ncActor::Input(entity eAct, string strInput, string strData)
 
 				/* inventory item may not be a weapon */
 				if (linkedList.declclass == strData) {
+					ncStats::UseItem(linkedList, this);
 					linkedList.OnUse(eAct);
 					break;
 				}

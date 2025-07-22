@@ -4,7 +4,7 @@
 "Tokens" 
 { 
 "MAYHEM_Chapter1_Title"		"LQ Episode 0"
-"WEAPON_AXE"		"Axe"
+"WEAPON_AXE"			"Axe"
 "WEAPON_SHOTGUN"		"Shotgun"
 "WEAPON_SUPERSHOTGUN"		"Super Shotgun"
 "WEAPON_NAILGUN"		"Nailgun"
@@ -12,5 +12,11 @@
 "WEAPON_ROCKETLAUNCHER"		"Rocket Launcher"
 "WEAPON_GRENADELAUNCHER"		"Grenade Launcher"
 "WEAPON_LIGHTNING"		"Lightning"
+
+"Team_AutoAssign"		"Auto assign"
+"Menu_Spectate"			"Spectate"
+"Title_SelectYourTeam"		"Select your team"
+"Map_Description_not_available"	"Map description not available."
+"Distance"			"Distance"
 } 
 }

@@ -390,9 +390,6 @@ public:
 	/** Will read from the named def to perform an attack. */
 	virtual bool AttackByDef(string, bool);
 
-	/** Sets the @ref bot_info tag on this entity to the desired botInfo_t tag. */
-	nonvirtual void SetBotTag(botInfo_t);
-
 	/** Will enable collision with players, which is the default. */
 	nonvirtual void EnablePlayerCollision(void);
 	/** Will disable collision with player entities. */

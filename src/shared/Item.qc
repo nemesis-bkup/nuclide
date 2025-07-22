@@ -44,6 +44,22 @@ ncItem::Spawned(void)
 	precache.Sound(m_sndAcquire);
 	precache.Sound(m_sndRespawn);
 	_isItem = true;
+
+	if (m_itemGivesHealth > 0 || m_itemGivesBonusHealth > 0) {
+		ncHint::PlaceEntityHint(this, "HEALTH");
+	}
+
+	if (m_itemGivesArmor > 0 || m_itemGivesBonusArmor > 0) {
+		ncHint::PlaceEntityHint(this, "ARMOR");
+	}
+
+	if (m_itemGivesArmor > 0) {
+		ncHint::PlaceEntityHint(this, "AMMO");
+	}
+
+	if (m_itemCarries) {
+		ncHint::PlaceEntityHint(this, "ITEM");
+	}
 }
 
 void
@@ -379,6 +395,7 @@ ncItem::Touch(entity eToucher)
 		return;
 	}
 
+	ncStats::PickupItem(this, pl);
 	UseTargets(pl, TRIG_TOGGLE, GetTriggerDelay());
 
 	if (m_itemRespawn <= 0) {
@@ -455,7 +472,6 @@ ncItem::PrintDebugInfo(void)
 void
 ncItem::BecomePickup(void)
 {
-	SetBotTag(BOTINFO_WEAPON);
 	SetModel(GetSpawnString("model"));
 
 	if (m_itemPickupSpins)
@@ -800,7 +816,6 @@ ncItem::GiveBonusItems(entity theOwner)
 	multicast([0,0,0], MULTICAST_ONE_R);
 
 	ourOwner.StartSoundDef(m_sndAcquire, CHAN_ITEM, true);
-	Logging_Pickup(ourOwner, this, __NULL__);
 
 	if (m_itemGivesHealth > 0i) {
 		if (ourOwner.GetHealth() < 100) {

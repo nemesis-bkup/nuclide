@@ -96,3 +96,14 @@ ncHint::Spawned(void)
 {
 	super::Spawned();
 }
+
+
+ncHint
+ncHint::PlaceEntityHint(entity owningEntity, string hintType)
+{
+	/* be lax for now */
+	ncHint newHint = spawn(ncHint);
+	newHint.SetOrigin(owningEntity.origin);
+	newHint.SetOwner(owningEntity);
+	newHint.m_hintType = hintType;
+}

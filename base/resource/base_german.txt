@@ -4,13 +4,19 @@
 "Tokens" 
 { 
 "MAYHEM_Chapter1_Title"		"LQ Episode 0"
-"WEAPON_AXE"				"Axt"
-"WEAPON_SHOTGUN"			"Scrotflinte"
-"WEAPON_SUPERSHOTGUN"		"Super Scrotflinte"
-"WEAPON_NAILGUN"			"Nagelschiesser"
-"WEAPON_SUPERNAILGUN"		"Super Nagelschiesser"
+"WEAPON_AXE"			"Axt"
+"WEAPON_SHOTGUN"		"Schrotflinte"
+"WEAPON_SUPERSHOTGUN"		"Superschrotflinte"
+"WEAPON_NAILGUN"		"Nagelschiesser"
+"WEAPON_SUPERNAILGUN"		"Supernagelschiesser"
 "WEAPON_ROCKETLAUNCHER"		"Raketenwerfer"
 "WEAPON_GRENADELAUNCHER"	"Granatenwerfer"
-"WEAPON_LIGHTNING"			"Donnerwaffe"
+"WEAPON_LIGHTNING"		"Donnerkraftwerk"
+
+"Team_AutoAssign"		"Auto Wahl"
+"Menu_Spectate"			"Zuschauen"
+"Title_SelectYourTeam"		"Team Auswahl"
+"Map_Description_not_available"	"Keine weitere Karten Informationen gefunden."
+"Distance"			"Distanz"
 } 
 }

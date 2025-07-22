@@ -25,4 +25,5 @@ public:
 
 	/* overrides */
 	virtual void Respawn(void);
+	virtual void Spawned(void);
 };

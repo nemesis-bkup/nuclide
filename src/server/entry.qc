@@ -67,12 +67,14 @@ ClientConnect(void)
 	pl.deaths = 0;
 	pl.frags = 0;
 	pl.score = 0;
-	self.gotData = false;
+	pl.gotData = false;
 
 	/* don't carry over team settings from a previous session */
-	self.team = TEAM_CONNECTING;
-	self.flags |= FL_CLIENT;
-	userinfo.SetString(self, "*team", "0");
+	pl.team = TEAM_CONNECTING;
+	pl.flags |= FL_CLIENT;
+	userinfo.SetString(pl, "*team", "0");
+
+	ncStats::Connect(pl);
 
 	if (g_ents_initialized) {
 		g_grMode.PlayerConnect((ncPlayer)self);
@@ -90,6 +92,7 @@ This means the fields will still be accessible inside of this function.
 void
 ClientDisconnect(void)
 {
+
 	if (g_ents_initialized) {
 		g_grMode.PlayerDisconnect((ncPlayer)self);
 	}
@@ -100,6 +103,7 @@ ClientDisconnect(void)
 
 	/* this will hide/remove the player from other clients */
 	ncPlayer pl = (ncPlayer)self;
+	ncStats::Disconnect(pl);
 	pl.SetSolid(SOLID_NOT);
 	pl.SetMovetype(MOVETYPE_NONE);
 	pl.SetModelindex(0);
@@ -171,6 +175,8 @@ void
 PutClientInServer(void)
 {
 	ncPlayer ourPlayer = (ncPlayer)self;
+
+	ncStats::Enter(ourPlayer);
 
 	/* we're officially in-game now. */
 	ourPlayer.team = TEAM_UNASSIGNED;
@@ -422,6 +428,8 @@ init(float prevprogs)
 	SurfData_Init();
 	DecalGroups_Init();
 
+	ncStats::Init();
+
 	/* DO NOT EVER CHANGE THESE. */
 	cvars.SetString("r_meshpitch", "1");
 
@@ -480,6 +488,14 @@ init_respawn(void)
 	ncLog("...%i entities spawned (%i inhibited)", g_ent_spawned, g_ent_spawned - spawnCounter);
 	Nodes_Init();
 	remove(self);
+
+	ncStats::StartGame();
+}
+
+void
+SV_Shutdown(void)
+{
+	ncStats::Shutdown();
 }
 
 entity g_respawntimer;

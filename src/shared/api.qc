@@ -335,7 +335,7 @@ void
 SHPF_serverinfo_SetInteger(string serverKey, int setValue)
 {
 #ifdef SERVER
-	forceinfokey(world, serverKey, itos(setValue));
+	SHPF_serverinfo_SetString(serverKey, itos(setValue));
 #else
 #endif
 }
@@ -344,7 +344,7 @@ void
 SHPF_serverinfo_SetBool(string serverKey, bool setValue)
 {
 #ifdef SERVER
-	forceinfokey(world, serverKey, ftos(setValue));
+	SHPF_serverinfo_SetString(serverKey, ftos(setValue));
 #else
 #endif
 }
@@ -353,7 +353,7 @@ void
 SHPF_serverinfo_SetFloat(string serverKey, float setValue)
 {
 #ifdef SERVER
-	forceinfokey(world, serverKey, ftos(setValue));
+	SHPF_serverinfo_SetString(serverKey, ftos(setValue));
 #else
 #endif
 }
@@ -362,7 +362,7 @@ void
 SHPF_serverinfo_SetVector(string serverKey, vector setValue)
 {
 #ifdef SERVER
-	forceinfokey(world, serverKey, vtos(setValue));
+	SHPF_serverinfo_SetString(serverKey, vtos(setValue));
 #else
 #endif
 }
