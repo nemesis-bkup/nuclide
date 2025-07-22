@@ -68,6 +68,8 @@ CodeCallback_CallRequestTeam(entity playerEntity, int teamNum)
 
 		ents.Input(playerEntity, "SetTeam", itos(TEAM_SPECTATOR), playerEntity);
 		ents.ChangeToClass(playerEntity, "spectator");
+		userinfo.SetString(playerEntity, "topcolor", "0xffffff");
+		userinfo.SetString(playerEntity, "bottomcolor", "0xffffff");
 		game.TeleportToSpawn(playerEntity);
 		return (true);
 	}
@@ -75,10 +77,15 @@ CodeCallback_CallRequestTeam(entity playerEntity, int teamNum)
 	ents.Input(playerEntity, "SetTeam", itos(teamNum), playerEntity);
 
 	if (is.Alive(playerEntity) == false) {
-		if (playerEntity.team == 1)
+		if (playerEntity.team == 1) {
 			ents.ChangeToClass(playerEntity, "player_enforcer");
-		else
+			userinfo.SetString(playerEntity, "topcolor", "0xff1800");
+			userinfo.SetString(playerEntity, "bottomcolor", "0xff1800");
+		} else {
 			ents.ChangeToClass(playerEntity, "player_mp");
+			userinfo.SetString(playerEntity, "topcolor", "0x9aff");
+			userinfo.SetString(playerEntity, "bottomcolor", "0x9aff");
+		}
 
 		game.TeleportToSpawn(playerEntity);
 		music.PlayOnceOnClient(precache.Music("music/track05.ogg"), playerEntity);

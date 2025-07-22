@@ -30,7 +30,7 @@ string
 ncStats::NetGamesTime(void)
 {
 	string timeZoneString = strftime(true, "%z");
-	float timeZoneFloat = stof(timeZoneString);
+	float timeZoneFloat = stof(timeZoneString) * 0.01;
 	string timeZone = strftime(true, "%Y.%m.%d.%H.%M.%S");
 
 	/* not sure if we can get ms, so just put 000 there. this timestamp is never used for event logging */

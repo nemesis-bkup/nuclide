@@ -277,16 +277,39 @@ Scores_Draw(void)
 	ncPlayer pl;
 	
 	pl = (ncPlayer)pSeat->m_ePlayer;
+	int teamCount = teams.TeamCount();
+	int c = 6i;
 
 	if (autocvar_cg_centerScores) {
-		int c = 10;
-		
-		/* calculate all valid entries */
-		for (int i = -1; i > -32; i--) {
-			if (getplayerkeyvalue(i, "name")) {
-				break;
+		if (teamCount > 0i) {
+			for (int t = 1; t <= serverkeyfloat("teams"); t++) {
+				c += 16;
+
+				for (int i = -1; i > -32; i--) {
+					string playerName = getplayerkeyvalue(i, "name");
+
+					if (getplayerkeyfloat(i, "*team") != t) {
+						continue;
+					}
+
+					/* Out of players */
+					if (!STRING_SET(playerName)) {
+						break;
+					}
+					c += 10;
+				}
+				c += 6;
 			}
-			c += 10;
+		} else {
+			for (int i = -1; i > -32; i--) {
+				string playerName = getplayerkeyvalue(i, "name");
+
+				if (!STRING_SET(playerName)) {
+					break;
+				}
+
+				c += 10;
+			}
 		}
 		pos = video_mins + [(g_vidsize[0] / 2) - 145, (g_vidsize[1] / 2) - c];
 	} else {
