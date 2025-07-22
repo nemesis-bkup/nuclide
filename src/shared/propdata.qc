@@ -1210,9 +1210,9 @@ BreakModel_Entity(ncSurfacePropEntity target, vector dir, float speed)
 	WriteCoord(MSG_MULTICAST, pos[0] + target.maxs[0]);
 	WriteCoord(MSG_MULTICAST, pos[1] + target.maxs[1]);
 	WriteCoord(MSG_MULTICAST, pos[2] + target.maxs[2]);
-	WriteCoord(MSG_MULTICAST, dir[0]);
-	WriteCoord(MSG_MULTICAST, dir[1]);
-	WriteCoord(MSG_MULTICAST, dir[2]);
+	WriteFloat(MSG_MULTICAST, dir[0]);
+	WriteFloat(MSG_MULTICAST, dir[1]);
+	WriteFloat(MSG_MULTICAST, dir[2]);
 	WriteFloat(MSG_MULTICAST, speed);
 	WriteByte(MSG_MULTICAST, count);
 	multicast(pos, MULTICAST_PVS);
