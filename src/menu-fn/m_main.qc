@@ -229,7 +229,7 @@ menu_main_init(void)
 	main_btnMultiplayer.SetImage(BTN_MULTIPLAYER);
 	main_btnMultiplayer.SetPos(70,320);
 	/* disable when it's singleplayer_only */
-	if (GameLibrary_GetInfo(GAMEINFO_TYPE) != "Singleplayer")
+	if (GameLibrary_GetInfo(GAMEINFO_TYPE) != "Singleplayer" || GameLibrary_GetInfo(GAMEINFO_GAMEDIR) == "valve")
 		main_btnMultiplayer.SetExecute(btn_multiplayer_start);
 	Widget_Add(fn_main, main_btnMultiplayer);
 
