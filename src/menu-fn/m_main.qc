@@ -328,7 +328,7 @@ menu_main_init(void)
 	main_btn2Multiplayer = spawn(CMainButton);
 	main_btn2Multiplayer.SetImage(BTN_MULTIPLAYER);
 	main_btn2Multiplayer.SetPos(70,348);
-	if (GameLibrary_GetInfo(GAMEINFO_TYPE) != "Singleplayer")
+	if (GameLibrary_GetInfo(GAMEINFO_TYPE) != "Singleplayer" || GameLibrary_GetInfo(GAMEINFO_GAMEDIR) == "valve")
 		main_btn2Multiplayer.SetExecute(btn_multiplayer_start);
 	Widget_Add(fn_main2, main_btn2Multiplayer);
 

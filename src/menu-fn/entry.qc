@@ -55,7 +55,7 @@ m_init(void)
 	/* prepare spray logo keys */
 	spray_setinfokeys();
 
-	if (GameLibrary_GetInfo(GAMEINFO_GAMEDIR) != "valve") {
+	if (!Platform_FileInCurrentGamedir("gfx/shell/splash8bit.bmp")) {
 		m_intro_skip();
 		Music_MenuStart();
 	}
