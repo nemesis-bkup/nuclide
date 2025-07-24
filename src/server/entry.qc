@@ -446,24 +446,6 @@ init_respawn(void)
 {
 	int spawnCounter = 0i;
 
-	forceinfokey(world, "teams", "");
-	forceinfokey(world, "teamplay", "");
-	forceinfokey(world, "coop", "");
-
-	/* clean up... */
-	for (int teamID = 1; teamID < 1000; teamID++) {
-		forceinfokey(world, sprintf("team_%i", teamID), "");
-		forceinfokey(world, sprintf("teamscore_%i", teamID), "");
-		forceinfokey(world, sprintf("teamcolor_%i", teamID), "");
-		forceinfokey(world, sprintf("teamclosed_%i", teamID), "");
-		forceinfokey(world, sprintf("teamspawn_%i", teamID), "");
-		forceinfokey(world, sprintf("teamclass_%i", teamID), "");
-	}
-
-	forceinfokey(world, sprintf("teamspawn_%d", TEAM_CONNECTING), "");
-	forceinfokey(world, sprintf("teamspawn_%d", TEAM_UNASSIGNED), "info_player_start");
-	forceinfokey(world, sprintf("teamspawn_%d", TEAM_SPECTATOR), "info_spectator_start");
-
 	/* append entities from external .add file */
 	string appendEntitiesFile = strcat("maps/", mapname, ".add");
 	if (fileExists(appendEntitiesFile)) {
@@ -508,6 +490,24 @@ initents(void)
 {
 	ncRuleDelegate currentRule;
 	ncMapDelegate currentMap;
+
+	forceinfokey(world, "teams", "");
+	forceinfokey(world, "teamplay", "");
+	forceinfokey(world, "coop", "");
+
+	/* clean up... */
+	for (int teamID = 1; teamID < 1000; teamID++) {
+		forceinfokey(world, sprintf("team_%i", teamID), "");
+		forceinfokey(world, sprintf("teamscore_%i", teamID), "");
+		forceinfokey(world, sprintf("teamcolor_%i", teamID), "");
+		forceinfokey(world, sprintf("teamclosed_%i", teamID), "");
+		forceinfokey(world, sprintf("teamspawn_%i", teamID), "");
+		forceinfokey(world, sprintf("teamclass_%i", teamID), "");
+	}
+
+	forceinfokey(world, sprintf("teamspawn_%d", TEAM_CONNECTING), "");
+	forceinfokey(world, sprintf("teamspawn_%d", TEAM_UNASSIGNED), "info_player_start");
+	forceinfokey(world, sprintf("teamspawn_%d", TEAM_SPECTATOR), "info_spectator_start");
 
 	g_ents_initialized = false;
 	g_gamemode_done = false;

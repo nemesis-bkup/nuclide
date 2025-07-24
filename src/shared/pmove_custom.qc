@@ -235,6 +235,7 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	float frictionMultiplier;
 	float retainSpeed;
 	vector vecTemp;
+	float currentSpeed = vlen(self.velocity);
 
 #ifdef SERVER
 	/* too finicky with monsters between the various game settings */
@@ -257,7 +258,7 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	}
 
 	/* apply friction */
-	if (self.velocity[0] || self.velocity[1]) {
+	if (currentSpeed > 0) {
 		vecTemp = self.velocity;
 		vecTemp[2] = 0;
 		retainSpeed = length(vecTemp);
