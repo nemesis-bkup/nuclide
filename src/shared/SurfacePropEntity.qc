@@ -674,6 +674,7 @@ ncSurfacePropEntity::BreakModel(int damage, vector dir, int location)
 
 	m_timeOfDeath = time;
 
+
 	/* the first thing we do is mark this as invulnerable, to avoid
 	   any possible recursion in regards to damage later. */
 	MakeInvulnerable();
@@ -685,7 +686,9 @@ ncSurfacePropEntity::BreakModel(int damage, vector dir, int location)
 
 	if (GetPropData(PROPINFO_SKIN) != 0) {
 		SetSkin(GetPropData(PROPINFO_SKIN));
-	} else if (GetPropData(PROPINFO_BREAKMODEL) != __NULL__) {
+	} 
+
+	if (GetPropData(PROPINFO_BREAKMODEL) != __NULL__) {
 		speedValue = length(GetVelocity());
 
 		/* if we have enough momentum of our own, use that instead. */
