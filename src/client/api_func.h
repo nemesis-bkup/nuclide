@@ -218,6 +218,13 @@ typedef struct
 @param rectRGB  is the color of the rectangle, in normalized RGB values. E.g. `[0.0f, 0.0f, 1.0f]` for blue.
 @param rectAlpha is the alpha channel of the rectangle. 0.0 is invisible, 1.0 is fully visible. */
 	void RectOutline(vector rectPos, vector rectSize, float outlineThickness, vector rectColor, float rectAlpha);
+/** Displays a colored, rounded rectangle outline at the specified position with a specified size.
+
+@param rectPos is the position at which the rounded rectangle will be drawn.
+@param rectSize is the size at which we draw the rounded rectangle, in pixels.
+@param rectRGB  is the color of the rounded rectangle, in normalized RGB values. E.g. `[0.0f, 0.0f, 1.0f]` for blue.
+@param rectAlpha is the alpha channel of the rounded rectangle. 0.0 is invisible, 1.0 is fully visible. */
+	void RoundedRectOutline(vector rectPos, vector rectSize, vector rectColor, float rectAlpha);
 
 /** Displays a colored rounded box at the specified position with a specified size.
 
@@ -510,6 +517,16 @@ typedef struct
 } atlasPicAPI_t;
 var atlasPicAPI_t atlasPic; /**< Access atlasPicAPI_t functions using this variable. */
 
+/** material library */
+typedef struct
+{
+	bool Cached(void);
+	float GetWidth(string materialName);
+	float GetHeight(string materialName);
+	vector GetSize(string materialName);
+} materialAPI_t;
+var materialAPI_t material; /**< Access atlasPicAPI_t functions using this variable. */
+
 /** @} */ // end of hudC
 
 /* To be implemented by HUD */
@@ -549,6 +566,11 @@ _client_main(void)
 	screen.HUDMins = linkToClientProgs("CLPF_surface_HUDMins");
 	screen.HUDSize = linkToClientProgs("CLPF_surface_HUDSize");
 
+	material.GetSize = linkToClientProgs("CLPF_material_GetSize");
+	material.GetWidth = linkToClientProgs("CLPF_material_GetWidth");
+	material.GetHeight = linkToClientProgs("CLPF_material_GetHeight");
+	material.Cached = linkToClientProgs("CLPF_material_Cached");
+
 	player.GetCameraPosition = linkToClientProgs("CLPF_player_GetCameraPosition");
 	player.GetCameraAngles = linkToClientProgs("CLPF_player_GetCameraAngles");
 	player.GetHealth = linkToClientProgs("CLPF_player_GetHealth");
@@ -585,7 +607,8 @@ _client_main(void)
 	weapon.SelectWeapon = linkToClientProgs("CLPF_weapon_SelectWeapon");
 
 	draw.Rect = linkToClientProgs("CLPF_draw_Rect");
-	draw.RectOutline = linkToClientProgs("CLPF_CLPF_draw_RectOutline");
+	draw.RectOutline = linkToClientProgs("CLPF_draw_RectOutline");
+	draw.RoundedRectOutline = linkToClientProgs("CLPF_draw_RoundedRectOutline");
 	draw.RoundedBox = linkToClientProgs("CLPF_draw_RoundedBox");
 	draw.Line = linkToClientProgs("CLPF_draw_Line");
 	draw.Pic = linkToClientProgs("CLPF_draw_Pic");

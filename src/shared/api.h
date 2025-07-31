@@ -490,6 +490,18 @@ typedef struct
 	@param timeIntoFrame specifies the time into the sequence we'll pretend to be at
 	@return name of a material containing the desired sprite frame */
 	string SpriteFrame(string spritePath, float frameNum, float timeIntoFrame);
+
+	/** Precaches a given material.
+
+	On a server, this function will ensure that a model is added to the connection resource list.
+	On a client-side progs, you usually want to call this function within `HUD_ReloadVideoResources` or 
+	`ClientGame_RendererRestart`.
+
+	@note The engine may choose to create a material for you, for example when you tell it the path to an image of format listed in the `r_imageextensions` console variable. The engine may also create a fallback image. This behaviour is implementation specific.
+
+	@param particleEffect to precache
+	@return cached material string handle */
+	string Material(string materialName);
 } precacheAPI_t;
 precacheAPI_t precache; /**< Access precacheAPI_t functions using this variable. */
 
@@ -750,6 +762,7 @@ _shared_main(void)
 	teams.AddClass = linkToSharedProgs("SHPF_teams_AddClass");
 	teams.SetSpawnPoint = linkToSharedProgs("SHPF_teams_SetSpawnPoint");
 
+	precache.Material = linkToSharedProgs("SHPF_precache_Material");
 	precache.Model = linkToSharedProgs("SHPF_precache_Model");
 	precache.Music = linkToSharedProgs("SHPF_precache_Music");
 	precache.Sound = linkToSharedProgs("SHPF_precache_Sound");

@@ -489,9 +489,38 @@ CLPF_draw_Rect(vector pos, vector size, vector rgb, float a)
 }
 
 void
-CLPF_CLPF_draw_RectOutline(vector pos, vector size, float thickness, vector rgb, float a)
+CLPF_draw_RectOutline(vector pos, vector size, float thickness, vector rgb, float a)
 {
 	drawrect(pos, size, thickness, rgb, a);
+}
+
+void
+CLPF_draw_RoundedRectOutline(vector pos, vector size, vector rgb, float a)
+{
+	float tileScale = 1.0f;
+
+	if (size[1] < 32) {
+		tileScale = size[1] / 32;
+	}
+
+	vector tileSize = g_vec_null;
+	tileSize[0] = tileSize[1] =  (16 * tileScale);
+
+	drawpic(pos, "gfx/ui/m_linetopleft.tga", [16,16], rgb, a, 0);
+	drawpic(pos + [size[0] - 16, 0], "gfx/ui/m_linetopright.tga", [16,16], rgb, a, 0);
+	drawpic(pos + [0, size[1] - 16], "gfx/ui/m_linebottomleft.tga", [16,16], rgb, a, 0);
+	drawpic(pos + [size[0] - 16, size[1] - 16], "gfx/ui/m_linebottomright.tga", [16,16], rgb, a, 0);
+
+	if (size_x > 32) {
+		drawpic(pos + [16, 0], "gfx/ui/m_linetop.tga", [size[0] - 32, 16], rgb, a, 0);
+		drawpic(pos + [16, size[1] - 16], "gfx/ui/m_linebottom.tga", [size[0] - 32, 16], rgb, a, 0);
+	}
+
+	if (size_y > 32) {
+		drawpic(pos + [0, 16], "gfx/ui/m_lineleft.tga", [16, size[1] - 32], rgb, a, 0);
+		drawpic(pos + [size[0] - 16, 16], "gfx/ui/m_lineright.tga", [16, size[1] - 32], rgb, a, 0);
+		drawpic(pos + [16, 16], "gfx/ui/m_linemid.tga", [size[0] - 32, size[1] - 32], rgb, a, 0);
+	}
 }
 
 void
@@ -683,4 +712,30 @@ vector
 CLPF_atlasPic_GetSize(int atlasPic)
 {
 	return ncInterfaceSpriteSheet::GetSize(atlasPic);
+}
+
+bool
+CLPF_material_Cached(string materialName)
+{
+	return iscachedpic(materialName) ? (true) : (false);
+}
+
+float
+CLPF_material_GetWidth(string materialName)
+{
+	vector imageSize = drawgetimagesize(materialName);
+	return (imageSize[0]);
+}
+
+float
+CLPF_material_GetHeight(string materialName)
+{
+	vector imageSize = drawgetimagesize(materialName);
+	return (imageSize[1]);
+}
+
+vector
+CLPF_material_GetSize(string materialName)
+{
+	return drawgetimagesize(materialName);
 }

@@ -818,6 +818,12 @@ ncWeapon::ReloadCachedAttributes(void)
 
 #ifdef CLIENT
 	m_weaponTitle = localize(GetDefString("inv_name"));
+	m_weaponHUDIcon = localize(GetDefString("icon"));
+	m_weaponHUDIconSel = localize(GetDefString("iconSelected"));
+
+	if (!STRING_SET(m_weaponHUDIconSel)) {
+		m_weaponHUDIconSel = m_weaponHUDIcon;
+	}
 #else
 	m_weaponTitle = GetDefString("inv_name");
 #endif

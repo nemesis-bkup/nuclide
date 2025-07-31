@@ -174,8 +174,6 @@ View_DrawViewModel(void)
 	if (!pl)
 		return;
 
-	float fBaseTime2 = m_eViewModel.frame1time;
-	float fBaseTime = m_eViewModel.frame1time;
 	m_eViewModelL.frame = m_eViewModel.frame = pl.m_weaponAnimSequence;
 	m_eViewModelL.frame1time =
 	m_eViewModelL.frame2time =
@@ -209,12 +207,14 @@ View_DrawViewModel(void)
 		View_ClearEvents();
 	}
 
-	Event_Callback(m_eViewModel.frame1time, fBaseTime2);
+	Event_Callback(m_eViewModel.frame1time, m_eViewModel.m_modelEventTime);
 
 	entity oldSelf = self;
 	self = m_eViewModel;
-	processmodelevents(m_eViewModel.modelindex, m_eViewModel.frame, fBaseTime,
+	processmodelevents(m_eViewModel.modelindex, m_eViewModel.frame, m_eViewModel.m_modelEventTime,
 		m_eViewModel.frame1time, View_HandleAnimEvent);
+
+	m_eViewModel.m_modelEventTime = m_eViewModel.frame1time;
 	self = oldSelf;
 
 	if (pl.health <= 0) {

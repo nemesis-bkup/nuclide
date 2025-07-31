@@ -1092,6 +1092,25 @@ SHPF_entityDef_GetVector(string declName, string keyName)
 	return stov(SHPF_entityDef_GetString(declName, keyName));
 }
 
+string
+SHPF_precache_Material(string materialName)
+{
+	if (!STRING_SET(materialName)) {
+		return (__NULL__);
+	}
+
+#ifdef SERVER
+	/* trigger download of archives */
+	if (STRING_SET(whichpack(materialName, WP_REFERENCEPACKAGE))) {
+		return (materialName);
+	}
+
+	return (__NULL__);
+#else
+	return precache_pic(materialName);
+#endif
+}
+
 int
 SHPF_precache_Model(string modelPath)
 {

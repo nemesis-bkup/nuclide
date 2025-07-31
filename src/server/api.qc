@@ -372,3 +372,82 @@ void SVPF_music_PlayOnceOnClient(musictrack_t globalTrack, entity targetClient)
 	msg_entity = targetClient;
 	multicast([0,0,0], MULTICAST_ONE_R);
 }
+
+
+
+
+/* localinfo library */
+string
+SVPF_localinfo_GetString(string serverKey)
+{
+	return serverkey(serverKey);
+}
+
+float
+SVPF_localinfo_GetFloat(string serverKey)
+{
+	return serverkeyfloat(serverKey);
+}
+
+int
+SVPF_localinfo_GetInteger(string serverKey)
+{
+	return (int)serverkeyfloat(serverKey);
+}
+
+bool
+SVPF_localinfo_GetBool(string serverKey)
+{
+	return (serverkeyfloat(serverKey) > 0) ? (true) : (false);
+}
+
+vector
+SVPF_localinfo_GetVector(string serverKey)
+{
+	return stov(serverkey(serverKey));
+}
+
+void
+SVPF_localinfo_SetString(string serverKey, string setValue)
+{
+#ifdef SERVER
+	forceinfokey(world, serverKey, setValue);
+#else
+#endif
+}
+
+void
+SVPF_localinfo_SetInteger(string serverKey, int setValue)
+{
+#ifdef SERVER
+	SVPF_localinfo_SetString(serverKey, itos(setValue));
+#else
+#endif
+}
+
+void
+SVPF_localinfo_SetBool(string serverKey, bool setValue)
+{
+#ifdef SERVER
+	SVPF_localinfo_SetString(serverKey, ftos(setValue));
+#else
+#endif
+}
+
+void
+SVPF_localinfo_SetFloat(string serverKey, float setValue)
+{
+#ifdef SERVER
+	SVPF_localinfo_SetString(serverKey, ftos(setValue));
+#else
+#endif
+}
+
+void
+SVPF_localinfo_SetVector(string serverKey, vector setValue)
+{
+#ifdef SERVER
+	SVPF_localinfo_SetString(serverKey, vtos(setValue));
+#else
+#endif
+}

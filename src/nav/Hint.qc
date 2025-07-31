@@ -106,4 +106,5 @@ ncHint::PlaceEntityHint(entity owningEntity, string hintType)
 	newHint.SetOrigin(owningEntity.origin);
 	newHint.SetOwner(owningEntity);
 	newHint.m_hintType = hintType;
+	return (newHint);
 }

@@ -235,7 +235,8 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	float frictionMultiplier;
 	float retainSpeed;
 	vector vecTemp;
-	float currentSpeed = vlen(self.velocity);
+	vecTemp = self.velocity;
+	retainSpeed = length(vecTemp);
 
 #ifdef SERVER
 	/* too finicky with monsters between the various game settings */
@@ -258,11 +259,7 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	}
 
 	/* apply friction */
-	if (currentSpeed > 0) {
-		vecTemp = self.velocity;
-		vecTemp[2] = 0;
-		retainSpeed = length(vecTemp);
-
+	if (retainSpeed > 0) {
 		/* Next few lines of code assumes self is using player's hull, however it could be a monster
 			who use differen hull size, therefore it is invalid, so we probably better of using mins/maxs,
 			on the other hand edge friction is probably not that important. */

@@ -1091,7 +1091,7 @@ ncRenderableEntity::HandleAnimEvent(float flTimeStamp, int iCode, string strData
 			StartSound(strData, CHAN_AUTO, 0, true);
 		}
 		
-		StartSound(strData, CHAN_AUTO, 0, true);
+		//StartSound(strData, CHAN_AUTO, 0, true);
 		break;
 	/* GS events */
 	case 5001: /* muzzle flash on attachment 0 */
