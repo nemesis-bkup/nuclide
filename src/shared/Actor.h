@@ -208,7 +208,7 @@ public:
 	nonvirtual vector PathDestination(void);
 
 	/** Call to make a corpse of this actor. */
-	nonvirtual void MakeCorpse(float deathSequence);
+	nonvirtual ncEntity MakeCorpse(float deathSequence);
 
 	/* methods we'd like others to override */
 	/** Returns if this class is capable of crouching. */

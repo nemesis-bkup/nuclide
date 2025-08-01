@@ -608,7 +608,7 @@ ncActor::PathDestination(void)
 	return (m_pathfindingDestination);
 }
 
-void
+ncEntity
 ncActor::MakeCorpse(float deathSequence)
 {
 	bool makeRagdoll = GetSpawnBool("ragdoll");
@@ -628,6 +628,8 @@ ncActor::MakeCorpse(float deathSequence)
 			newCorpse.SetSize(VEC_HULL_MIN, [16, 16, -16]);
 		}
 	}
+
+	return (newCorpse);
 }
 
 void
