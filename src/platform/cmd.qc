@@ -59,6 +59,9 @@ Platform_ConsoleCommand(string commandString, int wordCount)
 	case "removeFriend":
 		FragNet_RemoveFriend(argv(1));
 		break;
+	case "reloadMenuLocale":
+		Locale_Reload();
+		break;
 	default:
 		return (false);
 	}
@@ -83,4 +86,5 @@ Platform_RegisterCommands(void)
 	registercommand("signOff");
 	registercommand("addFriend");
 	registercommand("removeFriend");
+	registercommand("reloadMenuLocale");
 }

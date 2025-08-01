@@ -606,6 +606,9 @@ Cmd_Parse(string sCMD)
 	case "showMOTD":
 		VGUI_ShowMOTD();
 		break;
+	case "reloadClientLocale":
+		Locale_Reload();
+		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
 	}
@@ -762,6 +765,7 @@ Cmd_Init(void)
 	registercommand("-menu_left");
 	registercommand("+menu_right");
 	registercommand("-menu_right");
+	registercommand("reloadClientLocale");
 
 	InitEnd();
 }
