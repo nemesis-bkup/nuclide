@@ -83,6 +83,12 @@ ClientConnect(void)
 			addonEnum.PlayerConnect((ncPlayer)self);
 		}
 	}
+
+	if (physics_supported() == TRUE) {
+		serverinfo.SetBool("physics", true);
+	} else {
+		serverinfo.SetBool("physics", false);
+	}
 }
 
 /** Called when a player leaves the server. At the end of the function the

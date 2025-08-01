@@ -536,7 +536,7 @@ PropData_ForModel(string modelname)
 
 				if (bID != -1) {
 					if (g_breakmodel[bID].data) {
-						g_breakmodel[bID].physics = true;
+						g_breakmodel[bID].physics = physics_supported() ? true : false;
 						g_breakmodel_count++;
 					}
 				}
@@ -955,6 +955,11 @@ BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int coun
 	int modelcount = x / 2;
 	bool usePhysics = g_breakmodel[index].physics;
 	
+	/* sanity check */
+	if (serverinfo.GetBool("physics") == false) {
+		usePhysics = false;
+	}
+
 	if (speed < 200) {
 		speed = 200;
 	}
