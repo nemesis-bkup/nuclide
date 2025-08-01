@@ -284,10 +284,10 @@ private:
 	float m_flThrust;
 	float m_flThrustStart;
 	float m_flThrustEnd;
-	float m_flFrictionLinear; /* TODO */
+	float m_flFrictionLinear;
 	float m_flBounce;
-	float m_flMass; /* TODO */
-	float m_flGravity; /* TODO */
+	float m_flMass;
+	float m_flGravity;
 	float m_flFuse;
 	bool m_bDetonateOnFuse;
 	bool m_bDetonateOnDeath;
@@ -315,10 +315,10 @@ private:
 	float m_timeUntilNextDamage;
 	float m_damageDelay;
 
-	float m_flLightOffset; /* TODO */
-	vector m_vecExplodeLightColor; /* TODO */
-	float m_fExplodelLightRadius; /* TODO */
-	float m_fExplodelLightFadetime; /* TODO */
+	float m_flLightOffset;
+	vector m_vecExplodeLightColor;
+	float m_fExplodelLightRadius;
+	float m_fExplodelLightFadetime;
 	string m_sndFly;
 	string m_sndExplode;
 	string m_sndBounce;

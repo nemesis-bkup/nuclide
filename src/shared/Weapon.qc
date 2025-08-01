@@ -1258,6 +1258,8 @@ ncWeapon::Attack(string fireInfo)
 		if (m_fiChargeTime <= 0.0 && !(ourOwner.m_nuclideFlags & VFL_PRIMEDFUSE) && STRING_SET(m_fiOnRelease)) {
 			_SetWeaponState(WEAPONSTATE_RELEASED);
 			ourOwner.m_nuclideFlags |= VFL_PRIMEDFUSE;
+		} else if (STRING_SET(m_fiOnRelease)) { /* grenade fix */
+			ourOwner.m_nuclideFlags |= VFL_PRIMEDFUSE;
 		}
 	}
 
@@ -1989,7 +1991,7 @@ ncWeapon::_WeaponStartedFiring(void)
 void
 ncWeapon::_WeaponStoppedFiring(void)
 {
-	if (m_fiLoopingFire == false) {
+	if (!STRING_SET(m_fiOnRelease) && m_fiLoopingFire == false) {
 		if (CanFire() == false) {
 			return;
 		}
@@ -2007,7 +2009,7 @@ ncWeapon::_WeaponStoppedFiring(void)
 		}
 
 		/* only go through the 'released' arc if we were either looping or got something to release? */
-		if (m_fiLoopingFire || actFireStop >= 0) {
+		if (STRING_SET(m_fiOnRelease) || m_fiLoopingFire || actFireStop >= 0) {
 			_SetWeaponState(WEAPONSTATE_RELEASED);
 		}
 
