@@ -187,6 +187,7 @@ ncPhysicsEntity::EvaluateEntity(void)
 	EVALUATE_VECTOR(maxs, 2, RDENT_CHANGED_SIZE)
 	EVALUATE_FIELD(frame, RDENT_CHANGED_FRAME)
 	EVALUATE_FIELD(skin, RDENT_CHANGED_SKIN)
+	EVALUATE_FIELD(health, RDENT_CHANGED_SKIN)
 	EVALUATE_FIELD(effects, RDENT_CHANGED_EFFECTS)
 	EVALUATE_FIELD(m_geomsetField, RDENT_CHANGED_BODY)
 	EVALUATE_FIELD(scale, RDENT_CHANGED_SCALE)
@@ -273,6 +274,7 @@ ncPhysicsEntity::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_COORD(maxs[2], RDENT_CHANGED_SIZE)
 	SENDENTITY_BYTE(frame, RDENT_CHANGED_FRAME)
 	SENDENTITY_FLOAT(skin, RDENT_CHANGED_SKIN)
+	SENDENTITY_FLOAT(health, RDENT_CHANGED_SKIN)
 	SENDENTITY_FLOAT(effects, RDENT_CHANGED_EFFECTS)
 	SENDENTITY_SHORT(m_geomsetField, RDENT_CHANGED_BODY)
 	SENDENTITY_FLOAT(scale, RDENT_CHANGED_SCALE)
@@ -336,6 +338,7 @@ ncPhysicsEntity::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_COORD(maxs[2], RDENT_CHANGED_SIZE)
 	READENTITY_BYTE(frame, RDENT_CHANGED_FRAME)
 	READENTITY_FLOAT(skin, RDENT_CHANGED_SKIN)
+	READENTITY_FLOAT(health, RDENT_CHANGED_SKIN)
 	READENTITY_FLOAT(effects, RDENT_CHANGED_EFFECTS)
 	READENTITY_SHORT(m_geomsetField, RDENT_CHANGED_BODY)
 	READENTITY_FLOAT(scale, RDENT_CHANGED_SCALE)
@@ -399,8 +402,8 @@ ncPhysicsEntity::postdraw(void)
 	float massVolume = (size[0] * size[1] * size[2]);
 	massVolume *= InchesToMeters; /* from meters to inches */
 
-	string renderString = sprintf("Mass: %.2f kg (%.2f ODE)\nEnergy: %d kj\nInertia: %d\nVolume: %.2f",
-		GetMass(), mass, GetEnergy() * (1.0 / 1024), GetInertia(), massVolume);
+	string renderString = sprintf("Health: %d\nMass: %.2f kg (%.2f ODE)\nEnergy: %d kj\nInertia: %d\nVolume: %.2f",
+		health, GetMass(), mass, GetEnergy() * (1.0 / 1024), GetInertia(), massVolume);
 
 	PointMessage_FieldAtPos(WorldSpaceCenter(), renderString, 256);
 }
@@ -741,13 +744,16 @@ ncPhysicsEntity::Death(entity inflictor, entity attacker, int damage, vector dir
 		return;
 	}
 
+
 	if (m_physicsGod) {
 		health = 10000;
 		return;
 	}
 
+
 	Pain(inflictor, attacker, damage, dir, absImpactPos, hitBody);
 	super::Death(inflictor, attacker, damage, dir, absImpactPos, hitBody);
+
 
 	if (!modelindex) {
 		geomtype = GEOMTYPE_NONE;
@@ -766,6 +772,7 @@ ncPhysicsEntity::Respawn(void)
 	/* make turning on spawn difficult, see EvaluateEntity() */
 	m_spawnPhysTime = GetTime() + 2.0f;
 	max_angular = 0.1f;
+
 	SetSolid(SOLID_BSP);
 	SetMovetype(MOVETYPE_PHYSICS);
 	ClearVelocity();
@@ -789,8 +796,8 @@ ncPhysicsEntity::Respawn(void)
 
 	hitcontentsmaski = CONTENTBITS_POINTSOLID;
 
-	if (physics_supported() == FALSE && GetSolid() != SOLID_CORPSE) {
-		DisablePlayerCollision();
+	if (physics_supported() == FALSE) {
+		SetSolid(SOLID_BBOX);
 	}
 
 	Wake();
@@ -819,6 +826,8 @@ ncPhysicsEntity::Respawn(void)
 			health = 5;
 			m_physicsGod = false;
 		}
+	} else {
+		m_physicsGod = false;
 	}
 
 	customphysics = PVSCheck;
