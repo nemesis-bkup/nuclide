@@ -35,15 +35,64 @@ void VGUI_ModelSpawner ( void )
 	static vguiCheckbox chkBackground;
 	static vguiCheckbox chkGround;
 	static vguiCheckbox chkMirror;
+	static vguiButton btnSpawnProp;
 	static vguiButton btnFirstperson;
+	static vguiButton btnResetCam;
+	static vguiButton btnSetViewModel;
 	
 	// Sequences
 	static vguiLabel lblSeqFrame;
 	static vguiButton btnSeqNext;
 	static vguiButton btnSeqPrev;
 	
+	static void VGUI_ModelViewer_SetViewModel( void ) {
+		if (pSeat == __NULL__) {
+			return;
+		}
+		ncRenderableEntity theModel = (ncRenderableEntity)pSeat->m_eViewModel;
+		ncRenderableEntity theModel2 = (ncRenderableEntity)pSeat->m_eViewModelL;
+
+		if (theModel && theModel.classname == "vm") {
+			theModel.modelindex = getmodelindex(eModel.model);
+			theModel2.modelindex = 
+			theModel2.modelindex2 = 
+			theModel2.modelindex3 = 
+			theModel2.modelindex4 =
+			theModel.modelindex2 = 
+			theModel.modelindex3 = 
+			theModel.modelindex4 = 0;
+			
+
+			if (theModel) {
+				theModel._UpdateBoneCount();
+			}
+
+			if (theModel2) {
+				theModel2._UpdateBoneCount();
+			}
+		}
+	}
+	static void VGUI_ModelViewer_Firstperson( void ) {
+		vecDistance = [ 0, 0, 0 ];
+		viewModel.Set3DAngles( [0,0,0] );
+		viewModel.Set3DPos( [0,0,0] );
+	}
+	static void VGUI_ModelViewer_ResetCam( void ) {
+		vector modelPos = (eModel.absmin + (0.5 * (eModel.absmax - eModel.absmin)));
+		vecDistance = [ 90, 0, 0 ];
+		viewModel.Set3DAngles( [0,180,0] );
+		viewModel.Set3DPos( modelPos );
+
+		makevectors( viewModel.Get3DAngles() );
+		viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
+	}
 	static void VGUI_ModelViewer_SpawnProp( void ) {
-		localcmd(sprintf("sv propSpawn %S\n", eModel.model));
+		/* in sandbox this may be allowed. */
+		if (serverinfo.GetString("gametype") == "sandbox") {
+			localcmd(sprintf("cmd propSpawn %S\n", eModel.model));
+		} else {
+			localcmd(sprintf("sv propSpawn %S\n", eModel.model));
+		}
 	}
 	static void VGUI_ModelViewer_SetFrame( int iFrame ) {
 		float maxFrame = modelframecount(eModel.modelindex) - 1;
@@ -66,6 +115,7 @@ void VGUI_ModelSpawner ( void )
 		setmodel( eModel, strModel );
 		winViewer.SetTitle( sprintf( "Model Viewer (%s)", strModel ) );
 		VGUI_ModelViewer_SetFrame( 0 );
+		VGUI_ModelViewer_ResetCam();
 	}
 	static void VGUI_ModelViewer_Draw ( void ) {
 		static int initialized = FALSE;
@@ -73,19 +123,42 @@ void VGUI_ModelSpawner ( void )
 			initialized = TRUE;
 			eModel = spawn();
 			VGUI_ModelViewer_SetModel( "models/error.vvm" );
-			AngleVectors( viewModel.Get3DAngles() );
-			viewModel.Set3DPos( v_forward * -vecDistance[0] + v_right * vecDistance[1] + v_up * vecDistance[2] );
 		}
 		addentity( eModel );
 		eModel.frame1time += frametime;
 		
 		if ( chkGround.GetValue() == TRUE ) {
-			R_BeginPolygon( "", 0, FALSE );
-			R_PolygonVertex( [ 64, -64, 0 ], [1,0], [1,1,1], 1.0f ); // Top Right
-			R_PolygonVertex( [ -64, -64, 0 ], [0,0], [1,1,1], 1.0f ); // Top left
-			R_PolygonVertex( [ -64, 64, 0 ], [0,1], [1,1,1], 1.0f ); // Bottom left
-			R_PolygonVertex( [ 64, 64, 0 ], [1,1], [1,1,1], 1.0f ); // Bottom right
-			R_EndPolygon();
+			vector vert1, vert2, vert3, vert4;
+			vector wireColor = [0.8f, 0.8f, 0.9f];
+
+			vert1 = [16,0];
+			vert2 = [0, 0];
+			vert3 = [0, 16];
+			vert4 = [16, 16];
+
+			for (int x = -256; x < 256; x += 16) {
+				for (int y = -256; y < 256; y += 16) {
+					R_BeginPolygon( "" );
+					R_PolygonVertex( [ x + vert1[0], y + vert1[1] ], '0 0', wireColor, 1.0f );
+					R_PolygonVertex( [ x + vert2[0], y + vert2[1] ], '1 0', wireColor, 1.0f );
+					R_EndPolygon();
+
+					R_BeginPolygon( "" );
+					R_PolygonVertex( [ x + vert2[0], y + vert2[1] ], '1 0', wireColor, 1.0f );
+					R_PolygonVertex( [ x + vert3[0], y + vert3[1] ], '1 1', wireColor, 1.0f );
+					R_EndPolygon();
+
+					R_BeginPolygon( "" );
+					R_PolygonVertex( [ x + vert3[0], y + vert3[1] ], '1 1', wireColor, 1.0f );
+					R_PolygonVertex( [ x + vert4[0], y + vert4[1] ], '0 1', wireColor, 1.0f );
+					R_EndPolygon();
+
+					R_BeginPolygon( "" );
+					R_PolygonVertex( [ x + vert4[0], y + vert4[1] ], '0 1', wireColor, 1.0f );
+					R_PolygonVertex( [ x + vert1[0], y + vert1[1] ], '0 0', wireColor, 1.0f );
+					R_EndPolygon();
+				}
+			}
 		}
 	
 		if ( chkBackground.GetValue() == TRUE ) {
@@ -99,6 +172,7 @@ void VGUI_ModelSpawner ( void )
 		static int iShiftDrag = FALSE;
 		static vector vecDragOfs;
 		vector vecDifference;
+		vector modelPos = (eModel.absmin + (0.5 * (eModel.absmax - eModel.absmin)));
 
 		int iMouseOver =  Util_MouseAbove( getmousepos(), viewModel.m_parent.GetPos() + viewModel.GetPos(), viewModel.GetSize() );
 		if ( flEVType == IE_KEYDOWN ) {
@@ -108,13 +182,13 @@ void VGUI_ModelSpawner ( void )
 				return true;
 			} else if ( flKey == K_MWHEELUP && iMouseOver == TRUE ) {
 				vecDistance[0] = bound( 0, --vecDistance[0], 512 );
-				AngleVectors( viewModel.Get3DAngles() );
-				viewModel.Set3DPos( v_forward * -vecDistance[0] + v_right * vecDistance[1] + v_up * vecDistance[2] );
+				makevectors( viewModel.Get3DAngles() );
+				viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
 				return true;
 			} else if ( flKey == K_MWHEELDOWN && iMouseOver == TRUE ) {
 				vecDistance[0] = bound( 0, ++vecDistance[0], 512 );
-				AngleVectors( viewModel.Get3DAngles() );
-				viewModel.Set3DPos( v_forward * -vecDistance[0] + v_right * vecDistance[1] + v_up * vecDistance[2] );
+				makevectors( viewModel.Get3DAngles() );
+				viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
 				return true;
 			} else if ( flKey == K_LSHIFT && iMouseOver == TRUE ) {
 				iShiftDrag = TRUE;
@@ -131,8 +205,8 @@ void VGUI_ModelSpawner ( void )
 			if ( flEVType == IE_MOUSEABS ) {
 				vecDifference = [ flChar, flKey ] - [ vecDragOfs[1], vecDragOfs[0] ];
 				viewModel.Set3DAngles( viewModel.Get3DAngles() + vecDifference );
-				AngleVectors( viewModel.Get3DAngles() );
-				viewModel.Set3DPos( v_forward * -vecDistance[0] + v_right * vecDistance[1] + v_up * vecDistance[2] );
+				makevectors( viewModel.Get3DAngles() );
+				viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
 				vecDragOfs = getmousepos();
 				return true;
 			}
@@ -141,7 +215,7 @@ void VGUI_ModelSpawner ( void )
 				vecDifference = [ flChar, flKey ] - [ vecDragOfs[1], vecDragOfs[0] ];
 				vecDistance[1] -= vecDifference[1];
 				vecDistance[2] += vecDifference[0];
-				viewModel.Set3DPos( v_forward * -vecDistance[0] + v_right * vecDistance[1] + v_up * vecDistance[2] );
+				viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
 				vecDragOfs = getmousepos();
 				return true;
 			}
@@ -168,7 +242,10 @@ void VGUI_ModelSpawner ( void )
 		scrlModels.SetLength( viewModel.GetSize()[1] );
 		scrlModels.SetMax( lstModels.GetMaxVisibleItems() );
 		btnLoadModel.SetPos( lstModels.GetPos() + [ 0, lstModels.GetSize()[1] + 1 ] );
-		btnFirstperson.SetPos( btnLoadModel.GetPos() + [ 0, 30 ] );
+		btnSpawnProp.SetPos( btnLoadModel.GetPos() + [ 0, 30 ] );
+		btnSetViewModel.SetPos( btnSpawnProp.GetPos() + [ 0, 30 ] );
+		btnFirstperson.SetPos( btnTabRenderer.GetPos() + [ 128, 30 ] );
+		btnResetCam.SetPos( btnFirstperson.GetPos() + [ 0, 30 ] );
 		
 		lblSeqFrame.SetPos( btnTabRenderer.GetPos() + [ 0, 30 ] );
 		btnSeqPrev.SetPos( btnTabRenderer.GetPos() + [ 0, 50 ] );
@@ -181,12 +258,16 @@ void VGUI_ModelSpawner ( void )
 		lblSeqFrame.Hide();
 		btnSeqPrev.Hide();
 		btnSeqNext.Hide();
+		btnFirstperson.Hide();
+		btnResetCam.Hide();
 	}
 	static void VGUI_ModelViewer_ShowRenderer( void ) {
 		VGUI_ModelViewer_HideAll();
 		chkBackground.Show();
 		chkGround.Show();
 		chkMirror.Show();
+		btnFirstperson.Show();
+		btnResetCam.Show();
 	}
 	static void VGUI_ModelViewer_ShowSequence( void ) {
 		VGUI_ModelViewer_HideAll();
@@ -246,11 +327,23 @@ void VGUI_ModelSpawner ( void )
 		chkBackground.SetValue( TRUE );
 		chkGround = spawn( vguiCheckbox );
 		chkGround.SetTitle( "Ground" );
+		chkGround.SetValue( true );
 		chkMirror = spawn( vguiCheckbox );
 		chkMirror.SetTitle( "Mirror on Ground" );
+		btnSpawnProp = spawn( vguiButton );
+		btnSpawnProp.SetTitle( "Spawn Prop" );
+		btnSpawnProp.SetFunc( VGUI_ModelViewer_SpawnProp );
+		btnSpawnProp.SetSize( [192,24] );
 		btnFirstperson = spawn( vguiButton );
-		btnFirstperson.SetTitle( "Spawn Prop" );
-		btnFirstperson.SetFunc( VGUI_ModelViewer_SpawnProp );
+		btnFirstperson.SetTitle( "FPS Cam" );
+		btnFirstperson.SetFunc( VGUI_ModelViewer_Firstperson );
+		btnResetCam = spawn( vguiButton );
+		btnResetCam.SetTitle( "Reset Cam" );
+		btnResetCam.SetFunc( VGUI_ModelViewer_ResetCam );
+		btnSetViewModel = spawn( vguiButton );
+		btnSetViewModel.SetTitle( "Set ViewModel" );
+		btnSetViewModel.SetFunc( VGUI_ModelViewer_SetViewModel );
+		btnSetViewModel.SetSize( [192,24] );
 		
 		lblSeqFrame = spawn( vguiLabel );
 		lblSeqFrame.SetTitle( "Frame: 0" );
@@ -305,7 +398,10 @@ void VGUI_ModelSpawner ( void )
 		winViewer.Add( lblSeqFrame );
 		winViewer.Add( btnSeqNext );
 		winViewer.Add( btnSeqPrev );
+		winViewer.Add( btnSpawnProp );
 		winViewer.Add( btnFirstperson );
+		winViewer.Add( btnSetViewModel );
+		winViewer.Add( btnResetCam );
 		winViewer.Add( btnLoadModel );
 		winViewer.Add( scrlModels );
 	}

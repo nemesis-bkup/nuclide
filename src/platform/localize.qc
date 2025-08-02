@@ -105,7 +105,7 @@ localize(string lookUpToken)
 {
 	string mat = "";
 
-	mat = (string)hash_get(g_hashLocale, lookUpToken);
+	mat = (string)hash_get(g_hashLocale, strtoupper(lookUpToken));
 
 	if not (mat)
 		return lookUpToken;
@@ -134,9 +134,10 @@ Locale_ParseFile(string pathToFile)
 	while ((sTemp = fgets(fileMaterial))) {
 		/* tokenize and just parse this stuff in */
 		if (tokenize_console(sTemp) == 2) {
-			lookUpToken = strcat("#", argv(0));
+			lookUpToken = strcat("#", strtoupper(argv(0)));
 			localizedString = argv(1);
 			hash_add(g_hashLocale, lookUpToken, localizedString, EV_STRING);
+			ncLog("Add %S %S", lookUpToken, localizedString);
 		}
 	}
 
@@ -174,6 +175,15 @@ Locale_Init(void)
 
 	Locale_AddFile("gameui");
 	Locale_AddFile(gameDir);
+
+#ifdef MENU
+	Locale_AddFile("menu");
+#endif
+
+#ifdef CLIENT
+	Locale_AddFile("client");
+
+#endif
 }
 
 void
