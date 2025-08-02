@@ -606,6 +606,9 @@ Cmd_Parse(string sCMD)
 	case "showMOTD":
 		VGUI_ShowMOTD();
 		break;
+	case "showModelSpawner":
+		VGUI_ModelSpawner();
+		break;
 	case "reloadClientLocale":
 		Locale_Reload();
 		break;
@@ -622,6 +625,7 @@ Cmd_Init(void)
 	registercommand("showClassSelectionMenu");
 	registercommand("showTeamSelectionMenu");
 	registercommand("showMOTD");
+	registercommand("showModelSpawner");
 
 	/* developer/debug commands */
 	registercommand("killAllBots");

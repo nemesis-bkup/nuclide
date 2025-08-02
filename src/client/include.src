@@ -24,6 +24,7 @@ vgui.qc
 vgui_changeclass.qc
 vgui_chooseteam.qc
 vgui_motd.qc
+vgui_modelspawner.qc
 way.qc
 detailtex.qc
 shake.qc
