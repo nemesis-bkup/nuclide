@@ -42,22 +42,14 @@ create_btnok_start(void)
 	static string gameType;
 	static void create_btnok_end(void) {
 		localcmd("stopmusic\nset sv_public 0\n");
-		localcmd(sprintf("set hostname %s\n", create_tbHostname.m_text));
-		localcmd(sprintf("set sv_playerslots %S\n", create_tbMaxplayers.m_text));
-		localcmd(sprintf("set password %S\n", create_tbPassword.m_text));
-		localcmd(sprintf("set g_gametype %S\n", gameType));
 		localcmd(sprintf("seta ui_maxclients %S\n", create_tbMaxplayers.m_text));
-
 		if (cvar("ui_fillServer") > 0) {
 			localcmd(sprintf("set bot_minClients %S\n", create_tbMaxplayers.m_text));
 		} else {
 			localcmd(sprintf("set bot_minClients %S\n", "0"));
 		}
-	
-		localcmd(sprintf("map %s\n", startmap));
 		g_menupage = PAGE_MULTIPLAYER;
-		RichPresence_Clear();
-		RichPresence_Set("status", sprintf("Multiplayer (LAN): %s", startmap));
+		Map_SpawnServer(create_tbHostname.m_text, startmap, stof(create_tbMaxplayers.m_text), gameType, create_tbPassword.m_text);
 	}
 
 	/* random */
