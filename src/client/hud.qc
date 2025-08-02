@@ -1,4 +1,5 @@
 
+var bool autocvar_g_showHud = true;
 var float g_flHUDProgs;
 var void(void) g_hudMain;
 var void(void) g_hudInit;
@@ -69,6 +70,10 @@ HUDProgs_Draw(void)
 		return;
 	}
 
+	if (autocvar_g_showHud == false) {
+		return;
+	}
+
 	if (g_flHUDProgs > 0) {
 		if (g_hudDraw) {
 			externset(g_flHUDProgs, clframetime, "clframetime");
@@ -83,6 +88,10 @@ HUDProgs_Draw(void)
  void
 HUDProgs_DrawSpectator(void)
 {
+	if (autocvar_g_showHud == false) {
+		return;
+	}
+
 	if (g_flHUDProgs > 0) {
 		if (g_hudDrawSpectator) {
 			g_hudDrawSpectator();
@@ -189,12 +198,20 @@ HUD_ReloadVideoResources(void)
 __weak void
 HUD_Draw(void)
 {
+	if (autocvar_g_showHud == false) {
+		return;
+	}
+
 	HUDProgs_Draw();
 }
 
 __weak void
 HUD_DrawSpectator(void)
 {
+	if (autocvar_g_showHud == false) {
+		return;
+	}
+
 	HUDProgs_DrawSpectator();
 }
 
