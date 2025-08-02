@@ -15,6 +15,7 @@
 */
 
 var bool autocvar_cg_viewmodelLag = 0;
+var bool autocvar_r_showViewModels = true;
 
 void
 View_Init(void)
@@ -228,7 +229,7 @@ View_DrawViewModel(void)
 			return;
 	}
 
-	if (cvar("r_drawviewmodel") == 0 || autocvar_pm_thirdPerson == TRUE) {
+	if (autocvar_r_showViewModels == false || autocvar_pm_thirdPerson == TRUE) {
 		return;
 	}
 
