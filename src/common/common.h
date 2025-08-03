@@ -268,12 +268,15 @@ fileExists(string filePath)
 
 	return true;
 }
+
 string
-Util_ExtensionFromString(string inputString)
+fileExtensionFromString(string inputString)
 {
 	int modelNameLength = strlen(inputString);
-	return substring(inputString, modelNameLength - 3, modelNameLength);
+	return substring(inputString, modelNameLength - 3, -1);
 }
+
+#define Util_ExtensionFromString fileExtensionFromString
 
 bool
 wordInString(string fullString, string wordToFind)

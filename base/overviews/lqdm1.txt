@@ -7,6 +7,6 @@ global
 
 layer
 {
-    IMAGE "overviews/lqdm1.bmp"
+    IMAGE "overviews/lqdm1.png"
     HEIGHT 0
 }
