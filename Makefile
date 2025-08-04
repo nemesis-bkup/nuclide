@@ -765,6 +765,9 @@ vmap:
 	cd Tools/vmap && $(MAKE)
 	-install -m 0777 Tools/vmap/vmap vmap
 
+clean-vmap:
+	cd Tools/vmap && $(MAKE) clean
+
 vvmtool:
 	if [ ! -d Tools/vvmtool ];then git clone https://github.com/VeraVisions/vvmtool Tools/vvmtool;else cd ./Tools/vvmtool && git pull;fi
 	cd Tools/vvmtool && $(MAKE)
