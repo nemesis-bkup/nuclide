@@ -324,159 +324,182 @@ var drawAPI_t draw;/**< Access drawAPI_t functions using this variable. */
 /** Player library */
 typedef struct
 {
+	/** Get the current 3D viewport's camera position.
 
-/** Get the current 3D viewport's camera position.
-
-@return the absolute world-space coordinate of the camera. */
+	@return the absolute world-space coordinate of the camera. */
 	vector GetCameraPosition(void);
-/** Get the current 3D viewport's camera angle.
+	/** Get the current 3D viewport's camera angle.
 
-@return the direction the camera is facing in euler-angle form. */
+	@return the direction the camera is facing in euler-angle form. */
 	vector GetCameraAngles(void);
-/** Get the current player's armor value.
+	/** Get the current player's armor value.
 
-@return the current armor value. */
+	@return the current armor value. */
 	float GetArmor(void);
-/** Get the current player's health value.
+	/** Get the current player's health value.
 
-@return the current health value. */
+	@return the current health value. */
 	float GetHealth(void);
-/** Get the current player's stamina value. 
+	/** Get the current player's stamina value. 
 
-@return the current stamina value, ranging from 0.0f to 1.0f. */
+	@return the current stamina value, ranging from 0.0f to 1.0f. */
 	float GetStamina(void);
-/** Get the current player's team ID.
+	/** Get the current player's team ID.
 
-@return the current player's team ID. */
+	@return the current player's team ID. */
 	int GetTeam(void);
-/** Check if the current player is standing upright. As in, not ducking, prone.
-They may still be walking or running.
+	/** Check if the current player is standing upright. As in, not ducking, prone.
+	They may still be walking or running.
 
-@return whether the current player is standing upright. */
+	@return whether the current player is standing upright. */
 	bool IsStanding(void);
-/** Check if the current player is leaning in any direction.
+	/** Check if the current player is leaning in any direction.
 
-@return whether the current player is leaning. */
+	@return whether the current player is leaning. */
 	bool IsLeaning(void);
-/** Check if the current player is actively sprinting.
+	/** Check if the current player is actively sprinting.
 
-@return whether the current player is sprinting. */
+	@return whether the current player is sprinting. */
 	bool IsSprinting(void);
-/** Check if the current player is actively crouched/ducked.
+	/** Check if the current player is actively crouched/ducked.
 
-@return whether the current player is crouched. */
+	@return whether the current player is crouched. */
 	bool IsCrouched(void);
-/** Check if the current player is actively prone/laying flat on the ground.
+	/** Check if the current player is actively prone/laying flat on the ground.
 
-@return whether the current player is prone. */
+	@return whether the current player is prone. */
 	bool IsProne(void);
-/** Check if the current player is actively moving.
+	/** Check if the current player is actively moving.
 
-@return whether the current player is moving. */
+	@return whether the current player is moving. */
 	bool IsMoving(void);
-/** Check if the current player is not on ground.
+	/** Check if the current player is not on ground.
 
-@return whether the current player is falling. */
+	@return whether the current player is falling. */
 	bool IsFalling(void);
-/** Check if the current player has a particular item.
+	/** Check if the current player has a particular item.
 
-@param itemClassName the classname of the item. E.g. "item_suit"
-@return whether the named item exists in the current player's inventory.*/
+	@param itemClassName the classname of the item. E.g. "item_suit"
+	@return whether the named item exists in the current player's inventory.*/
 	bool HasItem(string itemClassName);
+	/** Returns the string value of the current/active player's info-key.
+
+	@param userKey specifies the user info-key to query.
+	@return The value in string format. */
+	string GetString(string userKey);
+	/** Returns the integer value of a current/active player's info-key.
+
+	@param userKey specifies the user info-key to query.
+	@return The value in integer format. */
+	int GetInteger(string userKey);
+	/** Returns the floating-point value of a current/active player's info-key.
+
+	@param userKey specifies the user info-key to query.
+	@return The value in floating-point format. */
+	float GetFloat(string userKey);
+	/** Returns the boolean value of a current/active player's info-key.
+
+	@param userKey specifies the user info-key to query.
+	@return The value in boolean form. */
+	bool GetBool(string userKey);
+	/** Returns the vector value of a current/active player's info-key.
+
+	@param userKey specifies the user info-key to query.
+	@return The value in vector form. */
+	vector GetVector(string userKey);
 } playerAPI_t;
 var playerAPI_t player; /**< Access playerAPI_t functions using this variable. */
 
 /** Weapon library */
 typedef struct
 {
+	/** Returns whether this entity reference to a weapon is still valid.
 
-/** Returns whether this entity reference to a weapon is still valid.
-
-@param weaponRef is the weapon entity to reference
-@return whether the weapon entity reference is valid to the current player.*/
+	@param weaponRef is the weapon entity to reference
+	@return whether the weapon entity reference is valid to the current player.*/
 	bool IsValid(entity weaponRef = __NULL__);
-/** Returns the title of the weapon specified.
+	/** Returns the title of the weapon specified.
 
-@param weaponRef is the weapon entity to reference
-@return string value containing a localized weapon name.*/
+	@param weaponRef is the weapon entity to reference
+	@return string value containing a localized weapon name.*/
 	string GetTitle(entity weaponRef = __NULL__);
-/** Returns the slot number of the weapon specified.
+	/** Returns the slot number of the weapon specified.
 
-@param weaponRef is the weapon entity to reference
-@return integer value containing the inventory slot the weapon is in. */
+	@param weaponRef is the weapon entity to reference
+	@return integer value containing the inventory slot the weapon is in. */
 	int GetSlot(entity weaponRef = __NULL__);
-/** Returns if the slot position of the weapon specified.
+	/** Returns if the slot position of the weapon specified.
 
-@param weaponRef is the weapon entity to reference
-@return integer value containing the position within an inventory slot that the weapon is in. */
+	@param weaponRef is the weapon entity to reference
+	@return integer value containing the position within an inventory slot that the weapon is in. */
 	int GetSlotPos(entity weaponRef = __NULL__);
-/** Returns the inventory icons of the weapon specified.
+	/** Returns the inventory icons of the weapon specified.
 
-@param weaponRef is the weapon entity to reference
-@return string value containing the material/image of the weapon inventory icon.*/
+	@param weaponRef is the weapon entity to reference
+	@return string value containing the material/image of the weapon inventory icon.*/
 	string GetIcon(entity weaponRef = __NULL__);
-/** Returns the selected variant inventory icons of the weapon specified.
+	/** Returns the selected variant inventory icons of the weapon specified.
 
-@param weaponRef is the weapon entity to reference
-@return string value containing the material/image of the selected weapon inventory icon.*/
+	@param weaponRef is the weapon entity to reference
+	@return string value containing the material/image of the selected weapon inventory icon.*/
 	string GetSelectedIcon(entity weaponRef = __NULL__);
-/** Returns if the current/active weapons present reserve ammo.
+	/** Returns if the current/active weapons present reserve ammo.
 
-@return integer value of the present reserve ammo.*/
+	@return integer value of the present reserve ammo.*/
 	int GetAmmo1(entity weaponRef = __NULL__);
-/** Returns if the current/active weapons present reserve ammo, but for the second ammo type.
+	/** Returns if the current/active weapons present reserve ammo, but for the second ammo type.
 
-@return integer value of the present reserve ammo.*/
+	@return integer value of the present reserve ammo.*/
 	int GetAmmo2(entity weaponRef = __NULL__);
-/** Returns if the current/active weapons present clip/magazine size.
+	/** Returns if the current/active weapons present clip/magazine size.
 
-@return integer value of the present clip/magazine size.*/
+	@return integer value of the present clip/magazine size.*/
 	int GetClip(entity weaponRef = __NULL__);
-/** Returns if the current/active weapons maximum clip/magazine size.
+	/** Returns if the current/active weapons maximum clip/magazine size.
 
-@return integer value of the maximum clip/magazine size.*/
+	@return integer value of the maximum clip/magazine size.*/
 	int GetClipSize(entity weaponRef = __NULL__);
-/** Returns if the maximum reserve ammo.
+	/** Returns if the maximum reserve ammo.
 
-@return integer value of the maximum ammo size.*/
+	@return integer value of the maximum ammo size.*/
 	int MaxAmmo(entity weaponRef = __NULL__);
-/** Returns if the current/active weapon item in the player's inventory makes use of a secondary ammo type.
+	/** Returns if the current/active weapon item in the player's inventory makes use of a secondary ammo type.
 
-@return **true** when it supports a second ammo type.*/
+	@return **true** when it supports a second ammo type.*/
 	bool UsesSecondaryAmmo(entity weaponRef = __NULL__);
-/** Returns if the current/active weapon item in the player's inventory requires ammo.
+	/** Returns if the current/active weapon item in the player's inventory requires ammo.
 
-@return **true** when it requires ammo.*/
+	@return **true** when it requires ammo.*/
 	bool AmmoRequired(entity weaponRef = __NULL__);
 
-/** Returns the current/active weapon item in the player's inventory.
+	/** Returns the current/active weapon item in the player's inventory.
 
-@return the active weapon in the player's inventory. __NULL__ if invalid.*/
+	@return the active weapon in the player's inventory. __NULL__ if invalid.*/
 	entity GetActiveWeapon(void);
-/** Returns the first weapon item in the player's inventory.
+	/** Returns the first weapon item in the player's inventory.
 
-@return the first weapon in the player's inventory. __NULL__ if invalid.*/
+	@return the first weapon in the player's inventory. __NULL__ if invalid.*/
 	entity GetFirstWeaponInInventory(void);
-/** Returns the last weapon item in the player's inventory.
+	/** Returns the last weapon item in the player's inventory.
 
-@return the last weapon in the player's inventory. __NULL__ if invalid.*/
+	@return the last weapon in the player's inventory. __NULL__ if invalid.*/
 	entity GetLastWeaponInInventory(void);
 
-/** Returns the weapon that comes after (in the player's inventory) the input weapon.
+	/** Returns the weapon that comes after (in the player's inventory) the input weapon.
 
-@param playerWeapon the weapon entity of the player.
-@return the weapon after playerWeapon in the player's inventory. __NULL__ if invalid.*/
+	@param playerWeapon the weapon entity of the player.
+	@return the weapon after playerWeapon in the player's inventory. __NULL__ if invalid.*/
 	entity GetNextWeaponRelativeTo(entity);
 
-/** Returns the weapon that comes before (in the player's inventory) the input weapon.
+	/** Returns the weapon that comes before (in the player's inventory) the input weapon.
 
-@param playerWeapon the weapon entity of the player.
-@return the weapon before playerWeapon in the player's inventory. __NULL__ if invalid.*/
+	@param playerWeapon the weapon entity of the player.
+	@return the weapon before playerWeapon in the player's inventory. __NULL__ if invalid.*/
 	entity GetPreviousWeaponRelativeTo(entity playerWeapon);
 
-/** Attempts to make the player switch to the specified weapon reference.
+	/** Attempts to make the player switch to the specified weapon reference.
 
-@param weaponRef is the weapon entity to switch to. */
+	@param weaponRef is the weapon entity to switch to. */
 	void SelectWeapon(entity);
 } weaponAPI_t;
 var weaponAPI_t weapon; /**< Access weaponAPI_t functions using this variable. */
@@ -488,6 +511,7 @@ typedef struct
 	ncSpectatorMode_t Mode(void);
 	string LocalizedMode(void);
 	string Name(void);
+	int Team(void);
 } spectatingAPI_t;
 var spectatingAPI_t spectating; /**< Access spectatingAPI_t functions using this variable. */
 
@@ -586,6 +610,12 @@ _client_main(void)
 	player.IsMoving = linkToClientProgs("CLPF_player_IsMoving");
 	player.IsFalling = linkToClientProgs("CLPF_player_IsFalling");
 
+	player.GetString = linkToClientProgs("CLPF_player_GetString");
+	player.GetInteger = linkToClientProgs("CLPF_player_GetInteger");
+	player.GetBool = linkToClientProgs("CLPF_player_GetBool");
+	player.GetFloat = linkToClientProgs("CLPF_player_GetFloat");
+	player.GetVector = linkToClientProgs("CLPF_player_GetVector");
+
 	weapon.IsValid = linkToClientProgs("CLPF_weapon_IsValid");
 	weapon.GetTitle = linkToClientProgs("CLPF_weapon_GetTitle");
 	weapon.GetIcon = linkToClientProgs("CLPF_weapon_GetIcon");
@@ -628,6 +658,7 @@ _client_main(void)
 	spectating.Mode = linkToClientProgs("CLPF_spectating_Mode");
 	spectating.LocalizedMode = linkToClientProgs("CLPF_spectating_LocalizedMode");
 	spectating.Name = linkToClientProgs("CLPF_spectating_Name");
+	spectating.Team = linkToClientProgs("CLPF_spectating_Team");
 
 	atlasPic.Load = linkToClientProgs("CLPF_atlasPic_Load");
 	atlasPic.Draw = linkToClientProgs("CLPF_atlasPic_Draw");

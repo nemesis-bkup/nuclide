@@ -123,6 +123,39 @@ CLPF_player_IsFalling(string itemName)
 	return (((ncPlayer)pSeat->m_ePlayer).flags & FL_ONGROUND) ? false : true;
 }
 
+
+string
+CLPF_player_GetString(string keyName)
+{
+	return getplayerkeyvalue(player_localnum, keyName);
+}
+
+int
+CLPF_player_GetInteger(string keyName)
+{
+	return stoi(CLPF_player_GetString(keyName));
+}
+
+float
+CLPF_player_GetFloat(string keyName)
+{
+	return stof(CLPF_player_GetString(keyName));
+}
+
+bool
+CLPF_player_GetBool(string keyName)
+{
+	return stof(CLPF_player_GetString(keyName)) ? (true) : (false);
+}
+
+vector
+CLPF_player_GetVector(string keyName)
+{
+	return stov(CLPF_player_GetString(keyName));
+}
+
+
+
 bool
 CLPF_player_IsMoving(string itemName)
 {
@@ -574,7 +607,6 @@ CLPF_draw_SubPic(vector pos, vector displaySize, string material, vector sourceP
 ncSpectatorMode_t
 CLPF_spectating_Mode(void)
 {
-	/* TODO: cache on event basis */
 	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
 
 	if (spec) {
@@ -587,7 +619,6 @@ CLPF_spectating_Mode(void)
 string
 CLPF_spectating_LocalizedMode(void)
 {
-	/* TODO: cache on event basis */
 	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
 	if (spec) {
 		return (g_specmodes[spec.m_spectatingMode]);
@@ -596,10 +627,20 @@ CLPF_spectating_LocalizedMode(void)
 	return (g_specmodes[SPECMODE_FREE]);
 }
 
+int
+CLPF_spectating_Team(void)
+{
+	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
+	if (spec) {
+		return getplayerkeyvalue(spec.m_spectatingEntity - 1, "team");
+	}
+
+	return (TEAM_UNASSIGNED);
+}
+
 string
 CLPF_spectating_Name(void)
 {
-	/* TODO: cache on event basis */
 	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
 	if (spec) {
 		return getplayerkeyvalue(spec.m_spectatingEntity - 1, "name");
