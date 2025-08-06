@@ -922,6 +922,11 @@ ncProjectile::_LaunchHitscan(vector startPos, vector launchDir, float dmgMultipl
 	Destroy();
 }
 
+var float autocvar_projectile_pushForceMultiplier = 1.0f;
+
+/* completely made up, winged variable to feel 'close' to HL2 type interaction */
+#define PROJECTILE_BASE_PUSH_MULTIPLIER 25.0f
+
 void
 ncProjectile::_ApplyDamage(void)
 {
@@ -964,7 +969,7 @@ ncProjectile::_ApplyDamage(void)
 	if (STRING_SET(pushString)) {
 		pushForce = stof(pushString);
 	} else {
-		pushForce = (float)m_iMultiValue * 25.0f;
+		pushForce = ((float)m_iMultiValue * PROJECTILE_BASE_PUSH_MULTIPLIER) * autocvar_projectile_pushForceMultiplier;
 	}
 
 	damageDecl.AddKey("push", ftos(pushForce));
