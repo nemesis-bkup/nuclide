@@ -81,6 +81,7 @@ ncActor::SetAnimationPrefix(string animPrefix)
 	m_boneSpine = gettagindex(this, GetDefString("spine"));
 	m_torsoFirst = gettagindex(this, GetDefString("torsoStart"));
 	m_torsoLast = gettagindex(this, GetDefString("torsoEnd"));
+	m_torsoTwistYaw = gettagindex(this, GetDefString("twistYaw"));
 
 #if 0
 	EntLog("Activity Set for prefix %S:", animPrefix);
@@ -669,6 +670,9 @@ ncActor::Input(entity eAct, string strInput, string strData)
 		if (ammoNum != -1i) {
 			GiveAmmo(ammoNum, ammoCount);
 		}
+		break;
+	case "RemoveActiveWeapon":
+		RemoveItem(GetCurrentWeapon());
 		break;
 	/* schedule management */
 	case "ActorThinks":

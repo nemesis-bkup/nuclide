@@ -18,7 +18,7 @@
 #define ACTOR_LOG imageToConsole("gfx/icon16/eye", ICN_SIZE, "Actor Log")
 
 /* TODO: serverinfo based checks for prediction reasons */
-var bool autocvar_g_infiniteAmmo = false;
+var int autocvar_g_infiniteAmmo = 0i;
 var bool autocvar_ai_debugNav = false;
 
 void
@@ -327,6 +327,7 @@ private:
 	int m_boneSpine;
 	int m_torsoFirst;
 	int m_torsoLast;
+	int m_torsoTwistYaw;
 
 	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
 };

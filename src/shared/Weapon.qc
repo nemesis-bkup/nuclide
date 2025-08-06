@@ -927,7 +927,7 @@ ncWeapon::IsEmpty(void)
 {
 	ncPlayer ourOwner = (ncPlayer)GetOwner();
 
-	if (autocvar_g_infiniteAmmo == true) {
+	if (autocvar_g_infiniteAmmo != 0) {
 		return (false);
 	}
 
@@ -1009,7 +1009,7 @@ ncWeapon::UseAmmo(string fireInfo)
 {
 	ncPlayer ourOwner = (ncPlayer)GetOwner();
 
-	if (autocvar_g_infiniteAmmo == true) {
+	if (autocvar_g_infiniteAmmo == 1 || (m_weaponClipSize <= 0 && autocvar_g_infiniteAmmo >= 1)) {
 		return (true);
 	}
 
@@ -1030,6 +1030,10 @@ ncWeapon::UseAmmo(string fireInfo)
 			}
 
 			m_weaponClip -= m_fiAmmoPerShot;
+			
+			if (autocvar_g_infiniteAmmo == 2) {
+				ourOwner.GiveAmmo(m_fiAmmoType, m_fiAmmoPerShot);
+			}
 		} else if (ourOwner.UseAmmo(m_fiAmmoType, m_fiAmmoPerShot) == false) {
 			EmptySound();
 			m_weaponIsFiring = false;
