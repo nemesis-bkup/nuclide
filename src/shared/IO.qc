@@ -28,6 +28,8 @@ ncIO::ncIO(void)
 	}
 
 	/* null all of them */
+	m_modelEventCallbacks =
+	m_gameModeFilter =
 	m_outputOnSpawn =
 	m_outputOnKilled =
 	m_outputOnTrigger =
@@ -35,6 +37,7 @@ ncIO::ncIO(void)
 	m_outputOnUser2 =
 	m_outputOnUser3 =
 	m_outputOnUser4 = __NULL__;
+	
 #else
 	owner = __NULL__;
 	chain = __NULL__;

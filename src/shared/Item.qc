@@ -45,6 +45,10 @@ ncItem::Spawned(void)
 	precache.Sound(m_sndRespawn);
 	_isItem = true;
 
+	if (CreatedByMap() == false) {
+		return;
+	}
+
 	if (m_itemGivesHealth > 0 || m_itemGivesBonusHealth > 0) {
 		ncHint::PlaceEntityHint(this, "HEALTH");
 	}

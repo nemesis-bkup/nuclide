@@ -463,6 +463,7 @@ EntityDef_PrepareEntity(entity target, int id)
 
 				if (mode == g_ruleCName) {
 					foundMode = true;
+					break;
 				}
 			}
 

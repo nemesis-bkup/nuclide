@@ -14,6 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+enum
+{
+	ANIMATIONMODEL_SKELETAL,
+	ANIMATIONMODEL_HLMDL_VALVE,
+	ANIMATIONMODEL_HLMDL_GOOSE,
+}
+
 void
 ncPlayer::ncPlayer(void)
 {
@@ -438,10 +445,8 @@ ncPlayer::ProcessInput(void)
 	}
 }
 
-/* this is where it gets mod specific really fast,
-   as some models may not even support skeletal animation */
 void
-ncPlayer::UpdatePlayerAnimation(float timelength)
+ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
 {
 	float maxTopTime;
 	float maxBottomTime;
@@ -450,6 +455,88 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 	if (!skeletonindex) {
 		skeletonindex = skel_create(modelindex);
 	}
+
+	/* hack, we can't play the animations in reverse the normal way */
+	if (frame1time < 0.0f) {
+		frame1time = 10.0f;
+	}
+
+	angles[0] = 0.0f;
+	angles[1] = v_angle[1];
+	angles[2] = 0.0f;
+
+	makevectors([0, v_angle[1], 0]);
+	forwardDir = v_forward;
+	float fCorrect = dotproduct(velocity, v_right) * 0.25f;
+
+	/* Correct the legs */
+	angles[1] -= fCorrect;
+
+
+	/* TODO: Needs interpolation */
+	/* lower body */
+	frame = anim_bottom;
+	frame1time = anim_bottom_time;
+	skel_build(skeletonindex, this, modelindex, 0, 0, 0, 1);
+
+	// Build the top body
+	frame = anim_top;
+	frame1time = anim_top_time;
+//  	lerpfrac = 1.0f;
+	skel_build(skeletonindex, this, modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
+
+	makevectors( [ 0, fCorrect, 0 ] );
+	skel_postmul_bone( skeletonindex, m_torsoTwistYaw, [0,0,0], v_forward );
+
+}
+
+void
+ncPlayer::UpdatePlayerAnimation_Valve(float timelength)
+{
+	basebone = m_boneSpine;
+	frame = anim_top;
+	frame1time = anim_top_time;
+	baseframe = anim_bottom;
+	baseframe1time = anim_bottom_time;
+
+	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
+	bonecontrol1 = -fCorrect;
+	bonecontrol2 = bonecontrol1 * 0.5f;
+	bonecontrol3 = bonecontrol2 * 0.5f;
+	bonecontrol4 = bonecontrol3 * 0.5f;
+
+	angles[1] = v_angle[1] - fCorrect;
+	angles[0] = angles[2] = 0;
+
+	subblendfrac =
+	subblend2frac = v_angle[0] / 90;
+}
+
+void
+ncPlayer::UpdatePlayerAnimation_Goose(float timelength)
+{
+	basebone = m_boneSpine;
+	baseframe = anim_top;
+	baseframe1time = anim_top_time;
+	frame = anim_bottom;
+	frame1time = anim_bottom_time;
+
+	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
+
+	subblendfrac = -fCorrect * 0.05f;
+	angles[1] = v_angle[1] - fCorrect;
+	subblend2frac = v_angle[0] / 90;
+	angles[0] = angles[2] = 0;
+}
+
+/* this is where it gets mod specific really fast,
+   as some models may not even support skeletal animation */
+void
+ncPlayer::UpdatePlayerAnimation(float timelength)
+{
+	float maxTopTime;
+	float maxBottomTime;
+	vector forwardDir;
 
 	if (anim_top_delay <= 0.0f) {
 		anim_top = m_actAim;
@@ -487,22 +574,6 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 		}
 	}
 
-	/* hack, we can't play the animations in reverse the normal way */
-	if (frame1time < 0.0f) {
-		frame1time = 10.0f;
-	}
-
-	angles[0] = 0.0f;
-	angles[1] = v_angle[1];
-	angles[2] = 0.0f;
-
-	makevectors([0, v_angle[1], 0]);
-	forwardDir = v_forward;
-	float fCorrect = dotproduct(velocity, v_right) * 0.25f;
-
-	/* Correct the legs */
-	angles[1] -= fCorrect;
-
 	if (HasVFlags(VFL_INVEHICLE)) {
 		float rq = -1;
 		ncVehicle veh = (ncVehicle)vehicle;
@@ -537,28 +608,20 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 		anim_top_time = (maxTopTime - anim_top_time);
 	}
 
-	/* TODO: Needs interpolation */
-	/* lower body */
-	frame = anim_bottom;
-	frame1time = anim_bottom_time;
-	skel_build(skeletonindex, this, modelindex, 0, 0, 0, 1);
+	switch (m_animBackend) {
+	case ANIMATIONMODEL_HLMDL_VALVE:
+		UpdatePlayerAnimation_Valve(timelength);
+		break;
+	case ANIMATIONMODEL_HLMDL_GOOSE:
+		UpdatePlayerAnimation_Goose(timelength);
+		break;
+	case ANIMATIONMODEL_SKELETAL:
+		UpdatePlayerAnimation_Skeletal(timelength);
+		break;
+	}
 
-	// Build the top body
-	frame = anim_top;
-	frame1time = anim_top_time;
-//  	lerpfrac = 1.0f;
-	skel_build(skeletonindex, this, modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
 
-	makevectors( [ 0, -fCorrect, 0 ] );
-	skel_postmul_bone( skeletonindex, autocvar(skel_bone, 5), [0,0,0], v_forward );
 
-	/* counter act our crouching spine animation */
-	if (IsCrouching())
-		makevectors( [ 0, -25, fCorrect ] );
-	else
-		makevectors( [ 0, v_angle[0] * 0.5f, fCorrect ] );
-
-	skel_postmul_bone( skeletonindex, m_boneSpine, [0,0,0], v_forward );
 
 	/* timer update last */
 	/* top animation is always just being incremented */
@@ -1053,6 +1116,7 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 	READENTITY_BYTE(m_spectatingEntity, PLAYER_SPECTATE)
 	READENTITY_BYTE(m_spectatingMode, PLAYER_SPECTATE)
 	READENTITY_BYTE(m_spectatingFlags, PLAYER_SPECTATE)
+	READENTITY_BYTE(m_animBackend, PLAYER_TOPFRAME)
 	READENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
 	READENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
 	READENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
@@ -1159,6 +1223,7 @@ ncPlayer::PredictPreFrame(void)
 	SAVE_STATE(anim_bottom_time)
 	SAVE_STATE(sndindex_idle)
 	SAVE_STATE(activeweapon)
+	SAVE_STATE(m_animBackend)
 
 	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
 		m_ammoTypes_net[i] = m_ammoTypes[i];
@@ -1213,6 +1278,7 @@ ncPlayer::PredictPostFrame(void)
 	ROLL_BACK(anim_bottom)
 	ROLL_BACK(anim_bottom_time)
 	ROLL_BACK(sndindex_idle)
+	ROLL_BACK(m_animBackend)
 
 	/* make sure to relink these */
 	ROLL_BACK(vehicle_entnum)
@@ -1641,6 +1707,7 @@ ncPlayer::EvaluateEntity(void)
 	EVALUATE_FIELD(m_spectatingEntity, PLAYER_SPECTATE)
 	EVALUATE_FIELD(m_spectatingMode, PLAYER_SPECTATE)
 	EVALUATE_FIELD(m_spectatingFlags, PLAYER_SPECTATE)
+	EVALUATE_FIELD(m_animBackend, PLAYER_TOPFRAME)
 	EVALUATE_FIELD(anim_top, PLAYER_TOPFRAME)
 	EVALUATE_FIELD(anim_top_time, PLAYER_TOPFRAME)
 	EVALUATE_FIELD(anim_top_delay, PLAYER_TOPFRAME)
@@ -1750,6 +1817,7 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_BYTE(m_spectatingMode, PLAYER_SPECTATE)
 	SENDENTITY_BYTE(m_spectatingFlags, PLAYER_SPECTATE)
 
+	SENDENTITY_BYTE(m_animBackend, PLAYER_TOPFRAME)
 	SENDENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
 	SENDENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
 	SENDENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
@@ -1967,6 +2035,8 @@ ncPlayer::Spawned(void)
 	Physics_SetViewParms();
 	mins = m_pmoveVars.GetStandingMins();
 	maxs = m_pmoveVars.GetStandingMaxs();
+
+	m_animBackend = GetSpawnFloat("animBackend");
 }
 
 float

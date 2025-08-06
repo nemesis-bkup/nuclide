@@ -331,6 +331,7 @@ private:
 #endif
 
 	entity m_holdingEntity;
+	NETWORKED_FLOAT(m_animBackend)
 
 
 

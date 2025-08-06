@@ -452,14 +452,7 @@ init_respawn(void)
 {
 	int spawnCounter = 0i;
 
-	/* append entities from external .add file */
-	string appendEntitiesFile = strcat("maps/", mapname, ".add");
-	if (fileExists(appendEntitiesFile)) {
-		loadfromfile(appendEntitiesFile);
-		ncError("Loading extra entities for %s from %S", mapname, appendEntitiesFile);
-	} else {
-		ncError("No entity additions exist for %s under %S", mapname, appendEntitiesFile);
-	}
+	ncMapDelegate::InitialRespawn();
 
 	if (g_ents_initialized) {
 		g_grMode.InitPostEnts();
@@ -736,17 +729,17 @@ CheckSpawn(void() spawnfunc)
 				ent.SpawnKey(argv(i), argv(i+1));
 			}
 		}
-		
-		
- 
+
 		if (STRING_SET(ent.m_gameModeFilter)) {
 			if (ent.m_gameModeFilter != g_ruleCName) {
+				ent._loading = false;
+
 				if (ent.identity) {
-					ent.Destroy();
+					ent.ScheduleThink(ent.Destroy, 0.0f);
 				} else {
 					remove(ent);
 				}
-				ent = __NULL__;
+
 				g_ents_initialized = true;
 				return;
 			}
