@@ -44,12 +44,15 @@ private:
 	int m_borderThickness;
 	vector m_picMins;
 	vector m_picSize;
+	vector m_picColorTint;
 };
 
 void
 vguiPic::vguiPic(void)
 {
 	m_strImage = __NULL__;
+	m_picColorTint = [1,1,1];
+	m_borderThickness = 0i;
 }
 
 void
@@ -63,14 +66,14 @@ vguiPic::Draw(void)
 {
 	if (m_borderThickness <= 0) {
 		if (m_strImage) {
-			drawpic(m_parent.m_vecOrigin + m_vecOrigin, m_strImage, m_vecSize, [1,1,1], 1.0f, 0);
+			drawpic(m_parent.m_vecOrigin + m_vecOrigin, m_strImage, m_vecSize, m_picColorTint, 1.0f, 0);
 		}
 	} else {
 		vguiTheme ourTheme = GetTheme();
 		ourTheme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, __NULL__);
 
 		if (m_strImage) {
-			drawpic(m_parent.m_vecOrigin + m_vecOrigin + m_picMins, m_strImage, m_picSize, [1,1,1], 1.0f, 0);
+			drawpic(m_parent.m_vecOrigin + m_vecOrigin + m_picMins, m_strImage, m_picSize, m_picColorTint, 1.0f, 0);
 		}
 	}
 }
@@ -113,6 +116,12 @@ vguiPic::SetBorder (int thickness)
 {
 	m_borderThickness = thickness;
 	AdjustBounds();
+}
+
+void
+vguiPic::SetColor(vector colorTint)
+{
+	m_picColorTint = colorTint;
 }
 
 int

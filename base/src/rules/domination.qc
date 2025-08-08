@@ -58,7 +58,7 @@ CodeCallback_StartGameType(void)
 	game.SetSpawnPoint("info_intermission");
 
 	teams.SetUp(1, "Enforcers", [255, 64, 64], true);
-	teams.SetUp(2, "Rangers", [64, 64, 255], true);
+	teams.SetUp(2, "Rangers", [155, 205, 255], true);
 
 	teams.SetSpawnPoint(1, "info_player_deathmatch");
 	teams.SetSpawnPoint(2, "info_player_deathmatch");

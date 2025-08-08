@@ -25,6 +25,7 @@ vgui_changeclass.qc
 vgui_chooseteam.qc
 vgui_motd.qc
 vgui_modelspawner.qc
+vgui_playerlist.qc
 way.qc
 detailtex.qc
 shake.qc

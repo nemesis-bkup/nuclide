@@ -1748,6 +1748,10 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_INT(modelindex, PLAYER_MODELINDEX)
 	SENDENTITY_INT(vw_index, PLAYER_MODELINDEX)
 	SENDENTITY_BYTE(colormap, PLAYER_MODELINDEX)
+	
+	if (flChanged & PLAYER_MODELINDEX) {
+		userinfo.SetFloat(this, "*mi", modelindex);
+	}
 
 	/* crap the render mode updates in here */
 	SENDENTITY_BYTE(m_renderMode, PLAYER_MODELINDEX)

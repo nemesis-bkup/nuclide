@@ -31,8 +31,7 @@ HUD_Draw(void)
 {
 
 	vector hud_mins = screen.HUDMins();
-	vector hud_size = screen.HUDSize();
-	vector hudSize = hud_size;
+	vector hudSize = screen.HUDSize();
 	vector iconPos = hud_mins + (hudSize / 2);
 	iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
 
@@ -43,9 +42,10 @@ HUD_Draw(void)
 	if (g_damageAlpha > 0.0f) {
 		if (autocvar_cg_damageFill > 0.0) {
 			vector screenSize = screen.Size();
+			vector screenMins = screen.Mins();
 			vector finalColor = [1,1,1];
 			finalColor[1] = finalColor[2] = 1.0 - (g_damageAlpha * autocvar_cg_damageFill);
-			draw.Pic(hud_mins, "fade_modulate", screenSize, finalColor, 1.0, DRAWFLAG_NORMAL);
+			draw.Pic(screenMins, "fade_modulate", screenSize, finalColor, 1.0, DRAWFLAG_NORMAL);
 		}
 
 		g_damageAlpha -= clframetime;
@@ -60,16 +60,16 @@ HUD_Draw(void)
 
 	/* ammo */
 	if (weapon.AmmoRequired() == true) {
-		iconPos[0] = (hudSize[0] - baseIconSize) - baseIconPadding;
-		iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
+		iconPos[0] = hud_mins[0] + (hudSize[0] - baseIconSize) - baseIconPadding;
+		iconPos[1] = hud_mins[1] + (hudSize[1] - baseIconSize) - baseIconPadding;
 		draw.Pic(iconPos, g_ammoPic, [baseIconSize, baseIconSize], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
 		iconPos[0] -= baseIconPadding;
 		draw.RText(iconPos, ammoValue, FONT_HUD);
 		iconPos[1] += font.GetHeight(FONT_HUD);
 		draw.RText(iconPos, weapon.GetTitle(), FONT_HUD);
 	} else {
-		iconPos[0] = hudSize[0] - baseIconPadding;
-		iconPos[1] = (hudSize[1] - baseIconSize) - baseIconPadding;
+		iconPos[0] = hud_mins[0] + hudSize[0] - baseIconPadding;
+		iconPos[1] = hud_mins[1] + (hudSize[1] - baseIconSize) - baseIconPadding;
 		iconPos[1] += font.GetHeight(FONT_HUD);
 		draw.RText(iconPos, weapon.GetTitle(), FONT_HUD);
 	}
