@@ -208,12 +208,12 @@ View_DrawViewModel(void)
 		View_ClearEvents();
 	}
 
-	Event_Callback(m_eViewModel.frame1time, m_eViewModel.m_modelEventTime);
-
 	entity oldSelf = self;
 	self = m_eViewModel;
 	processmodelevents(m_eViewModel.modelindex, m_eViewModel.frame, m_eViewModel.m_modelEventTime,
 		m_eViewModel.frame1time, View_HandleAnimEvent);
+
+	Event_Callback(m_eViewModel.frame1time, m_eViewModel.m_modelEventTime);
 
 	m_eViewModel.m_modelEventTime = m_eViewModel.frame1time;
 	self = oldSelf;

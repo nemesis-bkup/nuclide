@@ -76,13 +76,7 @@ btn_newgame_start(void)
 void
 btn_training(void)
 {
-	localcmd("stopmusic\n");
-	localcmd("maxplayers 1\n");
-	localcmd(GameLibrary_GetInfo(GAMEINFO_TRAININGMAP));
-
-	/* TODO: Some mods may choose to put movies in this... */
-	RichPresence_Clear();
-	RichPresence_Set("status", "Singleplayer: Training");
+	Map_Training();
 }
 
 void

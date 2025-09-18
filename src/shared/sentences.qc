@@ -64,7 +64,7 @@ Sentences_Init(void)
 	}
 
 	if (fs_sentences < 0) {
-		ncWarning("No Sentences, missing %S", autocvar_sentences_File);
+		ncWarning("Sentences subsystem unvailable.");
 		InitEnd();
 		return;
 	}
@@ -97,6 +97,8 @@ Sentences_Init(void)
 #else
 		if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
 			ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
+			ncWarning("Sentences subsystem unvailable.");
+			InitEnd();
 			return;
 		}
 
@@ -193,7 +195,7 @@ Sentences_Init(void)
 	}
 
 	if (fs_sentences < 0) {
-		ncWarning("No Sentences, missing %S", autocvar_sentences_File);
+		ncWarning("Sentences subsystem unvailable.");
 		InitEnd();
 		return;
 	}
@@ -225,7 +227,8 @@ Sentences_Init(void)
 				g_sentences_count);
 #else
 		if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
-			ncError("Reached limit of max sentences!");
+			ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
+			ncWarning("Sentences subsystem unvailable.");
 			InitEnd();
 			return;
 		}

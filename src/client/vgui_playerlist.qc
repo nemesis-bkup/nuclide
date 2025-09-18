@@ -174,38 +174,26 @@ void VGUI_PlayerList ( void )
 
 	static void VGUI_PlayerList_UpdateDetails ( void ) {
 		int selectedEntry = lstPlayers.GetSelected();
-		string playerName;
-		string playerModel;
-		string playerFedi;
-		string playerFlag;
-		string playerAvatar;
-		string modelIndex;
-		string playerBG;
+		string playerName = "";
+		string playerModel = "";
+		string playerFedi = "";
+		string playerFlag = "";
+		string playerAvatar = "";
+		string modelIndex = "";
+		string playerBG = "";
 		
 		/* TODO: these should be cached elsewhere, with an API making these accessible */
 		if (selectedEntry != -1) {
-			playerName =  getplayerkeyvalue(selectedEntry, "name");
-			playerModel =  getplayerkeyvalue(selectedEntry, "model");
-			playerFedi =  getplayerkeyvalue(selectedEntry, "fedi");
-			playerFlag =  getplayerkeyvalue(selectedEntry, "flag");
-			playerAvatar =  getplayerkeyvalue(selectedEntry, "avatar");
+			ncUserInfo playerInfo = g_userInfo.InfoByIndex(selectedEntry);
+			playerName =  playerInfo.Name();
+			playerModel =  playerInfo.Model();
+			playerFedi =  playerInfo.Contact();
+			playerFlag =  playerInfo.Flag();
+			playerAvatar =  playerInfo.Avatar();
 			modelIndex =  modelnameforindex(getplayerkeyfloat(selectedEntry, "*mi"));
-			playerBG =  getplayerkeyvalue(selectedEntry, "bg");
+			playerBG =  playerInfo.Banner();
 		}
 
-		if (!STRING_SET(playerFedi)) {
-			playerFedi = "No contact info.";
-		}
-		
-		if (!STRING_SET(playerFlag)) {
-			playerFlag = "gfx/flags16/earth";
-		} else {
-			playerFlag = strcat("gfx/flags16/", playerFlag);
-		}
-
-		if (!STRING_SET(playerAvatar)) {
-			playerAvatar = "gfx/ui/avatar_missing";
-		}
 		
 		if (!STRING_SET(playerBG)) {
 			picBackground.Hide();

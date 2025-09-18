@@ -407,6 +407,13 @@ typedef struct
 	@param userKey specifies the user info-key to query.
 	@return The value in vector form. */
 	vector GetVector(string userKey);
+	
+	/** Returns the game flags of the player entity.
+	    These are highly performant, predicted, game specific
+	    flags. Use these if infokeys are too expensive.
+
+	@return The gameflag bitfield in float form. */
+	float GetGameFlags(void);
 } playerAPI_t;
 var playerAPI_t player; /**< Access playerAPI_t functions using this variable. */
 
@@ -583,7 +590,7 @@ _client_main(void)
 	font.RGBtoHex = linkToClientProgs("Font_RGBtoHex");
 	font.StringWidth = linkToClientProgs("Font_StringWidth");
 
-	screen.Width = linkToClientProgs("CLPF_surface_ScreenHeight");
+	screen.Width = linkToClientProgs("CLPF_surface_ScreenWidth");
 	screen.Height = linkToClientProgs("CLPF_surface_ScreenHeight");
 	screen.Size = linkToClientProgs("CLPF_surface_ScreenSize");
 	screen.Mins = linkToClientProgs("CLPF_surface_ScreenMins");
@@ -609,6 +616,7 @@ _client_main(void)
 	player.IsProne = linkToClientProgs("CLPF_player_IsProne");
 	player.IsMoving = linkToClientProgs("CLPF_player_IsMoving");
 	player.IsFalling = linkToClientProgs("CLPF_player_IsFalling");
+	player.GetGameFlags = linkToClientProgs("CLPF_player_GetGameFlags");
 
 	player.GetString = linkToClientProgs("CLPF_player_GetString");
 	player.GetInteger = linkToClientProgs("CLPF_player_GetInteger");

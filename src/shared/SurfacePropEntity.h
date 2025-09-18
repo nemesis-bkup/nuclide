@@ -185,8 +185,8 @@ private:
 	
 	float m_timeUntilNextBurnDamage;
 
-	PREDICTED_FLOAT(armor)
-	PREDICTED_FLOAT_N(health)
+	NETWORKED_FLOAT(armor)
+	NETWORKED_FLOAT_N(health)
 
 	/* Surface/PropKit */
 	int m_surfdataID;

@@ -18,18 +18,29 @@ void
 ncActor::ncActor(void)
 {
 #ifdef SERVER
+	m_pvsSleep = true;
 	m_activeSchedule = __NULL__;
 	m_pathfindingNodeCount = 0i;
 	m_pathfindingCurrentNode = -1i;
 	m_pathfindingGraph = __NULL__;
 	m_pathfindingDestination = [0,0,0];
-	m_moveSpeedKey = 0.0f;
-	m_pathTarget = "";
 	m_pathEntity = __NULL__;
 	m_timeUntilDroppingRoute = 0.0f;
+	m_pathfindingLastPos = g_vec_null;
+	m_followingEntity = __NULL__;
+	m_moveSpeedKey = 0.0f;
+	m_mindset = __NULL__;
+	m_hook = __NULL__;
+	m_pathTarget = "";
 #endif
 
 	m_itemList = __NULL__;
+	activeweapon = 0;
+	m_itemStart = 0;
+	m_currentStamina = 0.0f;
+	m_activeWeapon_net = 0;
+	m_activeWeapon = __NULL__;
+	m_firstWeapon = __NULL__;
 
 	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
 		m_ammoTypes[i] = 0i;
@@ -526,6 +537,13 @@ ncActor::RestoreComplete(void)
 }
 
 void
+ncActor::Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody)
+{
+	RouteClear();
+	super::Death(inflictor, attacker, damagePoints, dir, absImpactPos, hitBody);
+}
+
+void
 ncActor::ThinkSchedules(void)
 {
 	if (IsPerforming() == false && m_pathfindingNodeCount <= 0i) {
@@ -671,8 +689,17 @@ ncActor::Input(entity eAct, string strInput, string strData)
 			GiveAmmo(ammoNum, ammoCount);
 		}
 		break;
+	case "DropWeaponInSlot":
+		DropWeaponInSlot(ReadInt(strData));
+		break;
+	case "RemoveWeaponInSlot":
+		RemoveWeaponInSlot(ReadInt(strData));
+		break;
 	case "RemoveActiveWeapon":
 		RemoveItem(GetCurrentWeapon());
+		break;
+	case "SwitchToWeapon":
+		SwitchToWeapon(strData);
 		break;
 	/* schedule management */
 	case "ActorThinks":
@@ -1147,15 +1174,22 @@ ncActor::ChasePath(string startPath)
 }
 
 void
+ncActor::OnRemoveEntity(void)
+{
+	RouteClear();
+}
+
+void
 ncActor::RouteClear(void)
 {
-	if (!m_pathfindingNodeCount) {
-		return;
-	}
-
 	m_pathfindingCurrentNode = BOTROUTE_END;
 	m_pathfindingNodeCount = 0;
-	memfree(m_pathfindingGraph);
+
+	if (m_pathfindingGraph != __NULL__) {
+		memfree(m_pathfindingGraph);
+		m_pathfindingGraph = __NULL__;
+	}
+
 	ncActor_Log("Actor %S (%s) cleared their route.", netname, classname);
 }
 
@@ -1539,7 +1573,7 @@ ncActor::GiveItem(string itemName)
 	}
 
 	/* since we have something in the inventory, start there */
-	linkedList = (ncWeapon)m_itemList;
+	linkedList = m_itemList;
 
 	/* iterate through the inventory, then figure out if we already have it*/
 	while (linkedList) {
@@ -1645,6 +1679,66 @@ ncActor::SwitchToBestWeapon(bool ignoreActive)
 			SwitchToExactWeapon((ncWeapon)bestWeapon);
 		}
 	}
+}
+
+
+
+bool
+ncActor::RemoveWeaponInSlot(int desiredSlot)
+{
+	/* iterate over all the inventory items */
+	ncItem linkedList = m_itemList;
+
+	while (linkedList) {
+		if (!STRING_SET(linkedList.declclass)) {
+			linkedList = __NULL__;
+			break;
+		}
+
+		/* inventory item may not be a weapon */
+		if (is.Weapon(linkedList)) {
+			ncWeapon testWeapon = (ncWeapon)linkedList;
+			string weaponName = testWeapon.declclass;
+			int hudSlot = testWeapon.m_weaponHUDSlot;
+
+			if (hudSlot == desiredSlot) {
+				return RemoveItem(weaponName);
+			}
+		}
+
+		linkedList = (ncItem)linkedList.m_nextItem;
+	}
+
+	return (false);
+}
+
+bool
+ncActor::DropWeaponInSlot(int desiredSlot)
+{
+	/* iterate over all the inventory items */
+	ncItem linkedList = m_itemList;
+
+	while (linkedList) {
+		if (!STRING_SET(linkedList.declclass)) {
+			linkedList = __NULL__;
+			break;
+		}
+
+		/* inventory item may not be a weapon */
+		if (is.Weapon(linkedList)) {
+			ncWeapon testWeapon = (ncWeapon)linkedList;
+			string weaponName = testWeapon.declclass;
+			int hudSlot = testWeapon.m_weaponHUDSlot;
+
+			if (hudSlot == desiredSlot) {
+				return RemoveItem(weaponName);
+			}
+		}
+
+		linkedList = (ncItem)linkedList.m_nextItem;
+	}
+
+	return (false);
 }
 
 bool

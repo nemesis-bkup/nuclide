@@ -1180,10 +1180,17 @@ ncWeapon::FiredWeaponAttack(string fireInfo)
 	}
 
 #ifdef SERVER
-	ScheduleThink(EjectBrass, m_fiBrassDelay * 0.01f);
+	/* brass ejection */
+	if (STRING_SET(m_fiBrassDef)) {
+		ncTimer::TemporaryTimer(this, EjectBrass, m_fiBrassDelay * 0.01f, false);
+	}
 #endif
 
-	ourOwner.AttackByDef(fireInfo, false);
+	if (STRING_SET(fireInfo)) {
+		vector firePos = ourOwner.m_xrInputRight.GetOrigin();
+		vector fireAng = ourOwner.m_xrInputRight.GetAngles();
+		ourOwner._ProjectileAttack(fireInfo, false, firePos, fireAng);
+	}
 }
 
 void
@@ -1811,6 +1818,18 @@ ncWeapon::SecondaryAttack(void)
 	Attack(m_secondaryFireInfo);
 }
 
+void
+ncWeapon:: WeaponStartedReloading(void)
+{
+
+}
+
+void
+ncWeapon:: WeaponStoppedReloading(void)
+{
+
+}
+
 #ifdef SERVER
 void
 ncWeapon::_ReloadFinished(void)
@@ -1829,6 +1848,7 @@ ncWeapon::_ReloadFinished(void)
 	}
 
 	ourOwner.UseAmmo(m_primaryAmmoType, ammoToDeduct);
+	WeaponStoppedReloading();
 }
 #endif
 
@@ -1917,10 +1937,15 @@ ncWeapon::Reload(void)
 
 	ourOwner.StartSoundDef(reloadSound, CHAN_AUTO, true);
 	ScheduleThink(_ReloadFinished, reloadTime - 0.1f);
+	WeaponStartedReloading();
+
 #endif
 
 #ifdef SERVER
-	ncTimer foobar = foobar.TemporaryTimer(this, EjectCartridge, m_fiCartridgeDelay * 0.01f, false);
+	/* cartridge ejection */
+	if (STRING_SET(m_fiCartridgeDef)) {
+		ncTimer::TemporaryTimer(this, EjectCartridge, m_fiCartridgeDelay * 0.01f, false);
+	}
 #endif
 
 	ourOwner.sndindex_idle = 0;

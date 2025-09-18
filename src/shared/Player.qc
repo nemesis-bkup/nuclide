@@ -19,7 +19,7 @@ enum
 	ANIMATIONMODEL_SKELETAL,
 	ANIMATIONMODEL_HLMDL_VALVE,
 	ANIMATIONMODEL_HLMDL_GOOSE,
-}
+};
 
 void
 ncPlayer::ncPlayer(void)
@@ -448,10 +448,6 @@ ncPlayer::ProcessInput(void)
 void
 ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
 {
-	float maxTopTime;
-	float maxBottomTime;
-	vector forwardDir;
-
 	if (!skeletonindex) {
 		skeletonindex = skel_create(modelindex);
 	}
@@ -465,9 +461,7 @@ ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
 	angles[1] = v_angle[1];
 	angles[2] = 0.0f;
 
-	makevectors([0, v_angle[1], 0]);
-	forwardDir = v_forward;
-	float fCorrect = dotproduct(velocity, v_right) * 0.25f;
+	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
 
 	/* Correct the legs */
 	angles[1] -= fCorrect;
@@ -485,8 +479,7 @@ ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
 //  	lerpfrac = 1.0f;
 	skel_build(skeletonindex, this, modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
 
-	makevectors( [ 0, fCorrect, 0 ] );
-	skel_postmul_bone( skeletonindex, m_torsoTwistYaw, [0,0,0], v_forward );
+	skel_postmul_bone( skeletonindex, m_torsoTwistYaw, [0,0,0], anglesToForward([ 0, fCorrect, 0 ]) );
 
 }
 
@@ -536,7 +529,6 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 {
 	float maxTopTime;
 	float maxBottomTime;
-	vector forwardDir;
 
 	if (anim_top_delay <= 0.0f) {
 		anim_top = m_actAim;
@@ -629,7 +621,7 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 	anim_top_delay -= timelength;
 
 	/* we may be walking backwards, thus decrement bottom */
-	if (dotproduct(velocity, forwardDir) < 0) {
+	if (dotproduct(velocity, anglesToForward([0, v_angle[1], 0])) < 0) {
 		anim_bottom_time -= timelength;
 	} else {
 		anim_bottom_time += timelength;
@@ -731,10 +723,9 @@ ncPlayer::predraw(void)
       so we need to advance their animation manually */
 	if (entnum != player_localentnum) {
 		if (autocvar(cg_extrapolateClients, 1)) {
-			makevectors(v_angle);
-			input_movevalues[0] = dotproduct(velocity, v_forward);
-			input_movevalues[1] = dotproduct(velocity, v_right);
-			input_movevalues[2] = dotproduct(velocity, v_up);
+			input_movevalues[0] = dotproduct(velocity, anglesToForward(v_angle));
+			input_movevalues[1] = dotproduct(velocity, anglesToRight(v_angle));
+			input_movevalues[2] = dotproduct(velocity, anglesToUp(v_angle));
 			input_buttons = (flags & FL_JUMPRELEASED) ? 0 : INPUT_JUMP; /* this may not help that much... */
 			input_buttons |= IsCrouching() ? INPUT_CROUCH : 0;
 			input_angles = v_angle;
@@ -912,11 +903,10 @@ ncPlayer::UpdateAliveCam(void)
 			veh.UpdateView();
 	} else if (health) {
 		if (autocvar_pm_thirdPerson == TRUE) {
-			makevectors(view_angles);
-			vector vStart = [pSeat->m_vecPredictedOrigin[0], pSeat->m_vecPredictedOrigin[1], pSeat->m_vecPredictedOrigin[2] + maxs[2]] + (v_right * 4);
-			vector vEnd = vStart + (v_forward * -48) + (v_right * 4);
+			vector vStart = [pSeat->m_vecPredictedOrigin[0], pSeat->m_vecPredictedOrigin[1], pSeat->m_vecPredictedOrigin[2] + maxs[2]] + (anglesToRight(view_angles) * 4);
+			vector vEnd = vStart + (anglesToForward(view_angles) * -48) + (anglesToRight(view_angles) * 4);
 			traceline(vStart, vEnd, FALSE, this);
-			g_view.SetCameraOrigin(trace_endpos + (v_forward * 5));
+			g_view.SetCameraOrigin(trace_endpos + (anglesToForward(view_angles) * 5));
 		}
 	}
 
@@ -1079,9 +1069,9 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 	READENTITY_COORD(m_pmoveHookVelocity[1], PLAYER_PUNCHANGLE)
 	READENTITY_COORD(m_pmoveHookVelocity[2], PLAYER_PUNCHANGLE)
 	READENTITY_FLOAT(m_netEffects, PLAYER_FLAGS)
-	READENTITY_INT(flags, PLAYER_FLAGS)
+	READENTITY_FLOAT(flags, PLAYER_FLAGS)
 	READENTITY_INT(m_nuclideFlags, PLAYER_FLAGS)
-	READENTITY_INT(gflags, PLAYER_FLAGS)
+	READENTITY_FLOAT(gflags, PLAYER_FLAGS)
 	READENTITY_FLOAT(gravity, PLAYER_FLAGS)
 	READENTITY_FLOAT(friction, PLAYER_FLAGS)
 	READENTITY_FLOAT(m_timeSinceJump, PLAYER_TIMINGS)
@@ -1555,8 +1545,9 @@ ncPlayer::MakeTempSpectator(void)
 	effects = 0;
 	alpha = 0.0f;
 	scale = 1.0f;
-	SetInfoKey("*spectator", "0"); /* not a real spectator */
-	SetInfoKey("*dead", "0");
+
+	userinfo.SetBool(this, "*spectator", false);
+	userinfo.SetBool(this, "*dead", false);
 }
 
 void
@@ -1586,9 +1577,10 @@ ncPlayer::Death(entity inflictor, entity attacker, int damagePoints, vector dir,
 	SetGravity(1.0f);
 	customphysics = Empty;
 	setsize(this, [0,0,0], [0,0,0]);
-	SetInfoKey("*deaths", ftos(deaths));
-	SetInfoKey("*dead", "1");
-	SetInfoKey("*spectator", "0");
+
+	userinfo.SetFloat(this, "*deaths", deaths);
+	userinfo.SetBool(this, "*spectator", false);
+	userinfo.SetBool(this, "*dead", false);
 	m_timeOfDeath = time;
 }
 
@@ -1619,10 +1611,10 @@ ncPlayer::MakePlayer(void)
 	SetScale(1.0f);
 	Physics_SetViewParms();
 	SetSize(m_pmoveVars.GetStandingMins(), m_pmoveVars.GetStandingMaxs());
-	SetInfoKeyFloat("*spectator", false);
-	SetInfoKeyFloat("*deaths", deaths);
-	SetInfoKeyFloat("*dead", 0);
-	SetInfoKeyFloat("*spec", 0);
+
+	userinfo.SetFloat(this, "*deaths", deaths);
+	userinfo.SetBool(this, "*spectator", false);
+	userinfo.SetBool(this, "*dead", false);
 }
 
 void
@@ -1631,7 +1623,6 @@ ncPlayer::MakeSpectator(void)
 	ClientKill();
 	MakeTempSpectator();
 	SetTeam(TEAM_SPECTATOR);
-	SetInfoKeyFloat("*team", team);
 }
 
 void
@@ -1783,9 +1774,9 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_COORD(m_pmoveHookVelocity[1], PLAYER_PUNCHANGLE)
 	SENDENTITY_COORD(m_pmoveHookVelocity[2], PLAYER_PUNCHANGLE)
 	SENDENTITY_FLOAT(effects, PLAYER_FLAGS)
-	SENDENTITY_INT(flags, PLAYER_FLAGS)
+	SENDENTITY_FLOAT(flags, PLAYER_FLAGS)
 	SENDENTITY_INT(m_nuclideFlags, PLAYER_FLAGS)
-	SENDENTITY_INT(gflags, PLAYER_FLAGS)
+	SENDENTITY_FLOAT(gflags, PLAYER_FLAGS)
 	SENDENTITY_FLOAT(gravity, PLAYER_FLAGS)
 	SENDENTITY_FLOAT(friction, PLAYER_FLAGS)
 	SENDENTITY_FLOAT(m_timeSinceJump, PLAYER_TIMINGS)

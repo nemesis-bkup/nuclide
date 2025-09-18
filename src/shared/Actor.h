@@ -155,6 +155,10 @@ public:
 	nonvirtual bool RemoveAllItems(bool);
 	/** Removes all weapons from the inventory. Returns `false` when already clear. */
 	nonvirtual bool RemoveAllWeapons(void);
+	/** Removes the first item in someones specified inventory slot. Return values equals whether the inventory was changed. */
+	nonvirtual bool RemoveWeaponInSlot(int);
+	/** Drops the first item in someones specified inventory slot, placing it into the world in front of them. Return values equals whether the inventory was changed. */
+	nonvirtual bool DropWeaponInSlot(int);
 	/** Returns the name of the current weapon. E.g. "weapon_foobar" */
 	nonvirtual string GetCurrentWeapon(void);
 	/** Switches the entity to use the desired weapon. */
@@ -192,6 +196,8 @@ public:
 	virtual void Spawned(void);
 	virtual void Input(entity, string, string);
 	virtual void DebugDraw(void);
+	virtual void OnRemoveEntity(void);
+	virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
 
 	/** Overridable: Called regularily to select a new schedule to perform. */
 	virtual void SelectNewSchedule(void);
@@ -250,7 +256,12 @@ public:
 	virtual void Event_ReloadWeaponEnd(void);
 	virtual void Event_HolsterWeapon(void);
 
+
+
 private:
+
+
+	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
 
 #ifdef SERVER
 	bool m_pvsSleep;
@@ -328,8 +339,6 @@ private:
 	int m_torsoFirst;
 	int m_torsoLast;
 	int m_torsoTwistYaw;
-
-	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
 };
 
 /* for now here to make debugging easier */

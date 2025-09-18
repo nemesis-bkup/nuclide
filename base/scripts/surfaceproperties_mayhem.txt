@@ -198,7 +198,7 @@ slime
 gs_material_snow
 {
 	bulletimpact "sfx_impact.snow"
-	fx_bulletimpact "shot_snow.shot_snow"
+	fx_bulletimpact "impact_snow.main"
 	stepleft "step_default.left"
 	stepright "step_default.right"
 }

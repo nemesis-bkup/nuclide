@@ -42,7 +42,6 @@ const int g_physMaxDamageOperations = 32;
 var int g_physDamageOperations = 0;
 #endif
 
-var bool autocvar_phys_lowspec = true;
 
 bool
 Physics_Simple(void)
@@ -665,23 +664,23 @@ ncPhysicsEntity::_TouchThink(void)
 
 #if 1
 	if (m_timeSincePhysicsCheck < time) {
-		if (lengthSquared(m_vecPrevAngles - angles) < 4) {
+		if (lengthSquared(m_lastvalidSimAng - angles) < 4) {
 			avelocity = g_vec_null;
 		}
-		if (lengthSquared(m_vecPrevOrigin - origin) < 4) {
+		if (lengthSquared(m_lastValidSimPos - origin) < 4) {
 			velocity = g_vec_null;
 		}
 
 		m_timeSincePhysicsCheck = time + 1.0f;
-		m_vecPrevOrigin = origin;
-		m_vecPrevAngles = angles;
+		m_lastValidSimPos = origin;
+		m_lastvalidSimAng = angles;
 	}
 
 	/* If we barely move, disable the physics simulator */
 	#ifdef SERVER
 	if (velocity == g_vec_null && avelocity == g_vec_null) {
 		if (GetValue(this)) {
-			NSPhysics_Log("%s is now sleeping.", classname);
+			LogPhysics("%s is now sleeping.", classname);
 			Sleep();
 			velocity = [0,0,0];
 			avelocity = [0,0,0];
@@ -769,6 +768,15 @@ ncPhysicsEntity::Respawn(void)
 {
 	super::Respawn();
 
+	/* cache the center position offset */
+	vector centerOffset = WorldSpaceCenter() - GetOrigin();
+	vector oldAngles = angles;
+	angles = [0,0,0];
+	m_massCenter[0] = dotproduct(centerOffset, GetForward());
+	m_massCenter[1] = dotproduct(centerOffset, GetRight());
+	m_massCenter[2] = dotproduct(centerOffset, GetUp());
+	angles = oldAngles;
+	
 	/* make turning on spawn difficult, see EvaluateEntity() */
 	m_spawnPhysTime = GetTime() + 2.0f;
 	max_angular = 0.1f;
@@ -919,7 +927,7 @@ ncPhysicsEntity::ApplyForceCenter(vector vecForce)
 		vector finalForce = vecForce;
 		physics_addforce(this, finalForce, GetMassCenter());
 
-		NSPhysics_Log("%s::ApplyForceCenter: %v (val: %v)",
+		LogPhysics("%s::ApplyForceCenter: %v (val: %v)",
 			classname, finalForce, vecForce);
 	} else {
 		velocity += vecForce;
@@ -935,10 +943,10 @@ ncPhysicsEntity::ApplyForceOffset(vector vecForce, vector vecOffset)
 	vecForce *= MetersToInches;
 
 	if (physics_supported() == TRUE) {
-		vector finalForce = vecForce;
+		vector finalForce = (vecForce) * autocvar_phys_forceScale;
 		physics_addforce(this, finalForce, vecOffset);
 
-		NSPhysics_Log("%s::ApplyForceOffset: %v at pos %v (val: %v)",
+		LogPhysics("%s::ApplyForceOffset: %v at pos %v (val: %v)",
 			classname, finalForce, vecOffset, vecForce);
 	} else {
 		velocity += vecForce;
@@ -951,10 +959,10 @@ ncPhysicsEntity::ApplyTorqueCenter(vector vecTorque)
 	Wake();
 
 	if (physics_supported() == TRUE) {
-		vector finalTorque = vecTorque * m_inertiaScale;
+		vector finalTorque = ((vecTorque * m_inertiaScale) * autocvar_phys_spinScale);
 		physics_addtorque(this, finalTorque);
 
-		NSPhysics_Log("%s::ApplyTorqueCenter: %v (val: %v, scale: %f)",
+		LogPhysics("%s::ApplyTorqueCenter: %v (val: %v, scale: %f)",
 			classname, finalTorque, vecTorque, m_inertiaScale);
 	} else {
 		avelocity = vecTorque;
@@ -1041,7 +1049,7 @@ ncPhysicsEntity::GetMass(void)
 vector
 ncPhysicsEntity::GetMassCenter(void)
 {
-	return WorldSpaceCenter();
+	return GetOrigin() + (GetForward() * m_massCenter[0]) + (GetRight() * m_massCenter[1]) + (GetUp() * m_massCenter[2]);
 }
 
 float

@@ -16,6 +16,8 @@
 
 void EFX_UpdateListener(ncView);
 
+const string g_rtEnvSphereMaterial = "rtenvsphere";
+
 void
 init(float prevprogs)
 {
@@ -173,8 +175,11 @@ CSQC_RendererRestarted(string rstr)
 	g_shellchromeshader = shaderforname("shellchrome", sprintf("{\ndeformVertexes bulge 1.25 1.25 0\n{\nmap %s\ntcMod scroll -0.1 0.1\ntcGen environment\nblendFunc add\nrgbGen entity\n}\n}", "textures/sfx/reflection.tga"));
 	g_shellchromeshader_cull = shaderforname("shellchrome2", sprintf("{\ncull back\ndeformVertexes bulge 1.5 1.5 0\n{\nmap %s\ntcMod scroll -0.1 0.1\ntcGen environment\nrgbGen entity\n}\n}", "textures/sfx/reflection.tga"));
 
+	shaderforname(g_rtEnvSphereMaterial, sprintf("{\nsurfaceParm nolightmap\n{\nmap $rt:%s\n}\n}", g_rtEnvSphereMaterial));
+
 	InitEnd();
 }
+
 
 /** Always call this instead of renderscene(); !
 We want you to avoid calling renderscene() directly because it misrepresents
@@ -187,6 +192,40 @@ void
 CSQC_RenderScene(void)
 {
 	renderscene();
+}
+
+var bool autocvar_r_glsl_rtenvsphere = false;
+var int autocvar_r_glsl_rtenvsphere_size = 32;
+
+/* renders a basic envsphere 2d texture, for your metal spheres
+   that bump into peoples heads or something */
+void
+CSQC_RenderRTEnvSphere(vector cameraOrigin, vector cameraAngle)
+{
+	if (autocvar_r_glsl_rtenvsphere == false) {
+		return;
+	}
+
+	clearscene();
+
+	cvar_set("r_projection", "5");
+	setviewprop(VF_RT_DESTCOLOUR, g_rtEnvSphereMaterial, (float)1, [autocvar_r_glsl_rtenvsphere_size,autocvar_r_glsl_rtenvsphere_size]);
+	setviewprop(VF_SIZE, [autocvar_r_glsl_rtenvsphere_size,autocvar_r_glsl_rtenvsphere_size]);
+	setviewprop(VF_DRAWENGINESBAR, (float)0);
+	setviewprop(VF_ORIGIN, cameraOrigin);
+
+	setviewprop(VF_ANGLES, vectoangles(anglesToForward(cameraAngle) * -1));
+	setviewprop(VF_AFOV, 90.0f);
+
+	/* expensive as hell */
+	if (autocvar(r_skipRTEnvSphereEntities, 1))
+		addentities(MASK_ENGINE);
+
+	CSQC_RenderScene();
+
+	/* reset */
+	setviewprop(VF_RT_DESTCOLOUR, "");
+	cvar_set("r_projection", "0");
 }
 
 /** Called on top of every 3D rendered view. This just again ensures we box
@@ -303,8 +342,6 @@ CSQC_UpdateView(float w, float h, float focus)
 
 	/* this is running whenever we're doing 'buildcubemaps' */
 	if (autocvar_overview_test == true) {
-		vector worldMins = -4096;
-		vector worldMaxs = 4096;
 		float totalWidth = 4096.0f;
 		float radFromFov = autocvar_overview_fov * (MATH_PI / 180.0f);
 		float newDistance = (totalWidth / 2.0f) / tan(radFromFov / 2.0f);
@@ -370,11 +407,17 @@ CSQC_UpdateView(float w, float h, float focus)
 				g_dlight_cached = true;
 				dynamiclight_add(g_view.GetCameraOrigin(), 2048.0f, [0.1,0.1,0.1]);
 			}
+			
+			CSQC_RenderRTEnvSphere(g_view.GetCameraOrigin(), g_view.GetCameraAngle());
 
 			g_view.UpdateView();
 
 			/* 2D calls happen here, after rendering is done */
 			CSQC_Update2D(w, h, focus);
+
+			if (autocvar(r_showRTEnvSphere, 0))
+				draw.Pic([16,16], g_rtEnvSphereMaterial, [64, 64], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
+
 			Commandmenu_Draw();
 
 			EFX_UpdateListener(g_view);

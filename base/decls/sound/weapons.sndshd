@@ -12,13 +12,13 @@ weapon_axe.miss
 	sample weapons/ax1.wav
 }
 
-weapon_axe.hitbody
+Weapon_Axe.Melee_Hit
 {
 	alerts
 	sample player/axhit1.wav
 }
 
-weapon_axe.hit
+Weapon_Axe.Melee_HitWorld
 {
 	alerts
 	sample player/axhit2.wav

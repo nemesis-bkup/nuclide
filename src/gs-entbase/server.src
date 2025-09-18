@@ -86,6 +86,7 @@ server/item_food.qc
 server/item_generic.qc
 server/item_healthcharger.qc
 server/item_recharge.qc
+server/item_item_crate.qc
 server/light.qc
 server/logic_auto.qc
 server/logic_case.qc

@@ -68,9 +68,23 @@ void
 XR_Shutdown(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
-	pl.m_xrInputHead.Destroy();
-	pl.m_xrInputLeft.Destroy();
-	pl.m_xrInputRight.Destroy();
+
+	if (pl.m_xrSpace)
+		pl.m_xrSpace.Destroy();
+
+	if (pl.m_xrInputHead)
+		pl.m_xrInputHead.Destroy();
+
+	if (pl.m_xrInputLeft)
+		pl.m_xrInputLeft.Destroy();
+
+	if (pl.m_xrInputRight)
+		pl.m_xrInputRight.Destroy();
+
+	pl.m_xrSpace = __NULL__;
+	pl.m_xrInputHead = __NULL__;
+	pl.m_xrInputLeft = __NULL__;
+	pl.m_xrInputRight = __NULL__;
 	
 }
 
@@ -82,7 +96,7 @@ XR_UpdateView(entity ePlayer)
 
 	/* not yet ready */
 	if (!pl.m_xrSpace) {
-		return;
+		XR_Init(ePlayer);
 	}
 
 	/* update our space */
@@ -112,7 +126,7 @@ XR_InputFrame(entity ePlayer)
 
 	/* not yet ready */
 	if (!pl.m_xrSpace) {
-		return;
+		XR_Init(ePlayer);
 	}
 
 	if (autocvar_xr_testInputs) {
@@ -139,6 +153,10 @@ bool
 XR_Available(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
+
+	if (!pl.m_xrInputHead) {
+		return (false);
+	}
 
 	/* we only care about the HMD... otherwise why even bother? */
 	return pl.m_xrInputHead.IsAvailable();

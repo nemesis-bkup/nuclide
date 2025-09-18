@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Vera Visions LLC.
+ * Copyright (c) 2022-2025 Vera Visions LLC.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -63,14 +63,7 @@ ncTimer::_TempTimerThink(void)
 ncTimer
 ncTimer::ScheduleTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	ncTimer ret;
-
-	if (this)
-		ret = this;
-	else {
-		ret = spawn(ncTimer);
-		this = ret;
-	}
+	ncTimer ret = spawn(ncTimer);
 
 	ret.m_eReceiver = receiver;
 	ret.m_flTime = interval;
@@ -86,15 +79,7 @@ ncTimer::ScheduleTimer(entity receiver, void() call, float interval, bool repeat
 ncTimer
 ncTimer::TemporaryTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	ncTimer ret;
-
-	if (this)
-		ret = this;
-	else {
-		ret = spawn(ncTimer);
-		this = ret;
-	}
-
+	ncTimer ret = spawn(ncTimer);
 	ret.m_eReceiver = receiver;
 	ret.m_flTime = interval;
 	ret._m_ncTimerFunc = call;
@@ -116,15 +101,7 @@ ncTimer::RunTimer(void)
 ncTimer
 ncTimer::SetupTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	ncTimer ret;
-
-	if (this)
-		ret = this;
-	else {
-		ret = spawn(ncTimer);
-		this = ret;
-	}
-
+	ncTimer ret = spawn(ncTimer);
 	ret.m_eReceiver = receiver;
 	ret.m_flTime = interval;
 	ret._m_ncTimerFunc = call;

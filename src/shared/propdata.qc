@@ -1124,8 +1124,6 @@ BreakModel_Receive(void)
 		return;
 	}
 
-	ncLog("BreakModel: i: %i max: %i name: %S", index, g_breakmodel_count, g_breakmodel[index].name);
-
 	BreakModel_SpawnID(smins, smaxs, dir, speed, count, index);
 }
 

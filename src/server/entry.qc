@@ -56,6 +56,13 @@ ClientConnect(void)
 {
 	/* this will hide/remove the player from other clients */
 	ncPlayer pl = (ncPlayer)self;
+
+	if (g_background == false) {
+		if (ncAuthManager::Connect(pl) == false) {
+			return;
+		}
+	}
+
 	spawnfunc_ncPlayer();
 	pl.SetSolid(SOLID_NOT);
 	pl.SetMovetype(MOVETYPE_NONE);
@@ -122,6 +129,8 @@ ClientDisconnect(void)
 	pl.deaths = 0;
 	pl.frags = 0;
 	pl.score = 0;
+
+	ncAuthManager::Disconnect(pl);
 }
 
 /** Called by the `kill` console command.
@@ -182,10 +191,9 @@ PutClientInServer(void)
 {
 	ncPlayer ourPlayer = (ncPlayer)self;
 
-	ncStats::Enter(ourPlayer);
-
 	/* we're officially in-game now. */
 	ourPlayer.team = TEAM_UNASSIGNED;
+
 
 	if (g_background == true) {
 		/* the game and its triggers start when the player is ready to see it */
@@ -193,6 +201,12 @@ PutClientInServer(void)
 		self.classname = "player";
 		return;
 	}
+
+	if (ncAuthManager::AllowRespawn(ourPlayer) == false) {
+		return;
+	}
+
+	ncStats::Enter(ourPlayer);
 
 	if (g_ents_initialized) {
 		g_grMode.PlayerSpawn(ourPlayer);

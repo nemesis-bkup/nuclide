@@ -42,7 +42,6 @@ create_btnok_start(void)
 	static string gameType;
 	static void create_btnok_end(void) {
 		localcmd("stopmusic\nset sv_public 0\n");
-		localcmd(sprintf("seta ui_maxclients %S\n", create_tbMaxplayers.m_text));
 		if (cvar("ui_fillServer") > 0) {
 			localcmd(sprintf("set bot_minClients %S\n", create_tbMaxplayers.m_text));
 		} else {

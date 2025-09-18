@@ -183,27 +183,27 @@ public:
 
 private:
 	/* new */
-	PREDICTED_FLOAT(m_studioBoneController1)
-	PREDICTED_FLOAT(m_studioBoneController2)
-	PREDICTED_FLOAT(m_studioBoneController3)
-	PREDICTED_FLOAT(m_studioBoneController4)
-	PREDICTED_FLOAT(m_studioBoneController5)
-	PREDICTED_FLOAT_N(modelflags)
-	PREDICTED_INT(m_geomsetField)
-	PREDICTED_FLOAT_N(colormap)
-	PREDICTED_VECTOR_N(glowmod)
-	PREDICTED_FLOAT_N(frame1time)
+	NETWORKED_FLOAT(m_studioBoneController1)
+	NETWORKED_FLOAT(m_studioBoneController2)
+	NETWORKED_FLOAT(m_studioBoneController3)
+	NETWORKED_FLOAT(m_studioBoneController4)
+	NETWORKED_FLOAT(m_studioBoneController5)
+	NETWORKED_FLOAT_N(modelflags)
+	NETWORKED_INT(m_geomsetField)
+	NETWORKED_FLOAT_N(colormap)
+	NETWORKED_VECTOR_N(glowmod)
+	NETWORKED_FLOAT_N(frame1time)
 
-	PREDICTED_FLOAT(m_renderFX)
-	PREDICTED_FLOAT(m_renderMode)
-	PREDICTED_FLOAT(m_renderAmount)
-	PREDICTED_VECTOR(m_renderColor)
-	PREDICTED_VECTOR(m_axialScale)
+	NETWORKED_FLOAT(m_renderFX)
+	NETWORKED_FLOAT(m_renderMode)
+	NETWORKED_FLOAT(m_renderAmount)
+	NETWORKED_VECTOR(m_renderColor)
+	NETWORKED_VECTOR(m_axialScale)
 
 	/* either a sprite model or a particle */
-	PREDICTED_INT(m_iMuzzleModel)
-	PREDICTED_INT(m_iMuzzlePart)
-	PREDICTED_FLOAT(m_flMuzzleScale)
+	NETWORKED_INT(m_iMuzzleModel)
+	NETWORKED_INT(m_iMuzzlePart)
+	NETWORKED_FLOAT(m_flMuzzleScale)
 
 	/* model events */
 	float m_modelEventTime;

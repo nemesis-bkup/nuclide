@@ -7,6 +7,7 @@ Timer.qc
 Decal.qc
 RenderableEntity.qc
 SurfacePropEntity.qc
+BreakableBrush.qc
 Mover.qc
 PhysicsConstraint.qc
 PhysicsEntity.qc
@@ -52,6 +53,6 @@ activities.qc
 api.qc
 XRSpace.qc
 XRInput.qc
-xr.qc
+XRManager.qc
 ../botlib/Bot.qc
 #endlist

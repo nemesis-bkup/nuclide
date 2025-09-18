@@ -19,6 +19,22 @@ ncClient::ncClient(void)
 {
 	customphysics = Empty; /* we don't want any engine physics to run on clients, ever. */
 	flags |= FL_CLIENT;
+
+	m_xrSpace = __NULL__;
+	m_xrInputHead = __NULL__;
+	m_xrInputLeft = __NULL__;
+	m_xrInputRight = __NULL__;
+
+#ifdef SERVER
+	m_authLevel = AUTH_UNCONNECTED;
+#endif
+}
+
+void
+ncClient::Spawned(void)
+{
+	super::Spawned();
+
 	XR_Init(this);
 }
 
@@ -183,6 +199,13 @@ Client_InIntermission(void)
 }
 
 #ifdef SERVER
+
+authentication_t
+ncClient::AuthLevel(void)
+{
+	return (m_authLevel);
+}
+
 /*
 =================
 Client_FixAngle

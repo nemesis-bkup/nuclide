@@ -59,6 +59,8 @@ Platform_Init(void)
 	ModeLibrary_Init();
 	Saves_Init();
 	Platform_RendererRestarted();
+	
+	ncProfileManager::Init();
 
 	videoFile = GameLibrary_GetInfo(GAMEINFO_INTROVIDEO);
 	menuMap = GameLibrary_GetInfo(GAMEINFO_MENUMAP);
@@ -86,6 +88,9 @@ void
 Platform_Shutdown(void)
 {
 	FragNet_SignOff();
+
+	/* remember to save last */
+	ncProfileManager::Shutdown();
 }
 
 void

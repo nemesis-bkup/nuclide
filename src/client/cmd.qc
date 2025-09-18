@@ -612,8 +612,20 @@ Cmd_Parse(string sCMD)
 	case "showPlayerList":
 		VGUI_PlayerList();
 		break;
+	case "showServerInfo":
+		VGUI_ShowServerInfo();
+		break;
 	case "reloadClientLocale":
 		Locale_Reload();
+		break;
+	case "showEditor":
+		VGUI_ShowEditor();
+		break;
+	case "showSunEditor":
+		VGUI_ShowSunEditor();
+		break;
+	case "listUserInfo":
+		g_userInfo.DebugPrint();
 		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
@@ -630,6 +642,9 @@ Cmd_Init(void)
 	registercommand("showMOTD");
 	registercommand("showModelSpawner");
 	registercommand("showPlayerList");
+	registercommand("showServerInfo");
+	registercommand("showEditor");
+	registercommand("showSunEditor");
 
 	/* developer/debug commands */
 	registercommand("killAllBots");
@@ -774,6 +789,8 @@ Cmd_Init(void)
 	registercommand("+menu_right");
 	registercommand("-menu_right");
 	registercommand("reloadClientLocale");
+
+	registercommand("listUserInfo");
 
 	InitEnd();
 }

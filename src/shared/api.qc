@@ -880,12 +880,12 @@ spawnClass(string className, vector desiredPos)
 
 #ifdef SERVER
 bool
-changeClass(entity target, string className)
+changeClass(entity targetEntity, string className)
 {
 	/* hijack that decl. you don't to mess with this. */
-	if (target.flags & FL_CLIENT) {
+	if (targetEntity.flags & FL_CLIENT) {
 		if (className == "spectator") {
-			ncPlayer theClient = (ncPlayer)target;
+			ncPlayer theClient = (ncPlayer)targetEntity;
 			changeClass(theClient, "player");
 			theClient.MakeTempSpectator();
 			theClient.team = TEAM_SPECTATOR;
@@ -893,16 +893,25 @@ changeClass(entity target, string className)
 		}
 	}
 
-	return EntityDef_SwitchClass((ncEntity)target, className) ? (true) : (false);
+	/* save trouble */
+	if (targetEntity.classname == className) {
+		if (targetEntity.identity == 1) {
+			ncEntity theTarget = (ncEntity)targetEntity;
+			theTarget.Spawn();
+		}
+		return (true);
+	}
+
+	return EntityDef_SwitchClass((ncEntity)targetEntity, className) ? (true) : (false);
 }
 #endif
 
 void
-sendInput(entity target, string inputName, string dataString, entity activator)
+sendInput(entity theTarget, string inputName, string dataString, entity activator)
 {
-	ncEntity targetEntity = (ncEntity)target;
+	ncEntity targetEntity = (ncEntity)theTarget;
 
-	if (!target) {
+	if (!theTarget) {
 		ncError("target entity is nil");
 		return;
 	}

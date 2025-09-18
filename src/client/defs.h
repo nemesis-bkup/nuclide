@@ -29,6 +29,9 @@
 #include "crosshair.h"
 #include "hud.h"
 #include "InterfaceSpriteSheet.h"
+#include "UserInfo.h"
+#include "UserInfoManager.h"
+#include "ServerInfo.h"
 
 var bool g_net_debug = false;
 var bool g_cheats = false;

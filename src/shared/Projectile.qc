@@ -1276,7 +1276,9 @@ ncProjectile::Launch(vector startPos, vector launchDir, float fuseOffset, float 
 	}
 
 	if (m_flThrust != 0 || m_bTrackEnemy == true) {
-		m_thrustHandler = m_thrustHandler.TemporaryTimer(this, _ThrustThink, 0.0, true);
+		if (!m_thrustHandler) {
+			m_thrustHandler = ncTimer::TemporaryTimer(this, _ThrustThink, 0.0, true);
+		}
 	}
 
 	string startFrame = GetSpawnString("animStartFrame");

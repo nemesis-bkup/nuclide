@@ -102,8 +102,8 @@ public:
 #endif
 
 private:
-	PREDICTED_FLOAT(m_spectatingEntity)
-	PREDICTED_FLOAT(m_spectatingFlags)
+	NETWORKED_FLOAT(m_spectatingEntity)
+	NETWORKED_FLOAT(m_spectatingFlags)
 	ncSpectatorMode_t m_spectatingMode; ncSpectatorMode_t m_spectatingMode_net;
 	float m_flDeathCam;
 	float m_flLastSpecTargetChange;

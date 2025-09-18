@@ -160,7 +160,7 @@ Locale_AddFile(string resourceName)
 		g_localeFiles = sprintf("%s%s;", g_localeFiles, fileNameFB);
 		Locale_ParseFile(fileNameFB);
 	} else {
-		ncError("Locale resource %S not found.", resourceName);
+		ncLog("Locale resource %S not found.", resourceName);
 	}
 }
 

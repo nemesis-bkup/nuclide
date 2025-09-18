@@ -214,8 +214,8 @@ Scores_Draw(void)
 	int c = 6i;
 	string temp;
 
-	const float scoreboardWidth = 520;
-	const float scoreboardHeight = 360;
+	float scoreboardWidth = screen.HUDSize()[0] - 120;
+	float scoreboardHeight = screen.HUDSize()[1] - 120;
 	const float playerPadding = 7;
 	vector scorePos = screen.HUDMins() + [60,60];
 	vector hostnamePos = scorePos + [6,6];
@@ -229,7 +229,7 @@ Scores_Draw(void)
 	string selfName = getplayerkeyvalue(pl.entnum-1, "name");
 	float playerTextHeight = font.GetHeight(FONT_SCORES_BOLD);
 	float playerStackSize = playerTextHeight + 4;
-	float playerTextOffset;
+	float playerTextOffset = 0.0f;
 	
 	pos = hostlinePos + [0, 6];
 
@@ -263,7 +263,6 @@ Scores_Draw(void)
 
 	if (Util_IsTeamplay()) {
 		for (int t = 1; t <= serverkeyfloat("teams"); t++) {
-			float l;
 			vector teamColor = teams.Color(t);
 			int playerCount = teams.NumPlayers(t);
 			

@@ -2054,20 +2054,15 @@ ncMonster::Death(entity inflictor, entity attacker, int damage, vector dir, vect
 
 	if (actDeath < 0) {
 		if (actViolent >= 0 && GetHealth() < -25) { /* lots of damage */
-			actDeath = (actViolent);
-			printf("actViolent %d death\n", actDeath);
+			actDeath = actViolent;
 		} else if (actBackshot >= 0 && IsFacingPosition(absImpactPos) == false) {
-			actDeath = (actBackshot);
-			printf("actBackshot %d death\n", actDeath);
+			actDeath = actBackshot;
 		} else if (actForward >= 0 && IsFacingPosition(absImpactPos) == false) {
-			actDeath = (actForward);
-			printf("actForward %d death\n", actDeath);
+			actDeath = actForward;
 		} else if (actBackward >= 0 && IsFacingPosition(absImpactPos) == true) {
-			actDeath = (actBackward);
-			printf("actBackward %d death\n", actDeath);
+			actDeath = actBackward;
 		} else {
 			actDeath = actSimple;
-			printf("actSimple %d death\n", actDeath);
 		}
 	} else {
 		actDeath = actSimple;

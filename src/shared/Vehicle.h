@@ -77,12 +77,12 @@ private:
 	vector m_vecExitPos;
 
 	/* FIXME: Aren't those already defined in parent classes? */
-	PREDICTED_VECTOR_N(angles)
-	PREDICTED_VECTOR_N(origin)
-	PREDICTED_VECTOR_N(velocity)
+	NETWORKED_VECTOR_N(angles)
+	NETWORKED_VECTOR_N(origin)
+	NETWORKED_VECTOR_N(velocity)
 
 #ifdef CLIENT
-	PREDICTED_FLOAT(driver_entnum)
+	NETWORKED_FLOAT(driver_entnum)
 #endif
 };
 

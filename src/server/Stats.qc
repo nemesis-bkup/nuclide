@@ -16,15 +16,40 @@
 
 var bool g_statLoggingEnabled;
 filestream g_statLogHandle;
+var float g_statMemoTime;
+var string g_statMemoString;
 
 typedef enum
 {
 	NGLOG_Q2OSP, /* NetGamesUSA provided their own tool with OSP */
 	NGLOG_UT99,	/* compatible with UTStatsDB, supposedly (untested) */
 	NGLOG_Q3A, /* compatible with a few different tools */
+	NGLOG_IW, /* compatible with a few different tools */
 } statloggingtype_t;
 
-var statloggingtype_t autocvar_stats_logtype = NGLOG_Q3A;
+var statloggingtype_t autocvar_stats_logtype = NGLOG_IW;
+var bool autocvar_stats_enabled = true;
+
+string
+ncStats::OutputFilename(void)
+{
+	switch (autocvar_stats_logtype) {
+	case NGLOG_UT99:
+		string currentTime = ncStats::NetGamesTime();
+		string fileName = strcat(currentTime, ".txt");
+		return (fileName);
+	case NGLOG_Q2OSP:
+		string currentTime = ncStats::NetGamesTime();
+		string fileName = strcat(currentTime, ".txt");
+		return (fileName);
+	default:
+	case NGLOG_Q3A:
+	case NGLOG_IW:
+		float minutes = time / 60;
+		float seconds = time % 60;
+		return "games_mp.log";
+	}
+}
 
 string
 ncStats::NetGamesTime(void)
@@ -40,6 +65,10 @@ ncStats::NetGamesTime(void)
 string
 ncStats::LocalTime(void)
 {
+	if (time == g_statMemoTime) {
+		return (g_statMemoString);
+	}
+
 	switch (autocvar_stats_logtype) {
 	case NGLOG_UT99:
 		return sprintf("%.2f", time);
@@ -47,9 +76,12 @@ ncStats::LocalTime(void)
 		return sprintf("%.1f", time);
 	default:
 	case NGLOG_Q3A:
+	case NGLOG_IW:
 		float minutes = time / 60;
 		float seconds = time % 60;
-		return sprintf("%d:%02d", minutes, seconds);
+		g_statMemoTime = time;
+		g_statMemoString = sprintf("%d:%02d", minutes, seconds);
+		return (g_statMemoString);
 	}
 }
 
@@ -120,21 +152,21 @@ ncStats::Info(string keyName, string setValue)
 void
 ncStats::Init(void)
 {
-	if (cvars.GetBool("sv_background") == true) {
+	if (autocvar_stats_enabled == false || cvars.GetBool("sv_background") == true) {
 		g_statLoggingEnabled = false;
 		return;
 	}
 
-	string currentTime = ncStats::NetGamesTime();
-	string fileName = strcat(currentTime, ".txt");
+	string currentTime = NetGamesTime();
+	string fileName = OutputFilename();
 
-	g_statLogHandle = fopen(fileName, FILE_WRITE);
+	g_statLogHandle = fopen(fileName, FILE_APPEND);
 
 	if (g_statLogHandle < 0) {
 		ncError("Unable to write log.txt");
 		g_statLoggingEnabled = false;
 
-		error("Errored out of %s", fileName);
+		error(sprintf("Errored out of %s", fileName));
 		return;
 	}
 
@@ -153,6 +185,7 @@ ncStats::Init(void)
 	bool needPass = cvars.GetString("password") ? (true) : (false);
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		string fullServerInfo = strcat("\\", "dmflags", "\\", "0");
 		fullServerInfo = strcat(fullServerInfo, "\\", "fraglimit", "\\", cvars.GetString("fraglimit"));
@@ -164,7 +197,6 @@ ncStats::Init(void)
 		fullServerInfo = strcat(fullServerInfo, "\\", "mapname", "\\", serverinfo.GetString("mapname"));
 		fullServerInfo = strcat(fullServerInfo, "\\", "gamename", "\\", cvars.GetString("fs_game"));
 		fullServerInfo = strcat(fullServerInfo, "\\", "g_needpass", "\\", needPass ? "1" : "0");
-
 		fputs(g_statLogHandle, sprintf("%s ------------------------------------------------------------\n", LocalTime()));
 		fputs(g_statLogHandle, sprintf("%s InitGame: %s\n", LocalTime(), fullServerInfo));
 		break;
@@ -249,6 +281,7 @@ ncStats::Shutdown(void)
 	}
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		fputs(g_statLogHandle, sprintf("%s ShutdownGame:\n", LocalTime()));
 		fputs(g_statLogHandle, sprintf("%s ------------------------------------------------------------\n", LocalTime()));
@@ -261,6 +294,7 @@ ncStats::Shutdown(void)
 	}
 
 	fclose(g_statLogHandle);
+	g_statLoggingEnabled = false;
 }
 
 void
@@ -273,10 +307,11 @@ ncStats::Connect(ncClient connectingClient)
 	string playerName = connectingClient.netname;
 	int playerNum =  num_for_edict(connectingClient) - 1;
 	bool teamPlay = teams.TeamCount() > 1 ? (true) : (false);
-	string playerInfoString = sprintf("n\\%s\\t\\%d\n", playerName, connectingClient.team);
+	string playerInfoString = sprintf("n\\%s\\t\\%d\\u\\%s", playerName, connectingClient.team, infokey(connectingClient, "*cert_sha1"));
 
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		fputs(g_statLogHandle, sprintf("%s ClientConnect: %i\n", LocalTime(), playerNum));
 		fputs(g_statLogHandle, sprintf("%s ClientUserinfoChanged: %i %s\n", LocalTime(), playerNum, playerInfoString));
@@ -312,6 +347,7 @@ ncStats::Enter(ncPlayer enteringPlayer)
 
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		fputs(g_statLogHandle, sprintf("%s ClientBegin: %i\n", LocalTime(), playerNum));
 		break;
@@ -385,8 +421,9 @@ ncStats::NameChange(ncPlayer changedPlayer, string newName)
 	int playerPing =  userinfo.GetInteger(changedPlayer, "ping");
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
-		string playerInfoString = sprintf("n\\%s\\t\\%d\n", newName, changedPlayer.team);
+		string playerInfoString = sprintf("n\\%s\\t\\%d", newName, changedPlayer.team);
 		fputs(g_statLogHandle, sprintf("%s ClientUserinfoChanged: %i %s\n", LocalTime(), playerNum, playerInfoString));
 		break;
 	case NGLOG_UT99:
@@ -414,13 +451,15 @@ ncStats::Kill(ncPlayer killedPlayer, ncEntity inflicingEntity, ncEntity attackin
 
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
+		break;
 	case NGLOG_Q3A:
 		if (killedPlayer == attackingEntity) {
-			fputs(g_statLogHandle, sprintf("%s Kill: %i %i %i: %s killed %s by %s\n", LocalTime(), attackerNum, deadNum, 0i, killedPlayer.netname, killedPlayer.netname, "<world>"));
+			fputs(g_statLogHandle, sprintf("%s Kill: %i %i %i: %s killed %s by %s\n", LocalTime(), attackerNum, deadNum, 1i, killedPlayer.netname, killedPlayer.netname, "<world>"));
 			return;
 		}
 
-		fputs(g_statLogHandle, sprintf("%s Kill: %i %i %i: %s killed %s by %s\n", LocalTime(), attackerNum, deadNum, 0i, attackingEntity.netname, killedPlayer.netname, attackerWeapon));
+		fputs(g_statLogHandle, sprintf("%s Kill: %i %i %i: %s killed %s by %s\n", LocalTime(), attackerNum, deadNum, 1i, attackingEntity.netname, killedPlayer.netname, attackerWeapon));
 		break;
 	case NGLOG_UT99:
 		if (killedPlayer == attackingEntity) {
@@ -461,6 +500,7 @@ ncStats::PickupItem(ncItem takenItem, ncPlayer inflictingPlayer)
 
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		fputs(g_statLogHandle, sprintf("%s Item: %i %s\n", LocalTime(), playerNum, itemName));
 		break;
@@ -560,8 +600,9 @@ ncStats::JoinTeam(int teamID, ncPlayer leavingPlayer)
 	int playerPing =  userinfo.GetInteger(leavingPlayer, "ping");
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
-		string playerInfoString = sprintf("n\\%s\\t\\%d\n", playerName, leavingPlayer.team);
+		string playerInfoString = sprintf("n\\%s\\t\\%d", playerName, leavingPlayer.team);
 		fputs(g_statLogHandle, sprintf("%s ClientUserinfoChanged: %i %s\n", LocalTime(), playerNum, playerInfoString));
 		break;
 	case NGLOG_UT99:
@@ -585,8 +626,9 @@ ncStats::LeaveTeam(int teamID, ncPlayer leavingPlayer)
 	int playerPing =  userinfo.GetInteger(leavingPlayer, "ping");
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
-		string playerInfoString = sprintf("n\\%s\\t\\%d\n", leavingPlayer.netname, leavingPlayer.team);
+		string playerInfoString = sprintf("n\\%s\\t\\%d", leavingPlayer.netname, leavingPlayer.team);
 		fputs(g_statLogHandle, sprintf("%s ClientUserinfoChanged: %i %s\n", LocalTime(), playerNum, playerInfoString));
 		break;
 	case NGLOG_UT99:
@@ -624,6 +666,7 @@ ncStats::EndGame(string reasonString)
 	}
 
 	switch (autocvar_stats_logtype) {
+	case NGLOG_IW:
 	case NGLOG_Q3A:
 		fputs(g_statLogHandle, sprintf("%s Exit: %s\n", LocalTime(), "serverquit"));
 
@@ -649,7 +692,5 @@ ncStats::EndGame(string reasonString)
 		break;
 	}
 
-	g_statLoggingEnabled = false;
 	Shutdown();
-
 }

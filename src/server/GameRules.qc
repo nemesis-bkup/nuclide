@@ -135,7 +135,7 @@ ncRuleDelegate::PlayerDeath(ncPlayer deadPlayer, ncEntity inflictor, ncEntity at
 {
 	/* death-counter */
 	deadPlayer.deaths++;
-	deadPlayer.SetInfoKey("*deaths", ftos(deadPlayer.deaths));
+	userinfo.SetString(deadPlayer, "*deaths", ftos(deadPlayer.deaths));
 
 	/* update score-counter */
 	if (is.Player(attacker)) {
@@ -440,6 +440,7 @@ ncRuleDelegate::LinkProgs(void)
 		RULEMAP(newRule, PlayerRequestTeam, "CodeCallback_CallRequestTeam")
 		RULEMAP(newRule, PlayerSpawn, "CodeCallback_PlayerSpawn")
 		RULEMAP(newRule, Title, "CodeCallback_Title")
+		RULEMAP(newRule, MaxItemPerSlot, "CodeCallback_MaxItemsPerSlot")
 	}
 
 	serverinfo.SetString("mode", newRule.Title());

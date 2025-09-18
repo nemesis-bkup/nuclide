@@ -637,6 +637,7 @@ ncRenderableEntity::RenderGLQuakeShadow(void)
 	origin = oldOrigin;
 }
 
+
 /*
 ============
 ncRenderableEntity::predraw
@@ -707,6 +708,7 @@ ncRenderableEntity::predraw(void)
 
 	processmodelevents(modelindex, frame, m_modelEventTime,
 		frame1time, HandleAnimEvent);
+	m_modelEventTime = frame1time;
 
 	RenderAxialScale();
 

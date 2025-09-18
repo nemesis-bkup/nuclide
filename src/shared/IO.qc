@@ -571,7 +571,6 @@ ncIO::SetSendFlags(float flSendFlags)
 void
 ncIO::_ReceiveComplete(float flNew, float flChanged)
 {
-
 }
 #endif
 

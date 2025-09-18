@@ -187,6 +187,12 @@ CLPF_player_IsLeaning(string itemName)
 	return ((ncPlayer)pSeat->m_ePlayer).IsLeaning();
 }
 
+bool
+CLPF_player_GetGameFlags(void)
+{
+	return (pSeat->m_ePlayer.gflags);
+}
+
 
 /* teamplay functions */
 string
@@ -568,7 +574,6 @@ CLPF_draw_RoundedBox(vector pos, vector size, vector rgb, float a)
 	vector tileSize = g_vec_null;
 	tileSize[0] = tileSize[1] =  (16 * tileScale);
 
-
 	drawpic(pos, "gfx/ui/m_topleft.tga", tileSize, rgb, a, 0);
 	drawpic(pos + [size[0] - tileSize[0], 0], "gfx/ui/m_topright.tga", tileSize, rgb, a, 0);
 	drawpic(pos + [0, size[1] - tileSize[1]], "gfx/ui/m_bottomleft.tga", tileSize, rgb, a, 0);
@@ -632,7 +637,7 @@ CLPF_spectating_Team(void)
 {
 	ncSpectator spec = (ncSpectator)pSeat->m_ePlayer;
 	if (spec) {
-		return getplayerkeyvalue(spec.m_spectatingEntity - 1, "team");
+		return (int)getplayerkeyvalue(spec.m_spectatingEntity - 1, "team");
 	}
 
 	return (TEAM_UNASSIGNED);

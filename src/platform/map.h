@@ -11,13 +11,13 @@ Map_NewGame(int skillValue)
 
 	RichPresence_Clear();
 	switch (skillValue) {
-	case 1:
+	case 1i:
 		RichPresence_Set("status", "Singleplayer: Normal");
 		break;
-	case 2:
+	case 2i:
 		RichPresence_Set("status", "Singleplayer: Medium");
 		break;
-	case 3:
+	case 3i:
 		RichPresence_Set("status", "Singleplayer: Hard");
 		break;
 	}

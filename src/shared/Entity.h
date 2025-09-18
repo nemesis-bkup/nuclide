@@ -401,7 +401,7 @@ public:
 
 private:
 	/** Will read from the named def to perform a projectile attack. */
-	nonvirtual bool _ProjectileAttack(string, bool);
+	nonvirtual bool _ProjectileAttack(string, bool, vector, vector);
 
 #ifdef SERVER
 	nonvirtual vector GetModelMins(void);

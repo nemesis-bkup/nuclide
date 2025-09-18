@@ -1958,7 +1958,7 @@ ncEntity::GetNearbySpot(void)
 }
 
 bool
-ncEntity::_ProjectileAttack(string defName, bool wasReleased)
+ncEntity::_ProjectileAttack(string defName, bool wasReleased, vector fromPos, vector viewAngle)
 {
 #ifdef SERVER
 	string attackDef;
@@ -1977,10 +1977,10 @@ ncEntity::_ProjectileAttack(string defName, bool wasReleased)
 		attackDef = GetSubDefString(defName, "def_onFire");
 	}
 
-	EntLog("Launching %i %S at %v towards %v", numProjectiles, attackDef, GetEyePos(), GetViewAngle());
+	EntLog("Launching %i %S at %v towards %v", numProjectiles, attackDef, fromPos, viewAngle);
 
 	for (int i = 0i; i < numProjectiles; i++) {
-		ncAttack_SpawnDefAtPosition(attackDef, (ncActor)this, GetEyePos(), GetViewAngle());
+		ncAttack_SpawnDefAtPosition(attackDef, (ncActor)this, fromPos, viewAngle);
 	}
 #endif
 
@@ -1995,7 +1995,7 @@ ncEntity::AttackByDef(string defName, bool wasReleased)
 	}
 
 #ifdef SERVER
-	_ProjectileAttack(defName, wasReleased);
+	_ProjectileAttack(defName, wasReleased, GetEyePos(), GetViewAngle());
 #endif
 
 	return (true);

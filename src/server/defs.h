@@ -43,6 +43,7 @@
 
 #include "CapturePoint.h"
 #include "CaptureItem.h"
+#include "Auth.h"
 
 /* helper macros */
 #define EVALUATE_FIELD(fieldname, changedflag) {\

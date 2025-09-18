@@ -36,6 +36,7 @@ void VGUI_ModelSpawner ( void )
 	static vguiCheckbox chkGround;
 	static vguiCheckbox chkMirror;
 	static vguiButton btnSpawnProp;
+	static vguiButton btnSpawnDoll;
 	static vguiButton btnFirstperson;
 	static vguiButton btnResetCam;
 	static vguiButton btnSetViewModel;
@@ -87,12 +88,10 @@ void VGUI_ModelSpawner ( void )
 		viewModel.Set3DPos( modelPos + (v_forward * -vecDistance[0]) + (v_right * vecDistance[1]) + (v_up * vecDistance[2]) );
 	}
 	static void VGUI_ModelViewer_SpawnProp( void ) {
-		/* in sandbox this may be allowed. */
-		if (serverinfo.GetString("gametype") == "sandbox") {
-			localcmd(sprintf("cmd propSpawn %S\n", eModel.model));
-		} else {
-			localcmd(sprintf("sv propSpawn %S\n", eModel.model));
-		}
+		localcmd(sprintf("sv propSpawn %S\n", eModel.model));
+	}
+	static void VGUI_ModelViewer_SpawnDoll( void ) {
+		localcmd(sprintf("sv dollSpawn %S\n", eModel.model));
 	}
 	static void VGUI_ModelViewer_SetFrame( int iFrame ) {
 		float maxFrame = modelframecount(eModel.modelindex) - 1;
@@ -243,7 +242,8 @@ void VGUI_ModelSpawner ( void )
 		scrlModels.SetMax( lstModels.GetMaxVisibleItems() );
 		btnLoadModel.SetPos( lstModels.GetPos() + [ 0, lstModels.GetSize()[1] + 1 ] );
 		btnSpawnProp.SetPos( btnLoadModel.GetPos() + [ 0, 30 ] );
-		btnSetViewModel.SetPos( btnSpawnProp.GetPos() + [ 0, 30 ] );
+		btnSpawnDoll.SetPos( btnSpawnProp.GetPos() + [ 0, 30 ] );
+		btnSetViewModel.SetPos( btnSpawnDoll.GetPos() + [ 0, 30 ] );
 		btnFirstperson.SetPos( btnTabRenderer.GetPos() + [ 128, 30 ] );
 		btnResetCam.SetPos( btnFirstperson.GetPos() + [ 0, 30 ] );
 		
@@ -334,6 +334,12 @@ void VGUI_ModelSpawner ( void )
 		btnSpawnProp.SetTitle( "Spawn Prop" );
 		btnSpawnProp.SetFunc( VGUI_ModelViewer_SpawnProp );
 		btnSpawnProp.SetSize( [192,24] );
+		
+		btnSpawnDoll = spawn( vguiButton );
+		btnSpawnDoll.SetTitle( "Spawn Doll" );
+		btnSpawnDoll.SetFunc( VGUI_ModelViewer_SpawnDoll );
+		btnSpawnDoll.SetSize( [192,24] );
+		
 		btnFirstperson = spawn( vguiButton );
 		btnFirstperson.SetTitle( "FPS Cam" );
 		btnFirstperson.SetFunc( VGUI_ModelViewer_Firstperson );
@@ -399,6 +405,7 @@ void VGUI_ModelSpawner ( void )
 		winViewer.Add( btnSeqNext );
 		winViewer.Add( btnSeqPrev );
 		winViewer.Add( btnSpawnProp );
+		winViewer.Add( btnSpawnDoll );
 		winViewer.Add( btnFirstperson );
 		winViewer.Add( btnSetViewModel );
 		winViewer.Add( btnResetCam );

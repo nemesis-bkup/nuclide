@@ -95,7 +95,7 @@ Colors_Init(void)
 
 	/* at this point give up */
 	if (fs_colors < 0) {
-		ncWarning("Cannot parse gfx/shell/colors.lst!");
+		ncLog("Missing gfx/shell/colors.lst, using built-in colors.");
 		return;
 	}
 

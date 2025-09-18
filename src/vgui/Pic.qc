@@ -34,6 +34,7 @@ public:
 	virtual void Spawned(void);
 
 	nonvirtual void SetImage(string);
+	nonvirtual void SetColor(vector);
 	nonvirtual string GetImage(void);
 	nonvirtual void SetBorder(int);
 	nonvirtual int GetBorder(void);

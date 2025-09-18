@@ -442,7 +442,7 @@ ncVehicle::PlayerEnter(ncPlayer pl)
 	m_eDriverLast = m_eDriver;
 	pl.vehicle = this;
 	pl.m_nuclideFlags |= VFL_INVEHICLE;
-	EntLog("Player %S entered this vehicle.", pl.GetInfoKey("name"));
+	EntLog("Player %S entered this vehicle.", userinfo.GetString(pl, "name"));
 }
 
 void
@@ -451,7 +451,7 @@ ncVehicle::PlayerLeave(ncPlayer pl)
 	if (!pl)
 		return;
 
-	EntLog("Player %S exits this vehicle.", pl.GetInfoKey("name"));
+	EntLog("Player %S exits this vehicle.", userinfo.GetString(pl, "name"));
 
 	owner = __NULL__;
 	pl.m_nuclideFlags &= ~VFL_INVEHICLE;

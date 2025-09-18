@@ -62,6 +62,21 @@ Platform_ConsoleCommand(string commandString, int wordCount)
 	case "reloadMenuLocale":
 		Locale_Reload();
 		break;
+	case "listProfiles":
+		ncProfileManager::ListProfiles();
+		break;
+	case "profile_create":
+		ncProfileManager::CreateNamedProfile(argv(1));
+		break;
+	case "profile_delete":
+		ncProfileManager::DeleteNamedProfile(argv(1));
+		break;
+	case "profile_select":
+		ncProfileManager::SetProfileByName(argv(1));
+		break;
+	case "profile_save":
+		ncProfileManager::SaveActiveProfile();
+		break;
 	default:
 		return (false);
 	}
@@ -87,4 +102,10 @@ Platform_RegisterCommands(void)
 	registercommand("addFriend");
 	registercommand("removeFriend");
 	registercommand("reloadMenuLocale");
+	registercommand("listProfiles");
+
+	registercommand("profile_create");
+	registercommand("profile_delete");
+	registercommand("profile_select");
+	registercommand("profile_save");
 }

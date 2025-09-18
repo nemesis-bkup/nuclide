@@ -14,6 +14,14 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+typedef enum
+{
+	AUTH_UNCONNECTED = 0,
+	AUTH_PROCESSING = 1,
+	AUTH_VERIFIED = 2,
+	AUTH_FAILED = 3,
+} authentication_t;
+
 /** This entity class is the lowest client/player class.
 
 It is mostly concerned with the features shared between players
@@ -45,6 +53,7 @@ public:
 	virtual void SharedInputFrame(void);
 
 	/* overrides */
+	virtual void Spawned(void);
 	virtual void OnRemoveEntity(void);
 	virtual float GetForwardSpeed(void);
 	virtual float GetSideSpeed(void);
@@ -74,6 +83,8 @@ public:
 	/* overrides */
 	virtual void Save(float);
 	virtual void Restore(string,string);
+	
+	nonvirtual authentication_t AuthLevel(void);
 #endif
 
 private:
@@ -87,5 +98,7 @@ private:
 
 #ifdef SERVER
 	float score;
+	authentication_t m_authLevel;
 #endif
 };
+

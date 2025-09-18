@@ -468,6 +468,8 @@ EntityDef_PrepareEntity(entity target, int id)
 			}
 
 			if (foundMode == false) {
+				ncError("Spawning %s blocked by game mode filter %S", targetEnt.classname, targetEnt.m_gameModeFilter);
+				targetEnt.m_gameModeFilter = __NULL__;
 				targetEnt.Destroy();
 				targetEnt = __NULL__;
 				g_lastSpawnData = "";
@@ -619,6 +621,12 @@ EntityDef_SwitchClass(ncEntity target, string className)
 
 	for (int i = 0i; i < g_entDefCount; i++) {
 		if (className == g_entDefTable[i].entClass) {
+
+			/* ensure the previous class deconstructs */		
+			if (target.identity == 1) {
+				target.OnRemoveEntity();
+			}
+			
 			EntityDef_Precache(className);
 			returnEntity = EntityDef_PrepareEntity(target, i);
 			return (returnEntity);
@@ -636,6 +644,7 @@ EntityDef_CreateClassname(string className)
 	ncEntity test;
 	self = new;
 	test = EntityDef_SpawnClassname(className);
+	self = oldSelf;
 
 	/* Failure */
 	if (test == __NULL__) {
@@ -643,7 +652,6 @@ EntityDef_CreateClassname(string className)
 		return (__NULL__);
 	}
 
-	self = oldSelf;
 	return (new);
 }
 

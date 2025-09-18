@@ -39,5 +39,5 @@ void XR_UpdateView(entity);
 #endif
 
 var float autocvar_xr_roomScale = 1.0f;
-var float autocvar_xr_viewHeight = -48.0f;
+var float autocvar_xr_viewHeight = 0.0f;
 var bool autocvar_xr_testInputs = false;

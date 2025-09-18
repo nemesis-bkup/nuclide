@@ -193,20 +193,25 @@ CMD_Spawn(void)
 }
 
 static void
-CMD_PropSpawn(void)
+SV_PropSpawn(string newModel, entity spawningEntity)
 {
-	string newModel = argv(1);
-	makevectors(self.v_angle);
-	traceline(self.origin, self.origin + (v_forward * 1024), MOVE_NORMAL, self);
-
+	makevectors(spawningEntity.v_angle);
+	traceline(spawningEntity.origin, self.origin + (v_forward * 1024), MOVE_NORMAL, spawningEntity);
+	vector finalPosition = trace_endpos;
 	prop_physics newProp = spawn(prop_physics);
 	newProp.SetModel(newModel);
-	newProp.SetOriginUnstick(trace_endpos + [0,0,32]);
+	newProp.SetOriginUnstick(finalPosition + [0,0,32]);
 	newProp.Spawn();
 	newProp.SetModel(newModel);
-	newProp.SetOriginUnstick(trace_endpos + [0,0,32]);
+	newProp.SetOriginUnstick(finalPosition + [0,0,32]);
 	newProp.ClearVelocity();
 	newProp.Wake();
+}
+
+static void
+CMD_PropSpawn(void)
+{
+	SV_PropSpawn(argv(1), self);
 }
 
 static void

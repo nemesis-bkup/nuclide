@@ -15,17 +15,35 @@
 */
 
 var bool autocvar_phys_developer = false;
-void
-_NSPhysics_Log(string msg)
-{
-	if (autocvar_phys_developer == true)
-		print(sprintf("%f %s\n", time, msg));
-}
-#define NSPhysics_Log(...) _NSPhysics_Log(sprintf(__VA_ARGS__))
-
-
 var float autocvar_phys_pushscale = 1.0f;
 var float autocvar_phys_impactforcescale = 1.0f;
+var bool autocvar_phys_lowspec = true;
+var float autocvar_phys_spinScale = 1.0f;
+var float autocvar_phys_forceScale = 1.0f;
+
+
+#define CG_PHYSICS_LOG			imageToConsole("gfx/icon16/hourglass", ICN_SIZE, "Client Physics Log")
+#define SV_PHYSICS_LOG			imageToConsole("gfx/icon16/hourglass", ICN_SIZE, "Server Physics Log")
+
+void
+_LogPhysics(string msg)
+{
+#ifdef CLIENT
+	if (autocvar_g_logTimestamps)
+		print(sprintf("%s ^9%f ^7%s\n", CG_PHYSICS_LOG, time, msg));
+	else
+		print(sprintf("%s ^7%s\n", CG_PHYSICS_LOG, msg));
+#endif
+#ifdef SERVER
+	if (autocvar_g_logTimestamps)
+		print(sprintf("%s ^9%f ^7%s\n", SV_PHYSICS_LOG, time, msg));
+	else
+		print(sprintf("%s ^7%s\n", SV_PHYSICS_LOG, msg));
+#endif
+}
+
+#define LogPhysics(...) if (autocvar_phys_developer > 0) _ncLog(sprintf(__VA_ARGS__))
+
 
 #ifdef CLIENT
 var bool autocvar_r_showPhysicsInfo = false;
@@ -85,13 +103,14 @@ subject to change at any given time. Currently we're targeting ODE.
 @{
 */
 
+/** Object collision types. Several approximate shapes can be used for very fast physics simulation. If you want detail, you can use the per-poly triangle mesh collision - which may be optimised in the future with engine-side improvements. */
 enum
 {
-	PHYSM_BOX,
-	PHYSM_SPHERE,
-	PHYSM_CAPSULE,
-	PHYSM_TRIMESH,
-	PHYSM_CYLINDER
+	PHYSM_BOX,	/**< Entity will explicitly use a box for contact collision detection. */
+	PHYSM_SPHERE,	/**< Entity will explicitly use a sphere for contact collision detection. */
+	PHYSM_CAPSULE,	/**< Entity will explicitly use a capsule for contact collision detection. */
+	PHYSM_TRIMESH,	/**< Entity will explicitly use a per-poly checks (expensive) for contact collision detection. */
+	PHYSM_CYLINDER	/**< Entity will explicitly use a cylinder for contact collision detection. */
 };
 
 /** This entity class represents physically-simulated entities. 
@@ -122,6 +141,7 @@ public:
 	virtual void Restore(string,string);
 	virtual void Touch(entity);
 #endif
+
 #ifdef CLIENT
 	virtual void ReceiveEntity(float,float);
 	virtual void postdraw(void);
@@ -212,7 +232,7 @@ public:
 	nonvirtual void Sleep(void);
 
 private:
-	int m_iEnabled;
+	int m_physicsEnabled;
 	int m_desiredGeomtype;
 	int m_surfdataID;
 	int m_physicsFlags;
@@ -222,13 +242,16 @@ private:
 	float m_overrideVolume;
 	float m_lastTouchTime;
 
+	NETWORKED_FLOAT(m_overrideMass)
+
 	/* performance sanity checks */
-	vector m_vecPrevOrigin;
-	vector m_vecPrevAngles;
+	vector m_lastValidSimPos;
+	vector m_lastvalidSimAng;
 	float m_timeSincePhysicsCheck;
-	PREDICTED_FLOAT(m_overrideMass)
 	float m_spawnPhysTime;
 	bool m_playingFeedbackSound;
+
+	vector m_massCenter;
 
 #ifdef SERVER
 	string m_outputOnDamaged;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024 Vera Visions LLC.
+ * Copyright (c) 2023-2025 Vera Visions LLC.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -198,12 +198,14 @@ void
 ncPhysicsConstraint::Break(entity activatingEnt)
 {
 #ifdef SERVER
-	if (m_outputOnBreak)
+	if (STRING_SET(m_outputOnBreak)) {
 		UseOutput(activatingEnt, m_outputOnBreak);
+	}
 #endif
 
-	if (m_strBreakSound)
+	if (STRING_SET(m_strBreakSound)) {
 		StartSoundDef(m_strBreakSound, CHAN_AUTO, true);
+	}
 
 	Destroy();
 }
@@ -256,6 +258,12 @@ ncPhysicsConstraint::SetConstraintType(constraint_t setValue)
 void
 ncPhysicsConstraint::SetEntity1(entity targetEnt)
 {
+	/* HAS to be valid */
+	if (!targetEnt) {
+		targetEnt = spawn(ncPhysicsConstraint);
+		setorigin(targetEnt, GetOrigin());
+	}
+
 	enemy = targetEnt;
 	jointgroup = GetConstraintSystemID();
 
@@ -320,6 +328,19 @@ ncPhysicsConstraint::GetSliderFriction(void)
 ncPhysicsConstraint
 ncPhysicsConstraint::Ballsocket(entity firstEnt, entity secondEnt, vector pos1, vector pos2, float forceLimit, bool noCollide)
 {
+	if (!firstEnt) {
+		EntError("firstEnt: invalid entity reference");
+		return __NULL__;
+	}
+	if (!secondEnt) {
+		EntError("secondEnt: invalid entity reference");
+		return __NULL__;
+	}
+	if (firstEnt == secondEnt) {
+		EntError("can't rope the entity to itself!");
+		return __NULL__;
+	}
+
 	ncPhysicsConstraint new = spawn(ncPhysicsConstraint);
 	new.SetConstraintType(CONSTRAINT_POINT);
 	new.SetEntity1(firstEnt);
@@ -335,8 +356,16 @@ ncPhysicsConstraint::Ballsocket(entity firstEnt, entity secondEnt, vector pos1, 
 ncPhysicsConstraint
 ncPhysicsConstraint::Weld(entity firstEnt, entity secondEnt, float bone1, float bone2, float forceLimit, bool noCollide, bool deleteEnt1OnBreak)
 {
+	if (!firstEnt) {
+		EntError("firstEnt: invalid entity reference");
+		return __NULL__;
+	}
+	if (!secondEnt) {
+		EntError("secondEnt: invalid entity reference");
+		return __NULL__;
+	}
 	if (firstEnt == secondEnt) {
-		EntError("Cannot weld the entity with itself!");
+		EntError("can't weld the entity with itself!");
 		return __NULL__;
 	}
 
@@ -353,6 +382,19 @@ ncPhysicsConstraint::Weld(entity firstEnt, entity secondEnt, float bone1, float 
 ncPhysicsConstraint
 ncPhysicsConstraint::Rope(entity firstEnt, entity secondEnt, vector pos1, vector pos2)
 {
+	if (!firstEnt) {
+		EntError("firstEnt: invalid entity reference");
+		return __NULL__;
+	}
+	if (!secondEnt) {
+		EntError("secondEnt: invalid entity reference");
+		return __NULL__;
+	}
+	if (firstEnt == secondEnt) {
+		EntError("can't rope the entity to itself!");
+		return __NULL__;
+	}
+
 	ncPhysicsConstraint new = spawn(ncPhysicsConstraint);
 	new.SetConstraintType(CONSTRAINT_POINT);
 	new.SetEntity1(firstEnt);
@@ -369,6 +411,10 @@ ncPhysicsConstraint::Rope(entity firstEnt, entity secondEnt, vector pos1, vector
 ncPhysicsConstraint
 ncPhysicsConstraint::KeepUpright(entity firstEnt, vector uprightAngle, float angleLimit)
 {
+	if (!firstEnt) {
+		EntError("invalid entity reference");
+	}
+
 	firstEnt.angles = uprightAngle;
 	firstEnt.max_angular = angleLimit;
 	return __NULL__;

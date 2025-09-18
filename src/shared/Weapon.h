@@ -377,9 +377,10 @@ public:
 	virtual void WeaponStartedFiring(void);
 	/** Overridable: Called once when the weapon stopped firing. */
 	virtual void WeaponStoppedFiring(void);
-
-	/** Returns whether the weapon is being actively fired by the owner. */
-	nonvirtual bool WeaponIsFiring(void);
+	/** Overridable: Called once when the weapon stopped reloading. */
+	virtual void WeaponStartedReloading(void);
+	/** Overridable: Called once when the weapon stopped reloading. */
+	virtual void WeaponStoppedReloading(void);
 
 	/** Overridable: Controls def_onFire event. */
 	virtual void FiredWeaponAttack(string);
@@ -391,10 +392,13 @@ public:
 	/** Overridable: Called when we've switched from this weapon successfully. */
 	virtual void SwitchedFromWeapon(void);
 
-	/** Overridable: Called when requesting to cache values from decl to attributes. */
+	/** Overridable: Called when requesting to cache values from decl to attributes. Call super function. */
 	virtual void UpdateFireInfoCache(void);
-	/** Overridable: Called when the active fireInfo changed. */
+	/** Overridable: Called when the active fireInfo changed. Call super function. */
 	virtual void FireInfoChanged(void);
+
+	/** Returns whether the weapon is being actively fired by the owner. */
+	nonvirtual bool WeaponIsFiring(void);
 
 	/** Set the active fire Info of the weapon to this one. */
 	nonvirtual void SwitchFireInfo(string);
@@ -408,7 +412,7 @@ public:
 	nonvirtual float OverheatingProgress(void);
 	nonvirtual float PlayerSpeedMod(void);
 
-	/** Called to cache some entityDef values. */
+	/** Overriding this: Called to cache some entityDef values. */
 	virtual void ReloadCachedAttributes(void);
 
 private:

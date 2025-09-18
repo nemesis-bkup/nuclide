@@ -444,9 +444,9 @@ private:
 	nonvirtual void _RenderDebugViewCone();
 #endif
 
-	PREDICTED_FLOAT(m_flHeadYaw)
-	PREDICTED_FLOAT_N(subblendfrac)
-	PREDICTED_FLOAT_N(bonecontrol1)
+	NETWORKED_FLOAT(m_flHeadYaw)
+	NETWORKED_FLOAT_N(subblendfrac)
+	NETWORKED_FLOAT_N(bonecontrol1)
 
 #ifdef SERVER
 	entity m_eLookAt;
@@ -505,7 +505,7 @@ private:
 	/* timer for keeping track of the target */
 	float m_flTrackingTime;
 
-	PREDICTED_VECTOR_N(view_ofs)
+	NETWORKED_VECTOR_N(view_ofs)
 
 	/* caching variables, don't save these */
 	float m_actIdle;

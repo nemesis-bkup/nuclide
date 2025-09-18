@@ -52,6 +52,7 @@ var bool autocvar_net_showArrivals = false;
 			callfunction(self.classname); \
 			if (autocvar_net_showArrivals)\
 			ncError("New entity appeared to client: %S", self.classname);\
+			x ##_e.Spawned();\
 		} \
 		x ##receivedFlags = readfloat();\
 		x ##_e.ReceiveEntity( y, x ##receivedFlags );\
@@ -123,7 +124,7 @@ string __fullspawndata;
 #include "Sound.h"
 #include "Debris.h"
 
-#include "xr.h"
+#include "XRManager.h"
 #include "../botlib/Bot.h"
 #include "Client.h"
 #include "Spectator.h"
@@ -314,18 +315,6 @@ setmodel(entity ent, string mname)
 	return prior(ent, mname);
 }
 
-__wrap __variant*
-memalloc(int size)
-{
-#if 0
-	if (size > 55000)
-		breakpoint();
-
-	print(sprintf("memalloc: %i\n", size));
-#endif
-	return prior(size);
-}
-
 .float removed;
 __wrap void
 remove(entity target)
@@ -343,7 +332,6 @@ remove(entity target)
 		}
 	}
 
-	target.removed = 0;
 	prior(target);
 }
 
