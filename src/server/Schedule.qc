@@ -33,8 +33,7 @@ ncSchedule::AdvanceLater(float timeDelta)
 {
 	m_inProgress = true;
 	EntLog("Advancing %S in %f seconds.", m_name, timeDelta);
-	ncTimer newTimer = __NULL__;
-	newTimer = newTimer.TemporaryTimer(this, Advance, timeDelta, false);
+	ncTimer::TemporaryTimer(this, Advance, timeDelta, false);
 }
 
 bool

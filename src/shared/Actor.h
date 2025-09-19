@@ -193,6 +193,7 @@ public:
 	virtual void Save(float);
 	virtual void Restore(string,string);
 	virtual void RestoreComplete(void);
+	virtual void Respawn(void);
 	virtual void Spawned(void);
 	virtual void Input(entity, string, string);
 	virtual void DebugDraw(void);

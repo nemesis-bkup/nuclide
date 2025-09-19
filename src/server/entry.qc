@@ -14,10 +14,10 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-static int g_ent_spawned;
-var bool g_gamemode_done = false;
+static int g_mapSpawnEntityCount;
+var bool g_mapEntitiesLoaded = false;
 .bool gotData;
-var bool g_background = false;
+var bool g_menuBackgroundMapMode = false;
 
 /** Called once every single tic on the server. */
 void
@@ -38,7 +38,7 @@ StartFrame(void)
 		externset(g_mapCProgs, frametime, "frametime");
 	}
 
-	if (g_ents_initialized && g_grMode)
+	if (g_grMode)
 		if (g_grMode.FrameStart && time > 1)
 			g_grMode.FrameStart();
 
@@ -57,7 +57,7 @@ ClientConnect(void)
 	/* this will hide/remove the player from other clients */
 	ncPlayer pl = (ncPlayer)self;
 
-	if (g_background == false) {
+	if (g_menuBackgroundMapMode == false) {
 		if (ncAuthManager::Connect(pl) == false) {
 			return;
 		}
@@ -83,12 +83,10 @@ ClientConnect(void)
 
 	ncStats::Connect(pl);
 
-	if (g_ents_initialized) {
-		g_grMode.PlayerConnect((ncPlayer)self);
+	g_grMode.PlayerConnect((ncPlayer)self);
 
-		for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
-			addonEnum.PlayerConnect((ncPlayer)self);
-		}
+	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
+		addonEnum.PlayerConnect((ncPlayer)self);
 	}
 
 	if (physics_supported() == TRUE) {
@@ -105,8 +103,7 @@ This means the fields will still be accessible inside of this function.
 void
 ClientDisconnect(void)
 {
-
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.PlayerDisconnect((ncPlayer)self);
 	}
 
@@ -139,11 +136,11 @@ The `self` global is the client issuing the command.
 void
 ClientKill(void)
 {
-	if (g_background == true) {
+	if (g_menuBackgroundMapMode == true) {
 		return;
 	}
 
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.PlayerKill((ncPlayer)self);
 	}
 }
@@ -195,7 +192,7 @@ PutClientInServer(void)
 	ourPlayer.team = TEAM_UNASSIGNED;
 
 
-	if (g_background == true) {
+	if (g_menuBackgroundMapMode == true) {
 		/* the game and its triggers start when the player is ready to see it */
 		self.health = 100;
 		self.classname = "player";
@@ -208,7 +205,7 @@ PutClientInServer(void)
 
 	ncStats::Enter(ourPlayer);
 
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.PlayerSpawn(ourPlayer);
 	}
 
@@ -248,7 +245,7 @@ PlayerPreThink(void)
 	ncPlayer ourPlayer = (ncPlayer)self;
 	bool isBot = is.Bot(ourPlayer);
 
-	if (g_gamemode_done) {
+	if (g_mapEntitiesLoaded) {
 		return;
 	}
 
@@ -272,7 +269,7 @@ PlayerPreThink(void)
 	}
 
 
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.PlayerPreFrame((ncPlayer) ourPlayer);
 	}
 }
@@ -287,7 +284,7 @@ PlayerPostThink(void)
 	ncPlayer ourPlayer = (ncPlayer)self;
 	bool isBot = is.Bot(ourPlayer);
 
-	if (g_gamemode_done) {
+	if (g_mapEntitiesLoaded) {
 		return;
 	}
 
@@ -309,7 +306,7 @@ PlayerPostThink(void)
 		((ncBot)ourPlayer).BotPostFrame();
 	}
 
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.PlayerPostFrame(ourPlayer);
 		ourPlayer.EvaluateEntity();
 		userinfo.SetString(ourPlayer, "*score", ftos(ourPlayer.score));
@@ -325,8 +322,9 @@ SetNewParms(void)
 {
 	InitPrint("Setting New Level Parameters");
 
-	if (g_ents_initialized)
+	if (g_grMode) {
 		g_grMode.LevelNewParms();
+	}
 }
 
 /** Called whenever a single-player level change is about to happen, carrying
@@ -343,8 +341,9 @@ SetChangeParms(void)
 
 	InitPrint("Setting Level-Change Parameters");
 
-	if (g_ents_initialized)
+	if (g_grMode) {
 		g_grMode.LevelChangeParms(ourPlayer);
+	}
 }
 
 /** Run whenever an input packet by a client has been received.
@@ -357,7 +356,7 @@ SV_RunClientCommand(void)
 {
 	ncClient cl = (ncClient)self;
 
-	if (g_ents_initialized == false) {
+	if (g_mapEntitiesLoaded == false) {
 		return;
 	}
 
@@ -367,7 +366,7 @@ SV_RunClientCommand(void)
 
 	trigger_auto_trigger();
 
-	if (g_background == true) {
+	if (g_menuBackgroundMapMode == true) {
 		return;
 	}
 
@@ -402,7 +401,7 @@ SV_ParseClientCommand(string cmd)
 	int argc;
 	ncClient theClient = (ncClient)self;
 
-	if (g_background == true) {
+	if (g_menuBackgroundMapMode == true) {
 		return;
 	}
 
@@ -411,7 +410,7 @@ SV_ParseClientCommand(string cmd)
 	}
 
 	/* give the game-mode a chance to override us */
-	if (g_ents_initialized == true) {
+	if (g_grMode) {
 		if (g_grMode.ClientCommand(theClient, cmd) == true) {
 			return;
 		}
@@ -455,7 +454,7 @@ init(float prevprogs)
 
 	/* ENGINE, PLS FIX */
 	input_cursor_entitynumber = 0;
-	g_gamemode_done = false;
+	g_mapEntitiesLoaded = false;
 }
 
 /** Called inside initents() to make sure the entities have their Respawn()
@@ -468,23 +467,23 @@ init_respawn(void)
 
 	ncMapDelegate::InitialRespawn();
 
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		g_grMode.InitPostEnts();
 	}
 
 	/* of all the map entities that we wanted to spawn, how many are left? */
 	for (entity a = world; (a = findfloat(a, ::_mapspawned, true));) {
 		ncEntity ent = (ncEntity)a;
-		ent.Respawn();
+		//ent.Respawn();
 		spawnCounter++;
 	}
 
-	g_gamemode_done = true;
-	ncLog("...%i entities spawned (%i inhibited)", g_ent_spawned, g_ent_spawned - spawnCounter);
+	g_mapEntitiesLoaded = true;
+	ncLog("...%i entities spawned (%i inhibited)", g_mapSpawnEntityCount, g_mapSpawnEntityCount - spawnCounter);
 	Nodes_Init();
-	remove(self);
-
 	ncStats::StartGame();
+
+	remove(self);
 }
 
 void
@@ -522,9 +521,6 @@ initents(void)
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_UNASSIGNED), "info_player_start");
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_SPECTATOR), "info_spectator_start");
 
-	g_ents_initialized = false;
-	g_gamemode_done = false;
-
 	/* sound shader init */
 	Materials_Init();
 	MOTD_Init();
@@ -553,10 +549,10 @@ initents(void)
 		/* trade them in. */
 		serverinfo.SetBool("background", true);
 		localcmd("sv_background 0\n");
-		g_background = true;
+		g_menuBackgroundMapMode = true;
 	} else {
 		serverinfo.SetBool("background", false);
-		g_background = false;
+		g_menuBackgroundMapMode = false;
 	}
 
 	/* the maxclients serverinfo key? yeah, that one lies to the client. so
@@ -571,8 +567,6 @@ initents(void)
 	Mapcycle_Init();
 	Vote_Init();
 	ChangeTarget_Activate();
-
-	g_ents_initialized = true;
 
 	BotLib_Init();
 
@@ -612,7 +606,7 @@ ConsoleCmd(string cmd)
 	pl = (ncPlayer)self;
 
 	/* give the game-mode a chance to override us */
-	if (g_ents_initialized) {
+	if (g_grMode) {
 		if (g_grMode.ConsoleCommand(pl, cmd) == TRUE) {
 			return (1);
 		}
@@ -629,11 +623,11 @@ is being executed.
 float
 SV_ShouldPause(float newstatus)
 {
-	if (g_background == 1) {
+	if (g_menuBackgroundMapMode == true) {
 		return (0);
 	}
 
-	if (cvars.GetFloat("pausable") == 1) {
+	if (cvars.GetBool("pausable") == true) {
 		return (1);
 	}
 
@@ -678,12 +672,9 @@ CheckSpawn(void() spawnfunc)
 	static string lastClass;
 	bool skipLoad = false; /* entity data will be loaded elsewhere */
 
-	g_ents_initialized = false;
-
 	/* cancel out early */
 	if (ent == world) {
 		worldspawn();
-		g_ents_initialized = true;
 		return;
 	}
 
@@ -719,7 +710,7 @@ CheckSpawn(void() spawnfunc)
 	if (ent.identity) {
 		if (ent.CanSpawn(false) == false) {
 			ent.Destroy();
-			g_ent_spawned--;
+			g_mapSpawnEntityCount--;
 		}
 	} else {
 		/* don't need to spam repetitive messages */
@@ -729,7 +720,6 @@ CheckSpawn(void() spawnfunc)
 
 		lastClass = desiredClass;
 		remove(ent);
-		g_ents_initialized = true;
 		return;
 	}
 
@@ -753,8 +743,6 @@ CheckSpawn(void() spawnfunc)
 				} else {
 					remove(ent);
 				}
-
-				g_ents_initialized = true;
 				return;
 			}
 		}
@@ -764,6 +752,5 @@ CheckSpawn(void() spawnfunc)
 	}
 
 	/* count and mark as map spawned */
-	g_ent_spawned++;
-	g_ents_initialized = true;
+	g_mapSpawnEntityCount++;
 }

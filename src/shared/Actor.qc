@@ -574,6 +574,14 @@ ncActor::IsPerforming(void)
 	return (m_activeSchedule) ? (true) : (false);
 }
 
+void
+ncActor::Respawn(void)
+{
+	CancelSchedule();
+
+	super::Respawn();
+}
+
 bool
 ncActor::CancelSchedule(void)
 {

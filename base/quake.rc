@@ -4,3 +4,4 @@ exec default_video.cfg
 exec default_mayhem.cfg
 exec fte.cfg
 exec config.cfg
+exec autoexec.cfg

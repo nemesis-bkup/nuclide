@@ -137,7 +137,7 @@ Locale_ParseFile(string pathToFile)
 			lookUpToken = strcat("#", strtoupper(argv(0)));
 			localizedString = argv(1);
 			hash_add(g_hashLocale, lookUpToken, localizedString, EV_STRING);
-			ncLog("Add %S %S", lookUpToken, localizedString);
+			//ncLog("Add %S %S", lookUpToken, localizedString);
 		}
 	}
 
