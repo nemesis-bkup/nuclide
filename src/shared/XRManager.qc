@@ -27,60 +27,65 @@
    will use the regular input_angles and view position for weapons.
 */
 
+static NSXRSpace
+FindXRSpace(entity playerEntity)
+{
+	NSXRSpace foundSpace = __NULL__;
+
+	for (NSXRSpace spaceList = world; (spaceList = find(spaceList, ::classname, "NSXRSpace"));) {
+		if (spaceList.owner == playerEntity) {
+			return (spaceList);
+		}
+	}
+
+	foundSpace = spawn(NSXRSpace);
+	foundSpace.solid = SOLID_NOT;
+	foundSpace.touch = 0;
+	foundSpace.owner = playerEntity;
+	return (foundSpace);
+}
+
+static NSXRInput
+FindXRInput(entity playerEntity, xrinput_t inputType)
+{
+	NSXRInput foundInput = __NULL__;
+
+	/* See if it exists already */
+	for (NSXRInput inputList = world; (inputList = find(inputList, ::classname, "NSXRInput"));) {
+		if (inputList.owner == playerEntity) {
+			continue;
+		}
+		if (inputList.GetType() != inputType) {
+			continue;
+		}
+		return (inputList);
+	}
+
+	/* Doesn't exist. Create it. */
+	foundInput = spawn(NSXRInput);
+	foundInput.SetType(inputType);
+	foundInput.SetParentSpace(FindXRSpace(playerEntity));
+	foundInput.solid = SOLID_NOT;
+	foundInput.touch = 0;
+	foundInput.owner = playerEntity;
+	return (foundInput);
+}
+
 void
 XR_Init(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
 
-	if (!pl.m_xrSpace) {
-		pl.m_xrSpace = spawn(NSXRSpace);
-		pl.m_xrSpace.solid = SOLID_NOT;
-		pl.m_xrSpace.touch = 0;
-	}
-
-	/* the only 3 devices that matter right now */
-	if (!pl.m_xrInputHead) {
-		pl.m_xrInputHead = spawn(NSXRInput);
-		pl.m_xrInputHead.SetType(XR_INPUT_HEAD);
-		pl.m_xrInputHead.SetParentSpace(pl.m_xrSpace);
-		pl.m_xrInputHead.solid = SOLID_NOT;
-		pl.m_xrInputHead.touch = 0;
-	}
-
-	if (!pl.m_xrInputLeft) {
-		pl.m_xrInputLeft = spawn(NSXRInput);
-		pl.m_xrInputLeft.SetType(XR_INPUT_LEFT);
-		pl.m_xrInputLeft.SetParentSpace(pl.m_xrSpace);
-		pl.m_xrInputLeft.solid = SOLID_NOT;
-		pl.m_xrInputLeft.touch = 0;
-	}
-
-	if (!pl.m_xrInputRight) {
-		pl.m_xrInputRight = spawn(NSXRInput);
-		pl.m_xrInputRight.SetType(XR_INPUT_RIGHT);
-		pl.m_xrInputRight.SetParentSpace(pl.m_xrSpace);
-		pl.m_xrInputRight.solid = SOLID_NOT;
-		pl.m_xrInputRight.touch = 0;
-	}
+	pl.m_xrSpace = FindXRSpace(pl);
+	pl.m_xrInputHead = FindXRInput(pl, XR_INPUT_HEAD);
+	pl.m_xrInputLeft = FindXRInput(pl, XR_INPUT_LEFT);
+	pl.m_xrInputRight = FindXRInput(pl, XR_INPUT_RIGHT);
 }
 
 void
 XR_Shutdown(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
-
-	if (pl.m_xrSpace)
-		pl.m_xrSpace.Destroy();
-
-	if (pl.m_xrInputHead)
-		pl.m_xrInputHead.Destroy();
-
-	if (pl.m_xrInputLeft)
-		pl.m_xrInputLeft.Destroy();
-
-	if (pl.m_xrInputRight)
-		pl.m_xrInputRight.Destroy();
-
 	pl.m_xrSpace = __NULL__;
 	pl.m_xrInputHead = __NULL__;
 	pl.m_xrInputLeft = __NULL__;
