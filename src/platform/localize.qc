@@ -191,7 +191,7 @@ Locale_Reload(void)
 {
 	for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
 		string fileToLoad = argv(i);
-		ncLog("Indexing locale resource %s\n", fileToLoad);
+		ncLog("Indexing locale resource %s", fileToLoad);
 		Locale_ParseFile(fileToLoad);
 	}
 }

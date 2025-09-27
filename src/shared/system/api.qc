@@ -386,10 +386,12 @@ SHPF_teams_Valid(int teamID)
 
 	if (teamID <= 0i) {
 		ncError("Team ID cannot be 0 or negative.");
+		return (false);
 	}
 
 	if (teamID > 1000i) {
 		ncError("Team ID cannot be over 1000. Reserved.");
+		return (false);
 	}
 
 	return (true);

@@ -35,7 +35,7 @@ ncClient::Spawned(void)
 {
 	super::Spawned();
 
-	XR_Init(this);
+	ncXRManager::Init(this);
 }
 
 #ifdef SERVER
@@ -89,7 +89,8 @@ ncClient::SharedInputFrame(void)
 void
 ncClient::OnRemoveEntity(void)
 {
-	XR_Shutdown(this);
+	super::OnRemoveEntity();
+	ncXRManager::Shutdown(this);
 }
 
 void

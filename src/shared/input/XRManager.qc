@@ -72,10 +72,9 @@ FindXRInput(entity playerEntity, xrinput_t inputType)
 }
 
 void
-XR_Init(entity ePlayer)
+ncXRManager::Init(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
-
 	pl.m_xrSpace = FindXRSpace(pl);
 	pl.m_xrInputHead = FindXRInput(pl, XR_INPUT_HEAD);
 	pl.m_xrInputLeft = FindXRInput(pl, XR_INPUT_LEFT);
@@ -83,29 +82,28 @@ XR_Init(entity ePlayer)
 }
 
 void
-XR_Shutdown(entity ePlayer)
+ncXRManager::Shutdown(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
 	pl.m_xrSpace = __NULL__;
 	pl.m_xrInputHead = __NULL__;
 	pl.m_xrInputLeft = __NULL__;
 	pl.m_xrInputRight = __NULL__;
-	
 }
 
 #ifdef CLIENT
 void
-XR_UpdateView(entity ePlayer)
+ncXRManager::UpdateView(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
 
 	/* not yet ready */
 	if (!pl.m_xrSpace) {
-		XR_Init(ePlayer);
+		ncXRManager::Init(ePlayer);
 	}
 
 	/* update our space */
-	if (XR_Available(ePlayer)) {
+	if (ncXRManager::Available(ePlayer)) {
 		pl.m_xrSpace.SetOrigin(g_view.GetCameraOrigin());
 		pl.m_xrSpace.SetAngles(view_angles);
 
@@ -125,13 +123,13 @@ XR_UpdateView(entity ePlayer)
 #endif
 
 void
-XR_InputFrame(entity ePlayer)
+ncXRManager::InputFrame(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
 
 	/* not yet ready */
 	if (!pl.m_xrSpace) {
-		XR_Init(ePlayer);
+		ncXRManager::Init(ePlayer);
 	}
 
 	if (autocvar_xr_testInputs) {
@@ -155,7 +153,7 @@ XR_InputFrame(entity ePlayer)
 }
 
 bool
-XR_Available(entity ePlayer)
+ncXRManager::Available(entity ePlayer)
 {
 	ncClient pl = (ncClient)ePlayer;
 

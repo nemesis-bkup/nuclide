@@ -16,8 +16,8 @@
 
 static int g_mapSpawnEntityCount;
 var bool g_mapEntitiesLoaded = false;
-.bool gotData;
 var bool g_menuBackgroundMapMode = false;
+.bool gotData;
 
 /** Called once every single tic on the server. */
 void
@@ -63,7 +63,11 @@ ClientConnect(void)
 		}
 	}
 
-	spawnfunc_ncPlayer();
+	/* not necessary to do this again */
+	if (pl.declclass != "ncPlayer") {
+		spawnfunc_ncPlayer();
+	}
+
 	pl.SetSolid(SOLID_NOT);
 	pl.SetMovetype(MOVETYPE_NONE);
 	pl.SetModelindex(0);
@@ -75,10 +79,9 @@ ClientConnect(void)
 	pl.frags = 0;
 	pl.score = 0;
 	pl.gotData = false;
-
-	/* don't carry over team settings from a previous session */
 	pl.team = TEAM_CONNECTING;
 	pl.flags |= FL_CLIENT;
+
 	userinfo.SetString(pl, "*team", "0");
 
 	ncStats::Connect(pl);
@@ -436,16 +439,9 @@ init(float prevprogs)
 
 	Skill_Init();
 	Constants_Init();
-	EntityDef_Init();
-	Ammo_Init();
 	MapTweaks_Init();
 	MapC_Init();
 	RuleC_Init();
-
-	SoundDef_Init();
-	PropData_Init();
-	SurfData_Init();
-	DecalGroups_Init();
 
 	ncStats::Init();
 
@@ -521,10 +517,17 @@ initents(void)
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_UNASSIGNED), "info_player_start");
 	forceinfokey(world, sprintf("teamspawn_%d", TEAM_SPECTATOR), "info_spectator_start");
 
-	/* sound shader init */
+	g_ents_initialized = false;
+	EntityDef_Init();
+	Ammo_Init();
+	SoundDef_Init();
+	PropData_Init();
+	SurfData_Init();
+	DecalGroups_Init();
 	Materials_Init();
 	MOTD_Init();
 	PMove_Init();
+	g_ents_initialized = true;
 
 	BodyQue_Init();
 
@@ -561,8 +564,11 @@ initents(void)
 
 	currentRule = currentRule.ActiveInstance();
 	currentMap = currentMap.ActiveInstance();
+
+	g_ents_initialized = false;
 	currentRule.Precache();
 	currentMap.Precache();
+	g_ents_initialized = true;
 
 	Mapcycle_Init();
 	Vote_Init();
@@ -684,6 +690,7 @@ CheckSpawn(void() spawnfunc)
 
 	/* no longer needed, immediately discard. */
 	__fullspawndata = "";
+	g_ents_initialized = false;
 
 	/* we have to diverge here in order to support in-code class entities,
 	   decl entities and overrides of both.
@@ -705,6 +712,7 @@ CheckSpawn(void() spawnfunc)
 	} else {
 		ent.identity = 0;
 	}
+	g_ents_initialized = true;
 
 	/* check if this entity was meant to spawn on the client-side only */
 	if (ent.identity) {
@@ -748,7 +756,9 @@ CheckSpawn(void() spawnfunc)
 		}
 
 		ent._loading = false;
+		g_ents_initialized = false;
 		ent.Spawn();
+		g_ents_initialized = true;
 	}
 
 	/* count and mark as map spawned */

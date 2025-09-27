@@ -1185,19 +1185,25 @@ void
 ncActor::OnRemoveEntity(void)
 {
 	RouteClear();
+
+	super::OnRemoveEntity();
 }
 
 void
 ncActor::RouteClear(void)
 {
-	m_pathfindingCurrentNode = BOTROUTE_END;
-	m_pathfindingNodeCount = 0;
-
-	if (m_pathfindingGraph != __NULL__) {
-		memfree(m_pathfindingGraph);
-		m_pathfindingGraph = __NULL__;
+	if (m_pathfindingNodeCount <= 0i) {
+		return;
 	}
 
+	m_pathfindingCurrentNode = BOTROUTE_END;
+	m_pathfindingNodeCount = 0i;
+
+	if (m_pathfindingGraph) {
+		memfree(m_pathfindingGraph);
+	}
+
+	m_pathfindingGraph = __NULL__;
 	ncActor_Log("Actor %S (%s) cleared their route.", netname, classname);
 }
 

@@ -374,3 +374,11 @@ ncRadar::InitFromSourceHLTVScript(string fileName)
 	ncLog("Map overview available.");
 	return newRadar;
 }
+
+__weak void
+Radar_Draw(vector atPosition, vector rectSize)
+{
+	g_overview.SetViewPosition(g_view.GetHUDCanvasPos() + atPosition);
+	g_overview.SetViewSize(rectSize);
+	g_overview.UpdateView();
+}

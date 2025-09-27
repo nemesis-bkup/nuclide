@@ -77,6 +77,10 @@ public:
 	virtual void InputPrevious(void);
 	/** Call to change the spectating mode. */
 	virtual void InputMode(void);
+	/** Call to forcefully un-spectate a thing. */
+	nonvirtual void Unspectate(void);
+	virtual void OnRemoveEntity(void);
+	virtual void Respawn(void);
 
 	/** Re-teleport to the target we're spectating. 
 	Called once by InputNext/Previous. */

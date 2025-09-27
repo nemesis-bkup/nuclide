@@ -266,7 +266,7 @@ View_DrawViewModel(void)
 	/* now apply the scale hack */
 	m_eViewModelL.scale = m_eViewModel.scale = autocvar_cg_viewmodelScale;
 
-	if (Client_IsSpectator(cl) || XR_Available(cl) == false) {
+	if (Client_IsSpectator(cl) || ncXRManager::Available(cl) == false) {
 		m_eViewModelL.origin = g_view.GetCameraOrigin();
 		makevectors(currentAngle);
 		m_eViewModelL.origin += (v_forward * cvar("cg_gunX"));

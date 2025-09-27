@@ -88,6 +88,14 @@ to be an idle animation, add this line to your entityDef:
 
 ```
 "act_idle"	"0"
+"act_fire" "1,2"
+```
+
+Some may also want to use @ref constants, which can be mapped like so:
+
+```
+"act_idle"	"$PISTOL_ANIM_IDLE"
+"act_fire"	"$PISTOL_ANIM_FIRE1,$PISTOL_ANIM_FIRE2"
 ```
 
 @{

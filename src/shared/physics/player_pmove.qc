@@ -685,7 +685,7 @@ ncPlayer::Physics_Run(void)
 		}
 	}
 
-	if (XR_Available(this)) {
+	if (ncXRManager::Available(this)) {
 		m_xrSpace.SetOrigin(origin);
 		m_xrSpace.SetAngles(input_angles);
 	} else {

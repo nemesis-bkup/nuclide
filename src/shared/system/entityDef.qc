@@ -353,10 +353,6 @@ EntityDef_PrepareEntity(entity target, int id)
 		}
 	}
 
-	if (!targetEnt) {
-		targetEnt = spawn(ncEntity);
-	}
-
 	targetEnt.declclass = g_entDefTable[id].entClass;
 	targetEnt.spawnclass = g_entDefTable[id].spawnClass;
 
@@ -610,10 +606,10 @@ EntityDef_SpawnClassname(string className)
 }
 
 ncEntity
-EntityDef_SwitchClass(ncEntity target, string className)
+EntityDef_SwitchClass(ncEntity targetEntity, string className)
 {
 	ncEntity returnEntity = __NULL__;
-	g_lastSpawnData = target.m_rawSpawnData;
+	g_lastSpawnData = targetEntity.m_rawSpawnData;
 
 	if (!STRING_SET(className)) {
 		return (__NULL__);
@@ -623,12 +619,12 @@ EntityDef_SwitchClass(ncEntity target, string className)
 		if (className == g_entDefTable[i].entClass) {
 
 			/* ensure the previous class deconstructs */		
-			if (target.identity == 1) {
-				target.OnRemoveEntity();
+			if (targetEntity.identity == 1) {
+				targetEntity.OnRemoveEntity();
 			}
 			
 			EntityDef_Precache(className);
-			returnEntity = EntityDef_PrepareEntity(target, i);
+			returnEntity = EntityDef_PrepareEntity(targetEntity, i);
 			return (returnEntity);
 		}
 	}

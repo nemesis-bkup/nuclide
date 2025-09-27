@@ -43,6 +43,7 @@ AllowFlashlight(void)
 void
 CodeCallback_Precaches(void)
 {
+	precache.Entity(autocvar_invasion_monsterClass);
 	Util_SharedPrecaches();
 }
 
@@ -116,6 +117,29 @@ CodeCallback_PlayerKilled(entity playerEntity, entity inflictor, entity attacker
 void
 CodeCallback_NPCKilled(entity npcEntity, entity inflictor, entity attacker, string weapon)
 {
+	string npcName;
+	string attackerName;
+
+	if (npcEntity) {
+		npcName = npcEntity.netname;
+
+		if (!STRING_SET(npcName)) {
+			npcName = npcEntity.classname;
+		}
+	} else {
+		npcName = "Unknown";
+	}
+
+	if (attacker) {
+		if (!STRING_SET(attacker.netname)) {
+			attackerName = attacker.classname;
+		} else {
+			attackerName = attacker.netname;
+		}
+	} else {
+		npcName = "Unknown";
+	}
+
 	if (npcEntity == attacker)
 		combat.Obituary(npcEntity.netname, attacker.netname, weapon, "self");
 	else

@@ -144,42 +144,6 @@ _SndEntLog(string className, string functionName, float edictNum, string warnMes
 @param ... contains a formatted string containing a description. */
 #define SndEntLog(...) if (autocvar_s_logLevel >= LOGLEVEL_DEBUG) _SndEntLog(classname, __FUNC__, num_for_edict(this), sprintf(__VA_ARGS__))
 
-/** Global hash table for name > soundDef id lookup. */
-var hashtable g_hashsounds;
-
-/** Enumeration of valid sound flags. */
-typedef enumflags
-{
-	SNDFL_LOOPING,	/**< forceloop */
-	SNDFL_NODUPS,	/**< don't random the samples */
-	SNDFL_GLOBAL,	/**< no attenuation */
-	SNDFL_NOREVERB,	/**< skip reverb */
-	SNDFL_OMNI,		/**< volume on all channels is equal */
-	SNDFL_PRIVATE,	/**< only play on target */
-	SNDFL_STEP,		/**< volume is calculated from entity speed */
-	SNDFL_FOLLOW,	/**< sample follows entity as it plays */
-	SNDFL_ALERTS	/**< this sounds alerts AI, takes distance into account */
-} soundFlag_t;
-
-/** A soundDef aka 'sound shader' type. */
-typedef struct
-{
-	float dist_min; /**< Minimum playback distance. Default is 0. */
-	float dist_max; /**< Maximum playback distance. */
-	float offset;	/**< Sound sample offset. Will start playback this many seconds in. */
-	float pitch_min; /**< Minimum sound pitch. */
-	float pitch_max; /**< Maximum sound pitch. */
-	float shakes; /**< Earthquake/Shake amplifier. Default is 0. */
-	float volume; /**< Desired playback volume. */
-	soundFlag_t flags; /**< Sound flags that are applied to this soundDef. */
-	int playc; /**< Number of plays. */
-	int sample_count; /**< Total amount of samples within this soundDef. */
-	string samples; /**< Separated list of samples. */
-	string name; /**< Name of the soundDef. */
-	string distshader; /**< soundDef to play where this soundDef is not audible. */
-	float pointparticle;
-} snd_t;
-
 /** A sound sample of a sentences.txt word sequence. */
 typedef struct
 {
@@ -187,11 +151,6 @@ typedef struct
 	float m_flLength;
 	float m_flPitch;
 } sound_t;
-
-/** Pointer to the global soundDef table. */
-snd_t *g_sounds;
-/** Total amount of registered soundDef entries. */
-int g_sounds_count; 
 
 /** Called by the client inside CSQC_Init(), and on the server inside init(). */
 void SoundDef_Init(void);

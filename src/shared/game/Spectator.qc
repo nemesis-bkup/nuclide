@@ -21,6 +21,28 @@ ncSpectator::ncSpectator(void)
 	m_spectatingMode = SPECMODE_FREE;
 }
 
+void
+ncSpectator::Respawn(void)
+{
+	Unspectate();
+	super::Respawn();
+}
+
+void
+ncSpectator::OnRemoveEntity(void)
+{
+	Unspectate();
+	super::Respawn();
+}
+
+void
+ncSpectator::Unspectate(void)
+{
+	m_spectatingEntity = 0;
+	m_spectatingMode = SPECMODE_FREE;
+	m_flDeathCam = 0.0f;
+}
+
 #ifdef SERVER
 void
 ncSpectator::Save(float handle)

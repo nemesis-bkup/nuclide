@@ -95,6 +95,8 @@ class ncRenderableEntity:ncEntity
 public:
 	void ncRenderableEntity(void);
 
+	virtual void OnRemoveEntity(void);
+
 	/* overrides */
 	virtual void SpawnKey(string,string);
 #ifdef SERVER

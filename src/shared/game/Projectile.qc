@@ -1465,47 +1465,37 @@ ncProjectile::predraw(void)
 ncProjectile
 ncProjectile_SpawnDef(string entityDef, ncActor theOwner)
 {
-	entity oldself = self;
-
 	ncProjectile rocket = spawn(ncProjectile);
 	rocket.owner = theOwner;
-	self = rocket;
-	EntityDef_SpawnClassname(entityDef);
+	EntityDef_SwitchClass(rocket, entityDef);
 	rocket.SetWeaponOwner(theOwner.m_activeWeapon);
 	rocket.Launch(theOwner.GetEyePos(), theOwner.GetViewAngle(), 0.0f, 0.0f, 0.0f);
-	self = oldself;
 	return rocket;
 }
 
 ncProjectile
 ncProjectile_SpawnDefAtPosition(string entityDef, ncActor theOwner, vector vecOrigin, vector vecAngles)
 {
-	entity oldself = self;
 	ncProjectile rocket = spawn(ncProjectile);
 	rocket.owner = theOwner;
-	self = rocket;
-	EntityDef_SpawnClassname(entityDef);
+	EntityDef_SwitchClass(rocket, entityDef);
 	rocket.SetWeaponOwner(theOwner.m_activeWeapon);
 	rocket.Launch(vecOrigin, vecAngles, 0.0f, 0.0f, 0.0f);
-	self = oldself;
 	return rocket;
 }
 
 ncProjectile
 ncProjectile_SpawnDefAttachment(string entityDef, ncActor theOwner, int attachmentID)
 {
-	entity oldself = self;
 	float skeletonIndex = skel_create(theOwner.modelindex);
 	vector attachmentPos =  gettaginfo(theOwner, skel_get_numbones(skeletonIndex) + attachmentID);
 	skel_delete(skeletonIndex);
 
 	ncProjectile rocket = spawn(ncProjectile);
 	rocket.owner = theOwner;
-	self = rocket;
-	EntityDef_SpawnClassname(entityDef);
+	EntityDef_SwitchClass(rocket, entityDef);
 	rocket.SetWeaponOwner(theOwner.m_activeWeapon);
 	rocket.Launch(attachmentPos, theOwner.GetViewAngle(), 0.0f, 0.0f, 0.0f);
-	self = oldself;
 	return rocket;
 }
 #endif

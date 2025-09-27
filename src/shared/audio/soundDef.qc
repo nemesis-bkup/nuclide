@@ -14,61 +14,12 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#warning SoundDef should be stored in ncDict
+/* this was converted from one system to another, so excuse the sloppy */
 
 static void pointsound_proper(vector origin, string sample, float volume, float attenuation, float pitch) = #483;
-
-#ifndef SOUNDSHADER_DYNAMIC
-	#ifndef SOUNDSHADER_MAX
-		/** The max amount of soundDef entries. Can override this in your progs.src. */
-		#define SOUNDSHADER_MAX 512
-	#endif
-#endif
-
-/*
-#define SOUNDSHADER_DYNAMIC
-
-Your game can define SOUNDSHADER_DYNAMIC in its progs.src if you want an unpredictable amount of sound shaders.
-Other than that, you can increase the value of SOUNDSHADER_MAX.
-
-We switched to up-front allocation because QCLIB fragments memory like hell as there's
-no real garbage collector to speak of
-*/
-
-void
-SoundDef_Shutdown(void)
-{
-	if (g_sounds) {
-		memfree(g_sounds);
-	}
-
-	g_sounds_count = 0;
-	g_hashsounds = 0;
-}
-
-void SoundSource_Init(void);
-
-void
-SoundDef_Init(void)
-{
-	InitStart();
-
-	/* make sure it's all reset */
-	SoundDef_Shutdown();
-
-#ifndef SOUNDSHADER_DYNAMIC
-	g_sounds = (snd_t *)memalloc(sizeof(snd_t) * SOUNDSHADER_MAX);
-	ncLog("...allocated %d bytes for SoundDef", sizeof(snd_t) * SOUNDSHADER_MAX);
-#endif
-
-	/* Source Engine conventions */
-	SoundSource_Init();
-
-	precache_sound("common/null.wav");
-	InitEnd();
-}
-
 var int autocvar_s_nominaldistance = 1000;
+
+
 #define SND_NOMINALDISTANCE autocvar_s_nominaldistance
 #define SND_MAXRADIUS_QUAKE 1000
 #define SND_MAXRADIUS_SOURCE 1000
@@ -81,8 +32,34 @@ var int autocvar_s_nominaldistance = 1000;
 #define ATTN_SOURCE_GUNFIRE		0.27f
 #define ATTN_SOURCE_TALKING		0.7f
 
+void
+SoundDef_Shutdown(void)
+{
+	/* free up the entity slot */
+	for (ncSoundDict spaceList = world; (spaceList = find(spaceList, ::classname, "ncSoundDict"));) {
+		remove(spaceList);
+	}
+}
+
+void SoundSource_Init(void);
+
+void
+SoundDef_Init(void)
+{
+	InitStart();
+
+	/* make sure it's all reset */
+	SoundDef_Shutdown();
+
+	/* Source Engine conventions */
+	SoundSource_Init();
+
+	precache_sound("common/null.wav");
+	InitEnd();
+}
+
 static void
-SoundDef_ParseField(int i, int a, string keyName, string valueCS)
+SoundDef_ParseField(ncSoundDict newSound, int a, string keyName, string valueCS)
 {
 	bool precacheSound = true;
 	string setValue = strtolower(valueCS);
@@ -93,16 +70,16 @@ SoundDef_ParseField(int i, int a, string keyName, string valueCS)
 		if (a == 2) {
 			switch(setValue) {
 			case "idle":
-				g_sounds[i].dist_max = SND_MAXRADIUS_QUAKE / ATTN_IDLE;
+				newSound.dist_max = SND_MAXRADIUS_QUAKE / ATTN_IDLE;
 				break;
 			case "static":
-				g_sounds[i].dist_max = SND_MAXRADIUS_QUAKE / ATTN_STATIC;
+				newSound.dist_max = SND_MAXRADIUS_QUAKE / ATTN_STATIC;
 				break;
 			case "none":
-				g_sounds[i].dist_max = 0;
+				newSound.dist_max = 0;
 				break;
 			case "normal":
-				g_sounds[i].dist_max = SND_MAXRADIUS_QUAKE / ATTN_NORM;
+				newSound.dist_max = SND_MAXRADIUS_QUAKE / ATTN_NORM;
 			default:
 				break;
 			}
@@ -114,34 +91,34 @@ SoundDef_ParseField(int i, int a, string keyName, string valueCS)
 			switch(setValue) {
 			case "attn_idle":
 			case "sndlvl_idle":
-				g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_IDLE;
+				newSound.dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_IDLE;
 				break;
 			case "attn_ricochet":
 			case "attn_static":
 			case "sndlvl_static":
-				g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_STATIC;
+				newSound.dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_STATIC;
 				break;
 			case "0":
 			case "attn_none":
 			case "sndlvl_none":
-				g_sounds[i].dist_max = ATTN_SOURCE_NONE;
+				newSound.dist_max = ATTN_SOURCE_NONE;
 				break;
 			case "attn_norm":
 			case "sndlvl_norm":
-				g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_NORM;
+				newSound.dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_NORM;
 				break;
 			case "attn_gunfire":
 			case "sndlvl_gunfire":
-				g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_GUNFIRE;
+				newSound.dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_GUNFIRE;
 				break;
 			case "attn_talking":
 			case "sndlvl_talking":
-				g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_TALKING;
+				newSound.dist_max = SND_MAXRADIUS_SOURCE / ATTN_SOURCE_TALKING;
 				break;
 			default:
 				if (substring(setValue, 0, 7) == "sndlvl_") {
 					float dbLevel = stof(substring(setValue, 7, -3));
-					g_sounds[i].dist_max = SND_MAXRADIUS_SOURCE / ((dbLevel > 50.0f) ? (20.0f / (dbLevel - 50.0f)) : 4.0f);
+					newSound.dist_max = SND_MAXRADIUS_SOURCE / ((dbLevel > 50.0f) ? (20.0f / (dbLevel - 50.0f)) : 4.0f);
 				} else {
 					ncError("Unknown soundlevel %S", setValue);
 				}
@@ -151,22 +128,22 @@ SoundDef_ParseField(int i, int a, string keyName, string valueCS)
 		break;
 	case "dist_min":
 		if (a == 2) {
-			g_sounds[i].dist_min = stof(setValue);
+			newSound.dist_min = stof(setValue);
 		}
 		break;
 	case "dist_max":
 		if (a == 2) {
-			g_sounds[i].dist_max = stof(setValue);
+			newSound.dist_max = stof(setValue);
 		}
 		break;
 	case "volume":
 		if (a == 2) {
-			g_sounds[i].volume = stof(setValue);
+			newSound.volume = stof(setValue);
 		}
 		break;
 	case "shakes":
 		if (a == 2) {
-			g_sounds[i].shakes = stof(setValue);
+			newSound.shakes = stof(setValue);
 		}
 		break;
 	case "pitch":
@@ -174,61 +151,61 @@ SoundDef_ParseField(int i, int a, string keyName, string valueCS)
 			int comma = tokenizebyseparator(setValue, ",");
 
 			if (comma == 2) {
-				g_sounds[i].pitch_min = stof(argv(0));
-				g_sounds[i].pitch_max = stof(argv(1));
+				newSound.pitch_min = stof(argv(0));
+				newSound.pitch_max = stof(argv(1));
 			} else {
-				g_sounds[i].pitch_min = fabs(stof(setValue)) * 100;
-				g_sounds[i].pitch_max = g_sounds[i].pitch_min;
+				newSound.pitch_min = fabs(stof(setValue)) * 100;
+				newSound.pitch_max = newSound.pitch_min;
 			}
 		}
 		break;
 	case "pitch_min":
 		if (a == 2) {
-			g_sounds[i].pitch_min = fabs(stof(setValue)) * 100;
+			newSound.pitch_min = fabs(stof(setValue)) * 100;
 		}
 		break;
 	case "pitch_max":
 		if (a == 2) {
-			g_sounds[i].pitch_max = fabs(stof(setValue)) * 100;
+			newSound.pitch_max = fabs(stof(setValue)) * 100;
 		}
 		break;
 	case "offset":
 		if (a == 2) {
-			g_sounds[i].offset = stof(setValue);
+			newSound.offset = stof(setValue);
 		}
 		break;
 	case "looping":
-		g_sounds[i].flags |= SNDFL_LOOPING;
+		newSound.flags |= SNDFL_LOOPING;
 		break;
 	case "nodups":
-		g_sounds[i].flags |= SNDFL_NODUPS;
+		newSound.flags |= SNDFL_NODUPS;
 		break;
 	case "global":
-		g_sounds[i].flags |= SNDFL_GLOBAL;
+		newSound.flags |= SNDFL_GLOBAL;
 		break;
 	case "private":
-		g_sounds[i].flags |= SNDFL_PRIVATE;
+		newSound.flags |= SNDFL_PRIVATE;
 		break;
 	case "no_reverb":
-		g_sounds[i].flags |= SNDFL_NOREVERB;
+		newSound.flags |= SNDFL_NOREVERB;
 		break;
 	case "omnidirectional":
-		g_sounds[i].flags |= SNDFL_OMNI;
+		newSound.flags |= SNDFL_OMNI;
 		break;
 	case "follow":
-		g_sounds[i].flags |= SNDFL_FOLLOW;
+		newSound.flags |= SNDFL_FOLLOW;
 		break;
 	case "footstep":
-		g_sounds[i].flags |= SNDFL_STEP;
+		newSound.flags |= SNDFL_STEP;
 		break;
 	case "distshader":
-		g_sounds[i].distshader = valueCS;
+		newSound.distshader = valueCS;
 		break;
 	case "pointparticle":
-		g_sounds[i].pointparticle = particleeffectnum(valueCS);
+		newSound.pointparticle = particleeffectnum(valueCS);
 		break;
 	case "alerts":
-		g_sounds[i].flags |= SNDFL_ALERTS;
+		newSound.flags |= SNDFL_ALERTS;
 		break;
 	case "wave":
 		string randomPrefix = substring(setValue, 0, 1);
@@ -247,24 +224,24 @@ SoundDef_ParseField(int i, int a, string keyName, string valueCS)
 			if (precacheSound)
 				precache_sound(setValue);
 
-			g_sounds[i].samples = sprintf("%s%s\n", g_sounds[i].samples, setValue);
-			g_sounds[i].sample_count++;
+			newSound.samples = sprintf("%s%s\n", newSound.samples, setValue);
+			newSound.sample_count++;
 		}
 		break;
 	}
 }
 
 static float
-SoundDef_GetAttenuation(int i)
+SoundDef_GetAttenuation(ncSoundDict newSound)
 {
-	if (g_sounds[i].dist_max == 0)
+	if (newSound.dist_max == 0)
 		return 0;
 	else
-		return cvar("s_nominaldistance") / g_sounds[i].dist_max;
+		return cvar("s_nominaldistance") / newSound.dist_max;
 }
 
 static int
-SoundDef_Parse(int i, string line, string shader)
+SoundDef_Parse(ncSoundDict newSound, string line, string shader)
 {
 	int c;
 	static string t_name;
@@ -292,14 +269,14 @@ SoundDef_Parse(int i, string line, string shader)
 		break;
 	default:
 		if (braced == TRUE) {
-			SoundDef_ParseField(i, c, argv(0), argv(1));
+			SoundDef_ParseField(newSound, c, argv(0), argv(1));
 		} else {
 			/* name/identifer of our message */
 			t_name = line;
 
 			if (t_name == shader) {
 				/* I guess it's what we want */
-				g_sounds[i].name = shader;
+				newSound.name = shader;
 			} else {
 				/* not what we're looking for */
 				t_name = "";
@@ -312,24 +289,16 @@ SoundDef_Parse(int i, string line, string shader)
 bool
 SoundDef_PrecacheFile(string fileName)
 {
+#if 0
 	filestream scriptFile;
 	string lineStream;
 	int braceDepth = 0i;
 	string sndDefName = "";
-	int startIndex = g_sounds_count;
-
-	if (g_sounds_count >= SOUNDSHADER_MAX)
-		return false;
 
 	scriptFile = fopen(fileName, FILE_READ);
 
 	if (scriptFile < 0) {
 		return false;
-	}
-
-	/* create the hash-table if it doesn't exist */
-	if (!g_hashsounds) {
-		g_hashsounds = hash_createtab(2, HASH_ADD);
 	}
 
 	SndLog("Precaching SOURCE ENGINE file %S", fileName);
@@ -360,7 +329,6 @@ SoundDef_PrecacheFile(string fileName)
 					//if (substring(sndDefName, 0, 11) == "Weapon_SMG1")
 					//	error("");
 
-					hash_add(g_hashsounds, sndDefName, startIndex);
 				//	print(sprintf("sfx add %i %S\n", startIndex, sndDefName));
 					sndDefName = "";
 					startIndex++;
@@ -386,6 +354,25 @@ SoundDef_PrecacheFile(string fileName)
 
 	fclose(scriptFile);
 	return true;
+#endif
+}
+
+static ncSoundDict
+SoundDef_FindSoundByName(string soundName)
+{
+	for (ncSoundDict spaceList = world; (spaceList = find(spaceList, ::classname, "ncSoundDict"));) {
+		if (spaceList.name == soundName) {
+			return (spaceList);
+		}
+	}
+
+	return (__NULL__);
+}
+
+static int
+SoundDef_GetSoundIDByName(string soundName)
+{
+	return getmodelindex(strcat("*S:", soundName), true);
 }
 
 int
@@ -395,6 +382,7 @@ SoundDef_Precache(string shader)
 	filestream fh;
 	string line;
 	int index;
+	ncSoundDict newSound;
 
 	if (!STRING_SET(shader)) {
 		return -1i;
@@ -405,41 +393,16 @@ SoundDef_Precache(string shader)
 		return -1i;
 	}
 
-	index = g_sounds_count;
-
 	SndLog("Precaching SoundDef %S", shader);
 
-	/* create the hash-table if it doesn't exist */
-	if (!g_hashsounds) {
-		g_hashsounds = hash_createtab(2, HASH_ADD);
-	}
-
 	/* check if it's already cached */
-	{
-		int cache;
-		cache = (int)hash_get(g_hashsounds, shader, -1);
-
-		if (cache >= 0) {
-			return cache;
-		}
+	newSound = SoundDef_FindSoundByName(shader);
+	
+	if (newSound) {
+		return (int)SoundDef_GetSoundIDByName(shader);
 	}
 
-	g_sounds_count++;
-
-#ifdef SOUNDSHADER_DYNAMIC
-	g_sounds = (snd_t *)memreallocOld(g_sounds, sizeof(snd_t), index, g_sounds_count);
-#else
-	if (g_sounds_count >= SOUNDSHADER_MAX) {
-		ncError("Reached SOUNDSHADER_MAX (%d)", SOUNDSHADER_MAX);
-		return -1;
-	}
-#endif
-
-	g_sounds[index].volume = 1.0f;
-	g_sounds[index].dist_max = 1000;
-	g_sounds[index].pitch_min = g_sounds[index].pitch_max = 100;
-	g_sounds[index].offset = 0;
-	g_sounds[index].flags = SNDFL_FOLLOW;
+	newSound = spawn(ncSoundDict);
 
 	sh = search_begin("decls/sound/*.sndshd", TRUE, TRUE);
 
@@ -451,26 +414,24 @@ SoundDef_Precache(string shader)
 
 		while ((line = fgets(fh))) {
 			/* when we found it, quit */
-			if (SoundDef_Parse(index, line, shader) == TRUE) {
+			if (SoundDef_Parse(newSound, line, shader) == TRUE) {
 				search_end(sh);
 				fclose(fh);
-				hash_add(g_hashsounds, shader, (int)index);
 
 				/* distant shader */
-				if (g_sounds[index].distshader) {
-					SoundDef_Precache(g_sounds[index].distshader);
+				if (newSound.distshader) {
+					SoundDef_Precache(newSound.distshader);
 				}
 
 				/* REGISTER IT so the client knows. */
 				precache_model(strcat("*S:", shader));
-				return index;
+				return SoundDef_GetSoundIDByName(shader);
 			}
 		}
 		fclose(fh);
 	}
 
 	ncError("No SoundDef %S found.", shader);
-	g_sounds_count--;
 	search_end(sh);
 	return -1;
 }
@@ -484,40 +445,45 @@ SoundDef_Distance(entity target, string shader)
 	float pitch;
 	int flag;
 	int sample;
+	ncSoundDict newSound;
+
+	if (!STRING_SET(shader)) {
+		return;
+	}
 
 	flag = 0;
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	newSound = SoundDef_FindSoundByName(shader);
 
-	if (sample < 0) {
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
 	radius = SoundDef_GetAttenuation(sample);
-	volume = g_sounds[sample].volume;
+	volume = newSound.volume;
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
 
 #ifdef CLIENT
-	if (g_sounds[sample].flags & SNDFL_OMNI) {
+	if (newSound.flags & SNDFL_OMNI) {
 		flag |= SOUNDFLAG_NOSPACIALISE;
 	}
 #endif
@@ -530,7 +496,7 @@ SoundDef_Distance(entity target, string shader)
 		ATTN_NONE,
 		pitch,
 		flag,
-		g_sounds[sample].offset
+		newSound.offset
 	);
 }
 
@@ -544,44 +510,46 @@ SoundDef_DistancePos(vector pos, string shader)
 	int flag;
 	int sample;
 
-	flag = 0;
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	ncSoundDict newSound;
 
-	if (sample < 0) {
+	flag = 0;
+	newSound = SoundDef_FindSoundByName(shader);
+
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
 	radius = SoundDef_GetAttenuation(sample);
-	volume = g_sounds[sample].volume;
+	volume = newSound.volume;
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
 
 #ifdef CLIENT
-	if (g_sounds[sample].flags & SNDFL_OMNI) {
+	if (newSound.flags & SNDFL_OMNI) {
 		flag |= SOUNDFLAG_NOSPACIALISE;
 	}
 #endif
 
-	SndLog("Playing %S (radius: %f)", argv(r), g_sounds[sample].dist_max );
+	SndLog("Playing %S (radius: %f)", argv(r), newSound.dist_max );
 	pointsound_proper(pos, argv(r), volume, ATTN_NONE, pitch);
 }
 
@@ -606,43 +574,45 @@ SoundDef_Play(entity target, int chan, string shader)
 		return;
 	}
 
-	flag = 0;
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	ncSoundDict newSound;
 
-	if (sample < 0) {
+	flag = 0;
+	newSound = SoundDef_FindSoundByName(shader);
+
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
 	radius = SoundDef_GetAttenuation(sample);
-	volume = g_sounds[sample].volume;
+	volume = newSound.volume;
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_GLOBAL) {
+	if (newSound.flags & SNDFL_GLOBAL) {
 		radius = ATTN_NONE;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
-	if (g_sounds[sample].flags & SNDFL_FOLLOW) {
+	if (newSound.flags & SNDFL_FOLLOW) {
 		flag |= SOUNDFLAG_FOLLOW;
 	}
-	if (g_sounds[sample].flags & SNDFL_STEP) {
+	if (newSound.flags & SNDFL_STEP) {
 		float s = vlen(target.velocity);
 
 		if (s <= (g_pmoveVars.pm_walkspeed * 0.5)) {
@@ -654,34 +624,34 @@ SoundDef_Play(entity target, int chan, string shader)
 		}
 	}
 #ifdef CLIENT
-	if (g_sounds[sample].flags & SNDFL_OMNI) {
+	if (newSound.flags & SNDFL_OMNI) {
 		flag |= SOUNDFLAG_NOSPACIALISE;
 	}
 #else
-	if (g_sounds[sample].flags & SNDFL_PRIVATE) {
+	if (newSound.flags & SNDFL_PRIVATE) {
 		flag |= SOUNDFLAG_UNICAST;
 		msg_entity = target;
 	}
-	if (g_sounds[sample].flags & SNDFL_ALERTS) {
-		ncMonster_AlertEnemyAlliance(target.origin, g_sounds[sample].dist_max, target.m_iAlliance);
-		BotLib_Alert(target.origin, g_sounds[sample].dist_max, target.team);
+	if (newSound.flags & SNDFL_ALERTS) {
+		ncMonster_AlertEnemyAlliance(target.origin, newSound.dist_max, target.m_iAlliance);
+		BotLib_Alert(target.origin, newSound.dist_max, target.team);
 	}
 #endif
 
-	SndLog("Playing %S (radius: %f)", argv(r), g_sounds[sample].dist_max );
+	SndLog("Playing %S (radius: %f)", argv(r), newSound.dist_max );
 
 #ifdef SERVER
-	if (g_sounds[sample].shakes > 0.0) {
+	if (newSound.shakes > 0.0) {
 		Client_ShakeOnce(target.origin, 512, 2.5, 1.0, 1.0f);
 	}
 #else
-	if (g_sounds[sample].shakes > 0.0) {
+	if (newSound.shakes > 0.0) {
 		float srad = 512;
 		float dist = vlen(pSeat->m_vecPredictedOrigin - target.origin);
 		if (dist < srad) {
 			float dif = 1.0 - (dist/srad);
-			pSeat->m_flShakeFreq = (1.0 * dif) * g_sounds[sample].shakes;
-			pSeat->m_flShakeAmp = (1.0 * dif) * g_sounds[sample].shakes;
+			pSeat->m_flShakeFreq = (1.0 * dif) * newSound.shakes;
+			pSeat->m_flShakeAmp = (1.0 * dif) * newSound.shakes;
 			pSeat->m_flShakeDuration = soundlength(argv(r));
 			pSeat->m_flShakeTime = pSeat->m_flShakeDuration;
 		}
@@ -689,10 +659,10 @@ SoundDef_Play(entity target, int chan, string shader)
 #endif
 
 #ifdef CLIENT
-	if (g_sounds[sample].pointparticle)
-		pointparticles(g_sounds[sample].pointparticle, target.origin, [0,0,0], 1);
+	if (newSound.pointparticle > -1)
+		pointparticles(newSound.pointparticle, target.origin, [0,0,0], 1);
 #else
-	if (g_sounds[sample].pointparticle)
+	if (newSound.pointparticle > -1)
 		ncWarning("SoundDef %S is attempting to spawn a particle on the server side.", shader);
 #endif
 
@@ -704,11 +674,11 @@ SoundDef_Play(entity target, int chan, string shader)
 		radius,
 		pitch,
 		flag,
-		g_sounds[sample].offset
+		newSound.offset
 	);
 
-	if (g_sounds[sample].distshader) {
-		SoundDef_Distance(target, g_sounds[sample].distshader);
+	if (STRING_SET(newSound.distshader)) {
+		SoundDef_Distance(target, newSound.distshader);
 	}
 }
 
@@ -724,50 +694,52 @@ SoundDef_PlayAt(vector pos, string shader)
 	if (shader == "")
 		return;
 
-	flag = 0;
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	ncSoundDict newSound;
 
-	if (sample < 0) {
+	flag = 0;
+	newSound = SoundDef_FindSoundByName(shader);
+
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_GLOBAL) {
+	if (newSound.flags & SNDFL_GLOBAL) {
 		radius = 0;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
 #ifdef CLIENT
-	if (g_sounds[sample].flags & SNDFL_OMNI) {
+	if (newSound.flags & SNDFL_OMNI) {
 		flag |= SOUNDFLAG_NOSPACIALISE;
 	}
 #endif
 
-	SndLog("Playing %S (radius: %f)", argv(r), g_sounds[sample].dist_max );
+	SndLog("Playing %S (radius: %f)", argv(r), newSound.dist_max );
 
 	/* really? this doesn't do any more? */
-	pointsound_proper(pos, argv(r), g_sounds[sample].volume, SoundDef_GetAttenuation(sample), pitch);
+	pointsound_proper(pos, argv(r), newSound.volume, SoundDef_GetAttenuation(sample), pitch);
 
-	if (g_sounds[sample].distshader) {
-		SoundDef_DistancePos(pos, g_sounds[sample].distshader);
+	if (STRING_SET(newSound.distshader)) {
+		SoundDef_DistancePos(pos, newSound.distshader);
 	}
 }
 
@@ -782,17 +754,19 @@ SoundDef_PlayLocal(string shader)
 	if (shader == "")
 		return;
 
-	flag = 0;
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	ncSoundDict newSound;
 
-	if (sample < 0) {
+	flag = 0;
+	newSound = SoundDef_FindSoundByName(shader);
+
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* really? this doesn't do any more? */
 	localsound(argv(r));
@@ -801,10 +775,11 @@ SoundDef_PlayLocal(string shader)
 int
 SoundDef_GetID(string defName)
 {
-	if (defName == "")
-		return -1;
+	if (!STRING_SET(defName)) {
+		return -1i;
+	}
 
-	return (int)hash_get(g_hashsounds, defName, -1);
+	return SoundDef_GetSoundIDByName(defName);
 }
 
 void
@@ -815,36 +790,40 @@ SoundDef_Update(entity target, int channel, int sample, float volume)
 	float pitch;
 	int flag;
 
-	if (sample < 0) {
+	ncSoundDict newSound;
+
+	//newSound = SoundDef_FindSoundByName(shader);
+
+	if (!newSound) {
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
 	radius = SoundDef_GetAttenuation(sample);
 	flag = 0;
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_GLOBAL) {
+	if (newSound.flags & SNDFL_GLOBAL) {
 		radius = ATTN_NONE;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
-	if (g_sounds[sample].flags & SNDFL_OMNI) {
+	if (newSound.flags & SNDFL_OMNI) {
 		flag |= SOUNDFLAG_NOSPACIALISE;
 	}
 
@@ -852,11 +831,11 @@ SoundDef_Update(entity target, int channel, int sample, float volume)
 		target,
 		channel,
 		argv(0),
-		g_sounds[sample].volume * volume,
+		newSound.volume * volume,
 		radius,
 		pitch,
 		flag,
-		g_sounds[sample].offset
+		newSound.offset
 	);
 }
 #else
@@ -867,45 +846,46 @@ SoundDef_Speak(entity target, string shader)
 	float radius;
 	float pitch;
 	int flag;
-	int sample;
+	ncSoundDict newSound;
 
-	sample = (int)hash_get(g_hashsounds, shader, -1);
+	flag = 0;
+	newSound = SoundDef_FindSoundByName(shader);
 
-	if (sample < 0) {
+	if (!newSound) {
 		ncError("SoundDef %S is not precached", shader);
 		return;
 	}
 
 	/* pick a sample */
-	r = floor(random(0,  g_sounds[sample].sample_count));
-	tokenizebyseparator(g_sounds[sample].samples, "\n");
+	r = floor(random(0,  newSound.sample_count));
+	tokenizebyseparator(newSound.samples, "\n");
 
 	/* set pitch */
-	pitch = random(g_sounds[sample].pitch_min, g_sounds[sample].pitch_max);
-	radius = g_sounds[sample].dist_max;
+	pitch = random(newSound.pitch_min, newSound.pitch_max);
+	radius = newSound.dist_max;
 	flag = 0;
 
 	/* flags */
-	if (g_sounds[sample].flags & SNDFL_NOREVERB) {
+	if (newSound.flags & SNDFL_NOREVERB) {
 		flag |= SOUNDFLAG_NOREVERB;
 	}
-	if (g_sounds[sample].flags & SNDFL_GLOBAL) {
+	if (newSound.flags & SNDFL_GLOBAL) {
 		radius = ATTN_NONE;
 	}
-	if (g_sounds[sample].flags & SNDFL_LOOPING) {
+	if (newSound.flags & SNDFL_LOOPING) {
 		flag |= SOUNDFLAG_FORCELOOP;
 	}
-	if (g_sounds[sample].flags & SNDFL_NODUPS) {
-		if (g_sounds[sample].playc >= g_sounds[sample].sample_count) {
-			g_sounds[sample].playc = 0;
+	if (newSound.flags & SNDFL_NODUPS) {
+		if (newSound.playc >= newSound.sample_count) {
+			newSound.playc = 0;
 		}
-		r = g_sounds[sample].playc++;
+		r = newSound.playc++;
 	}
-	if (g_sounds[sample].flags & SNDFL_FOLLOW) {
+	if (newSound.flags & SNDFL_FOLLOW) {
 		flag |= SOUNDFLAG_FOLLOW;
 	}
 
-	if (g_sounds[sample].flags & SNDFL_PRIVATE) {
+	if (newSound.flags & SNDFL_PRIVATE) {
 		flag |= SOUNDFLAG_UNICAST;
 		msg_entity = target;
 	}
@@ -958,9 +938,12 @@ SoundSource_Init(void)
 void
 SoundDef_DebugList(void)
 {
-	for (int i = 0; i < g_sounds_count; i++) {
-		print(sprintf("%i: %s (%i samples)\n", i, g_sounds[i].name, g_sounds[i].sample_count));
+	int soundsCount = 0i;
+
+	for (ncSoundDict spaceList = world; (spaceList = find(spaceList, ::classname, "ncSoundDict"));) {
+		print(sprintf("%i: %s (%i samples)\n", soundsCount, spaceList.name, spaceList.sample_count));
+		soundsCount++;
 	}
 
-	print(sprintf("\t%i total soundDef loaded\n", g_sounds_count));
+	print(sprintf("\t%i total soundDef loaded\n", soundsCount));
 }

@@ -499,7 +499,7 @@ ncView::UpdateView(void)
 	SkyCamera_Setup(origin);
 
 	if (cl)
-		XR_UpdateView(m_viewTarget);
+		ncXRManager::UpdateView(m_viewTarget);
 
 	/* render our frame */
 	RenderView();

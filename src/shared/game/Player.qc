@@ -340,7 +340,7 @@ ncPlayer::ProcessInput(void)
 	if (Util_IsPaused())
 		return;
 
-	XR_InputFrame(this);
+	ncXRManager::InputFrame(this);
 
 	if (!Client_InIntermission() && IsFakeSpectator()) {
 		ncSpectator::ProcessInput();
@@ -977,7 +977,7 @@ ncPlayer::ClientInputFrame(void)
 	}
 
 	/* some input overrides for XR */
-	if (XR_Available(this)) {
+	if (ncXRManager::Available(this)) {
 		if (pSeat->m_bMoveForward) {
 			input_movevalues[0] = 100;
 		}
@@ -1494,6 +1494,7 @@ ncPlayer::Respawn(void)
 {
 	/* make sure nothing happens here */
 	SendFlags |= UPDATE_ALL;
+	MakePlayer();
 	ReloadCachedAttributes();
 }
 
@@ -1501,6 +1502,14 @@ void
 ncPlayer::Input(entity eAct, string strInput, string strData)
 {
 	switch (strInput) {
+	case "Kill":
+		ncDict damageDecl = spawn(ncDict);
+		damageDecl.AddKey("damage", itos(1000));
+		damageDecl.AddKey("noGod", "1");
+		damageDecl.AddKey("noArmor", "1");
+		Damage(eAct, eAct, damageDecl, 1.0, g_vec_null, GetOrigin());
+		remove(damageDecl);
+		break;
 	case "Message":
 		env_message_single(this, strData);
 		break;
@@ -1589,6 +1598,7 @@ ncPlayer::MakePlayer(void)
 {
 	AddFlags(FL_CLIENT);
 	RemoveVFlags(VFL_FAKESPEC);
+	Unspectate();
 
 	if (health <= 0) {
 		health = max_health = 100;

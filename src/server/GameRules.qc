@@ -117,12 +117,7 @@ ncRuleDelegate::PlayerDisconnect(ncPlayer pl)
 void
 ncRuleDelegate::PlayerKill(ncPlayer pl)
 {
-	ncDict damageDecl = spawn(ncDict);
-	damageDecl.AddKey("damage", itos(1000));
-	damageDecl.AddKey("noGod", "1");
-	damageDecl.AddKey("noArmor", "1");
-	pl.Damage(pl, pl, damageDecl, 1.0, g_vec_null, pl.GetOrigin());
-	remove(damageDecl);
+	pl.Input(pl, "Kill", "");
 }
 
 void

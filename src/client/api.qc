@@ -90,7 +90,14 @@ CLPF_player_GetStamina(void)
 int
 CLPF_player_GetTeam(void)
 {
-	return (int)getplayerkeyfloat(pSeat->m_ePlayer.entnum-1, "*team");
+	int theTeam = (int)getplayerkeyfloat(pSeat->m_ePlayer.entnum-1, "*team");
+
+	/* 0 == connecting, unassigned */
+	if (!theTeam) {
+		return (TEAM_UNASSIGNED);
+	}
+
+	return (theTeam);
 }
 
 bool
@@ -519,6 +526,12 @@ CLPF_weapon_SelectWeapon(entity weaponCheck)
 	}
 
 	return (false);
+}
+
+void
+CLPF_draw_RadarRect(vector pos, vector size)
+{
+	Radar_Draw(pos, size);
 }
 
 void

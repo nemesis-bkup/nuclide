@@ -186,6 +186,13 @@ Menu_InputEvent(float evtype, float scanx, float chary, float devid)
 			if (clientstate() == 2 && !g_background) {
 				m_toggle(0);
 			}
+		} else if (chary == K_TOUCH) {
+			/* hack for touchscreens. */
+			evtype = IE_KEYDOWN;
+			chary = K_MOUSE1;
+			main_input(evtype, scanx, chary, devid);
+			evtype = IE_KEYUP;
+			chary = K_MOUSE1;
 		}
 		break;
 	case IE_MOUSEABS:

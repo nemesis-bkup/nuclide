@@ -65,15 +65,35 @@ void ncRenderableEntity::_UpdateGeomset(void)
 void
 ncRenderableEntity::_UpdateBoneCount(void)
 {
+	bool hadBoneCount = true;
+
 	if (!modelindex) {
 		return;
 	}
 
-	skeletonindex = skel_create(modelindex);
+	if (!skeletonindex) {
+		skeletonindex = skel_create(modelindex);
+		hadBoneCount = false;
+	}
+
 	m_iNumBones = skel_get_numbones(skeletonindex) + 1;
 	//print(sprintf("UPDATED GEOMSET FOR MODELINDEX %d, %d BONES\n", modelindex, m_iNumBones));
-	skel_delete(skeletonindex);
-	skeletonindex = 0;
+
+	if (hadBoneCount == false) {
+		skel_delete(skeletonindex);
+		skeletonindex = 0;
+	}
+}
+
+void
+ncRenderableEntity::OnRemoveEntity(void)
+{
+	super::OnRemoveEntity();
+
+	if (skeletonindex) {
+		skel_delete(skeletonindex);
+		skeletonindex = 0;
+	}
 }
 
 /*

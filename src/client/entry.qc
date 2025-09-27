@@ -55,8 +55,14 @@ void
 CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	InitPrint("Initializing Client Game");
-	ncLog("Built: %s %s", __DATE__, __TIME__);
-	ncLog("QCC: %s", __QCCVER__);
+
+	printf("Game Logic Info:\n");
+	printf("\tBuild Date: %s %s\n", __DATE__, __TIME__);
+	printf("\tBuild Compiler: %s\n", __QCCVER__);
+	printf("Game Runtime Info:\n");
+	printf("\tAPI Version: %d\n", apilevel);
+	printf("\tEngine: %s\n", enginename);
+	printf("\tEngine Version: %d\n", engineversion);
 
 	for (int i = 0i; i < 4i; i++) {
 		g_viewSeats[i] = spawn(ncView);
@@ -110,9 +116,6 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 
 	HUD_Init();
 
-	/* end msg */
-	ncLog("Client game initialized.");
-
 	/* because the engine will do really bad hacks to our models otherwise. e.g. R6284 */
 	cvar_set("r_fullbrightSkins", "0");
 
@@ -127,6 +130,9 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 			SoundDef_Precache(substring(tmp, 3, -1));
 		}
 	}
+
+	/* end msg, next messages belong to engine NOT us. */
+	printf("Client game initialized.\n");
 }
 
 /** Called by the engine whenever video resources need to be reloaded.

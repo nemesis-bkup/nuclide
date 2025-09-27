@@ -28,13 +28,6 @@ You will commonly find them within `<gamedir>/decls/`.
 
 /** This class is responsible for handling groups of key/value pairs.
 
-It handles entity spawns, respawns,
-save/load as well as key/value pair loading, as well as inputs/outputs
-which is our basic entity model.
-
-This is a very low-level class. You're never meant to use this.
-Use ncEntity as a basis for your classes.
-
 @ingroup decl
 */
 class

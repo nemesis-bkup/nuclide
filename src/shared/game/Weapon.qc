@@ -954,18 +954,23 @@ ncWeapon::IsEmpty(void)
 void
 ncWeapon::Draw(void)
 {
+	/* TODO: some weapons want to unset the mode upon re-draw! */
+	#if 0
 	SwitchFireInfo(m_primaryFireInfo);
+	#else
+	SwitchFireInfo(m_weaponLastFireInfo);
+	#endif
 
 	float drawAnimation = -1;
 	float drawTime = 0.0f;
 
 	if (m_weaponClipSize > 0 && m_weaponClip == 0) {
-		drawAnimation = GetSubDefAct(m_primaryFireInfo, "drawEmpty");
+		drawAnimation = GetSubDefAct(m_weaponLastFireInfo, "drawEmpty");
 	}
 
 	/* no empty draw anim exists */
 	if (drawAnimation < 0) {
-		drawAnimation = GetSubDefAct(m_primaryFireInfo, "draw");
+		drawAnimation = GetSubDefAct(m_weaponLastFireInfo, "draw");
 	}
 
 	/* no draw anim exists at all... */
