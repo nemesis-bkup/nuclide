@@ -136,14 +136,6 @@ ncPhysicsEntity::Restore(string keyName, string setValue)
 }
 #endif
 
-#ifdef CLIENT
-bool physics_supported(void)
-{
-	return true;
-}
-#endif
-
-
 #ifdef SERVER
 void
 ncPhysicsEntity::EvaluateEntity(void)

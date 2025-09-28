@@ -21,6 +21,12 @@ var bool autocvar_phys_lowspec = true;
 var float autocvar_phys_spinScale = 1.0f;
 var float autocvar_phys_forceScale = 1.0f;
 
+#ifdef CLIENT
+bool physics_supported(void)
+{
+	return true;
+}
+#endif
 
 #define CG_PHYSICS_LOG			imageToConsole("gfx/icon16/hourglass", ICN_SIZE, "Client Physics Log")
 #define SV_PHYSICS_LOG			imageToConsole("gfx/icon16/hourglass", ICN_SIZE, "Server Physics Log")

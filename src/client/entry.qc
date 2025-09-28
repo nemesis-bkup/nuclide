@@ -56,13 +56,8 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 {
 	InitPrint("Initializing Client Game");
 
-	printf("Game Logic Info:\n");
-	printf("\tBuild Date: %s %s\n", __DATE__, __TIME__);
-	printf("\tBuild Compiler: %s\n", __QCCVER__);
-	printf("Game Runtime Info:\n");
-	printf("\tAPI Version: %d\n", apilevel);
-	printf("\tEngine: %s\n", enginename);
-	printf("\tEngine Version: %d\n", engineversion);
+	ncLogAlways("Game Logic Info: Date=%s Time=%s Compiler=%S", __DATE__, __TIME__, __QCCVER__);
+	ncLogAlways("Game Runtime Info: API=%d Engine=%S Version=%d", apilevel, enginename, engineversion);
 
 	for (int i = 0i; i < 4i; i++) {
 		g_viewSeats[i] = spawn(ncView);
@@ -132,7 +127,7 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 	}
 
 	/* end msg, next messages belong to engine NOT us. */
-	printf("Client game initialized.\n");
+	ncLogAlways("Client game initialized.");
 }
 
 /** Called by the engine whenever video resources need to be reloaded.

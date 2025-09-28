@@ -162,6 +162,12 @@ _NSAssert(bool condition, string function, string descr)
 @param description(...) contains a formatted string containing a description. */
 #define ncLog(...) if (autocvar_g_logLevel >= LOGLEVEL_DEBUG) _ncLog(sprintf(__VA_ARGS__))
 
+/** Logs an message, with timestamp.
+	 The console variable `g_logLevel` has to be `3` or higher for them to be visible.
+
+@param description(...) contains a formatted string containing a description. */
+#define ncLogAlways(...) _ncLog(sprintf(__VA_ARGS__))
+
 /** Logs an error message, with timestamp.
 	 The console variable `g_logLevel` has to be `1` or higher for them to be visible.
 
@@ -223,7 +229,7 @@ InitPrint(string functionName)
 		sideRight = strcat(sideRight,"-");
 	}
 
-	ncLog( "%s %s %s", sideLeft, functionName, sideRight);
+	ncLogAlways( "%s %s %s", sideLeft, functionName, sideRight);
 }
 
 var string g_lastInitFunc;
@@ -244,8 +250,8 @@ void
 _InitEnd(void)
 {
 	float endTime = gettime(1);
-	ncLog("loaded in %.1f seconds", (endTime - g_initTime));
-	ncLog("---------------------------------------------------");
+	ncLogAlways("loaded in %.1f seconds", (endTime - g_initTime));
+	ncLogAlways("---------------------------------------------------");
 	g_initTime = 0;
 }
 

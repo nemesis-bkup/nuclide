@@ -372,7 +372,14 @@ SoundDef_FindSoundByName(string soundName)
 static int
 SoundDef_GetSoundIDByName(string soundName)
 {
-	return getmodelindex(strcat("*S:", soundName), true);
+	float fakeModelIndex = getmodelindex(strcat("*S:", soundName), true);
+
+	/* convert invalid modelindex to invalid sound index */
+	if (!fakeModelIndex) {
+		fakeModelIndex = -1;
+	}
+
+	return (int)fakeModelIndex;
 }
 
 int
@@ -424,7 +431,9 @@ SoundDef_Precache(string shader)
 				}
 
 				/* REGISTER IT so the client knows. */
+#ifdef SERVER
 				precache_model(strcat("*S:", shader));
+#endif
 				return SoundDef_GetSoundIDByName(shader);
 			}
 		}
@@ -432,6 +441,7 @@ SoundDef_Precache(string shader)
 	}
 
 	ncError("No SoundDef %S found.", shader);
+	remove(newSound);
 	search_end(sh);
 	return -1;
 }
