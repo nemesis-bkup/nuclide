@@ -519,8 +519,11 @@ SoundDef_DistancePos(vector pos, string shader)
 	float pitch;
 	int flag;
 	int sample;
-
 	ncSoundDict newSound;
+
+	if (!STRING_SET(shader)) {
+		return;
+	}
 
 	flag = 0;
 	newSound = SoundDef_FindSoundByName(shader);
@@ -701,8 +704,9 @@ SoundDef_PlayAt(vector pos, string shader)
 	int flag;
 	int sample;
 
-	if (shader == "")
+	if (!STRING_SET(shader)) {
 		return;
+	}
 
 	ncSoundDict newSound;
 
@@ -743,7 +747,7 @@ SoundDef_PlayAt(vector pos, string shader)
 	}
 #endif
 
-	SndLog("Playing %S (radius: %f)", argv(r), newSound.dist_max );
+	SndLog("Playing %s %S (radius: %f)", shader, argv(r), newSound.dist_max );
 
 	/* really? this doesn't do any more? */
 	pointsound_proper(pos, argv(r), newSound.volume, SoundDef_GetAttenuation(sample), pitch);
@@ -761,9 +765,9 @@ SoundDef_PlayLocal(string shader)
 	int flag;
 	int sample;
 
-	if (shader == "")
+	if (!STRING_SET(shader)) {
 		return;
-
+	}
 	ncSoundDict newSound;
 
 	flag = 0;
@@ -857,6 +861,10 @@ SoundDef_Speak(entity target, string shader)
 	float pitch;
 	int flag;
 	ncSoundDict newSound;
+
+	if (!STRING_SET(shader)) {
+		return;
+	}
 
 	flag = 0;
 	newSound = SoundDef_FindSoundByName(shader);

@@ -40,6 +40,7 @@ EntityDef_ReadFile(string filePath)
 	currentDef.tweakKeys = "";
 	currentDef.eventList = "";
 	currentDef.inheritID = -1i;
+	currentDef.precacheDone = 0;
 
 	/* bounds check */
 	if (g_entDefCount >= ENTITYDEF_MAX) {
@@ -79,6 +80,7 @@ EntityDef_ReadFile(string filePath)
 						g_entDefTable[g_entDefCount].tweakDefs = currentDef.tweakDefs;
 						g_entDefTable[g_entDefCount].tweakKeys = currentDef.tweakKeys;
 						g_entDefTable[g_entDefCount].eventList = currentDef.eventList;
+						g_entDefTable[g_entDefCount].precacheDone = false;
 
 						/* increment the def count */
 						if (g_entDefCount < ENTITYDEF_MAX)
@@ -496,6 +498,13 @@ EntityDef_Precaches(int index)
 	if (g_ents_initialized == true) {
 		return;
 	}
+
+	if (g_entDefTable[index].precacheDone == true) {
+		return;
+	}
+
+	ncLogAlways("...precaching %s", g_entDefTable[index].entClass);
+	g_entDefTable[index].precacheDone = true;
 
 	for (int i = 0; i < tokenize_console(g_entDefTable[index].spawnData); i+= 2) {
 		string keyName = argv(i);

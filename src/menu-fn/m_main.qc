@@ -354,23 +354,23 @@ menu_main_draw(void)
 {
 	if (clientstate() == 2 && !g_background) {
 		Widget_Draw(fn_main2);
-		WLabel_Static(235, 216, m_reslbl[IDS_MAIN_RETURNHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 216, m_reslbl[IDS_MAIN_RETURNHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 244, m_reslbl[IDS_MAIN_NEWGAMEHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 244, m_reslbl[IDS_MAIN_NEWGAMEHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 272, m_reslbl[IDS_MAIN_TRAININGHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 272, m_reslbl[IDS_MAIN_TRAININGHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 300, m_reslbl[IDS_MAIN_CONFIGUREHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 300, m_reslbl[IDS_MAIN_CONFIGUREHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 328, m_reslbl[IDS_MAIN_LOADSAVEHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 328, m_reslbl[IDS_MAIN_LOADSAVEHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 356, m_reslbl[IDS_MAIN_MULTIPLAYERHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 356, m_reslbl[IDS_MAIN_MULTIPLAYERHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 384, m_reslbl[IDS_MAIN_CUSTOMHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 384, m_reslbl[IDS_MAIN_CUSTOMHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 412, m_reslbl[IDS_MAIN_PREVIEWSHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 412, m_reslbl[IDS_MAIN_PREVIEWSHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 440, m_reslbl[IDS_MAIN_QUITHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 440, m_reslbl[IDS_MAIN_QUITHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
 
 		/* Don't even attempt to display the logo.avi otherwise */
@@ -403,29 +403,29 @@ menu_main_draw(void)
 		}
 #endif
 		Widget_Draw(fn_main);
-		WLabel_Static(235, 216, m_reslbl[IDS_MAIN_NEWGAMEHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 216, m_reslbl[IDS_MAIN_NEWGAMEHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 244, m_reslbl[IDS_MAIN_TRAININGHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 244, m_reslbl[IDS_MAIN_TRAININGHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 272, m_reslbl[IDS_MAIN_CONFIGUREHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 272, m_reslbl[IDS_MAIN_CONFIGUREHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 300, m_reslbl[IDS_MAIN_LOADHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 300, m_reslbl[IDS_MAIN_LOADHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 328, m_reslbl[IDS_MAIN_MULTIPLAYERHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 328, m_reslbl[IDS_MAIN_MULTIPLAYERHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 356, m_reslbl[IDS_MAIN_CUSTOMHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 356, m_reslbl[IDS_MAIN_CUSTOMHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 384, m_reslbl[IDS_MAIN_READMEHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 384, m_reslbl[IDS_MAIN_READMEHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 412, m_reslbl[IDS_MAIN_PREVIEWSHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 412, m_reslbl[IDS_MAIN_PREVIEWSHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
-		WLabel_Static(235, 440, m_reslbl[IDS_MAIN_QUITHELP], HELPTXT_SIZE, HELPTXT_SIZE,
+		WLabel_AtHeight(235, 440, m_reslbl[IDS_MAIN_QUITHELP], HELPTXT_SIZE,
 						col_help,1.0f, 0, font_label);
 	}
 
 	if (main_quitdialog) {
 		main_dgQuit.Draw();
-		/*WLabel_Static(203, 180, m_reslbl[IDS_MAIN_QUITPROMPT], 16, 16,
+		/*WLabel_AtHeight(203, 180, m_reslbl[IDS_MAIN_QUITPROMPT], 16,
 						col_prompt_text, 1.0f, 0, font_label_b);*/
 		WField_Static(162, 180, m_reslbl[IDS_MAIN_QUITPROMPT], 320, 260,
 						col_prompt_text, 1.0f, 2, font_label_p);

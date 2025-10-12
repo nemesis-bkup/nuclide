@@ -109,13 +109,13 @@ menu_creategameinet_draw(void)
 	Header_Draw(HEAD_CREATEGAME);
 	drawpic([g_menuofs[0]+550,g_menuofs[1]+10], g_bmp[FN_LOGO],[80,80], [1,1,1], 1.0f, 0);
 
-	WLabel_Static(216, 143, m_reslbl[IDS_CREATESERVER_NAME], 14, 14, [1,1,1],
+	WLabel_AtHeight(216, 143, m_reslbl[IDS_CREATESERVER_NAME], 14, [1,1,1],
 					1.0f, 0, font_arial);
-	WLabel_Static(216, 202, m_reslbl[IDS_CREATESERVER_MAXPLAYERS], 14, 14, [1,1,1],
+	WLabel_AtHeight(216, 202, m_reslbl[IDS_CREATESERVER_MAXPLAYERS], 14, [1,1,1],
 					1.0f, 0, font_arial);
-	WLabel_Static(216, 256, m_reslbl[IDS_NEWPROFILE_PASSWORD], 14, 14, [1,1,1],
+	WLabel_AtHeight(216, 256, m_reslbl[IDS_NEWPROFILE_PASSWORD], 14, [1,1,1],
 					1.0f, 0, font_arial);
-	WLabel_Static(381, 143, m_reslbl[IDS_CREATESERVER_MAP], 14, 14, [1,1,1],
+	WLabel_AtHeight(381, 143, m_reslbl[IDS_CREATESERVER_MAP], 14, [1,1,1],
 					1.0f, 0, font_arial);
 
 	WField_Static(52 + 26, 234, "Bots", 115, 64, [0.75, 0.75, 0.75],

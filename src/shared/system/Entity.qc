@@ -481,9 +481,14 @@ ncEntity::RestoreAngles(void)
 {
 	vector spawnAngles = g_vec_null;
 	string spawnAngleString = GetSpawnString("angles");
+	vector legacyMangle = GetSpawnVector("mangle");
 
 	if (!STRING_SET(spawnAngleString)) {
 		spawnAngles[1] = GetSpawnFloat("angle");
+		
+		if (legacyMangle != g_vec_null) {
+			spawnAngles = legacyMangle;
+		}
 	} else {
 		spawnAngles = stov(spawnAngleString);
 	}
@@ -1002,7 +1007,7 @@ ncEntity::Respawn(void)
 		SetOrigin(GetSpawnVector("origin"));
 	}
 
-	SetAngles(GetSpawnVector("angles"));
+	RestoreAngles();
 	SetModel(GetSpawnString("model"));
 
 	_RelinkToSpawnParent();

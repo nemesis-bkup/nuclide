@@ -60,7 +60,12 @@ EV_Intermission(void)
 
 	pSeat->m_vecCameraOrigin = pos;
 	pSeat->m_vecCameraAngle = ang;
+	g_view.SetCameraAngle(ang);
+	g_view.SetClientAngle(ang);
 	g_iIntermission = TRUE;
+
+	setproperty(VF_CL_VIEWANGLES, ang);
+	setproperty(VF_ANGLES, ang);
 }
 
 void
@@ -114,8 +119,12 @@ EV_Angle(void)
 	a[0] = readfloat();
 	a[1] = readfloat();
 	a[2] = readfloat();
+
 	g_view.SetCameraAngle(a);
 	g_view.SetClientAngle(a);
+
+	setproperty(VF_CL_VIEWANGLES, a);
+	setproperty(VF_ANGLES, a);
 }
 
 void

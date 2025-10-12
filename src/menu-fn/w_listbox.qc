@@ -68,7 +68,7 @@ CListBox::Draw(void)
 			 autocvar_menu_color_list_select, 1.0f);
 		}
 		drawsetcliparea(g_menuofs[0] + m_x, g_menuofs[1] + m_y, m_size[0], m_size[1]);
-		WLabel_Static(pos[0], pos[1], m_entries[i], 12, 12, autocvar_menu_color_list,
+		WLabel_AtHeight(pos[0], pos[1], m_entries[i], 12, autocvar_menu_color_list,
 					1.0f, 0, font_label);
 		drawresetcliparea();
 		pos[1] += 15;

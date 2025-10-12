@@ -232,12 +232,14 @@ ncRuleDelegate::IntermissionCycle(void)
 
 	/* if we have an intermission point, send it to all players. */
 	if (m_eIntermissionPoint) {
-		targ = (ncEntity)find(world, ::targetname, m_eIntermissionPoint.target);
+		targ = __NULL__;
+
+		if (STRING_SET(m_eIntermissionPoint.target)) {
+			targ = (ncEntity)find(world, ::targetname, m_eIntermissionPoint.target);
+		}
 
 		if (targ) {
-			vector foo;
-			foo = vectoangles(targ.origin - m_eIntermissionPoint.origin);
-			m_eIntermissionPoint.angles = foo;
+			m_eIntermissionPoint.angles = vectoangles(targ.origin - m_eIntermissionPoint.origin);
 		}
 
 		WriteByte(MSG_MULTICAST, 1);

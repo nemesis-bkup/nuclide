@@ -241,7 +241,7 @@ CSQC_Update2D(float w, float h, bool focus)
 	self = cl;
 
 	if (Util_GetMaxPlayers() > 1 && !VGUI_Active() && (Client_InIntermission() || (!cl.IsFakeSpectator() && cl.IsDead()))) {
-		HUD_Draw();
+		HUD_DrawIntermission();
 		Textmenu_Draw();
 		Scores_Draw();
 		Chat_Draw();
@@ -250,12 +250,18 @@ CSQC_Update2D(float w, float h, bool focus)
 		GameText_Draw();
 		PointMessage_Draw();
 
-		if (Client_IsSpectator(cl) == false) {
-			if (cl.m_activeWeapon)
-				cl.m_activeWeapon.UpdateGUI();
-			HUD_Draw();
+		if (Client_InIntermission() == true) {
+			HUD_DrawIntermission();
 		} else {
-			HUD_DrawSpectator();
+			if (Client_IsSpectator(cl) == false) {
+				if (cl.m_activeWeapon) {
+					cl.m_activeWeapon.UpdateGUI();
+				}
+
+				HUD_Draw();
+			} else {
+				HUD_DrawSpectator();
+			}
 		}
 
 		Textmenu_Draw();

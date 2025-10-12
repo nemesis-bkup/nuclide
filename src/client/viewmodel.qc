@@ -260,6 +260,7 @@ View_DrawViewModel(void)
 	}
 
 	/* apply to the left side */
+	m_eViewModel.angles += [pSeat->m_flZoomTime * 16, 0, 0];
 	m_eViewModelL.angles = m_eViewModel.angles;
 	m_eViewModelL.colormap = m_eViewModel.colormap = pSeat->m_ePlayer.colormap;
 
@@ -269,7 +270,7 @@ View_DrawViewModel(void)
 	if (Client_IsSpectator(cl) || ncXRManager::Available(cl) == false) {
 		m_eViewModelL.origin = g_view.GetCameraOrigin();
 		makevectors(currentAngle);
-		m_eViewModelL.origin += (v_forward * cvar("cg_gunX"));
+		m_eViewModelL.origin += (v_forward * cvar("cg_gunX")) + (v_forward * -(pSeat->m_flZoomTime * 16));
 		m_eViewModelL.origin += (v_right * cvar("cg_gunY"));
 		m_eViewModelL.origin += (v_up * cvar("cg_gunZ"));
 		m_eViewModel.origin = m_eViewModelL.origin;

@@ -117,6 +117,7 @@ typedef struct
 	string tweakKeys;
 
 	string eventList; /* model events */
+	bool precacheDone;
 	int inheritID;
 } entityDef_t;
 

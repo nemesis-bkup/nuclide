@@ -6,7 +6,7 @@ weapon.empty
 	sample weapons/ric1.wav
 }
 
-weapon_axe.miss
+Weapon_Axe.Miss
 {
 	alerts
 	sample weapons/ax1.wav

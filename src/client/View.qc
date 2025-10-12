@@ -365,8 +365,19 @@ ncView::UpdateView(void)
 				SetSensitivity(1.0f);
 				pl.UpdateDeathcam();
 			} else {
-				SetAFOV(cvar("fov") * pl.viewzoom);
-				SetSensitivity(pl.viewzoom);
+				float totalZoom = pl.viewzoom;
+				
+				if (pl.viewzoom == 1.0f && pSeat->m_iZoomed == true) {
+					pSeat->m_flZoomTime += clframetime;
+				} else {
+					pSeat->m_flZoomTime -= clframetime;
+				}
+
+				pSeat->m_flZoomTime = bound(0.0, pSeat->m_flZoomTime, 1.0f);
+				totalZoom *= lerp(1.0f, 0.5, pSeat->m_flZoomTime);
+
+				SetAFOV(cvar("fov") * totalZoom);
+				SetSensitivity(totalZoom);
 				cl.UpdateAliveCam();
 				StairSmooth();
 				View_DrawViewModel();

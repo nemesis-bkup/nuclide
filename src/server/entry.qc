@@ -684,6 +684,31 @@ CheckSpawn(void() spawnfunc)
 		return;
 	}
 
+	/* Quake compat: spawnflag filter compatibility */
+	if (cvars.GetBool("g_spawnflagFilter") == true) {
+		bool discardEntity = false;
+
+		if (serverinfo.GetString("mode") == "deathmatch") {
+			if (ent.spawnflags & 2048) {
+				discardEntity = true;
+			}
+		} else if (serverinfo.GetString("mode") == "singleplayer") {
+			if (ent.spawnflags & 256 && cvars.GetInteger("skill") == 0i) {
+				discardEntity = true;
+			} else if (ent.spawnflags & 512 && cvars.GetInteger("skill") == 1i) {
+				discardEntity = true;
+			} else if (ent.spawnflags & 1024 && cvars.GetInteger("skill") == 2i) {
+				discardEntity = true;
+			}
+		}
+
+		if (discardEntity == true) {
+			ncLog("...discarded %s (%d) due to spawnflag rules", ent.classname, num_for_edict(ent));
+			remove(ent);
+			return;
+		}
+	}
+
 	/* give it a copy of its spawndata. */
 	ent.m_rawSpawnData = __fullspawndata;
 	ent.spawnclass = desiredClass; /* EntityDef_ will override this later, needed for saves */
@@ -718,7 +743,6 @@ CheckSpawn(void() spawnfunc)
 	if (ent.identity) {
 		if (ent.CanSpawn(false) == false) {
 			ent.Destroy();
-			g_mapSpawnEntityCount--;
 		}
 	} else {
 		/* don't need to spam repetitive messages */

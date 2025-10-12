@@ -23,8 +23,8 @@ entityDef weapon_axe
 
 	"failRate"			"0.5"
 	"fireRate"			"0.5"
-	"snd_hit"			"weapon_axe.hit"
-	"snd_failed"		"weapon_axe.miss"
+	"snd_hit"			"Weapon_Axe.Melee_Hit"
+	"snd_failed"		"Weapon_Axe.Miss"
 
 	"act_idle"			"0"
 	"act_draw"			"0"
