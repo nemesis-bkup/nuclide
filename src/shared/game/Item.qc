@@ -74,14 +74,16 @@ ncItem::Respawn(void)
 
 	/* being a physics entity, we might have to restore player physics */
 	EnablePlayerCollision();
+}
 
-	if (CreatedByMap() == true) {
-		RestoreAngles();
-		SetOrigin(GetSpawnVector("origin") + GetSpawnVector("origin_add"));
+void
+ncItem::OnMapFinishedLoading(void)
+{
+	RestoreAngles();
+	SetOrigin(GetSpawnVector("origin") + GetSpawnVector("origin_add"));
 
-		if (!m_itemPickupFloats) {
-			DropToFloor();
-		}
+	if (!m_itemPickupFloats) {
+		DropToFloor();
 	}
 }
 
