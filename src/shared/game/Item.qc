@@ -70,15 +70,16 @@ void
 ncItem::Respawn(void)
 {
 	super::Respawn();
-	BecomePickup();
-
-	/* being a physics entity, we might have to restore player physics */
-	EnablePlayerCollision();
 }
 
 void
 ncItem::OnMapFinishedLoading(void)
 {
+	BecomePickup();
+
+	/* being a physics entity, we might have to restore player physics */
+	EnablePlayerCollision();
+
 	RestoreAngles();
 	SetOrigin(GetSpawnVector("origin") + GetSpawnVector("origin_add"));
 
@@ -448,7 +449,7 @@ ncItem::GetSpinning(void)
 void
 ncItem::PickupRespawn(void)
 {
-	Respawn();
+	OnMapFinishedLoading();
 	StartSoundDef(m_sndRespawn, CHAN_ITEM, true);
 	ReleaseThink();
 }
