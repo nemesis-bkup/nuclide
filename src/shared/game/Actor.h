@@ -340,6 +340,7 @@ private:
 	int m_torsoFirst;
 	int m_torsoLast;
 	int m_torsoTwistYaw;
+	int m_gibHealth;
 
 	/* taken from player, makes sense though */
 	float m_timeUnderwater;
