@@ -340,6 +340,9 @@ private:
 	int m_torsoFirst;
 	int m_torsoLast;
 	int m_torsoTwistYaw;
+
+	/* taken from player, makes sense though */
+	float m_timeUnderwater;
 };
 
 /* for now here to make debugging easier */
