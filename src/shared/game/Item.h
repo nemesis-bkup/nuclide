@@ -214,6 +214,7 @@ private:
 
 	int m_itemGivesHealth;
 	int m_itemGivesArmor;
+	float m_itemGivesAir;
 	int m_itemGivesBonusHealth;
 	int m_itemGivesBonusArmor;
 	bool m_itemNoTouch;
