@@ -99,18 +99,17 @@ Textmenu_Open(string textMenuName)
 	string declName = sprintf("textmenu/%s.decl", textMenuName);
 	ncTextMenuDict newMenu = ncTextMenuDict::LoadDeclFromFile("commands", declName);
 
-	if (!newMenu) {
-		return (false);
+	if (newMenu) {
+		/* assign the input dictionary */
+		g_textMenuDict = newMenu;
+	} else {
+		g_textMenuDict = __NULL__;
 	}
-
-	/* assign the input dictionary */
-	g_textMenuDict = newMenu;
 
 	/* look the titles up */
 	g_textmenu = textMenuName;
 
 	return (true);
-	
 }
 
 
