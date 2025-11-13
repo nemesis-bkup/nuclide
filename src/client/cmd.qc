@@ -650,6 +650,7 @@ Cmd_Parse(string sCMD)
 		break;
 	case "textMenuClose":
 		Textmenu_Hide();
+		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
 	}
@@ -805,6 +806,7 @@ Cmd_Init(void)
 
 	/* text menu */
 	registercommand("textMenuOpen");
+	registercommand("textMenuClose");
 
 	/* XR binds, temporady until the engine standardizes things */
 	registercommand("+attack_left");
