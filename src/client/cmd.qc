@@ -314,6 +314,8 @@ Cmd_Parse(string sCMD)
 		}
 	}
 
+	tokenize(sCMD);
+
 	switch (argv(0)) {
 
 	case "slot1":
@@ -643,6 +645,11 @@ Cmd_Parse(string sCMD)
 	case "listUserInfo":
 		g_userInfo.DebugPrint();
 		break;
+	case "textMenuOpen":
+		Textmenu_Open(argv(1));
+		break;
+	case "textMenuClose":
+		Textmenu_Hide();
 	default:
 		return HUD_ConsoleCommand(sCMD);
 	}
@@ -795,6 +802,9 @@ Cmd_Init(void)
 	/* Requested by Slacer */
 	registercommand("+zoomin");
 	registercommand("-zoomin");
+
+	/* text menu */
+	registercommand("textMenuOpen");
 
 	/* XR binds, temporady until the engine standardizes things */
 	registercommand("+attack_left");

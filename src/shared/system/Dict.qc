@@ -135,7 +135,7 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 
 	/* find an existing dict in memory */
 	for (ncDict dictSearch = 0; (dictSearch = (ncDict)find(dictSearch, ::classname, "ncDict"));) {
-		if (dictSearch.m_declPath == declName) {
+		if (dictSearch.m_filePath == fileName && dictSearch.m_declPath == declName) {
 			return (dictSearch);
 		}
 	}
@@ -149,6 +149,7 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 
 	newDict = spawn(ncDict);
 	newDict.m_declPath = declName;
+	newDict.m_filePath = fileName;
 
 	while ((tempString = fgets(fh))) {
 		for (int i = 0i; i < tokenize_console(tempString); i++) {

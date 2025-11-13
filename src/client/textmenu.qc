@@ -28,6 +28,7 @@ Textmenu_Hide(void)
 	g_textmenu = "";
 	g_textchannels[5].m_flTime = 0.0f;
 	g_textmenucheck = 0.0f;
+	g_textMenuDict = __NULL__;
 }
 
 void
@@ -71,10 +72,17 @@ Textmenu_Draw(void)
 void
 Textmenu_Input(int nr)
 {
+	/* dictionary based menus */
+	if (g_textMenuDict) {
+		g_textMenuDict.Input(nr);
+		return;
+	}
+
 	if (!STRING_SET(g_textmenu)) {
 		return;
 	}
 
+	/* internal menus */
 	void(int) vFunc = externvalue(-1, g_textmenu);
 
 	if (vFunc) {
@@ -83,4 +91,39 @@ Textmenu_Input(int nr)
 	}
 
 	print(sprintf("Warning! %s not implemented!\n", g_textmenu));
+}
+
+bool
+Textmenu_Open(string textMenuName)
+{
+	string declName = sprintf("textmenu/%s.decl", textMenuName);
+	ncTextMenuDict newMenu = ncTextMenuDict::LoadDeclFromFile("commands", declName);
+
+	if (!newMenu) {
+		return (false);
+	}
+
+	/* assign the input dictionary */
+	g_textMenuDict = newMenu;
+
+	/* look the titles up */
+	g_textmenu = textMenuName;
+
+	return (true);
+	
+}
+
+
+void
+ncTextMenuDict::ncTextMenuDict(void)
+{
+
+}
+
+void
+ncTextMenuDict::Input(int inputNum)
+{
+	string commandString = GetString(itos(inputNum+1));
+	localcmd(commandString);
+	localcmd("\n");
 }
