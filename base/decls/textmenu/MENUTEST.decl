@@ -1,0 +1,8 @@
+typeInfo commands
+{
+	"1"	"say Hello World"
+	"2"	"play sound/enforcer/enfstop.wav"
+	"3"	"toggle r_showshaders"
+	"5"	"textMenuOpen MENUTEST2"
+	"9"	"textMenuClose"
+}

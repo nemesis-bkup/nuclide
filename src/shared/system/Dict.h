@@ -58,6 +58,7 @@ private:
 	nonvirtual void _AddRemoveKey(string, string, bool);
 	string m_strBody;
 	string m_declPath;
+	string m_filePath;
 };
 
 /** @} */ // end of decl

@@ -25,6 +25,17 @@ var float g_textmenucheck = 0.0f;
 
 */
 
+class
+ncTextMenuDict:ncDict
+{
+public:
+	void ncTextMenuDict(void);
+	
+	nonvirtual void Input(int inputNum);
+};
+
+ncTextMenuDict g_textMenuDict;
+
 /** Forcefully displays a given text menu. */
 void Textmenu_Call(string);
 
@@ -42,5 +53,8 @@ void Textmenu_Input(int);
 
 /** Called by Nuclide to draw text menus. */
 void Textmenu_Draw(void);
+
+/** Called by `textMenuCreate` console command, argument equals the decl name. */
+bool Textmenu_Open(string defName);
 
 /** @} */ // end of client
