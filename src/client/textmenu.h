@@ -21,7 +21,37 @@ var float g_textmenucheck = 0.0f;
     @brief Displays text-based menus, for use with a keyboard.
     @ingroup client
 
-    @{
+The text of the menu is defined inside `titles.txt`, powered by the same backend handling [Game Text](@ref text).
+
+It is also used for things such as the waypoint editor. What the menu looks like can be seen here:
+
+![Waypoint Editor powered by Text Menus](nuclide-way-flags.png)
+
+# Console Commands
+
+## textMenuOpen [TITLE]
+
+Will display the text named **TITLE**.
+If a file named `decls/textmenu/TITLE.decl` exists, it'll map the input codes to command entries named in the file.
+
+Such a decl can look like this:
+
+```
+typeInfo commands
+{
+	"1"	"say Hello World"
+	"2"	"play sound/enforcer/enfstop.wav"
+	"3"	"toggle r_showshaders"
+	"5"	"textMenuOpen MENUTEST2"
+	"9"	"textMenuClose"
+}
+```
+
+## textMenuClose
+
+When issued, will close/hide whatever text menu may have been open at this time.
+
+@{
 
 */
 
