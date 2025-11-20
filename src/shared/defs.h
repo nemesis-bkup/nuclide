@@ -81,7 +81,7 @@ noref const float   SVC_TEMPENTITY          = 23;
 string __fullspawndata;
 #endif
 
-#include "system/cloader.h"
+#include "system/ConstantManager.h"
 #include "audio/soundDef.h"
 #include "environment/effects.h"
 
