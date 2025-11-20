@@ -335,6 +335,42 @@ ncNodeEditor::GoToPoint(entity pl)
 }
 
 bool
+ncNodeEditor::SaveNodesAsEntities(string filename)
+{
+	filestream file;
+
+	if (!g_nodeCount) {
+		ncError("No nodes in map. Unable to say node graph.");
+		return (false);
+	}
+
+	file = fopen(filename, FILE_WRITE);
+
+	if (file < 0) {
+		ncError("Unable to open %S for writing.", filename);
+		return (false);
+	}
+
+	fputs(file, sprintf("// waypoints for %s in info_node format\n", mapname));
+
+	for (int i = 0i; i < g_nodeCount; i++) {
+		fputs(file, "{\n");
+		fputs(file, sprintf("%S %S\n", "classname", "info_node"));
+		fputs(file, sprintf("\"origin\" \"%v\"\n", g_nodeGraph[i].m_origin));
+
+		#if 0
+		for(int j = 0i; j < g_nodeGraph[i].m_neighborCount; j++) {
+			fputs(file, sprintf(" %i %f %i\n", g_nodeGraph[i].m_neighborList[j].m_nodeID, g_nodeGraph[i].m_neighborList[j].m_travelCost, g_nodeGraph[i].m_neighborList[j].m_travelFlags));
+		}
+		#endif
+		fputs(file, "}\n");
+	}
+
+	fclose(file);
+	return (true);
+}
+
+bool
 ncNodeEditor::SaveFile(string filename)
 {
 	filestream file;
@@ -740,6 +776,9 @@ ncNodeEditor::Cmd(void)
 		break;
 	case "saverich":
 		Way_SaveJumbotFile(argv(2));
+		break;
+	case "savenode":
+		SaveNodesAsEntities(argv(2));
 		break;
 	case "loadfb":
 		Way_ReadFBFile(argv(2), true);

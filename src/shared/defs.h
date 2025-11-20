@@ -539,7 +539,7 @@ Route_GetJumpVelocity(vector vecFrom, vector vecTo, float flGravMod)
 	if (flGravMod <= 0.0)
 		flGravMod = 1.0f;
 
-	flGravity = serverkeyfloat("phy_gravity") * flGravMod;
+	flGravity = 800 * flGravMod;
 	flHeight = vecTo[2] - vecFrom[2];
 
 	/* this may not be a much verticality to this jump, use distance instead */

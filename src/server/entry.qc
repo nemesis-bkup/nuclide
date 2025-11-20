@@ -215,9 +215,7 @@ SV_ParseClientCommand(string cmd)
 		return;
 	}
 
-	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
-		addonEnum.ClientCommand(theClient, cmd);
-	}
+	ncAddonManager::ClientCommand(theClient, cmd);
 
 	/* give the game-mode a chance to override us */
 	if (g_grMode) {
@@ -282,6 +280,8 @@ ConsoleCmd(string cmd)
 	}
 
 	pl = (ncPlayer)self;
+
+	ncAddonManager::ConsoleCommand(pl, cmd);
 
 	/* give the game-mode a chance to override us */
 	if (g_grMode) {

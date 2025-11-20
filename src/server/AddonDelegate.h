@@ -84,6 +84,8 @@ Left = class method, right = name of the callback function for you to implement 
 
 ncAddonDelegate::Load = Plug_Load  
 ncAddonDelegate::Shutdown = Plug_Shutdown  
+ncAddonDelegate::ServerActivate = Plug_ServerActivate   
+ncAddonDelegate::LateActivate = Plug_LateActivate  
 ncAddonDelegate::ConsoleCommand = Plug_ConsoleCommand  
 ncAddonDelegate::ClientCommand = Plug_ClientCommand  
 ncAddonDelegate::PlayerConnect = Plug_PlayerConnect  
@@ -105,6 +107,11 @@ public:
 	virtual void Load(void);
 	/** Overridable: Called when the plugin gets unloaded. */
 	virtual void Shutdown(void);
+
+	/** Overridable: Called when the server gets activated and the addon is loaded alongside with it. Called after Plug_Load. */
+	virtual void ServerActivate(void);
+	/** Overridable: Called when the addon is loaded after server activation. Called after Plug_Load. */
+	virtual void LateActivate(void);
 
 	/** Overridable: Called when the server issues a console command. */
 	virtual bool ConsoleCommand(ncPlayer,string);

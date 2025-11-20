@@ -88,6 +88,7 @@ ncServerGame::InitEnts(void)
 
 	ncRuleDelegate::LinkProgs();
 	ncMapDelegate::LinkProgs();
+	ncAddonManager::LoadDefaultAddons();
 
 	Game_Worldspawn();
 	Decals_Init();
@@ -231,10 +232,7 @@ ncServerGame::ClientConnect(ncClient connectingClient)
 	ncStats::Connect(pl);
 
 	g_grMode.PlayerConnect((ncPlayer)self);
-
-	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
-		addonEnum.PlayerConnect((ncPlayer)self);
-	}
+	ncAddonManager::PlayerConnect((ncPlayer)self);
 
 	if (physics_supported() == TRUE) {
 		serverinfo.SetBool("physics", true);
@@ -250,9 +248,7 @@ ncServerGame::ClientDisconnect(ncClient disconnectingClient)
 		g_grMode.PlayerDisconnect((ncPlayer)self);
 	}
 
-	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
-		addonEnum.PlayerDisconnect((ncPlayer)self);
-	}
+	ncAddonManager::PlayerDisconnect((ncPlayer)self);
 
 	/* this will hide/remove the player from other clients */
 	ncPlayer pl = (ncPlayer)self;
@@ -339,9 +335,7 @@ ncServerGame::PutClientInServer(ncPlayer ourPlayer)
 	ncSessionManager::HandleLevelTransition();
 
 	/* handle plugins */
-	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
-		addonEnum.PlayerSpawn(ourPlayer);
-	}
+	ncAddonManager::PlayerSpawn(ourPlayer);
 
 	if (g_grMode.IsMultiplayer() == true && ourPlayer.deaths <= 0) {
 		bprint(PRINT_HIGH, sprintf("%s^d entered the game.\n", ourPlayer.netname));

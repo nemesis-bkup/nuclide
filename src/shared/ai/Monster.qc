@@ -2126,6 +2126,7 @@ ncMonster::Death(entity inflictor, entity attacker, int damage, vector dir, vect
 	UseOutput(attacker, m_outputOnDeath);
 	HasBeenKilled();
 	g_grMode.NPCDeath(this, (ncActor)inflictor, (ncActor)attacker);
+	ncAddonManager::NPCDeath(this, (ncActor)inflictor, (ncActor)attacker);
 
 	/* make sure we're not causing any more obituaries */
 	RemoveFlags(FL_MONSTER);

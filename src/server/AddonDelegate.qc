@@ -34,6 +34,16 @@ ncAddonDelegate::Load(void)
 }
 
 void
+ncAddonDelegate::ServerActivate(void)
+{
+}
+
+void
+ncAddonDelegate::LateActivate(void)
+{
+}
+
+void
 ncAddonDelegate::Shutdown(void)
 {
 }
@@ -96,15 +106,17 @@ ncAddonDelegate::Close(void)
 void
 ncAddonDelegate::LinkProgs(void)
 {
-		ADDON_LINK(Load, "Plug_Load")
-		ADDON_LINK(Shutdown, "Plug_Shutdown")
-		ADDON_LINK(ConsoleCommand, "Plug_ConsoleCommand")
-		ADDON_LINK(ClientCommand, "Plug_ClientCommand")
-		ADDON_LINK(PlayerConnect, "Plug_PlayerConnect")
-		ADDON_LINK(PlayerDisconnect, "Plug_PlayerDisconnect")
-		ADDON_LINK(PlayerSpawn, "Plug_PlayerSpawn")
-		ADDON_LINK(PlayerDeath, "Plug_PlayerDeath")
-		ADDON_LINK(NPCDeath, "Plug_NPCDeath")
+	ADDON_LINK(Load, "Plug_Load")
+	ADDON_LINK(Shutdown, "Plug_Shutdown")
+	ADDON_LINK(ConsoleCommand, "Plug_ConsoleCommand")
+	ADDON_LINK(ClientCommand, "Plug_ClientCommand")
+	ADDON_LINK(PlayerConnect, "Plug_PlayerConnect")
+	ADDON_LINK(PlayerDisconnect, "Plug_PlayerDisconnect")
+	ADDON_LINK(ServerActivate, "Plug_ServerActivate")
+	ADDON_LINK(LateActivate, "Plug_LateActivate")
+	ADDON_LINK(PlayerSpawn, "Plug_PlayerSpawn")
+	ADDON_LINK(PlayerDeath, "Plug_PlayerDeath")
+	ADDON_LINK(NPCDeath, "Plug_NPCDeath")
 }
 
 ncAddonDelegate

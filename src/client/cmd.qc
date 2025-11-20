@@ -651,6 +651,18 @@ Cmd_Parse(string sCMD)
 	case "textMenuClose":
 		Textmenu_Hide();
 		break;
+	case "vguiMenuOpen":
+		VGUI_CreateMenuFromDict(argv(1));
+		break;
+	case "vguiMenuClose":
+		VGUI_CloseMenu();
+		break;
+	case "trMenuOpen":
+		vguiTrUIMenu newMenu = vguiTrUIMenu::CreateFromMenuFile(g_uiDesktop, argv(1));
+		break;
+	case "trMenuClose":
+	   	vguiTrUIMenu::CloseAll();
+		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
 	}
@@ -807,6 +819,14 @@ Cmd_Init(void)
 	/* text menu */
 	registercommand("textMenuOpen");
 	registercommand("textMenuClose");
+	
+	/* vgui menu */
+	registercommand("vguiMenuOpen");
+	registercommand("vguiMenuClose");
+
+	/* trinity menu */
+	registercommand("trMenuOpen");
+	registercommand("trMenuClose");
 
 	/* XR binds, temporady until the engine standardizes things */
 	registercommand("+attack_left");

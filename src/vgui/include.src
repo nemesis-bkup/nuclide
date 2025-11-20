@@ -27,4 +27,8 @@
 ../vgui/ProgressBar.qc
 ../vgui/LoadingPanel.qc
 ../vgui/TextView.qc
+../vgui/TrUIMenu.h
+../vgui/TrUISubMenu.qc
+../vgui/TrUIItem.qc
+../vgui/TrUIMenu.qc
 #endlist

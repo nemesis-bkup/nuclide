@@ -44,6 +44,7 @@ shared/point_spotlight.qc
 shared/point_viewcontrol.qc
 shared/trigger_push.qc
 shared/func_conveyor.qc
+shared/trigger_jump.qc
 shared/prop_rope.qc
 shared/phys_rope.qc
 shared/worldspawn.qc

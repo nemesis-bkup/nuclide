@@ -1009,8 +1009,14 @@ we'll pass it a sentences.txt word (e.g. !BA_TEST) and start queing it
 void
 ncTalkMonster::Sentence(string msg)
 {
+	SentenceFromString(Sentences_GetSamples(msg));
+}
+
+void
+ncTalkMonster::SentenceFromString(string msg)
+{
 	/* not defined */
-	if (msg == "") {
+	if (!STRING_SET(msg)) {
 		return;
 	}
 
@@ -1021,7 +1027,7 @@ ncTalkMonster::Sentence(string msg)
 		m_iSentencePos = 0;
 	}
 
-	m_iSentenceCount = tokenize(Sentences_GetSamples(msg));
+	m_iSentenceCount = tokenize(msg);
 	m_pSentenceQue = memalloc(sizeof(sound_t) * m_iSentenceCount);
 
 	/* first we have to get the info out of the token */

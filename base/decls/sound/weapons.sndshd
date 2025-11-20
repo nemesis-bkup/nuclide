@@ -44,15 +44,6 @@ sfx_impact.flesh
 	sample weapons/ric3.wav
 }
 
-sfx_impact.default
-{
-	alerts
-	sample weapons/ric1.wav
-	sample weapons/ric2.wav
-	sample weapons/ric3.wav
-}
-
-
 weapon_nailgun.ricochet
 {
 	alerts
