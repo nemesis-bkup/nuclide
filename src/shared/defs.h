@@ -145,8 +145,8 @@ string __fullspawndata;
 #include "environment/DeadBody.h"
 #include "game/motd.h"
 #include "system/util.h"
-#include "game/ammo.h"
-#include "system/activities.h"
+#include "game/AmmoManager.h"
+#include "system/ActivityManager.h"
 #include "environment/BreakableBrushManager.h"
 
 #define BSPVER_PREREL 	28
