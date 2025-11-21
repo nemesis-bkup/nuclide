@@ -355,6 +355,7 @@ func_breakable::Death(entity inflictor, entity attacker, int damage, vector dir,
 	Disappear();
 	MakeInvulnerable();
 	UseTargets(eActivator, TRIG_TOGGLE, 0.0f);
+	UseOutput(this, m_outputOnBreak);
 
 	/* This may seem totally absurd. That's because it is. It's very
 	 * unreliable but exploding breakables in close proximity it WILL cause

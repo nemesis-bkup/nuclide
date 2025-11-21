@@ -806,6 +806,11 @@ ncActor::Input(entity eAct, string strInput, string strData)
 	case "SelectNewSchedule":
 		SelectNewSchedule();
 		break;
+	case "Wait":
+		if (m_activeSchedule) {
+			m_activeSchedule.AdvanceLater(stof(strData));
+		}
+		break;
 	/* some tasks. */
 	case "WalkToTarget":
 		if (m_activeSchedule) {

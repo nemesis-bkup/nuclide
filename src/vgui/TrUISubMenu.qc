@@ -16,7 +16,7 @@
 
 /** menuDef */
 class
-vguiTrUISubMenu:vguiWindow
+vguiTrUISubMenu:vguiView
 {
 public:
 	void vguiTrUISubMenu(void);

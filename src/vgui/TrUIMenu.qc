@@ -28,7 +28,8 @@ vguiTrUIMenu::CloseAll(void)
 int
 vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPerLine)
 {
-	string word = strtolower(argv(i));
+	string realWord = argv(i);
+	string word = strtolower(realWord);
 	string nextWord = argv(i+1);
 	string macroLookUp = Constants_LookUp(strcat("$", nextWord), nextWord);
 
@@ -120,11 +121,11 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 				Constants_Add(macroName, macroValue);
 			}
 		} else if (focusLevel == "action") {
-			m_lastItem.m_trItemActionBuffer = sprintf("%s%s ", m_lastItem.m_trItemActionBuffer, word);
+			m_lastItem.m_trItemActionBuffer = sprintf("%s%s ", m_lastItem.m_trItemActionBuffer, realWord);
 		} else if (focusLevel == "mouseenter") {
-			m_lastItem.m_trItemEnterBuffer = sprintf("%s%s ", m_lastItem.m_trItemEnterBuffer, word);
+			m_lastItem.m_trItemEnterBuffer = sprintf("%s%s ", m_lastItem.m_trItemEnterBuffer, realWord);
 		} else if (focusLevel == "mouseexit") {
-			m_lastItem.m_trItemExitBuffer = sprintf("%s%s ", m_lastItem.m_trItemExitBuffer, word);
+			m_lastItem.m_trItemExitBuffer = sprintf("%s%s ", m_lastItem.m_trItemExitBuffer, realWord);
 		} else if (focusLevel == "assetglobaldef") {
 			switch (word) {
 			case "cursor":
@@ -176,8 +177,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 		} else if (focusLevel == "menudef") {
 			switch (word) {
 			case "name":
-				m_lastSubMenu.m_trSubName = macroLookUp;
-				m_lastSubMenu.SetTitle(m_lastSubMenu.m_trSubName);
+				m_lastSubMenu.m_trSubName = sprintf("%d_%s", num_for_edict(this), macroLookUp);
 				incrementToken++;
 				break;
 			case "fullscreen":
@@ -243,7 +243,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 		} else if (focusLevel == "itemdef") {
 			switch (word) {
 			case "name":
-				m_lastItem.m_trItemName = macroLookUp;
+				m_lastItem.m_trItemName = sprintf("%d_%s", num_for_edict(this), macroLookUp);
 				incrementToken++;
 				break;
 			case "text":
@@ -361,7 +361,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 				m_lastItem.m_trItemBackColor[0] = stof(argv(i+1));
 				m_lastItem.m_trItemBackColor[1] = stof(argv(i+2));
 				m_lastItem.m_trItemBackColor[2] = stof(argv(i+3));
-				m_lastItem.m_trItemBackAlpha = stof(argv(i+1));
+				m_lastItem.m_trItemBackAlpha = stof(argv(i+4));
 				incrementToken+=4;
 				break;
 			case "bordercolor":

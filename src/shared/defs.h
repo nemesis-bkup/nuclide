@@ -124,6 +124,7 @@ string __fullspawndata;
 #include "physics/Portal.h"
 #include "audio/Sound.h"
 #include "physics/Debris.h"
+#include "input/InteractiveSurface.h"
 #include "input/XRSpace.h"
 #include "input/XRInput.h"
 #include "input/XRManager.h"
@@ -132,9 +133,7 @@ string __fullspawndata;
 #include "game/Spectator.h"
 #include "physics/pmove.h"
 #include "game/Player.h"
-
 #include "physics/Vehicle.h"
-
 #include "environment/materials.h"
 #include "environment/damage.h"
 #include "game/entities.h"
@@ -148,6 +147,7 @@ string __fullspawndata;
 #include "game/AmmoManager.h"
 #include "system/ActivityManager.h"
 #include "environment/BreakableBrushManager.h"
+#include "environment/TVChannel.h"
 
 #define BSPVER_PREREL 	28
 #define BSPVER_Q1		29
