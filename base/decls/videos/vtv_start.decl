@@ -4,7 +4,7 @@ typeInfo video
 	"audio"			"music/track07.ogg"
 	"duration"		"10"
 	"light_style"		"1"
-	"light_color"		"64 128 128"
+	"light_color"		"128 112 128"
 	"top_text"		"ad break"
 	"bottom_text"		"be right back"
 }

@@ -4,5 +4,5 @@ typeInfo video
 	"audio"			"video/aurora.ogg"
 	"duration"		"59.112018"
 	"light_style"		"1"
-	"light_color"		"64 128 128"
+	"light_color"		"128 128 112"
 }

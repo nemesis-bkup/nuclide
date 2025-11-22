@@ -68,7 +68,7 @@
 }
 // entity 3
 {
-"light" "500"
+"light" "64"
 "origin" "0.000000 0.000000 96.000000"
 "classname" "light"
 }

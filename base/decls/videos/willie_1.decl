@@ -4,6 +4,6 @@ typeInfo video
 	"audio"			"video/willie_1.ogg"
 	"duration"		"230.000000"
 	"light_style"		"1"
-	"light_color"		"64 128 128"
+	"light_color"		"164 164 164"
 	"dog"			"vtvDOG"
 }

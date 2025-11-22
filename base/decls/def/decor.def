@@ -4,11 +4,11 @@ entityDef light_flame
 	"model"					"progs/flame2.mdl"
 
 	"light_color"			"1 0.75 0.25"
-	"light_radius"			"196"
+	"light_radius"			"128"
 	"light_offset"			"0 0 0"
 	"def_damage"			"flame_damage"
 	"damage_delay"			"1"
-	"god"					"1"
+	"god"				"1"
 }
 
 entityDef flame_damage
