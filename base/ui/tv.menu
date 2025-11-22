@@ -1,0 +1,48 @@
+{
+	menuDef 
+	{
+		name "DefaultTV"
+		rect 0 0 320 240
+		backcolor 0 0 1 1
+
+		itemDef 
+		{
+			name channel
+			background "tvStatic"
+			rect 0 0 320 240
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+		}
+
+		itemDef 
+		{
+			name dog
+			background "vtvDOG"
+			rect 244 207 50 18
+			decoration
+			style 3
+			visible 1
+		}
+
+		itemDef 
+		{
+			name toptext
+			text ""
+			rect 48 48 320 20
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+		}
+
+		itemDef 
+		{
+			name bottomtext
+			text ""
+			rect 48 164 320 20
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+		}
+	}
+}

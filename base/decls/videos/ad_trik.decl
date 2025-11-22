@@ -1,0 +1,8 @@
+typeInfo video
+{
+	"video"			"video/trik.roq"
+	"audio"			"video/trik.ogg"
+	"duration"		"60.048027"
+	"light_style"		"1"
+	"light_color"		"64 128 128"
+}

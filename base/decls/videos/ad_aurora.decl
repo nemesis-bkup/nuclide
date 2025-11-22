@@ -1,0 +1,8 @@
+typeInfo video
+{
+	"video"			"video/aurora.roq"
+	"audio"			"video/aurora.ogg"
+	"duration"		"59.112018"
+	"light_style"		"1"
+	"light_color"		"64 128 128"
+}
