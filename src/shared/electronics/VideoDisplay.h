@@ -14,7 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/*!QUAKED ncVideoDisplay (1 0 0) (-8 -8 -8) (8 8 8)
+Receives a video signal from an receiver and displays it.
 
+# KEYS
+- "angles" : Sets the pitch, yaw and roll angles of the surface.
+- "input" : Name of a video input, like an ncAVReceiver
+
+# INPUTS
+- "Enable" : Turn the screen on.
+- "Disable" : Turn the screen off.
+- "Toggle" : Toggle the screen on/off.
+
+# SPAWNFLAGSS
+None yet
+
+# TRIVIA
+This entity was introduced in Nuclide (2025).
+*/
 class
 ncVideoDisplay:ncInteractiveSurface
 {

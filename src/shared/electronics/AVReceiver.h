@@ -14,6 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/*!QUAKED ncAVReceiver (1 0 0) (-8 -8 -8) (8 8 8)
+Receives a video signal from an receiver and displays it.
+
+# KEYS
+- "angles" : Sets the pitch, yaw and roll angles of the surface.
+- "channel" : Default channel to receive
+- "volume" : Default receiver volume.
+- "enabled" : Whether this entity is enabled by default.
+
+# INPUTS
+- "SwitchChannel" : Zap to a different channel, broadcasted from a different ncAVTransmitter that's active.
+
+# SPAWNFLAGSS
+None yet
+
+# TRIVIA
+This entity was introduced in Nuclide (2025).
+*/
 class
 ncAVReceiver:ncPointTrigger
 {

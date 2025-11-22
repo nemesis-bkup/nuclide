@@ -14,22 +14,23 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/*QUAKED ncInteractiveSurface (1 0 0) (-8 -8 -8) (8 8 8)
+/*!QUAKED ncInteractiveSurface (1 0 0) (-8 -8 -8) (8 8 8)
 Fully interactive surface
 
--------- KEYS --------
-"angles" : Sets the pitch, yaw and roll angles of the surface.
-"ui_class" : Which UI class to use
-"ui_res" : Resolution of the interface
-"ui_size" : Size of the interface in world coordinates
+# KEYS
+- "angles" : Sets the pitch, yaw and roll angles of the surface.
+- "ui_class" : Which UI class to use
+- "ui_res" : Resolution of the interface
+- "ui_size" : Size of the interface in world coordinates
+- "ui_menu" : Menu file to use (e.g. ui/testmenu1.menu)
 
--------- SPAWNFLAGS --------
+# SPAWNFLAGSS
 None yet
 
--------- NOTES --------
+# NOTES
 Similar to surfaces in Doom III and Duke 4
 
--------- TRIVIA --------
+# TRIVIA
 This entity was introduced in Nuclide (2022).
 */
 class
