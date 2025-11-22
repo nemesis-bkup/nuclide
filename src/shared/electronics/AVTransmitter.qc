@@ -44,6 +44,28 @@ ncAVTransmitter::ncAVTransmitter(void)
 
 #ifdef SERVER
 void
+ncAVTransmitter::TransmitSingleVideo(string videoFile, bool advancesSchedule)
+{
+	/* FIXME: easy network speedup: turn this into an event after, and set those _new fields to prevent networking them */
+	ncDict videoDict = ncDict::LoadDeclFromFile("video", sprintf("videos/%s.decl", videoFile));
+	m_tvChannelVideo = videoDict.GetString("video");
+	m_tvChannelAudio = videoDict.GetString("audio");
+	m_tvChannelDOG = videoDict.GetString("dog");
+	m_tvChannelTopText = videoDict.GetString("top_text");
+	m_tvChannelBottomText = videoDict.GetString("bottom_text");
+	m_tvChannelLight = videoDict.GetVector("light_color");
+	m_tvChannelLightStyle = videoDict.GetFloat("light_style");
+
+	float durationInterval = videoDict.GetFloat("duration");
+		
+	remove(videoDict);
+		
+	if (advancesSchedule && m_activeSchedule && durationInterval > 0.0f) {
+		m_activeSchedule.AdvanceLater(durationInterval);
+	}
+}
+
+void
 ncAVTransmitter::Input(entity entityActivator, string inputName, string dataField)
 {
 	switch (inputName) {
@@ -66,24 +88,17 @@ ncAVTransmitter::Input(entity entityActivator, string inputName, string dataFiel
 		EntLog("Channel %i is now playing audio track %S", m_tvChannelNum, m_tvChannelAudio);
 		health = 1;
 		break;
+	case "RandomVideo":
+		float videoEnum = tokenize(dataField);
+		float randomVideo = floor(random(0, videoEnum));
+		TransmitSingleVideo(argv(randomVideo), true);
+		break;
+	case "AsyncVideo":
+		TransmitSingleVideo(dataField, false);
+		break;
+	case "SingleVideo":
 	case "LoadVideo":
-		/* FIXME: easy network speedup: turn this into an event after, and set those _new fields to prevent networking them */
-		ncDict videoDict = ncDict::LoadDeclFromFile("video", sprintf("videos/%s.decl", dataField));
-		m_tvChannelVideo = videoDict.GetString("video");
-		m_tvChannelAudio = videoDict.GetString("audio");
-		m_tvChannelDOG = videoDict.GetString("dog");
-		m_tvChannelTopText = videoDict.GetString("top_text");
-		m_tvChannelBottomText = videoDict.GetString("bottom_text");
-		m_tvChannelLight = videoDict.GetVector("light_color");
-		m_tvChannelLightStyle = videoDict.GetFloat("light_style");
-
-		float durationInterval = videoDict.GetFloat("duration");
-		
-		remove(videoDict);
-		
-		if (m_activeSchedule && durationInterval > 0.0f) {
-			m_activeSchedule.AdvanceLater(durationInterval);
-		}
+		TransmitSingleVideo(dataField, true);
 		break;
 	case "SetDOG":
 		m_tvChannelDOG = dataField;

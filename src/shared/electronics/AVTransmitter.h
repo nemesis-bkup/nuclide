@@ -59,6 +59,7 @@ public:
 
 	virtual void EvaluateEntity(void);
 	virtual float SendEntity(entity,float);
+	virtual void TransmitSingleVideo(string videoFile, bool advancesSchedule);
 #endif
 
 #ifdef CLIENT

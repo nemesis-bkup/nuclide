@@ -1,4 +1,6 @@
 rendersize "21 16"
-path fonts/IBMPlexSans-Bold.otf
-path_ttf fonts/IBMPlexSans-Bold.otf
+path fonts/nimbus/NimbusSanL-Bol.otf
 size 16
+
+path_bitmap fonts/nimbus/NimbusSanL-Bol.png
+size_bitmap "8 16"

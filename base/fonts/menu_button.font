@@ -1,5 +1,5 @@
-color "255 255 255"
-alpha 255
-size 12
-path fonts/IBMPlexSans-Medium.otf
-path_ttf fonts/IBMPlexSans-Medium.otf
+path fonts/nimbus/NimbusSanL-Bol.otf
+size 14
+
+path_bitmap fonts/nimbus/NimbusSanL-Bol.png
+size_bitmap "7 14"
