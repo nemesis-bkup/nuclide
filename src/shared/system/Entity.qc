@@ -36,6 +36,7 @@ ncEntity::ncEntity(void)
 
 #ifdef SERVER
 	m_gameModeFilter = __NULL__;
+	m_outputOnRespawn = __NULL__;
 #endif
 }
 
@@ -76,6 +77,11 @@ void
 ncEntity::Spawned(void)
 {
 	super::Spawned();
+
+#ifdef SERVER
+	if (STRING_SET(m_outputOnRespawn))
+		m_outputOnRespawn = CreateOutput(m_outputOnRespawn);
+#endif
 }
 
 bool
@@ -1028,6 +1034,8 @@ ncEntity::Respawn(void)
 	RestoreAngles();
 	SetModel(GetSpawnString("model"));
 
+	UseOutput(this, m_outputOnRespawn);
+
 }
 
 void
@@ -1152,6 +1160,7 @@ ncEntity::Save(float handle)
 	SaveFloat(handle, "spawnTime", m_spawnTime);
 	SaveEntity(handle, "holdingPlayer", m_holdingPlayer);
 	SaveFloat(handle, "lastHeldTime", m_lastHeldTime);
+	SaveString(handle, "outputOnRespawn", m_outputOnRespawn);
 
 	super::Save(handle);
 }
@@ -1485,6 +1494,9 @@ ncEntity::Restore(string keyName, string setValue)
 	case "lastHeldTime":
 		m_lastHeldTime = ReadFloat(setValue);
 		break;
+	case "outputOnRespawn":
+		m_outputOnRespawn = ReadString(setValue);
+		break;
 	default:
 		super::Restore(keyName, setValue);
 		break;
@@ -1720,6 +1732,9 @@ ncEntity::SpawnKey(string keyName, string setValue)
 		} else {
 			pvsflags &= ~PVSF_IGNOREPVS;
 		}
+		break;
+	case "OnRespawn":
+		m_outputOnRespawn = PrepareOutput(m_outputOnRespawn, ReadString(setValue));
 		break;
 #endif
 	case "editor_mins":

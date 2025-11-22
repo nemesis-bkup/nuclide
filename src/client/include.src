@@ -1,5 +1,4 @@
 #includelist
-InteractiveSurface.qc
 View.qc
 Radar.qc
 hud.qc
@@ -27,6 +26,7 @@ vgui.qc
 vgui_changeclass.qc
 vgui_chooseteam.qc
 vgui_motd.qc
+vgui_menumaker.qc
 vgui_modelspawner.qc
 vgui_playerlist.qc
 vgui_serverinfo.qc

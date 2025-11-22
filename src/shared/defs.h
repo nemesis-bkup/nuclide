@@ -81,7 +81,7 @@ noref const float   SVC_TEMPENTITY          = 23;
 string __fullspawndata;
 #endif
 
-#include "system/cloader.h"
+#include "system/ConstantManager.h"
 #include "audio/soundDef.h"
 #include "environment/effects.h"
 
@@ -124,6 +124,7 @@ string __fullspawndata;
 #include "physics/Portal.h"
 #include "audio/Sound.h"
 #include "physics/Debris.h"
+#include "input/InteractiveSurface.h"
 #include "input/XRSpace.h"
 #include "input/XRInput.h"
 #include "input/XRManager.h"
@@ -132,9 +133,7 @@ string __fullspawndata;
 #include "game/Spectator.h"
 #include "physics/pmove.h"
 #include "game/Player.h"
-
 #include "physics/Vehicle.h"
-
 #include "environment/materials.h"
 #include "environment/damage.h"
 #include "game/entities.h"
@@ -145,9 +144,12 @@ string __fullspawndata;
 #include "environment/DeadBody.h"
 #include "game/motd.h"
 #include "system/util.h"
-#include "game/ammo.h"
-#include "system/activities.h"
+#include "game/AmmoManager.h"
+#include "system/ActivityManager.h"
 #include "environment/BreakableBrushManager.h"
+#include "electronics/AVTransmitter.h"
+#include "electronics/AVReceiver.h"
+#include "electronics/VideoDisplay.h"
 
 #define BSPVER_PREREL 	28
 #define BSPVER_Q1		29
@@ -539,7 +541,7 @@ Route_GetJumpVelocity(vector vecFrom, vector vecTo, float flGravMod)
 	if (flGravMod <= 0.0)
 		flGravMod = 1.0f;
 
-	flGravity = serverkeyfloat("phy_gravity") * flGravMod;
+	flGravity = 800 * flGravMod;
 	flHeight = vecTo[2] - vecFrom[2];
 
 	/* this may not be a much verticality to this jump, use distance instead */

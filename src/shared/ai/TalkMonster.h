@@ -151,6 +151,9 @@ public:
 	virtual void ReceiveEntity(float,float);
 
 	/** Plays a single sample from a sentence. */
+	virtual void SentenceFromString(string);
+
+	/** Plays a single sample from a sentence. */
 	virtual void SentenceSample(string);
 	/** Called once per frame to process the word queue */
 	virtual void ProcessWordQue(void);

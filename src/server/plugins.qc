@@ -38,6 +38,7 @@ AddonManager_LoadNamedAddon(string addonName)
 	}
 
 	addonEnum.Load();
+	addonEnum.LateActivate();
 }
 
 ncAddonDelegate

@@ -238,7 +238,7 @@ func_door_rotating::Respawn(void)
 	ClearVelocity();
 	ReleaseThink();
 
-	if (HasSpawnFlags(SF_ROT_USE) || HasSpawnFlags(SF_ROT_TOGGLE)) {
+	if (HasSpawnFlags(SF_ROT_USE) || (HasTargetname() && HasSpawnFlags(SF_ROT_TOGGLE))) {
 		m_bCanTouch = false;
 	} else {
 		m_bCanTouch = true;

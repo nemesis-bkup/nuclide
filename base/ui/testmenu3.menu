@@ -1,0 +1,19 @@
+{
+	menuDef 
+	{
+		name "testmenu3"
+		rect 0 0 320 240
+		backcolor 0 0 1 1
+
+		itemDef 
+		{
+			name toptext
+			text "Test Menu 3"
+			rect 48 48 320 20
+			forecolor 1 0 1 1
+			decoration
+			visible 1
+		}
+
+	}
+}

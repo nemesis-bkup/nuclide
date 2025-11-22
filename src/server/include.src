@@ -15,6 +15,7 @@ ServerGame.qc
 entry.qc
 Schedule.qc
 AddonDelegate.qc
+AddonManager.qc
 MapDelegate.qc
 SessionManager.qc
 CaptureItem.qc

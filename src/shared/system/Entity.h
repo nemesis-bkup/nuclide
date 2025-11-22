@@ -449,6 +449,7 @@ private:
 	string m_parent_attachment;
 	vector m_parentPosOffs;
 	vector m_parentAngOffs;
+	string m_outputOnRespawn;
 #endif
 };
 

@@ -18,6 +18,8 @@
 #define true 1
 #define false 0
 
+#define PROGS_TIME time
+
 /** @group common Common Functions
  *  @{
  */
@@ -29,10 +31,10 @@ typedef float musictrack_t;
 
 typedef enum
 {
-	LOGLEVEL_NONE,
-	LOGLEVEL_ERRORS,
-	LOGLEVEL_WARNINGS,
-	LOGLEVEL_DEBUG,
+	LOGLEVEL_NONE,		/**< 0, no log messages */
+	LOGLEVEL_ERRORS,	/**< 1, only errors */
+	LOGLEVEL_WARNINGS,	/**< 2, errors and warnings */
+	LOGLEVEL_DEBUG,		/**< 3, all, including developer oriented debug messages */
 } logLevel_t;
 
 #define LOGLEVEL_DEFAULT LOGLEVEL_WARNINGS
@@ -86,43 +88,43 @@ _ncLog(string msg)
 {
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", CG_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", CG_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", CG_LOG, msg));
 #endif
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", SV_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", SV_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", SV_LOG, msg));
 #endif
 #ifdef MENU
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", UI_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", UI_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", UI_LOG, msg));
 #endif
 #ifdef RULEC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", RULE_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", RULE_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", RULE_LOG, msg));
 #endif
 #ifdef MAPC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", MAP_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", MAP_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", MAP_LOG, msg));
 #endif
 #ifdef HUDC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", HUD_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", HUD_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", HUD_LOG, msg));
 #endif
 #ifdef ADDONC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^7%s\n", ADDON_LOG, time, msg));
+		print(sprintf("%s ^9%f ^7%s\n", ADDON_LOG, PROGS_TIME, msg));
 	else
 		print(sprintf("%s ^7%s\n", ADDON_LOG, msg));
 #endif
@@ -133,43 +135,43 @@ _ncError(string functionName, string msg)
 {
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", CG_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", CG_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", CG_ERROR, functionName, msg));
 #endif
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", SV_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", SV_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", SV_ERROR, functionName, msg));
 #endif
 #ifdef MENU
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", UI_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", UI_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", UI_ERROR, functionName, msg));
 #endif
 #ifdef RULEC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", RULE_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", RULE_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", RULE_ERROR, functionName, msg));
 #endif
 #ifdef MAPC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", MAP_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", MAP_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", MAP_ERROR, functionName, msg));
 #endif
 #ifdef HUDC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", HUD_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", HUD_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", HUD_ERROR, functionName, msg));
 #endif
 #ifdef ADDONC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^1%s^1: %s\n", ADDON_ERROR, time, functionName, msg));
+		print(sprintf("%s ^9%f ^1%s^1: %s\n", ADDON_ERROR, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^1%s^1: %s\n", ADDON_ERROR, functionName, msg));
 #endif
@@ -180,43 +182,43 @@ _ncWarning(string functionName, string msg)
 {
 #ifdef CLIENT
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", CG_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", CG_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", CG_WARNING, functionName, msg));
 #endif
 #ifdef SERVER
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", SV_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", SV_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", SV_WARNING, functionName, msg));
 #endif
 #ifdef MENU
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", UI_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", UI_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", UI_WARNING, functionName, msg));
 #endif
 #ifdef RULEC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", RULE_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", RULE_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", RULE_WARNING, functionName, msg));
 #endif
 #ifdef MAPC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", MAP_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", MAP_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", MAP_WARNING, functionName, msg));
 #endif
 #ifdef HUDC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", HUD_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", HUD_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", HUD_WARNING, functionName, msg));
 #endif
 #ifdef ADDONC
 	if (autocvar_g_logTimestamps)
-		print(sprintf("%s ^9%f ^3%s^1: %s\n", ADDON_WARNING, time, functionName, msg));
+		print(sprintf("%s ^9%f ^3%s^1: %s\n", ADDON_WARNING, PROGS_TIME, functionName, msg));
 	else
 		print(sprintf("%s ^3%s^1: %s\n", ADDON_WARNING, functionName, msg));
 #endif
@@ -271,7 +273,6 @@ _NSAssert(bool condition, string function, string descr)
 #define ncLog(...) if (autocvar_g_logLevel >= LOGLEVEL_DEBUG) _ncLog(sprintf(__VA_ARGS__))
 
 /** Logs an message, with timestamp.
-	 The console variable `g_logLevel` has to be `3` or higher for them to be visible.
 
 @param description(...) contains a formatted string containing a description. */
 #define ncLogAlways(...) _ncLog(sprintf(__VA_ARGS__))
@@ -306,15 +307,16 @@ typedef enumflags
        SEARCH_NAMESORT		/**< Sort the results alphabetically (slower) */
 } searchFlags_t;
 
+const entity g_entity_null = __NULL__;
+const float g_float_null = 0.0f;
+const int g_int_null = 0i;
+const string g_string_null = "";
 const vector g_vec_null = [0.0f, 0.0f, 0.0f];
-
-/* the console needs some attention too. */
-var float g_initTime;
 
 void
 InitPrint(string functionName)
 {
-	int chars = 51i;
+	static int chars = 51i;
 	int charsLeft;
 	int charExtra;
 	string sideLeft = "";
@@ -340,13 +342,7 @@ InitPrint(string functionName)
 	ncLogAlways( "%s %s %s", sideLeft, functionName, sideRight);
 }
 
-void
-_InitStart(string functionName)
-{
-	InitPrint(functionName);
-}
-
-#define InitStart() float local_initTime = gettime(1); _InitStart(__FUNC__)
+#define InitStart() float local_initTime = gettime(1); InitPrint(__FUNC__)
 
 void
 _InitEnd(float oldTime, string functionName)
@@ -354,7 +350,6 @@ _InitEnd(float oldTime, string functionName)
 	float endTime = gettime(1);
 	ncLogAlways("%s loaded in %.1f seconds", functionName, (endTime - oldTime));
 	ncLogAlways("---------------------------------------------------");
-	g_initTime = 0;
 }
 
 #define InitEnd() _InitEnd(local_initTime, __FUNC__)
@@ -370,18 +365,37 @@ _InitEnd(float oldTime, string functionName)
 bool
 fileExists(string filePath)
 {
-	if (filePath != "") /* not empty */
-		if not(whichpack(filePath)) /* not present on disk */
-			return false;
+	if (!STRING_SET(filePath)) {
+		return (false);
+	}
+		
+	/* not present on disk */
+	if not(whichpack(filePath)) {
+		return (false);
+	}
+		
 
-	return true;
+	return (true);
 }
 
 string
 fileExtensionFromString(string inputString)
 {
 	int modelNameLength = strlen(inputString);
-	return substring(inputString, modelNameLength - 3, -1);
+	int dotChar = -1;
+	
+	for (int i = (modelNameLength - 1); i > 0; i--) {
+		if (str2chr(inputString, i) == '.') {
+			dotChar = i;
+			break;
+		}
+	}
+	
+	if (dotChar != -1) {
+		return substring(inputString, dotChar + 1, -1);
+	}
+
+	return (__NULL__);
 }
 
 #define Util_ExtensionFromString fileExtensionFromString

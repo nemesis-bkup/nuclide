@@ -2359,6 +2359,7 @@ ncPlayer::Damage(entity inflictor, entity attacker, ncDict damageDecl, float dam
 		string attackerWeapon = damageDecl.GetString("weapon");
 		string deadWeapon = this.m_activeWeapon.declclass;
 		rules.PlayerDeath(this, (ncActor)inflictor, (ncActor)attacker, attackerWeapon);
+		ncAddonManager::PlayerDeath(this, (ncActor)inflictor, (ncActor)attacker, attackerWeapon);
 		Death(inflictor, attacker, (int)damagePoints, dmgDir, hitLocation, 0i);
 		ncStats::Kill(this, (ncEntity)inflictor, (ncEntity)attacker, attacker.frags - attackerOldScore, attackerWeapon, this.frags - deadOldScore, deadWeapon);
 	} else {

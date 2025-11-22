@@ -578,10 +578,9 @@ ncProjectile::Touch(entity eToucher)
 		vector currentAngle = GetAngles();
 		currentAngle[0] *= -1;
 		vector currentVelocity = anglesToForward(currentAngle);
-		SetMovetype(MOVETYPE_FLYMISSILE);
 		SetVelocity(reflect(currentVelocity, m_lastPlaneNormal) * m_vecLaunchVelocity[0]);
 		SetAngles(vectoangles(GetVelocity()));
-		SetOrigin(GetOrigin() + (anglesToForward(GetAngles() * 2.0f)));
+		SetOrigin(GetOrigin() + (anglesToForward(GetAngles()) * 2.0f));
 		StartSoundDef(m_sndBounce, CHAN_BODY, true);
 		return;
 	}
@@ -1187,6 +1186,12 @@ ncProjectile::Launch(vector startPos, vector launchDir, float fuseOffset, float 
 {
 	vector moveVel = g_vec_null;
 	vector projPos = g_vec_null;
+	string spawnPitch = GetSpawnString("pitch");
+	
+	if (STRING_SET(spawnPitch)) {
+		launchDir[0] = stof(spawnPitch);
+	}
+
 	SetAngles(launchDir);
 	SetSize(m_vecSpawnMins, m_vecSpawnMaxs);
 	m_timeUntilNextDamage = time;

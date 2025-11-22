@@ -33,6 +33,7 @@
 
 #include "spawn.h"
 #include "AddonDelegate.h"
+#include "AddonManager.h"
 #include "MapDelegate.h"
 #include "plugins.h"
 #include "lament.h"

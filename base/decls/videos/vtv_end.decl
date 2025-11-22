@@ -1,0 +1,10 @@
+typeInfo video
+{
+	"video"			"video/vtv_end.roq"
+	"audio"			"music/track10.ogg"
+	"duration"		"10"
+	"light_style"		"1"
+	"light_color"		"96 96 128"
+	"top_text"		"ad break"
+	"bottom_text"		"is over now"
+}

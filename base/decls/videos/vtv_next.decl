@@ -1,0 +1,9 @@
+typeInfo video
+{
+	"video"			"video/vtv_next.roq"
+	"audio"			"music/track07.ogg"
+	"duration"		"10"
+	"light_style"		"1"
+	"light_color"		"64 128 128"
+	"top_text"		"Up next:"
+}

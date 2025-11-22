@@ -24,6 +24,10 @@
 !!samps =SPECULAR specular reflectcube
 !!samps =FAKESHADOWS shadowmap
 
+#ifdef SPECULAR
+#define PBR
+#endif
+
 #include "sys/defs.h"
 
 varying vec2 tcbase;
@@ -36,7 +40,6 @@ varying vec4 vc;
 #ifdef SPECULAR
 varying vec3 eyevector;
 varying mat3 invsurface;
-#define PBR
 #endif
 
 #if defined(PCF) || defined(CUBE) || defined(SPOT)
@@ -124,6 +127,10 @@ varying vec4 vtexprojcoord;
 
 	#include "sys/fog.h"
 	#include "sys/pcf.h"
+	
+	#ifdef PBR
+	#include "sys/pbr.h"
+	#endif
 
 	#ifdef OFFSETMAPPING
 	#include "sys/offsetmapping.h"
@@ -198,7 +205,7 @@ varying vec4 vtexprojcoord;
 			vec3 F0 = mix(dielectricSpecular, albedo_f.rgb, metalness_f);
 			albedo_f.rgb = mix(albedo_f.rgb * (1.0 - dielectricSpecular.r), black, metalness_f);
 
-			out_f = LightingFuncShlick(normal_f.rgb, normalize(eyevector), nl, roughness_f, albedo_f.rgb, F0);
+			out_f = DoPBR(normal_f.rgb, normalize(eyevector), normalize(lightvector), roughness_f, albedo_f.rgb, F0, l_lightcolourscale);
 
 			vec3 cube_c = reflect(-eyevector, normal_f.rgb);
 			cube_c = cube_c.x*invsurface[0] + cube_c.y*invsurface[1] + cube_c.z*invsurface[2];

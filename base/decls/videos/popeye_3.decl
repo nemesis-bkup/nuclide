@@ -1,0 +1,9 @@
+typeInfo video
+{
+	"video"			"video/popeye_3.roq"
+	"audio"			"video/popeye_3.ogg"
+	"duration"		"314.853333"
+	"light_style"		"1"
+	"light_color"		"112 128 128"
+	"dog"			"vtvDOG"
+}
