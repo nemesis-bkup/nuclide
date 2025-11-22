@@ -328,6 +328,7 @@ CSQC_UpdateView(float w, float h, float focus)
 	Fog_Update();
 	Sky_Update(false);
 	cvar_set("_background", serverkey("background"));
+	ncAVTransmitter::FlipImages();
 
 	/* ensure background maps do not get paused */
 	if (serverkeyfloat("background") == 1)

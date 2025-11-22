@@ -49,12 +49,14 @@ environment/Spraylogo.qc
 system/util.qc
 game/motd.qc
 environment/DeadBody.qc
-environment/TVChannel.qc
+electronics/AVTransmitter.qc
+electronics/AVReceiver.qc
 system/entityDef.qc
 game/AmmoManager.qc
 system/ActivityManager.qc
 system/api.qc
 input/InteractiveSurface.qc
+electronics/VideoDisplay.qc
 input/XRSpace.qc
 input/XRInput.qc
 input/XRManager.qc

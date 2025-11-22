@@ -21,6 +21,7 @@ public:
 	nonvirtual vguiTrUIMenu CreateFromMenuFile(vguiWidget parent, string filePath);
 	nonvirtual void CloseAll(void);
 	nonvirtual int InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPerLine);
+	nonvirtual void InterpretCommand(string commandString);
 
 private:
 	/* assetGlobalDef */

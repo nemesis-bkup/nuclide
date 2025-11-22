@@ -191,7 +191,13 @@ Entity_EntityUpdate(float type, float new)
 		NSENTITY_READENTITY(ncInteractiveSurface, new)
 		break;
 	case ENT_TVCHANNEL:
-		NSENTITY_READENTITY(ncTVChannel, new)
+		NSENTITY_READENTITY(ncAVTransmitter, new)
+		break;
+	case ENT_AVRECEIVER:
+		NSENTITY_READENTITY(ncAVReceiver, new)
+		break;
+	case ENT_VIDEODISPLAY:
+		NSENTITY_READENTITY(ncVideoDisplay, new)
 		break;
 	default:
 			//error(sprintf("Unknown entity type update received. (%d)\n", t));

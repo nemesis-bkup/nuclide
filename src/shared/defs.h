@@ -147,7 +147,9 @@ string __fullspawndata;
 #include "game/AmmoManager.h"
 #include "system/ActivityManager.h"
 #include "environment/BreakableBrushManager.h"
-#include "environment/TVChannel.h"
+#include "electronics/AVTransmitter.h"
+#include "electronics/AVReceiver.h"
+#include "electronics/VideoDisplay.h"
 
 #define BSPVER_PREREL 	28
 #define BSPVER_Q1		29

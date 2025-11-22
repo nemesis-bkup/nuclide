@@ -15,41 +15,41 @@
 */
 
 class
-ncTVChannel:ncActor
+ncAVReceiver:ncPointTrigger
 {
 public:
-	void ncTVChannel(void);
+	void ncAVReceiver(void);
 
 #ifdef SERVER
 	virtual void Input(entity,string,string);
 	virtual void SpawnKey(string,string);
-	virtual bool IsAlive(void);
 
 	virtual void EvaluateEntity(void);
 	virtual float SendEntity(entity,float);
 #endif
 
-
 #ifdef CLIENT
 	virtual void ReceiveEntity(float,float);
-	virtual void ReloadVideoResources(void);
+	virtual void UpdateSpeakers(void);
+	virtual void UpdateVideoOutputs(void);
+	virtual void OnRemoveEntity(void);
+	virtual void KillVideoOutputs();
 #endif
 
 private:
-	NETWORKED_INT(m_tvChannelNum)
-	NETWORKED_STRING(m_tvChannelVideo)
-	NETWORKED_FLOAT(m_tvChannelTime)
+	NETWORKED_INT(m_avReceiverChannel)
+	NETWORKED_FLOAT(m_avReceiverVolume)
+	bool m_triggerEnabled_net;
 
 #ifdef CLIENT
-	bool m_bCached;
-	string m_tvChannelMat;
-	string m_tvChannelVideoMat;
+	bool m_triggerEnabled;
 #endif
 };
 
-typedef enum
+typedef enumflags
 {
-	TVCHANNELFL_CHAN,
-	TVCHANNELFL_VIDEO,
-	TVCHANNELFL_SEEKTIME,
+	AVRECEIVERFL_ORIGIN,
+	AVRECEIVERFL_CHAN,
+	AVRECEIVERFL_VOLUME,
+	AVRECEIVERFL_ENABLED,
 };

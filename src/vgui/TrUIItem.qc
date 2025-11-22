@@ -98,70 +98,6 @@ vguiTrUIItem::vguiTrUIItem(void)
 }
 
 void
-vguiTrUIItem::InterpretCommand(string commandString)
-{
-
-	int commandWords = tokenize_console(commandString);
-	string firstWord = argv(0);
-	string secondWord = argv(1);
-	string thirdWord = argv(2);
-	string targetLookUp = sprintf("%d_%s", num_for_edict(m_trGlobal), secondWord);
-	
-	if (!STRING_SET(firstWord)) {
-		return;
-	}
-
-	switch (firstWord) {
-	case "exec":
-		localcmd(sprintf("%s\n", substring(commandString, 5, -1)));
-		break;
-	case "uiscript":
-		break;
-	case "setbackground":
-		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName) {
-				precache_pic(thirdWord);
-				windowSearch.m_trItemBackground = thirdWord;
-			}
-		}
-		break;
-	case "play":
-		localcmd("play sound/common/wpn_select.wav\n");
-		break;
-	case "open":
-		string fileToOpen = substring(commandString, 5, -1);
-		
-		if (STRING_SET(fileToOpen))
-			localcmd(sprintf("trMenuOpen ui/%s.menu\n", substring(commandString, 5, -1)));
-		break;
-	case "show":
-		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName)
-				windowSearch.Show();
-		}
-		for (vguiTrUISubMenu windowSearch = 0; (windowSearch = (vguiTrUISubMenu)find(windowSearch, ::classname, "vguiTrUISubMenu"));) {
-			if (targetLookUp == windowSearch.m_trSubName)
-				windowSearch.Show();
-		}
-		break;
-	case "close":
-	case "hide":
-		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName)
-				windowSearch.Hide();
-		}
-		for (vguiTrUISubMenu windowSearch = 0; (windowSearch = (vguiTrUISubMenu)find(windowSearch, ::classname, "vguiTrUISubMenu"));) {
-			if (targetLookUp == windowSearch.m_trSubName)
-				windowSearch.Hide();
-		}
-		break;
-	default:
-		printf("InterpretCommand: %s\n", commandString);
-	}
-}
-
-
-void
 vguiTrUIItem::OnMouseEntered(void)
 {
 	int commandCount;
@@ -170,7 +106,7 @@ vguiTrUIItem::OnMouseEntered(void)
 		string commandString = argv(i);
 		
 		if (STRING_SET(commandString)) {
-			InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(commandString);
 		}
 	}
 }
@@ -184,7 +120,7 @@ vguiTrUIItem::OnMouseExited(void)
 		string commandString = argv(i);
 		
 		if (STRING_SET(commandString)) {
-			InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(commandString);
 		}
 	}
 }
@@ -203,7 +139,7 @@ vguiTrUIItem::OnMouseUp(void)
 		string commandString = argv(i);
 		
 		if (STRING_SET(commandString)) {
-			InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(commandString);
 		}
 	}
 }
