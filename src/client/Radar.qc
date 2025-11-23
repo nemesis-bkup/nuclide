@@ -135,10 +135,12 @@ ncRadar::RenderWireframePlane(void)
 void
 ncRadar::RenderView(void)
 {
-	if (m_strMaterial != __NULL__) {
-		RenderOverviewPlane();
-	} else if (m_strMaterial == "wireframe") {
+	if (m_strMaterial == "wireframe") {
 		RenderWireframePlane();
+	} else if (m_strMaterial == "null") {
+		return;
+	} else if (m_strMaterial != __NULL__) {
+		RenderOverviewPlane();
 	}
 
 	if (m_bShowPlayers)
@@ -189,7 +191,7 @@ ncRadar::InitWithMapname(string mapName)
 	}
 
 	/* empty */
-	return InitWireframe();
+	return InitEmpty();
 }
 
 void

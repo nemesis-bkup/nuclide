@@ -1,0 +1,21 @@
+typeInfo videoBC1
+{
+	"task_1"			"AsyncVideo vtv_next"
+	"task_2"			"SetBottomText Steamboat Willie"
+	"task_3"			"SetDOG"
+	"task_4"			"Wait 9"
+	"task_5"			"LoadVideo vtv_start"
+	"task_6"			"RandomVideo ad_movie ad_aurora ad_swingwing"
+	"task_7"			"RandomVideo ad_loop ad_trik"
+	"task_8"			"LoadVideo vtv_end"
+	"task_9"			"AsyncVideo vtv_back"
+	"task_10"			"SetBottomText Steamboat Willie"
+	"task_11"			"Wait 9"
+	"task_12"			"LoadVideo willie_1"
+	"task_13"			"LoadVideo vtv_start"
+	"task_14"			"RandomVideo ad_aurora ad_swingwing"
+	"task_15"			"RandomVideo ad_loop ad_trik"
+	"task_16"			"LoadVideo vtv_end"
+	"task_17"			"LoadVideo willie_2"
+	"task_18"			"ChangeMindset movie1"
+}

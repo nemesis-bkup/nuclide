@@ -1,5 +1,6 @@
-color "255 255 255"
-alpha 255
+rendersize "32"
+path fonts/nimbus/NimbusSanL-Reg.otf
 size 32
-path fonts/IBMPlexSans-Medium.otf
 
+path_bitmap fonts/nimbus/NimbusSanL-Reg.png
+size_bitmap "16 32"
