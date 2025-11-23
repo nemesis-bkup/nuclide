@@ -191,7 +191,7 @@ ncRadar::InitWithMapname(string mapName)
 	}
 
 	/* empty */
-	return InitWireframe();
+	return InitEmpty();
 }
 
 void

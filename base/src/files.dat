@@ -1,4 +1,4 @@
-2602
+2604
 1 cfg/skill.cfg
 1 cfg/skill_manifest.cfg
 1 csprogs.dat
@@ -112,6 +112,8 @@
 1 decls/schedules/searchNearestPlayerMelee.decl
 1 decls/schedules/takeCover.decl
 1 decls/schedules/videoBC.decl
+1 decls/schedules/videoBC1.decl
+1 decls/schedules/videoIdle.decl
 1 decls/sound/footsteps.sndshd
 1 decls/sound/func_breakable.sndshd
 1 decls/sound/impacts.sndshd

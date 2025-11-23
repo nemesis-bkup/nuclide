@@ -1,9 +1,13 @@
 
 entityDef avTransmitter
 {
-	"spawnclass"	"ncAVTransmitter"
-	"channel"	"1"
-	"mindset_idle"	"videoBC"
+	"spawnclass"		"ncAVTransmitter"
+	"channel"		"1"
+	"mindset_idle"		"videoIdle"
+	"mindset_pickmovie"	"videoBC,videoBC1"
+
+	"mindset_movie1"	"videoBC"
+	"mindset_movie2"	"videoBC1"
 }
 
 

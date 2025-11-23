@@ -1,0 +1,5 @@
+typeInfo videoIdle
+{
+	"task_1"			"Wait 10"
+	"task_2"			"ChangeMindset pickmovie"
+}
