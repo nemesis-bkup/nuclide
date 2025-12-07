@@ -117,7 +117,7 @@ ambient_generic::ambient_generic(void)
 	m_flRadius = 0.0f;
 	m_flPitch = 0.0f;
 	m_bLoops = false;
-	m_bToggle = false;
+	m_bToggle = true;
 	m_bIsModern = false;
 	m_strSpawnPath = __NULL__;
 	m_flSpawnVolume = 0.0f;
@@ -209,7 +209,7 @@ ambient_generic::SpawnKey(string strKey, string setValue)
 	case "lfomodpitch":
 	case "lfomodvol":
 	case "cspinup":
-		break;	
+		break;
 	case "radius":
 		m_bIsModern = true;
 		break;
@@ -330,15 +330,25 @@ ambient_generic::UseNormal(entity act, triggermode_t state)
 void
 ambient_generic::UseLoop(entity act, triggermode_t state)
 {
-	if (m_bToggle == true) {
+	switch (state) {
+	case TRIG_ON:
+		m_bToggle = true;
+		break;
+	case TRIG_OFF:
+		m_bToggle = false;
+		break;
+	default:
+	case TRIG_TOGGLE:
+		m_bToggle = !m_bToggle;
+	}
+
+	if (m_bToggle == false) {
 		SndEntLog( "%s stops %S", target, m_strActivePath);
 		m_strActivePath = "common/null.wav";
 	} else {
 		m_strActivePath = m_strSpawnPath;
 		SndEntLog( "%s plays %S", target, m_strActivePath);
 	}
-
-	m_bToggle = !m_bToggle;
 }
 
 void
@@ -349,8 +359,7 @@ ambient_generic::Input(entity eAct, string strKey, string setValue)
 		m_flPitch = stof(setValue);
 		break;
 	case "PlaySound":
-		m_bToggle = false;
-		Trigger(eAct, TRIG_TOGGLE);
+		Trigger(eAct, TRIG_ON);
 		break;
 	case "PlaySoundOnActivator":
 		SoundDef_Play(eAct, CHAN_AUTO, m_strActivePath);
@@ -359,8 +368,7 @@ ambient_generic::Input(entity eAct, string strKey, string setValue)
 		m_strActivePath = ReadString(setValue);
 		break;
 	case "StopSound":
-		m_bToggle = true;
-		Trigger(eAct, TRIG_TOGGLE);
+		Trigger(eAct, TRIG_OFF);
 		break;
 	case "ToggleSound":
 		m_bToggle = !m_bToggle;
@@ -439,7 +447,7 @@ ambient_generic::ReceiveEntity(float isnew, float flChanged)
 		setorigin(this, origin);
 		drawmask = MASK_ENGINE;
 	}
-	
+
 	if (flChanged & AMBIENT_PATH) {
 		if (flChanged & AMBIENT_MODERN) {
 			m_strActivePath = readstring();
@@ -463,7 +471,7 @@ ambient_generic::ReceiveEntity(float isnew, float flChanged)
 		if (flChanged & AMBIENT_MODERN) {
 			SoundDef_Update(this, CHAN_BODY, SoundDef_GetID(m_strActivePath), m_flVolume);
 		} else {
-			soundupdate(this, CHAN_BODY, 
+			soundupdate(this, CHAN_BODY,
 				m_strActivePath, m_flVolume, m_flRadius, m_flPitch, 0, 0);
 		}
 	}
@@ -472,7 +480,7 @@ ambient_generic::ReceiveEntity(float isnew, float flChanged)
 void
 ambient_generic::SentenceSample(string sample)
 {
-	/* honestly, the 0.25 for the radius is probably inaccurate (winged it), 
+	/* honestly, the 0.25 for the radius is probably inaccurate (winged it),
 	   ATTN_NORM is too short though */
 	sound(this, CHAN_VOICE, sample, 1.0, m_flRadius, 100, SOUNDFLAG_FOLLOW);
 }

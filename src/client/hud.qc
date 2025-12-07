@@ -15,6 +15,10 @@ var void(string, string, string, string) g_hudObituary;
 var void(void) g_hudReloadVideoResources;
 var void(vector, int, int) g_hudDamageReceived;
 var void(int, int, int) g_hudAmmoChanged;
+vguiWidget g_hudTrUIMenu;
+
+var __variant(int ownerDraw, int typeValue) g_hudOwnerDrawValueForType;
+var bool(vector pos, vector size, int ownerDraw, int drawType) g_hudOwnerDrawItemRect;
 
 void
 HUDProgs_Init(void)
@@ -42,6 +46,9 @@ HUDProgs_Init(void)
 		g_hudAmmoChanged = externvalue(g_flHUDProgs, "HUD_AmmoChanged");
 		g_hudObituary = externvalue(g_flHUDProgs, "HUD_Obituary");
 
+		g_hudOwnerDrawValueForType = externvalue(g_flHUDProgs, "HUD_OwnerDrawValueForType");
+		g_hudOwnerDrawItemRect = externvalue(g_flHUDProgs, "HUD_OwnerDrawItemRect");
+
 		if (g_hudMain) {
 			g_hudMain();
 		} else {
@@ -53,6 +60,10 @@ HUDProgs_Init(void)
 			g_hudInit();
 		}
 	}
+
+		g_hudTrUIMenu = spawn(vguiWidget);
+		g_hudTrUIMenu.Add(vguiTrUIMenu::CreateFromMenuFile(g_hudTrUIMenu, "ui/hud.menu"));
+
 }
 
 void
@@ -77,13 +88,18 @@ HUDProgs_Draw(void)
 	}
 
 	if (g_flHUDProgs > 0) {
+		externset(g_flHUDProgs, clframetime, "clframetime");
+		externset(g_flHUDProgs, frametime, "frametime");
+		externset(g_flHUDProgs, time, "time");
+		externset(g_flHUDProgs, cltime, "cltime");
+
 		if (g_hudDraw) {
-			externset(g_flHUDProgs, clframetime, "clframetime");
-			externset(g_flHUDProgs, frametime, "frametime");
-			externset(g_flHUDProgs, time, "time");
-			externset(g_flHUDProgs, cltime, "cltime");
 			g_hudDraw();
+		} else if (g_hudTrUIMenu) {
+			g_hudTrUIMenu.Draw();
 		}
+	} else if (g_hudTrUIMenu) {
+		g_hudTrUIMenu.Draw();
 	}
 }
 
@@ -199,6 +215,28 @@ HUDProgs_AmmoChanged(int ammoType, int absoluteValue, int deltaValue)
 	}
 }
 
+__variant
+HUDProgs_OwnerDrawValueForType(int ownerDraw, int typeValue)
+{
+	if (g_hudOwnerDrawValueForType) {
+		return g_hudOwnerDrawValueForType(ownerDraw, typeValue);
+	}
+
+	return (__NULL__);
+}
+
+bool
+HUDProgs_OwnerDrawItemRect(vector pos, vector size, int ownerDraw, int drawType)
+{
+	if (g_hudOwnerDrawItemRect) {
+		return g_hudOwnerDrawItemRect(pos, size, ownerDraw, drawType);
+	}
+
+	return (false);
+}
+
+
+
 __weak void
 HUD_Init(void)
 {
@@ -288,3 +326,16 @@ HUD_Obituary(string targetName, string attackerName, string weaponDef, string me
 {
 	HUDProgs_Obituary(targetName, attackerName, weaponDef, meansOfDeath);
 }
+
+__weak __variant
+HUD_OwnerDrawValueForType(int ownerDraw, int typeValue)
+{
+	return HUDProgs_OwnerDrawValueForType(ownerDraw, typeValue);
+}
+
+__weak bool
+HUD_OwnerDrawItemRect(vector pos, vector size, int ownerDraw, int drawType)
+{
+	return HUDProgs_OwnerDrawItemRect(pos, size, ownerDraw, drawType);
+}
+

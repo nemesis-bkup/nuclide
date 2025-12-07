@@ -16,6 +16,9 @@
 
 .void(void) tmpvguiList1;
 .void(void) tmpvguiList3;
+.vguiWidget tmpvguiList1Delegate;
+.vguiWidget tmpvguiList2Delegate;
+.vguiWidget tmpvguiList3Delegate;
 
 /** VGUI Widget: List
 
@@ -47,6 +50,9 @@ public:
 	nonvirtual void CallOnDoubleClick(void(vguiList, int));
 	nonvirtual void CallOnSelectionChanged(void(void));
 
+	nonvirtual void CallOnScrollWithDelegate(void(void) a, vguiWidget theDelegate);
+	nonvirtual void CallOnSelectionChangedWithDelegate(void(void) a, vguiWidget theDelegate);
+
 	virtual void Draw(void);
 	virtual bool Input(float, float, float, float);
 	virtual void Spawned(void);
@@ -59,6 +65,22 @@ private:
 	int m_iDrawOffset;
 	float m_flClickTimer;
 };
+
+static void
+vguiList_CallFunctionWithDelegate(void(void) targetFunc, vguiWidget delegateWidget)
+{
+	entity oldSelf = self;
+
+	if (delegateWidget) {
+		self = delegateWidget;
+	}
+
+	if (targetFunc) {
+		targetFunc();
+	}
+
+	self = oldSelf;
+}
 
 .void(vguiList, int) tmpvguiList2;
 
@@ -138,9 +160,7 @@ bool vguiList::Input (float flEVType, float flKey, float flChar, float flDevID)
 					}
 					m_iSelected = i;
 
-					if (tmpvguiList3) {
-						tmpvguiList3();
-					}
+					vguiList_CallFunctionWithDelegate(tmpvguiList3, tmpvguiList3Delegate);
 
 					m_flClickTimer = time + 0.5f;
 					ret = true;
@@ -170,7 +190,7 @@ void vguiList::SetOffset (int iOffset, int iCallBack)
 	m_iDrawOffset = bound(0, iOffset, m_iItemCount - iMaxDisplay);
 
 	if (tmpvguiList1 && iCallBack) {
-		tmpvguiList1();
+		vguiList_CallFunctionWithDelegate(tmpvguiList1, tmpvguiList1Delegate);
 	}
 }
 int vguiList::GetOffset(void)
@@ -238,6 +258,18 @@ void vguiList::CallOnScroll (void(void) vFunc)
 void vguiList::CallOnSelectionChanged (void(void) vFunc)
 {
 	tmpvguiList3 = vFunc;
+}
+
+void vguiList::CallOnScrollWithDelegate(void(void) vFunc, vguiWidget delegateWidget)
+{
+	tmpvguiList1 = vFunc;
+	tmpvguiList1Delegate = delegateWidget;
+}
+
+void vguiList::CallOnSelectionChangedWithDelegate(void(void) vFunc, vguiWidget delegateWidget)
+{
+	tmpvguiList3 = vFunc;
+	tmpvguiList3Delegate = delegateWidget;
 }
 
 void vguiList::CallOnDoubleClick (void(vguiList, int) vFunc)

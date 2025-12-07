@@ -165,6 +165,8 @@ CSQC_RendererRestarted(string rstr)
 	ClientGame_RendererRestart(rstr);
 	HUD_ReloadVideoResources();
 	Locale_Reload();
+	
+	WadIndexer::IndexDecals();
 
 	/* GS-Entbase */
 	Fade_Reload();
@@ -415,7 +417,7 @@ CSQC_UpdateView(float w, float h, float focus)
 				g_dlight_cached = true;
 				dynamiclight_add(g_view.GetCameraOrigin(), 2048.0f, [0.1,0.1,0.1]);
 			}
-			
+
 			CSQC_RenderRTEnvSphere(g_view.GetCameraOrigin(), g_view.GetCameraAngle());
 
 			g_view.UpdateView();
@@ -479,6 +481,17 @@ CSQC_InputEvent(float fEventType, float fKey, float fCharacter, float fDeviceID)
 	for (entity e = world; (e = find(e, ::classname, "ncInteractiveSurface"));) {
 		vector vecPos = pSeat->m_ePlayer.origin + pSeat->m_ePlayer.view_ofs;
 		ncInteractiveSurface surf = (ncInteractiveSurface) e;
+
+		if (surf.FocusCheck(vecPos, view_angles)) {
+			pSeat->m_bInterfaceFocused = true;
+			surf.Input(fEventType, fKey, fCharacter, fDeviceID);
+			break;
+		}
+	}
+
+	for (entity e = world; (e = find(e, ::classname, "ncVideoDisplay"));) {
+		vector vecPos = pSeat->m_ePlayer.origin + pSeat->m_ePlayer.view_ofs;
+		ncVideoDisplay surf = (ncVideoDisplay) e;
 
 		if (surf.FocusCheck(vecPos, view_angles)) {
 			pSeat->m_bInterfaceFocused = true;

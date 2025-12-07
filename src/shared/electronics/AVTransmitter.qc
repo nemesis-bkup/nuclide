@@ -57,9 +57,9 @@ ncAVTransmitter::TransmitSingleVideo(string videoFile, bool advancesSchedule)
 	m_tvChannelLightStyle = videoDict.GetFloat("light_style");
 
 	float durationInterval = videoDict.GetFloat("duration");
-		
+
 	remove(videoDict);
-		
+
 	if (advancesSchedule && m_activeSchedule && durationInterval > 0.0f) {
 		m_activeSchedule.AdvanceLater(durationInterval);
 	}
@@ -220,12 +220,22 @@ ncAVTransmitter::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(m_tvChannelLightStyle, TVCHANNELFL_LIGHT)
 
 	if (m_bCached == false || flNew || flChanged & TVCHANNELFL_CHAN) {
-		m_tvChannelMat = sprintf("tvchannel_%i", m_tvChannelNum);
+		if (m_tvChannelNum < 0) {
+			m_tvChannelMat = sprintf("videochannel_%i", -m_tvChannelNum);
+		} else {
+			m_tvChannelMat = sprintf("tvchannel_%i", m_tvChannelNum);
+		}
 	}
 
 	if (flChanged & TVCHANNELFL_VIDEO || flChanged & TVCHANNELFL_CHAN) {
 		/* video changed, so the destination for remapshader call should be different as well */
-		m_tvChannelVideoMat = sprintf("tvchannel_%i_%s", m_tvChannelNum, m_tvChannelVideo);
+
+		if (m_tvChannelNum < 0) {
+			m_tvChannelVideoMat = sprintf("videochannel_%i_%s", -m_tvChannelNum, m_tvChannelVideo);
+		} else {
+			m_tvChannelVideoMat = sprintf("tvchannel_%i_%s", m_tvChannelNum, m_tvChannelVideo);
+		}
+
 		ReloadVideoResources();
 	}
 
@@ -241,6 +251,20 @@ ncAVTransmitter::UpdateReceivers(void)
 			receiverEnum.UpdateSpeakers();
 		}
 	}
+
+	/* now update all the 'static' displays... */
+	for (ncInteractiveSurface videoDisplay = 0; (videoDisplay = (ncInteractiveSurface)find(videoDisplay, ::classname, "ncInteractiveSurface"));) {
+		vguiTrUIMenu targetMenu = (vguiTrUIMenu)videoDisplay.m_videoDisplayUI;
+
+		string videoName = sprintf("videochannel_%i", -m_tvChannelNum);
+		printf("%s\n", sprintf("setbackground videochannel_%i_video %S", -m_tvChannelNum, videoName));
+		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground videochannel_%i_video %S", -m_tvChannelNum, videoName));
+		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground videochannel_%i_dog %S", -m_tvChannelNum, m_tvChannelDOG));
+		targetMenu.InterpretCommand(targetMenu, sprintf("settext videochannel_%i_toptext %S", -m_tvChannelNum, m_tvChannelTopText));
+		targetMenu.InterpretCommand(targetMenu, sprintf("settext videochannel_%i_bottomtext %S", -m_tvChannelNum, m_tvChannelBottomText));
+		printf("%s\n", sprintf("settext videochannel_%i_toptext %S", -m_tvChannelNum, m_tvChannelTopText));
+		printf("%s\n", sprintf("settext videochannel_%i_bottomtext %S", -m_tvChannelNum, m_tvChannelBottomText));
+	}
 }
 
 void
@@ -252,7 +276,7 @@ ncAVTransmitter::ReloadVideoResources(void)
 	if (STRING_SET(m_tvChannelVideo)) {
 		/* compose the new material body text */
 		string newMaterial;
-		
+
 		if (autocvar_tv_useFFMPEG) {
 			newMaterial = sprintf(g_tvChannelMatFFMPEG, m_tvChannelVideo);
 		} else {
@@ -261,14 +285,14 @@ ncAVTransmitter::ReloadVideoResources(void)
 
 		/* register the videomaterial with the newly generated body text */
 		shaderforname(m_tvChannelVideoMat, newMaterial);
-		
+
 		/* rewind the destination video material, to resync */
 		gecko_navigate(m_tvChannelVideoMat, "cmd:rewind");
-		gecko_navigate(m_tvChannelMat, "cmd:rewind"); 
+		gecko_navigate(m_tvChannelMat, "cmd:rewind");
 
 		/* ensure the material is registered */
 		shaderforname(m_tvChannelMat, "{\n{\nmap $whiteimage\n}\n}");
-		
+
 		/* remap it as soon as possible */
 		remapshader(m_tvChannelMat, m_tvChannelVideoMat, time - m_tvChannelTime);
 	}

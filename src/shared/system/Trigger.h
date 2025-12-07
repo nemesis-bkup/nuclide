@@ -198,6 +198,8 @@ private:
 	string m_outputOnPlayerTouch;
 	string m_outputOnStartTouch;
 	string m_outputOnEndTouch;
+	string m_outputOnEnable;
+	string m_outputOnDisable;
 
 	/* legacy trigger architecture */
 	float m_triggerDelay;

@@ -362,6 +362,15 @@ void
 ChatCallback_GroupMessageReceived(string groupName, string fromUser, string messageString)
 {
 
+	for (VGUIChatWindow chat = __NULL__; (chat = (VGUIChatWindow)find(chat, ::classname, "Chat"));) {
+		if (groupName == chat.userNick) {
+			chat.MessageReceived(messageString);
+			return;
+		}
+	}
+
+	VGUIChatWindow new = VGUIFriendsList::NewWindow(groupName);
+	new.MessageReceived(strcat(fromUser, ":", messageString));
 }
 
 void

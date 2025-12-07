@@ -66,6 +66,7 @@ private:
 	NETWORKED_BOOL(m_uiSurfaceEnabled)
 
 #ifdef CLIENT
+	entity m_videoDisplayUI;
 	entity m_UIChain;
 	string m_strSurfaceMat;
 	bool m_bInFocus;
@@ -73,6 +74,15 @@ private:
 	vector m_vecCursorPos;
 	bool m_bCached;
 	vector m_vecWorldSize;
+#endif
+
+#ifdef SERVER
+	string m_outputOnActivate;
+	string m_outputOnActivateFailed;
+	string m_outputOnOutput1;
+	string m_outputOnOutput2;
+	string m_outputOnOutput3;
+	string m_outputOnOutput4;
 #endif
 };
 

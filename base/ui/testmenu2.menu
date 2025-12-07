@@ -2,17 +2,201 @@
 	menuDef 
 	{
 		name "testmenu2"
-		rect 0 0 320 240
+		rect 0 0 114 192
 		backcolor 0 0 1 1
+
+		// becomes a numeric textfield
+		itemDef 
+		{
+			name NumField
+			text ""
+			rect 6 6 102 30
+			bordercolor 1 1 1 1
+			forecolor 1 1 1 1
+			border 1
+			visible 1
+			maxChars 4
+			maxCharsHit { activateOnText } // will activate the entity it's connected to when entity target string matches numfield
+		}
 
 		itemDef 
 		{
-			name toptext
-			text "Test Menu 2"
-			rect 48 48 320 20
-			forecolor 1 1 0 1
-			decoration
-			visible 1
+			name Num7
+			text "7"
+			rect 6 48 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 7 }
+			mouseEnter { setitemcolor Num7 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num7 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num8
+			text "8"
+			rect 42 48 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 8 }
+			mouseEnter { setitemcolor Num8 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num8 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num9
+			text "9"
+			rect 78 48 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 9 }
+			mouseEnter { setitemcolor Num9 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num9 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num4
+			text "4"
+			rect 6 84 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 4 }
+			mouseEnter { setitemcolor Num4 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num4 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num5
+			text "5"
+			rect 42 84 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 5 }
+			mouseEnter { setitemcolor Num5 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num5 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num6
+			text "6"
+			rect 78 84 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 6 }
+			mouseEnter { setitemcolor Num6 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num6 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num1
+			text "1"
+			rect 6 120 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 1 }
+			mouseEnter { setitemcolor Num1 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num1 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num2
+			text "2"
+			rect 42 120 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 2 }
+			mouseEnter { setitemcolor Num2 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num2 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num3
+			text "3"
+			rect 78 120 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 3 }
+			mouseEnter { setitemcolor Num3 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num3 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name NumStar
+			text "*"
+			rect 6 156 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField * }
+			mouseEnter { setitemcolor NumStar forecolor 1 1 1 1 }
+			mouseExit { setitemcolor NumStar forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name Num0
+			text "0"
+			rect 42 156 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField 0 }
+			mouseEnter { setitemcolor Num0 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Num0 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef 
+		{
+			name NumPound
+			text "#"
+			rect 78 156 30 30
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+
+			action { addtext NumField # }
+			mouseEnter { setitemcolor NumPound forecolor 1 1 1 1 }
+			mouseExit { setitemcolor NumPound forecolor .4 .4 .4 .4  }
 		}
 
 	}

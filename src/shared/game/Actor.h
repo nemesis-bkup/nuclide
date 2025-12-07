@@ -110,7 +110,7 @@ public:
 	virtual float GetSideSpeed(void);
 	/** Overridable: Returns the desired maximum backwardss movement speed. */
 	virtual float GetBackSpeed(void);
-	
+
 
 	nonvirtual float GetStamina(void);
 
@@ -259,6 +259,8 @@ public:
 	virtual void FiredWeapon(string, string);
 	nonvirtual void __FiredWeapon(string, string);
 
+	virtual void Event_StepLeft(void);
+	virtual void Event_StepRight(void);
 	virtual void Event_DrawWeapon(void);
 	virtual void Event_FireWeapon(void);
 	virtual void Event_ReloadWeaponStart(void);
@@ -363,3 +365,7 @@ private:
 .bool _isActor;
 
 void ncActor_ListInventory(ncActor);
+
+#define ACTOREV_FIRED 1
+#define ACTOREV_STEP_LEFT 2
+#define ACTOREV_STEP_RIGHT 3

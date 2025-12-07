@@ -14,6 +14,13 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+font_s g_trConsoleFont;
+font_s g_trSmallFont;
+font_s g_trFont;
+font_s g_trBigFont;
+font_s g_trExtraBigFont;
+font_s g_trBoldFont;
+
 var vguiTrUISubMenu m_lastSubMenu;
 var vguiTrUIItem m_lastItem;
 
@@ -26,7 +33,7 @@ vguiTrUIMenu::CloseAll(void)
 }
 
 void
-vguiTrUIMenu::InterpretCommand(string commandString)
+vguiTrUIMenu::InterpretCommand(vguiWidget originWidget, string commandString)
 {
 
 	int commandWords = tokenize_console(commandString);
@@ -34,7 +41,8 @@ vguiTrUIMenu::InterpretCommand(string commandString)
 	string secondWord = argv(1);
 	string thirdWord = argv(2);
 	string targetLookUp = sprintf("%d_%s", num_for_edict(this), secondWord);
-	
+		printf("%s %s\n", firstWord, secondWord);
+
 	if (!STRING_SET(firstWord)) {
 		return;
 	}
@@ -45,18 +53,85 @@ vguiTrUIMenu::InterpretCommand(string commandString)
 		break;
 	case "uiscript":
 		break;
+	case "fireOutput":
+		vguiTrUIItem itemEnt = (vguiTrUIItem)originWidget;
+		localcmd(sprintf("cmd ui_input %d FireOutput %s\n", this.owner.m_serverSideNum, secondWord));
+		printf(sprintf("cmd ui_input %d FireOutput %s\n", this.owner.m_serverSideNum, secondWord));
+		break;
+	case "activateOnText":
+		vguiTrUIItem itemEnt = (vguiTrUIItem)originWidget;
+		localcmd(sprintf("cmd ui_input %d ActivateOnTextMatch %S\n", this.owner.m_serverSideNum, itemEnt.m_trItemText));
+		break;
 	case "settext":
 		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
 				windowSearch.m_trItemText = thirdWord;
+			}
+		}
+		break;
+	case "addtext":
+		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
+				windowSearch.AddText(thirdWord);
 			}
 		}
 		break;
 	case "setbackground":
 		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
 				precache_pic(thirdWord);
 				windowSearch.m_trItemBackground = thirdWord;
+			}
+		}
+		break;
+	case "setitemcolor":
+		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
+				switch (thirdWord) {
+				case "forecolor":
+					windowSearch.m_trItemForeColor[0] = stof(argv(3));
+					windowSearch.m_trItemForeColor[1] = stof(argv(4));
+					windowSearch.m_trItemForeColor[2] = stof(argv(5));
+					windowSearch.m_trItemForeAlpha = stof(argv(6));
+					break;
+				case "backcolor":
+					windowSearch.m_trItemBackColor[0] = stof(argv(3));
+					windowSearch.m_trItemBackColor[1] = stof(argv(4));
+					windowSearch.m_trItemBackColor[2] = stof(argv(5));
+					windowSearch.m_trItemBackAlpha = stof(argv(6));
+				case "bordercolor":
+					windowSearch.m_trItemBorderColor[0] = stof(argv(3));
+					windowSearch.m_trItemBorderColor[1] = stof(argv(4));
+					windowSearch.m_trItemBorderColor[2] = stof(argv(5));
+					windowSearch.m_trItemBorderAlpha = stof(argv(6));
+					break;
+				}
+			}
+		}
+		break;
+	case "addframe":
+		float framesToAdd = stof(thirdWord);
+
+		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
+				windowSearch.m_trItemModelDelegate.frame += framesToAdd;
+			}
+		}
+		break;
+	case "removeframe":
+		float framesToAdd = stof(thirdWord);
+
+		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
+				windowSearch.m_trItemModelDelegate.frame -= framesToAdd;
+			}
+		}
+		break;
+	case "setmodel":
+		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup) {
+				windowSearch.m_trItemModel = thirdWord;
+				setmodel(windowSearch.m_trItemModelDelegate, thirdWord);
 			}
 		}
 		break;
@@ -65,13 +140,13 @@ vguiTrUIMenu::InterpretCommand(string commandString)
 		break;
 	case "open":
 		string fileToOpen = substring(commandString, 5, -1);
-		
+
 		if (STRING_SET(fileToOpen))
 			localcmd(sprintf("trMenuOpen ui/%s.menu\n", substring(commandString, 5, -1)));
 		break;
 	case "show":
 		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName)
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup)
 				windowSearch.Show();
 		}
 		for (vguiTrUISubMenu windowSearch = 0; (windowSearch = (vguiTrUISubMenu)find(windowSearch, ::classname, "vguiTrUISubMenu"));) {
@@ -82,7 +157,7 @@ vguiTrUIMenu::InterpretCommand(string commandString)
 	case "close":
 	case "hide":
 		for (vguiTrUIItem windowSearch = 0; (windowSearch = (vguiTrUIItem)find(windowSearch, ::classname, "vguiTrUIItem"));) {
-			if (targetLookUp == windowSearch.m_trItemName)
+			if (targetLookUp == windowSearch.m_trItemName || targetLookUp == windowSearch.m_trItemGroup)
 				windowSearch.Hide();
 		}
 		for (vguiTrUISubMenu windowSearch = 0; (windowSearch = (vguiTrUISubMenu)find(windowSearch, ::classname, "vguiTrUISubMenu"));) {
@@ -102,6 +177,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 	string word = strtolower(realWord);
 	string nextWord = argv(i+1);
 	string macroLookUp = Constants_LookUp(strcat("$", nextWord), nextWord);
+	string thirdWord = argv(i+3);
 
 	incrementToken = 0;
 
@@ -128,15 +204,15 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 		break;
 	case "}":
 		braceDepth--;
-		
+
 		if (focusLevel == "action") {
 			printf("%s actions: %s\n", m_lastItem.m_trItemName, m_lastItem.m_trItemActionBuffer);
 		}
-		
+
 		if (focusLevel == "mouseenter") {
 			printf("%s mouseenter: %s\n", m_lastItem.m_trItemName, m_lastItem.m_trItemEnterBuffer);
 		}
-		
+
 		if (focusLevel == "mouseexit") {
 			printf("%s mouseexit: %s\n", m_lastItem.m_trItemName, m_lastItem.m_trItemExitBuffer);
 		}
@@ -182,7 +258,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 		} else if (word == "#define") {
 			string macroName = argv(i+1);
 			string macroValue = argv(i+2);
-			
+
 			for (int mtc = 3; mtc < wordsPerLine; mtc++) {
 				macroValue = strcat(macroValue, " ", argv(i+mtc));
 			}
@@ -196,6 +272,8 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 			m_lastItem.m_trItemEnterBuffer = sprintf("%s%s ", m_lastItem.m_trItemEnterBuffer, realWord);
 		} else if (focusLevel == "mouseexit") {
 			m_lastItem.m_trItemExitBuffer = sprintf("%s%s ", m_lastItem.m_trItemExitBuffer, realWord);
+		} else if (focusLevel == "maxcharshit") {
+			m_lastItem.m_trItemMaxCharBuffer = sprintf("%s%s ", m_lastItem.m_trItemMaxCharBuffer, realWord);
 		} else if (focusLevel == "assetglobaldef") {
 			switch (word) {
 			case "cursor":
@@ -224,22 +302,34 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 				incrementToken+=4;
 				break;
 			case "consolefont":
-				incrementToken+=2;
+				Font_Load(realWord, g_trConsoleFont);
+				m_trGlobalConsoleFont = &g_trConsoleFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			case "smallfont":
-				incrementToken+=2;
+				Font_Load(realWord, g_trSmallFont);
+				m_trGlobalSmallFont = &g_trSmallFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			case "font":
-				incrementToken+=2;
+				Font_Load(macroLookUp, g_trFont);
+				m_trGlobalFont = &g_trFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			case "bigfont":
-				incrementToken+=2;
+				Font_Load(realWord, g_trBigFont);
+				m_trGlobalBigFont = &g_trBigFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			case "extrabigfont":
-				incrementToken+=2;
+				Font_Load(realWord, g_trExtraBigFont);
+				m_trGlobalExtraBigFont = &g_trExtraBigFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			case "boldfont":
-				incrementToken+=2;
+				Font_Load(realWord, g_trBoldFont);
+				m_trGlobalBoldFont = &g_trBoldFont;
+				incrementToken += STRING_SET(thirdWord) ? 2 : 1;
 				break;
 			default:
 				ncError("assetGlobalDef: %i %S (LW: %S, NW: %S)", lineNr, argv(i), lastWord, argv(i+1));
@@ -424,7 +514,7 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 				incrementToken++;
 				break;
 			case "ownerdraw":
-				m_lastItem.m_trItemOwnerDraw = macroLookUp;
+				m_lastItem.m_trItemOwnerDraw = stoi(macroLookUp);
 				incrementToken++;
 				break;
 			case "backcolor":
@@ -442,30 +532,102 @@ vguiTrUIMenu::InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPer
 				incrementToken+=4;
 				break;
 			case "group":
-				m_lastItem.m_trItemGroup = macroLookUp;
+				m_lastItem.m_trItemGroup = sprintf("%d_%s", num_for_edict(this), macroLookUp);
 				incrementToken++;
 				break;
 			case "textalign":
-				m_lastItem.m_trItemTextAlign = macroLookUp;
+				m_lastItem.m_trItemTextAlign = stoi(macroLookUp);
 				incrementToken++;
 				break;
 			case "border":
-				m_lastItem.m_trItemBorder = macroLookUp;
+				m_lastItem.m_trItemBorder = stoi(macroLookUp);
 				incrementToken++;
 				break;
 			case "cvartest":
 				m_lastItem.m_trItemCvarTest = macroLookUp;
 				incrementToken++;
 				break;
+			case "maxchars":
+				m_lastItem.m_trItemMaxChars = stoi(macroLookUp);
+				incrementToken++;
+				break;
 			case "action":
 			case "cvar":
-			case "maxchars":
 			case "showcvar":
 			case "mouseenter":
 			case "mouseexit":
+			case "maxcharshit":
 				focusLevel = word;
 				break;
 			case "maxcharsgotonext":
+				break;
+
+			case "asset_model":
+				m_lastItem.m_trItemModel = macroLookUp;
+				incrementToken++;
+				break;
+			case "model_origin":
+				m_lastItem.m_trItemModelOrigin[0] = stof(argv(i+1));
+				m_lastItem.m_trItemModelOrigin[1] = stof(argv(i+2));
+				m_lastItem.m_trItemModelOrigin[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "model_fov":
+				m_lastItem.m_trItemModelFOVX =
+				m_lastItem.m_trItemModelFOVY = stof(macroLookUp);
+				incrementToken++;
+				break;
+			case "model_fovx":
+				m_lastItem.m_trItemModelFOVX = stof(macroLookUp);
+				incrementToken++;
+				break;
+			case "model_fovy":
+				m_lastItem.m_trItemModelFOVY = stof(macroLookUp);
+				incrementToken++;
+				break;
+			case "model_rotation":
+				m_lastItem.m_trItemModelRotation[0] = stof(argv(i+1));
+				m_lastItem.m_trItemModelRotation[1] = stof(argv(i+2));
+				m_lastItem.m_trItemModelRotation[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "model_angle":
+				m_lastItem.m_trItemModelAngles[1] = stof(macroLookUp);
+				incrementToken++;
+				break;
+			case "model_angles":
+				m_lastItem.m_trItemModelAngles[0] = stof(argv(i+1));
+				m_lastItem.m_trItemModelAngles[1] = stof(argv(i+2));
+				m_lastItem.m_trItemModelAngles[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "model_animplay":
+				m_lastItem.m_trItemModelAnim = stof(macroLookUp);
+				incrementToken++;
+				break;
+			case "model_avelocity":
+				m_lastItem.m_trItemModelAngularVelocity[0] = stof(argv(i+1));
+				m_lastItem.m_trItemModelAngularVelocity[1] = stof(argv(i+2));
+				m_lastItem.m_trItemModelAngularVelocity[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "camera_origin":
+				m_lastItem.m_trCamOrigin[0] = stof(argv(i+1));
+				m_lastItem.m_trCamOrigin[1] = stof(argv(i+2));
+				m_lastItem.m_trCamOrigin[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "camera_angles":
+				m_lastItem.m_trCamAngles[0] = stof(argv(i+1));
+				m_lastItem.m_trCamAngles[1] = stof(argv(i+2));
+				m_lastItem.m_trCamAngles[2] = stof(argv(i+3));
+				incrementToken+=3;
+				break;
+			case "camera_avelocity":
+				m_lastItem.m_trCamAngularVelocity[0] = stof(argv(i+1));
+				m_lastItem.m_trCamAngularVelocity[1] = stof(argv(i+2));
+				m_lastItem.m_trCamAngularVelocity[2] = stof(argv(i+3));
+				incrementToken+=3;
 				break;
 			default:
 				ncError("itemDef: %i: %S (LW: %S, NW: %S)", lineNr, argv(i), lastWord, argv(i+1));

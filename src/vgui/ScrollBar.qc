@@ -43,7 +43,7 @@ class vguiScrollBar:vguiWidget
 	int m_up_hold;
 	int m_dn_hover;
 	int m_dn_hold;
-	
+
 	entity m_delegateEntity;
 
 	void vguiScrollBar(void);
@@ -301,7 +301,6 @@ vguiScrollBar::CallOnChange(void(void) vFunc)
 	m_changed = vFunc;
 	m_delegateEntity = this;
 }
-
 
 void
 vguiScrollBar::CallOnChangeWithDelegate(void(void) vFunc, entity delegateEntity)

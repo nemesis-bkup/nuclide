@@ -624,6 +624,10 @@ Cmd_Parse(string sCMD)
 	case "showMOTD":
 		VGUI_ShowMOTD();
 		break;
+	case "showDesktop":
+		vguiDesktop winDesktop = spawn(vguiDesktop);
+		g_uiDesktop.Add(winDesktop);
+		break;
 	case "showModelSpawner":
 		VGUI_ModelSpawner();
 		break;
@@ -675,6 +679,7 @@ Cmd_Init(void)
 	InitStart();
 	registercommand("showClassSelectionMenu");
 	registercommand("showTeamSelectionMenu");
+	registercommand("showDesktop");
 	registercommand("showMOTD");
 	registercommand("showModelSpawner");
 	registercommand("showPlayerList");

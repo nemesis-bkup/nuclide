@@ -9,6 +9,7 @@ ServerInfo.qc
 fog.qc
 font.qc
 sky.qc
+draw.qc
 music.qc
 prints.qc
 voice.qc
@@ -38,6 +39,7 @@ shake.qc
 cmd.qc
 event.qc
 commandmenu.qc
+WadIndexer.qc
 entry.qc
 crosshair.qc
 util.qc

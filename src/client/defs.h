@@ -32,6 +32,7 @@
 #include "UserInfo.h"
 #include "UserInfoManager.h"
 #include "ServerInfo.h"
+#include "WadIndexer.h"
 
 var bool g_net_debug = false;
 var bool g_cheats = false;
@@ -348,7 +349,7 @@ struct
 	vector m_vecPredictedOriginOld;
 	vector m_vecPredictedVelocity;
 	float m_flPredictedFlags;
-	
+
 	/* camera fields */
 	vector m_vecCameraOrigin;
 	vector m_vecCameraAngle;
@@ -383,7 +384,7 @@ struct
 	bool m_iInputJump;
 	movementStance_t m_dForceStance;
 	float m_flInputBlockTime;
-	
+
 	/* fading */
 	float m_flFadeDuration;
 	float m_flFadeHold;

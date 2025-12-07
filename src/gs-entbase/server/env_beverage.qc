@@ -14,9 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/* dependency from item_food.cpp */
-void item_sodacan(void);
-
 typedef enum
 {
 	SKIN_COCACOLA = 0,
@@ -133,12 +130,9 @@ env_beverage::Trigger(entity act, triggermode_t unused)
 		return;
 	}
 
-	ncEntity eCan = spawn(ncEntity);
-	eCan.Spawn();
-	eCan.SetOrigin(GetOrigin());
+	ncEntity eCan = ents.Create("item_sodacan", GetOrigin());
 	eCan.SetAngles(GetAngles());
 	eCan.SetOwner(this);
-	eCan.ScheduleThink(item_sodacan, 0.0f);
 	eCan.SetSkin((float)m_sodaSkin);
 
 	m_usesLeft--;

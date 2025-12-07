@@ -57,6 +57,7 @@ system/ActivityManager.qc
 system/api.qc
 input/InteractiveSurface.qc
 electronics/VideoDisplay.qc
+electronics/SecurityCamera.qc
 input/XRSpace.qc
 input/XRInput.qc
 input/XRManager.qc

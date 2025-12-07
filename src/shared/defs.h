@@ -150,6 +150,7 @@ string __fullspawndata;
 #include "electronics/AVTransmitter.h"
 #include "electronics/AVReceiver.h"
 #include "electronics/VideoDisplay.h"
+#include "electronics/SecurityCamera.h"
 
 #define BSPVER_PREREL 	28
 #define BSPVER_Q1		29

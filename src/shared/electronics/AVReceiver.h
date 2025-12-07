@@ -50,6 +50,7 @@ public:
 	virtual void ReceiveEntity(float,float);
 	virtual void UpdateSpeakers(void);
 	virtual void UpdateVideoOutputs(void);
+	virtual void RefreshVideoDisplay(entity);
 	virtual void OnRemoveEntity(void);
 	virtual void KillVideoOutputs();
 #endif
@@ -57,6 +58,7 @@ public:
 private:
 	NETWORKED_INT(m_avReceiverChannel)
 	NETWORKED_FLOAT(m_avReceiverVolume)
+	NETWORKED_FLOAT(m_avReceiverMuted)
 	bool m_triggerEnabled_net;
 
 #ifdef CLIENT
@@ -70,4 +72,5 @@ typedef enumflags
 	AVRECEIVERFL_CHAN,
 	AVRECEIVERFL_VOLUME,
 	AVRECEIVERFL_ENABLED,
+	AVRECEIVERFL_MUTED,
 };
