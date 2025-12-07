@@ -85,6 +85,7 @@ item_food::Restore(string strKey, string setValue)
 void
 item_food::Respawn(void)
 {
+	super::Respawn();
 	SetSolid(SOLID_NOT);
 	SetMovetype(MOVETYPE_TOSS);
 
@@ -124,4 +125,14 @@ item_food::Touch(entity eToucher)
 	Destroy();
 }
 
-CLASSEXPORT(item_sodacan, item_food)
+class
+item_sodacan:info_null
+{
+	void item_sodacan(void);
+};
+
+void
+item_sodacan::item_sodacan(void)
+{
+
+}

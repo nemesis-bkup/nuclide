@@ -69,6 +69,9 @@ public:
 	/** Called when the window has been repositioned by the user. */
 	nonvirtual void CallOnMove(void(void) vFunc);
 
+	/** Call to close the window, and to destroy its contents. */
+	nonvirtual void Close(void);
+
 	/** Will focus the window when called. */
 	nonvirtual bool Focus(void);
 	nonvirtual void ShowContents();
@@ -190,8 +193,9 @@ void
 vguiWindow::Spawned(void)
 {
 	static void vguiWindowButtonClose(void) {
-		vguiButton winSelf = (vguiButton)self;
-		winSelf.m_parent.Hide();
+		vguiButton buttonSelf = (vguiButton)self;
+		vguiWindow windowParent = (vguiWindow)buttonSelf.m_parent;
+		windowParent.Hide();
 	}
 
 	SetMinSize([64,64]);
@@ -209,6 +213,12 @@ vguiWindow::Spawned(void)
 	Add(m_btnClose);
 
 	SetSize([320,240]);
+}
+
+void
+vguiWindow::Close(void)
+{
+	remove(this);
 }
 
 void vguiWindow::SetTitle (string strName)

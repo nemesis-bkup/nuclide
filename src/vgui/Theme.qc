@@ -41,7 +41,7 @@ typedef enum
 	VGUI_BORDER_LINE,		/**< Thin line border. */
 	VGUI_BORDER_INSET,		/**< Inset border, used for control elements. */
 	VGUI_BORDER_OUTSET,		/**< Outset border, often used for windows. */
-	//VGUI_BORDER_DOTTED,	
+	//VGUI_BORDER_DOTTED,
 	//VGUI_BORDER_DASHED,
 	//VGUI_BORDER_RIDGE,
 	//VGUI_BORDER_GROOVE
@@ -77,6 +77,8 @@ public:
 	virtual void DrawText(vector, string, vector, font_s);
 	/** Draw a window body. */
 	virtual void DrawWindow(vector, vector, VGUIDrawState_t);
+	/** Returns whether icons are currently enabled. */
+	virtual bool IconsEnabled(void);
 
 private:
 	vguiColor m_controlBackgroundColor;
@@ -86,6 +88,7 @@ private:
 	vguiColor m_windowBorderColor;
 	vguiColor m_hilightColor;
 	vguiColor m_shadowColor;
+	vguiColor m_hoverColor;
 };
 
 void
@@ -111,6 +114,15 @@ vguiTheme::vguiTheme(void)
 
 	m_shadowColor = spawn(vguiColor);
 	m_shadowColor.SetColorWithAlpha(UI_LOCOLOR, 0.5f);
+
+	m_hoverColor = spawn(vguiColor);
+	m_hoverColor.SetColorWithAlpha(UI_HOVERCOLOR, UI_HOVERALPHA);
+}
+
+bool
+vguiTheme::IconsEnabled(void)
+{
+	return (UI_NOICONS == false) ? (true) : (false);
 }
 
 void
@@ -118,7 +130,7 @@ vguiTheme::DrawBorder(vector atPos, vector withSize, VGUIBorderStyle_t borderSty
 {
 	switch (borderStyle) {
 	case VGUI_BORDER_INSET:
-		drawfill(atPos + [1, 1], withSize + [-2, -2], [0,0,0], 0.25f);
+		//drawfill(atPos + [1, 1], withSize + [-2, -2], [0,0,0], 0.25f);
 		drawfill(atPos + [0, withSize[1] - 1], [withSize[0], 1], m_hilightColor.GetColor(), m_hilightColor.GetAlpha());
 		drawfill(atPos, [withSize[0], 1], m_shadowColor.GetColor(), m_shadowColor.GetAlpha());
 		drawfill(atPos + [0, 1], [1, withSize[1] - 2], m_shadowColor.GetColor(), m_shadowColor.GetAlpha());
@@ -187,7 +199,7 @@ vguiTheme::DrawButton(vector atPos, vector withSize, VGUIDrawState_t drawStyle)
 	}
 
 	if (drawStyle == VGUI_STATE_HOVER) {
-		drawfill(atPos, withSize, UI_HOVERCOLOR, UI_HOVERALPHA);
+		drawfill(atPos, withSize, m_hoverColor.GetColor(), m_hoverColor.GetAlpha());
 	}
 }
 
@@ -230,7 +242,7 @@ vguiTheme::DrawText(vector atPos, string withText, vector boundSize, font_s text
 {
 	//drawsetcliparea(atPos[0], atPos[1], boundSize[0], boundSize[1]);
 	//drawfill(atPos, boundSize, [1,1,1], 0.5f);
-	Font_DrawText_RGB(atPos, withText, UI_FGCOLOR, textFont);
+	Font_DrawText_RGB(atPos, withText, m_textColor.GetColor(), textFont);
 	//drawresetcliparea();
 }
 
@@ -293,7 +305,7 @@ void
 vguiTheme::DrawWindowTitle(vector atPos, vector withSize, string titleText, string withIcon, font_s textFont, VGUIDrawState_t drawStyle)
 {
 	if (STRING_SET(titleText)) {
-		if (STRING_SET(withIcon) && UI_NOICONS == false) {
+		if (STRING_SET(withIcon) && IconsEnabled()) {
 			DrawText(atPos + [26, 8], titleText, withSize, textFont);
 			drawpic(atPos + [4, 4], withIcon, [16,16], [1,1,1], 1.0f, 0);
 		} else {

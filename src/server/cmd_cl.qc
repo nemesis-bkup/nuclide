@@ -65,6 +65,17 @@ Cmd_ParseClientCommand(ncClient sender, string cmd, int commandArguments)
 			g_grMode.ChatMessageTeam(sender, substring(cmd, 9, -1));
 		}
 		break;
+	case "ui_input":
+		float entNum = stof(argv(1));
+		string inputName = argv(2);
+		string inputData = argv(3);
+		ncEntity inputTarget = (ncEntity)edict_num(entNum);
+
+		if (inputTarget) {
+			inputTarget.Input(self, inputName, inputData);
+			printf("%s %s\n", inputName, inputData);
+		}
+		break;
 #if 0
 	case "spectate":
 		if (is.Player(sender)) {
@@ -97,7 +108,7 @@ Cmd_ParseClientCommand(ncClient sender, string cmd, int commandArguments)
 	case "setpos":
 		if (!serverinfo.GetBool("cheats"))
 			break;
-		
+
 		printf("%i %S\n", commandArguments, cmd);
 		if (cvar("sv_cheats") == 1) {
 			if (commandArguments == 2) { /* setpos "0 0 0" */
@@ -147,7 +158,7 @@ Cmd_ParseClientCommand(ncClient sender, string cmd, int commandArguments)
 		if (!STRING_SET(spawnClass)) {
 			break;
 		}
-		
+
 		ncEntity resultingEntity = spawn(ncEntity);
 
 		for (int i = 2; i < commandArguments; i+=2) {
@@ -235,7 +246,7 @@ Cmd_ParseClientCommand(ncClient sender, string cmd, int commandArguments)
 		}
 
 		targetOrg = Cmd_GetViewPoint((ncPlayer)sender);
-		
+
 		for (ncEntity entEnum = 0; (entEnum = (ncEntity)find(entEnum, ::targetname, identStr));) {
 			entEnum.SetOrigin(targetOrg);
 		}

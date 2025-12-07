@@ -44,6 +44,7 @@ public:
 	virtual void EvaluateEntity(void);
 	virtual float SendEntity(entity,float);
 	virtual void Input(entity, string, string);
+	virtual void OnMapFinishedLoading(void);
 #endif
 
 #ifdef CLIENT
@@ -59,8 +60,8 @@ private:
 	entity m_videoDisplayInput_net;
 
 #ifdef CLIENT
-	entity m_videoDisplayUI;
 	float m_vecScreenLightStyle;
+	float m_videoDisplayInputNum;
 #endif
 };
 
@@ -74,4 +75,5 @@ typedef enumflags
 	VIDEODISPLAYFL_DISTANCE,
 	VIDEODISPLAYFL_LIGHT,
 	VIDEODISPLAYFL_ENABLED,
+	VIDEODISPLAYFL_INPUT
 };

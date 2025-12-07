@@ -14,13 +14,27 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/** menuDef */
+/** Trinity Menu File "menuDef"
+
+This class represents objects that are parsed from "menuDef" entries
+defined in the Quake III: Team Arena (2000) menu scripting language.
+
+They are mainly used as a container for smaller items, which you
+may want to move together without having to adjust
+absolute screen values. As [items](@ref vguiTrUIItem) are placed relative to their parent
+menuDef.
+
+# SEE ALSO
+
+[itemDef](@ref vguiTrUIItem)
+
+*/
 class
 vguiTrUISubMenu:vguiView
 {
 public:
 	void vguiTrUISubMenu(void);
-	//virtual void Draw(void);
+	virtual void Draw(void);
 
 private:
 	vguiTrUIMenu m_trGlobal;
@@ -44,8 +58,8 @@ private:
 void
 vguiTrUISubMenu::vguiTrUISubMenu(void)
 {
-    	m_trSubName = __NULL__;
-    	m_trSubFullScreen = false;
+	m_trSubName = __NULL__;
+	m_trSubFullScreen = false;
 	m_trSubRectMins = g_vec_null;
 	m_trSubRectMaxs = g_vec_null;
 	m_trGlobal = __NULL__;

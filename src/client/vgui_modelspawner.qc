@@ -16,7 +16,7 @@
 
 bool g_iModelSpawnerInitialized;
 
-void VGUI_ModelSpawner ( void )
+vguiWindow VGUI_ModelSpawner ( void )
 {
 	static entity eModel;
 	static vector vecDistance = [ 90, 0, 0 ];
@@ -390,7 +390,6 @@ void VGUI_ModelSpawner ( void )
 		VGUI_ModelViewer_Resize();
 		VGUI_ModelViewer_ShowRenderer();
 
-		g_uiDesktop.Add( winViewer );
 		winViewer.Add( picBackground );
 		winViewer.Add( viewModel );
 		winViewer.Add( btnTabRenderer );
@@ -414,4 +413,5 @@ void VGUI_ModelSpawner ( void )
 	}
 
 	winViewer.Show();
+	return (winViewer);
 }

@@ -22,38 +22,65 @@ ncInteractiveSurface::ncInteractiveSurface(void)
 	m_flScale = 0.25f;
 	m_flUseDistance = 64;
 	m_vecScreenLight = g_vec_null;
-	
+
 #ifdef CLIENT
 	m_UIChain = __NULL__;
 	m_strSurfaceMat = sprintf("UISurface%d", num_for_edict(this));
 	EntLog("UI surface material: %S\n", m_strSurfaceMat);
 	m_bCached = false;
 #endif
+
+#ifdef SERVER
+	m_outputOnActivate = g_string_null;
+	m_outputOnActivateFailed = g_string_null;
+	m_outputOnOutput1 = g_string_null;
+	m_outputOnOutput2 = g_string_null;
+	m_outputOnOutput3 = g_string_null;
+	m_outputOnOutput4 = g_string_null;
+#endif
 }
 
 
 #ifdef SERVER
 void
-ncInteractiveSurface::SpawnKey(string strKey, string strValue)
+ncInteractiveSurface::SpawnKey(string keyName, string setValue)
 {
-	switch (strKey) {
+	switch (keyName) {
 	case "ui_menu":
-		m_strUIClass = strValue;
+		m_strUIClass = setValue;
 		break;
 	case "ui_res":
-		m_vecUIRes = stov(strValue);
+		m_vecUIRes = stov(setValue);
 		break;
 	case "ui_scale":
-		m_flScale = stof(strValue);
+		m_flScale = stof(setValue);
 		break;
 	case "ui_dist":
-		m_flUseDistance = stof(strValue);
+		m_flUseDistance = stof(setValue);
 		break;
 	case "light":
-		m_vecScreenLight = stov(strValue);
+		m_vecScreenLight = stov(setValue);
+		break;
+	case "OnActivate":
+		m_outputOnActivate = PrepareOutput(m_outputOnActivate, setValue);
+		break;
+	case "OnActivateFailed":
+		m_outputOnActivateFailed = PrepareOutput(m_outputOnActivateFailed, setValue);
+		break;
+	case "OnOutput1":
+		m_outputOnOutput1 = PrepareOutput(m_outputOnOutput1, setValue);
+		break;
+	case "OnOutput2":
+		m_outputOnOutput2 = PrepareOutput(m_outputOnOutput2, setValue);
+		break;
+	case "OnOutput3":
+		m_outputOnOutput3 = PrepareOutput(m_outputOnOutput3, setValue);
+		break;
+	case "OnOutput4":
+		m_outputOnOutput4 = PrepareOutput(m_outputOnOutput4, setValue);
 		break;
 	default:
-		super::SpawnKey(strKey, strValue);
+		super::SpawnKey(keyName, setValue);
 		break;
 	}
 }
@@ -65,21 +92,86 @@ ncInteractiveSurface::Spawned(void)
 	super::Spawned();
 	pvsflags = PVSF_NOREMOVE;
 	m_uiSurfaceEnabled = true;
+
+	if (STRING_SET(m_outputOnActivate)) {
+		m_outputOnActivate = CreateOutput(m_outputOnActivate);
+	}
+	if (STRING_SET(m_outputOnActivateFailed)) {
+		m_outputOnActivateFailed = CreateOutput(m_outputOnActivateFailed);
+	}
+	if (STRING_SET(m_outputOnOutput1)) {
+		m_outputOnOutput1 = CreateOutput(m_outputOnOutput1);
+	}
+	if (STRING_SET(m_outputOnOutput2)) {
+		m_outputOnOutput2 = CreateOutput(m_outputOnOutput2);
+	}
+	if (STRING_SET(m_outputOnOutput3)) {
+		m_outputOnOutput3 = CreateOutput(m_outputOnOutput3);
+	}
+	if (STRING_SET(m_outputOnOutput4)) {
+		m_outputOnOutput4 = CreateOutput(m_outputOnOutput4);
+	}
 }
 
 
 void
-ncInteractiveSurface::Input( entity entityActivator, string inputName, string dataField )
+ncInteractiveSurface::Input(entity entityActivator, string inputName, string dataField)
 {
 	switch (inputName) {
 	case "Enable":
 		m_uiSurfaceEnabled = true;
+		UseOutput(entityActivator, m_outputOnEnable);
 		break;
 	case "Disable":
 		m_uiSurfaceEnabled = false;
+		UseOutput(entityActivator, m_outputOnDisable);
 		break;
 	case "Toggle":
 		m_uiSurfaceEnabled = (m_uiSurfaceEnabled == true) ? (false) : (true);
+		break;
+	case "FireOutput":
+		float outputNum = stof(dataField);
+
+		printf("FireOutput: %d\n", outputNum);
+
+		/* prevent cheating... */
+		if (distance(entityActivator.origin, origin) > (m_flUseDistance * 2)) {
+			return;
+		}
+
+		switch (outputNum) {
+		case 1:
+			UseOutput(entityActivator, m_outputOnOutput1);
+			printf("%d %S", outputNum, m_outputOnOutput1);
+			break;
+		case 2:
+			UseOutput(entityActivator, m_outputOnOutput2);
+			printf("%d %S", outputNum, m_outputOnOutput2);
+			break;
+		case 3:
+			UseOutput(entityActivator, m_outputOnOutput3);
+			printf("%d %S", outputNum, m_outputOnOutput3);
+			break;
+		case 4:
+			UseOutput(entityActivator, m_outputOnOutput4);
+			printf("%d %S", outputNum, m_outputOnOutput4);
+			break;
+		}
+		break;
+	case "ActivateOnTextMatch":
+		string wantedText = GetSpawnString("gui_parm1");
+
+		/* prevent cheating... */
+		if (distance(entityActivator.origin, origin) > (m_flUseDistance * 2)) {
+			return;
+		}
+
+		if (dataField == wantedText) {
+			UseTargets(this, TRIG_TOGGLE, 0.0f);
+			UseOutput(entityActivator, m_outputOnActivate);
+		} else {
+			UseOutput(entityActivator, m_outputOnActivateFailed);
+		}
 		break;
 	default:
 		super::Input(entityActivator, inputName, dataField);
@@ -117,6 +209,7 @@ ncInteractiveSurface::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_ANGLE(angles[0], UISURFACEFL_ANGLES)
 	SENDENTITY_ANGLE(angles[1], UISURFACEFL_ANGLES)
 	SENDENTITY_ANGLE(angles[2], UISURFACEFL_ANGLES)
+	SENDENTITY_INT(num_for_edict(this), UISURFACEFL_INTERFACE)
 	SENDENTITY_STRING(m_strUIClass, UISURFACEFL_INTERFACE)
 	SENDENTITY_FLOAT(m_flScale, UISURFACEFL_SCALE)
 	SENDENTITY_FLOAT(m_flUseDistance, UISURFACEFL_DISTANCE)
@@ -140,6 +233,7 @@ ncInteractiveSurface::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_ANGLE(angles[0], UISURFACEFL_ANGLES)
 	READENTITY_ANGLE(angles[1], UISURFACEFL_ANGLES)
 	READENTITY_ANGLE(angles[2], UISURFACEFL_ANGLES)
+	READENTITY_INT(m_serverSideNum, UISURFACEFL_INTERFACE)
 	READENTITY_STRING(m_strUIClass, UISURFACEFL_INTERFACE)
 	READENTITY_FLOAT(m_flScale, UISURFACEFL_SCALE)
 	READENTITY_FLOAT(m_flUseDistance, UISURFACEFL_DISTANCE)
@@ -151,7 +245,6 @@ ncInteractiveSurface::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_BYTE(m_uiSurfaceEnabled, UISURFACEFL_ENABLED)
 
 	if (flNew) {
-		vguiWidget child;
 		vguiWidget uiChain = (vguiWidget)m_UIChain;
 
 		m_vecWorldSize = m_vecUIRes * m_flScale;
@@ -162,12 +255,13 @@ ncInteractiveSurface::ReceiveEntity(float flNew, float flChanged)
 		vguiWidget uiChain = (vguiWidget)m_UIChain;
 		uiChain.m_iFlags = 1;
 
-		child = vguiTrUIMenu::CreateFromMenuFile(m_UIChain, m_strUIClass);
+		m_videoDisplayUI = vguiTrUIMenu::CreateFromMenuFile(m_UIChain, m_strUIClass);
+		m_videoDisplayUI.owner = this;
 
-		if (child) {
-			uiChain.Add(child);
+		if (m_videoDisplayUI) {
+			uiChain.Add(m_videoDisplayUI);
 		} else {
-			error("Unable to allocate ncInteractiveSurface");
+			error("Unable to allocate ncVideoDisplay");
 		}
 	}
 

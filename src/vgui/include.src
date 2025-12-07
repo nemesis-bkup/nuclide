@@ -31,4 +31,7 @@
 ../vgui/TrUISubMenu.qc
 ../vgui/TrUIItem.qc
 ../vgui/TrUIMenu.qc
+../vgui/DesktopAppMusic.qc
+../vgui/DesktopTheme.qc
+../vgui/Desktop.qc
 #endlist

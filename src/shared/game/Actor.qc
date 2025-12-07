@@ -124,7 +124,7 @@ ncActor::FiredWeapon(string weaponDef, string fireInfo)
 void
 ncActor::Event_DrawWeapon(void)
 {
-	
+
 }
 
 void
@@ -152,7 +152,45 @@ ncActor::Event_HolsterWeapon(void)
 {
 }
 
-#define ACTOREV_FIRED 1
+void
+ncActor::Event_StepLeft(void)
+{
+#ifdef SERVER
+	WriteEntityEvent(MSG_MULTICAST, this, ACTOREV_STEP_LEFT);
+	msg_entity = world;
+	multicast(GetOrigin(), MULTICAST_PVS_R);
+#endif
+
+#ifdef CLIENT
+	traceline(origin + view_ofs, origin + [0,0,-48], MOVE_NORMAL, this);
+	string tex_name = getsurfacetexture(trace_ent, getsurfacenearpoint(trace_ent, trace_endpos));
+
+	StartSoundDef(
+		SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPLEFT),
+		CHAN_BODY,
+		true);
+#endif
+}
+
+void
+ncActor::Event_StepRight(void)
+{
+#ifdef SERVER
+	WriteEntityEvent(MSG_MULTICAST, this, ACTOREV_STEP_RIGHT);
+	msg_entity = world;
+	multicast(GetOrigin(), MULTICAST_PVS_R);
+#endif
+
+#ifdef CLIENT
+	traceline(origin + view_ofs, origin + [0,0,-48], MOVE_NORMAL, this);
+	string tex_name = getsurfacetexture(trace_ent, getsurfacenearpoint(trace_ent, trace_endpos));
+
+	StartSoundDef(
+		SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPRIGHT),
+		CHAN_BODY,
+		true);
+#endif
+}
 
 #ifdef CLIENT
 void
@@ -161,6 +199,12 @@ ncActor::ReceiveEvent(float eventID)
 	switch (eventID) {
 	case ACTOREV_FIRED:
 		FiredWeapon("", "");
+		break;
+	case ACTOREV_STEP_LEFT:
+		Event_StepLeft();
+		break;
+	case ACTOREV_STEP_RIGHT:
+		Event_StepRight();
 		break;
 	}
 }
@@ -602,8 +646,8 @@ ncActor::Death(entity inflictor, entity attacker, int damagePoints, vector dir, 
 
 		m_lastCorpse = MakeCorpse(deathAnimation);
 		m_sndDeath.PlayOnEntityChannel(this, CHAN_VOICE);
-		
-		
+
+
 	}
 }
 
@@ -803,6 +847,9 @@ ncActor::Input(entity eAct, string strInput, string strData)
 	case "PerformSchedule":
 		PerformSchedule(strData);
 		break;
+	case "CancelSchedule":
+		CancelSchedule();
+		break;
 	case "SelectNewSchedule":
 		SelectNewSchedule();
 		break;
@@ -839,7 +886,7 @@ ncActor::Input(entity eAct, string strInput, string strData)
 	case "TargetNearestPlayer":
 		ncEntity firstPlayer = __NULL__;
 		float bestDist = 99999.0f;
-		
+
 		for (entity pl = world; (pl = findfloat(pl, ::_isPlayer, 1));) {
 			float currentDist = distance(pl.origin, this.origin);
 
@@ -848,7 +895,7 @@ ncActor::Input(entity eAct, string strInput, string strData)
 				bestDist = currentDist;
 			}
 		}
-		
+
 		if (m_activeSchedule) {
 			if (firstPlayer) {
 				m_activeSchedule.SetTarget(firstPlayer);
@@ -1773,7 +1820,7 @@ ncActor::SwitchToBestWeapon(bool ignoreActive)
 
 			ncWeapon ourWeapon = (ncWeapon)linkedList;
 
-			/* don't auto-switch to empty weapons */			
+			/* don't auto-switch to empty weapons */
 			if (ourWeapon.IsEmpty()) {
 				linkedList = (ncItem)linkedList.m_nextItem;
 				continue;

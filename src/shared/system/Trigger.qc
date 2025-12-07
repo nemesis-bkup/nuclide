@@ -52,6 +52,14 @@ ncTrigger::Spawned(void)
 		m_outputOnPlayerTouch = CreateOutput(m_outputOnPlayerTouch);
 	if (STRING_SET(m_outputOnEndTouch))
 		m_outputOnEndTouch = CreateOutput(m_outputOnEndTouch);
+
+	if (STRING_SET(m_outputOnEnable)) {
+		m_outputOnEnable = CreateOutput(m_outputOnEnable);
+	}
+	if (STRING_SET(m_outputOnDisable)) {
+		m_outputOnDisable = CreateOutput(m_outputOnDisable);
+	}
+
 }
 
 bool
@@ -391,9 +399,11 @@ ncTrigger::Input(entity eAct, string strInput, string strData)
 		break;
 	case "Enable":
 		m_triggerEnabled = true;
+		UseOutput(eAct, m_outputOnEnable);
 		break;
 	case "Disable":
 		m_triggerEnabled = false;
+		UseOutput(eAct, m_outputOnDisable);
 		break;
 	case "Toggle":
 		m_triggerEnabled = (m_triggerEnabled) ? false : true;
@@ -460,6 +470,14 @@ ncTrigger::SpawnKey(string keyName, string setValue)
 	case "StartDisabled":
 		m_triggerStartsDisabled = ReadBool(setValue);
 		m_triggerSpawnflagFilter = true;
+		break;
+	
+	
+	case "OnEnable":
+		m_outputOnEnable = PrepareOutput(m_outputOnEnable, setValue);
+		break;
+	case "OnDisable":
+		m_outputOnDisable = PrepareOutput(m_outputOnDisable, setValue);
 		break;
 
 	case "OnStartTouch":

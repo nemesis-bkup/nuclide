@@ -24,6 +24,7 @@ enumflags
 
 /* TODO: MOVE THESE INTO vguiButton! COMPILER NEEDS TO BE FIXED FIRST HOWEVER. */
 .void(void) tmpvguiButton1;
+.vguiWidget tmpvguiButton1Delegate;
 
 /** VGUI Widget: Button
 
@@ -83,6 +84,8 @@ vguiButton::vguiButton(void)
 	m_flAlpha = 1.0f;
 	m_vecIconColor = [1,1,1];
 	m_keyEquivalent = -1;
+	tmpvguiButton1 = 0;
+	tmpvguiButton1Delegate = 0;
 }
 
 void
@@ -144,6 +147,15 @@ vguiButton::SetFunc(void(void) func)
 	tmpvguiButton1 = func;
 }
 void
+vguiButton::SetFuncWithDelegate(void(void) func, vguiWidget delegateWidget)
+{
+	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
+	//m_vFunc = vFunc;
+	tmpvguiButton1 = func;
+	tmpvguiButton1Delegate = delegateWidget;
+}
+
+void
 vguiButton::SetExec(string exe)
 {
 	m_strExec = exe;
@@ -201,7 +213,7 @@ vguiButton::Draw(void)
 		theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [8, 8], keyText, m_vecSize, g_fntDefault);
 	}
 
-	if ((STRING_SET(m_strIcon) && UI_NOICONS == false) || (!STRING_SET(m_strTitle) && STRING_SET(m_strIcon))) {
+	if ((STRING_SET(m_strIcon) && theme.IconsEnabled()) || (!STRING_SET(m_strTitle) && STRING_SET(m_strIcon))) {
 		if (m_iFlags & BUTTON_DOWN)
 			drawpic(m_parent.m_vecOrigin + m_vecOrigin + [4,4], m_strIcon, m_vecIMGSize, m_vecIconColor * 0.25, 1.0f, 0);
 		else
@@ -217,6 +229,22 @@ vguiButton::Draw(void)
 			theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [textPadding, 8], m_strTitle, m_vecSize, g_fntDefault);
 		}
 	}
+}
+
+static void
+vguiButton_CallFunctionWithDelegate(void(void) targetFunc, vguiWidget delegateWidget)
+{
+	entity oldSelf = self;
+
+	if (delegateWidget) {
+		self = delegateWidget;
+	}
+
+	if (targetFunc) {
+		targetFunc();
+	}
+
+	self = oldSelf;
 }
 
 bool
@@ -265,8 +293,7 @@ vguiButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 			if (m_iFlags & BUTTON_DOWN && mouseHover) {
 				OnMouseUp();
 
-				if (tmpvguiButton1)
-					tmpvguiButton1();
+				vguiButton_CallFunctionWithDelegate(tmpvguiButton1, tmpvguiButton1Delegate);
 
 				if (STRING_SET(m_strExec)) {
 					localcmd(sprintf("%s\n", m_strExec));

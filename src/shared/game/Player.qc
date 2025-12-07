@@ -159,7 +159,7 @@ ncPlayer::SharedInputFrame(void)
 				ncWeapon oldWeapon = m_activeWeapon;
 				m_activeWeapon = nextWeapon;
 				m_activeWeapon._SwitchedToCallback();
-				
+
 				if (oldWeapon) {
 					oldWeapon._SwitchedFromCallback();
 				}
@@ -419,7 +419,7 @@ ncPlayer::ProcessInput(void)
 			canfire = false;
 
 	/* can't fire when dead, sorry. */
-	if (health <= 0) { 
+	if (health <= 0) {
 		return;
 	}
 
@@ -464,11 +464,6 @@ ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
 {
 	if (!skeletonindex) {
 		skeletonindex = skel_create(modelindex);
-	}
-
-	/* hack, we can't play the animations in reverse the normal way */
-	if (frame1time < 0.0f) {
-		frame1time = 10.0f;
 	}
 
 	angles[0] = 0.0f;
@@ -544,6 +539,7 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 	float maxTopTime;
 	float maxBottomTime;
 
+#ifdef SERVER
 	if (anim_top_delay <= 0.0f) {
 		anim_top = m_actAim;
 	}
@@ -613,6 +609,7 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 	} else if (anim_bottom_time < 0.0f) {
 		anim_top_time = (maxTopTime - anim_top_time);
 	}
+#endif
 
 	switch (m_animBackend) {
 	case ANIMATIONMODEL_HLMDL_VALVE:
@@ -626,9 +623,7 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 		break;
 	}
 
-
-
-
+#ifdef SERVER
 	/* timer update last */
 	/* top animation is always just being incremented */
 	anim_top_time += timelength;
@@ -640,6 +635,7 @@ ncPlayer::UpdatePlayerAnimation(float timelength)
 	} else {
 		anim_bottom_time += timelength;
 	}
+#endif
 }
 
 void
@@ -744,11 +740,11 @@ ncPlayer::predraw(void)
 			input_buttons |= IsCrouching() ? INPUT_CROUCH : 0;
 			input_angles = v_angle;
 			input_impulse = 0;
-			input_timelength = clframetime;
+			input_timelength = frametime;
 			Physics_Run();
 		} else {
 			/* advance animation, usually done in physics */
-			UpdatePlayerAnimation(clframetime);
+			UpdatePlayerAnimation(frametime);
 		}
 	}
 
@@ -1821,7 +1817,7 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_INT(modelindex, PLAYER_MODELINDEX)
 	SENDENTITY_INT(vw_index, PLAYER_MODELINDEX)
 	SENDENTITY_BYTE(colormap, PLAYER_MODELINDEX)
-	
+
 	if (flChanged & PLAYER_MODELINDEX) {
 		userinfo.SetFloat(this, "*mi", modelindex);
 	}
@@ -2120,6 +2116,7 @@ ncPlayer::WeaponAnimTime(void)
 	return (m_weaponAnimTime);
 }
 
+
 void
 ncPlayer::Footsteps_Update(void)
 {
@@ -2165,10 +2162,6 @@ ncPlayer::Footsteps_Update(void)
 	/* the footsteps call might overwrite this later */
 	m_timeUntilNextFootstep = time + 0.35;
 
-	//tracebox(origin, PHY_HULL_MIN, PHY_HULL_MAX, origin + [0,0,-48], MOVE_NORMAL, target);
-	traceline(origin + view_ofs, origin + [0,0,-48], MOVE_NORMAL, this);
-	tex_name = getsurfacetexture(trace_ent, getsurfacenearpoint(trace_ent, trace_endpos));
-
 	/* don't step in air */
 	if (HasFlags(FL_ONGROUND) == false && HasVFlags(VFL_ONLADDER) == false) {
 		return;
@@ -2186,15 +2179,9 @@ ncPlayer::Footsteps_Update(void)
 	}
 
 	if (step) {
-		StartSoundDef(
-			SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPLEFT),
-			CHAN_BODY,
-			true);
+		Event_StepLeft();
 	} else {
-		StartSoundDef(
-			SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPRIGHT),
-			CHAN_BODY,
-			true);
+		Event_StepRight();
 	}
 
 	/* switch between feet */

@@ -14,7 +14,16 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/** itemDef */
+/** Trinity Menu File "itemDef"
+
+This class represents objects that are parsed from "itemDef" entries
+defined in the Quake III: Team Arena (2000) menu scripting language.
+
+# See also
+
+[menuDef](@ref vguiTrUISubMenu)
+
+*/
 class
 vguiTrUIItem:vguiWidget
 {
@@ -23,11 +32,13 @@ public:
 
 	virtual void Draw(void);
 	virtual bool Input(float, float, float, float);
-	
+
 	nonvirtual void OnMouseEntered(void);
 	nonvirtual void OnMouseExited(void);
 	nonvirtual void OnMouseDown(void);
 	nonvirtual void OnMouseUp(void);
+	nonvirtual void OnMaxChars(void);
+	nonvirtual void AddText(string toAdd);
 
 private:
 	string m_trItemName;
@@ -40,7 +51,9 @@ private:
 	vector m_trItemRectMaxs;
 	float m_trItemTextScale;
 	int m_trItemTextStyle;
-	string m_trItemOwnerDraw;
+	int m_trItemTextFont;
+	int m_trItemOwnerDraw;
+	float m_trItemOwnerDrawValue;
 	float m_trItemTextAlignX;
 	float m_trItemTextAlignY;
 	vector m_trItemFocusColor;
@@ -61,7 +74,41 @@ private:
 	string m_trItemActionBuffer;
 	string m_trItemEnterBuffer;
 	string m_trItemExitBuffer;
+	string m_trItemMaxCharBuffer;
+
+	/* 3D Model */
+	string m_trItemModel;
+	vector m_trItemModelOrigin;
+	float m_trItemModelFOVX;
+	float m_trItemModelFOVY;
+	vector m_trItemModelRotation;
+	vector m_trItemModelAngles;
+	float m_trItemModelAnim;
+	entity m_trItemModelDelegate;
+	vector m_trItemModelAngularVelocity;
+	entity m_trCamDelegate;
+	vector m_trCamOrigin;
+	vector m_trCamAngles;
+	vector m_trCamAngularVelocity;
+
+	/* text */
+	int m_trItemMaxChars;
 };
+
+#ifdef MENU
+__variant MenuGame_OwnerDrawValueForType(ncPlayer clientSlot, int ownerDraw, int typeValue);
+bool MenuGame_OwnerDrawItemRect(ncPlayer clientSlot, vguiTrUIItem drawItem, int ownerDraw, int drawType);
+bool MenuGame_OwnerDrawMenuRect(ncPlayer clientSlot, vguiTrUISubMenu drawMenu);
+#endif
+
+#ifdef CLIENT
+__variant ClientGame_OwnerDrawValueForType(ncPlayer clientSlot, int ownerDraw, int typeValue);
+bool ClientGame_OwnerDrawItemRect(ncPlayer clientSlot, vguiTrUIItem drawItem, int ownerDraw, int drawType);
+bool ClientGame_OwnerDrawMenuRect(ncPlayer clientSlot, vguiTrUISubMenu drawMenu);
+
+__variant HUD_OwnerDrawValueForType(int ownerDraw, int typeValue);
+bool HUD_OwnerDrawItemRect(vector pos, vector size, int ownerDraw, int drawType);
+#endif
 
 void
 vguiTrUIItem::vguiTrUIItem(void)
@@ -78,6 +125,7 @@ vguiTrUIItem::vguiTrUIItem(void)
 	m_trItemOwnerDraw = __NULL__;
 	m_trGlobal = __NULL__;
 	m_trItemTextAlignX = 0;
+	m_trItemTextFont = 0;
 	m_trItemTextAlignY;
 	m_trItemFocusColor = g_vec_null;
 	m_trItemFocusAlpha = 0;
@@ -95,6 +143,55 @@ vguiTrUIItem::vguiTrUIItem(void)
 	m_trItemActionBuffer = __NULL__;
 	m_trItemEnterBuffer = __NULL__;
 	m_trItemExitBuffer = __NULL__;
+	m_trItemMaxCharBuffer = __NULL__;
+	m_trItemOwnerDrawValue = 0.0f;
+
+	m_trItemModel = g_string_null;
+	m_trItemModelOrigin = g_vec_null;
+	m_trItemModelFOVX = g_float_null;
+	m_trItemModelFOVY = g_float_null;
+	m_trItemModelRotation = g_vec_null;
+	m_trItemModelAngles = g_vec_null;
+	m_trItemModelAnim = g_float_null;
+	m_trItemMaxChars = 0;
+	m_trItemModelDelegate = g_entity_null;
+	m_trCamAngularVelocity = g_vec_null;
+	m_trCamDelegate = g_entity_null;
+}
+
+void
+vguiTrUIItem::AddText(string toAdd)
+{
+	float stringLength = strlen(m_trItemText);
+
+	if (m_trItemMaxChars > 0)
+	if (stringLength >= m_trItemMaxChars) {
+		m_trItemText = "";
+		return;
+	}
+
+	m_trItemText = strcat(m_trItemText, toAdd);
+	stringLength = strlen(m_trItemText);
+
+	/* check if we've hit max chars */
+	if (stringLength >= m_trItemMaxChars) {
+		OnMaxChars();
+		return;
+	}
+}
+
+void
+vguiTrUIItem::OnMaxChars(void)
+{
+	int commandCount;
+
+	for (int i = 0; i < (commandCount = tokenizebyseparator(m_trItemMaxCharBuffer, ";", "\n")); i++) {
+		string commandString = argv(i);
+
+		if (STRING_SET(commandString)) {
+			m_trGlobal.InterpretCommand(this, commandString);
+		}
+	}
 }
 
 void
@@ -104,9 +201,9 @@ vguiTrUIItem::OnMouseEntered(void)
 
 	for (int i = 0; i < (commandCount = tokenizebyseparator(m_trItemEnterBuffer, ";", "\n")); i++) {
 		string commandString = argv(i);
-		
+
 		if (STRING_SET(commandString)) {
-			m_trGlobal.InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(this, commandString);
 		}
 	}
 }
@@ -118,9 +215,9 @@ vguiTrUIItem::OnMouseExited(void)
 
 	for (int i = 0; i < (commandCount = tokenizebyseparator(m_trItemExitBuffer, ";", "\n")); i++) {
 		string commandString = argv(i);
-		
+
 		if (STRING_SET(commandString)) {
-			m_trGlobal.InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(this, commandString);
 		}
 	}
 }
@@ -137,11 +234,58 @@ vguiTrUIItem::OnMouseUp(void)
 
 	for (int i = 0; i < (commandCount = tokenizebyseparator(m_trItemActionBuffer, ";", "\n")); i++) {
 		string commandString = argv(i);
-		
+
 		if (STRING_SET(commandString)) {
-			m_trGlobal.InterpretCommand(commandString);
+			m_trGlobal.InterpretCommand(this, commandString);
 		}
 	}
+}
+
+void
+vguiTrUIItem::Draw3D(void)
+{
+	vector pos = m_parent.m_vecOrigin + m_trItemRectMins;
+	vector size = m_trItemRectMaxs;
+
+	if (!m_trItemModelDelegate) {
+		m_trItemModelDelegate = spawn();
+		setmodel(m_trItemModelDelegate, m_trItemModel);
+		setorigin(m_trItemModelDelegate, m_trItemModelOrigin);
+		m_trItemModelDelegate.angles = m_trItemModelAngles;
+		m_trItemModelDelegate.frame = m_trItemModelAnim;
+		m_trItemModelDelegate.movetype = MOVETYPE_FLY;
+		m_trItemModelDelegate.solid = SOLID_NOT;
+		m_trItemModelDelegate.avelocity = m_trItemModelAngularVelocity;
+
+		m_trCamDelegate = spawn();
+		m_trCamDelegate.movetype = MOVETYPE_FLY;
+		m_trCamDelegate.solid = SOLID_NOT;
+		m_trCamDelegate.angles = m_trCamAngles;
+		m_trCamDelegate.avelocity = m_trCamAngularVelocity;
+		m_trCamDelegate.origin = m_trCamOrigin;
+		m_trItemModelDelegate.frame1time += clframetime;
+
+	}
+
+	clearscene();
+	setproperty(VF_VIEWPORT, pos, size);
+	setproperty(VF_AFOV, m_trItemModelFOVX);
+	setproperty(VF_ORIGIN, m_trCamDelegate.origin);
+	setproperty(VF_ANGLES, m_trCamDelegate.angles);
+
+#ifndef MENU
+	setproperty(VF_DRAWWORLD, false);
+#endif
+
+	/* sanity checks */
+	if (m_trItemModelDelegate.frame < 0) {
+		m_trItemModelDelegate.frame = 0;
+	}
+
+	addentity(m_trItemModelDelegate);
+	m_trItemModelDelegate.frame1time = time;
+
+	renderscene();
 }
 
 void
@@ -152,9 +296,19 @@ vguiTrUIItem::Draw(void)
 	vector size;
 	int textAlignFlags = 0;
 
-	pos = m_parent.m_vecOrigin + m_trItemRectMins;
+	pos = m_parent.m_parent.m_vecOrigin + m_parent.m_vecOrigin + m_trItemRectMins;
 	size = m_trItemRectMaxs;
 	textPos = pos + [m_trItemTextAlignX, m_trItemTextAlignY];
+
+	bool hudResult = HUD_OwnerDrawItemRect(pos, size, m_trItemOwnerDraw, m_trItemType);
+
+	if (hudResult == false) {
+		hudResult = ClientGame_OwnerDrawItemRect((ncPlayer)pSeat->m_ePlayer, this, m_trItemOwnerDraw, m_trItemType);
+
+		if (hudResult == true) {
+			return;
+		}
+	}
 
 	switch (m_trItemTextAlign) {
 	case 1:	/* center  */
@@ -172,7 +326,6 @@ vguiTrUIItem::Draw(void)
 		break;
 	}
 
-
 	if (STRING_SET(m_trItemBackground)) {
 		if (m_trItemType == 3) {
 			draw.Pic(pos, m_trItemBackground, size, [1,1,1], 1.0, 0);
@@ -183,10 +336,14 @@ vguiTrUIItem::Draw(void)
 		draw.Rect(pos, size, m_trItemBackColor, m_trItemBackAlpha);
 	}
 
-	if (m_trItemBorder > 0) {
-		draw.RectOutline(pos, size, 1.0f, m_trItemForeColor, m_trItemForeAlpha);
+	/* model stuff goes here */
+	if (STRING_SET(m_trItemModel)) {
+		Draw3D();
 	}
 
+	if (m_trItemBorder > 0) {
+		draw.RectOutline(pos, size, 1.0f, m_trItemBorderColor, m_trItemBorderAlpha);
+	}
 
 	if (HasFlag(BUTTON_HOVER)) {
 		drawfill(pos, size, m_trItemFocusColor, m_trItemFocusAlpha);
@@ -194,12 +351,45 @@ vguiTrUIItem::Draw(void)
 
 	if (STRING_SET(m_trItemText)) {
 		string foreColor = Font_RGBtoHex(m_trItemForeColor);
+		font_s textFont;
+		string destText;
+
+		switch (m_trItemTextFont) {
+		case 1:
+			textFont = *m_trGlobal.m_trGlobalBigFont;
+			break;
+		case 2:
+			textFont = *m_trGlobal.m_trGlobalExtraBigFont;
+			break;
+		case 3:
+			textFont = *m_trGlobal.m_trGlobalSmallFont;
+			break;
+		case 4:
+			textFont = *m_trGlobal.m_trGlobalBoldFont;
+			break;
+		case 5:
+			textFont = *m_trGlobal.m_trGlobalConsoleFont;
+			break;
+		default:
+			textFont = *m_trGlobal.m_trGlobalFont;
+			break;
+		}
+
+		destText = HUD_OwnerDrawValueForType((ncPlayer)pSeat->m_ePlayer, m_trItemOwnerDraw, m_trItemType);
+
+		if (destText == __NULL__) {
+			destText = ClientGame_OwnerDrawValueForType((ncPlayer)pSeat->m_ePlayer, m_trItemOwnerDraw, m_trItemType);
+
+			if (destText == __NULL__) {
+				destText = m_trItemText;
+			}
+		}
 
 		/* button */
 		if (m_trItemType == 1 && HasFlag(BUTTON_HOVER)) {
-			Font_DrawField(pos, size, m_trItemText, g_fntDefault, textAlignFlags);
+			Font_DrawField(pos + [m_trItemTextAlignX, m_trItemTextAlignY], size, destText, textFont, textAlignFlags);
 		} else {
-			Font_DrawField(pos, size, strcat(foreColor, m_trItemText), g_fntDefault, textAlignFlags);
+			Font_DrawField(pos + [m_trItemTextAlignX, m_trItemTextAlignY], size, strcat(foreColor, destText), textFont, textAlignFlags);
 		}
 	}
 }

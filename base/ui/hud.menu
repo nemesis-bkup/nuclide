@@ -1,0 +1,177 @@
+#define CG_PLAYER_ARMOR_ICON		1
+#define CG_PLAYER_ARMOR_VALUE		2
+#define CG_PLAYER_HEAD				3
+#define CG_PLAYER_HEALTH_VALUE		4
+#define CG_PLAYER_AMMO_ICON 		5
+#define CG_PLAYER_AMMO_VALUE		6
+#define CG_PLAYER_AMMOCLIP_VALUE	70
+#define CG_PLAYER_WEAPON_ICON2D		71
+#define CG_PLAYER_WEAPON_NAME		81
+#define CG_PLAYER_STAMINA			73
+
+{
+
+	assetglobaldef
+	{
+		font fonts/font16.font 16
+	}
+
+	menuDef
+	{
+		name "StaminaBar"
+		visible 1
+		border 1
+		bordersize 1
+		bordercolor .25 .25 .25 1
+		rect 10 400 10 70
+
+		itemDef
+		{
+				name "StaminaValue"
+				decoration
+				visible 1
+				rect 0 0 8 68
+				ownerdraw CG_PLAYER_STAMINA
+				type 8
+				forecolor 1 1 1 1
+				addColorRangerel 0.0 0.25 1 0.1 0.1 0.5
+				addColorRangerel 0.25 1.0 0.1 1 0.1 0.5
+		}
+	}
+
+	menuDef
+	{
+		name "StaminaBar2"
+		visible 1
+		rect 6 452 70 18
+
+		itemDef
+		{
+				name "StaminaValue"
+				addColorRangerel 0.0 0.25 1 0.1 0.1 0.5
+				addColorRangerel 0.25 1.0 0.1 1 0.1 0.5
+				rect 0 0 68 20
+				forecolor 1 1 1 1
+				ownerdraw CG_PLAYER_STAMINA
+				decoration
+				visible 1
+				textalign 2
+				text "100"
+		}
+	}
+
+	menuDef
+	{
+		name "Heads Up Display"
+		rect 0 0 640 480
+
+
+		itemDef
+		{
+			name Health
+			rect 296 432 32 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			style 3
+			background "gfx/hud/health"
+			backcolor 1 1 1 1
+		}
+
+		itemDef
+		{
+			name HealthValue
+			rect 220 432 61 32
+			forecolor 1 1 1 1
+			ownerdraw CG_PLAYER_HEALTH_VALUE
+			decoration
+			visible 1
+			textalign 2
+			text "100"
+		}
+
+		itemDef
+		{
+			name Armor
+			rect 344 432 32 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			style 3
+			background "gfx/hud/armor"
+			backcolor 1 1 1 1
+		}
+		itemDef
+		{
+			name ArmorValue
+			rect 390 432 61 32
+			forecolor 1 1 1 1
+			ownerdraw CG_PLAYER_ARMOR_VALUE
+			decoration
+			visible 1
+			text "100"
+		}
+
+		itemDef
+		{
+			name WeaponIcon
+			rect 594 432 32 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			style 3
+			background "gfx/hud/armor"
+			backcolor 1 1 1 1
+			ownerdraw CG_PLAYER_WEAPON_ICON2D
+		}
+
+		itemDef
+		{
+			name WeaponAmmo
+			rect 518 432 61 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			textalign 2
+			ownerdraw CG_PLAYER_AMMO_VALUE
+			text "100"
+		}
+
+		itemDef
+		{
+			name ClipAmmo
+			rect 462 432 61 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			textalign 2
+			ownerdraw CG_PLAYER_AMMOCLIP_VALUE
+			text "100"
+		}
+
+		itemDef
+		{
+			name WeaponName
+			rect 362 448 217 32
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			textalign 2
+			text "Shotgun"
+			ownerdraw CG_PLAYER_WEAPON_NAME
+		}
+
+		//itemDef
+		//{
+		//	name Radar
+		//	rect 498 16 128 128
+		//	forecolor 1 1 1 1
+		//	decoration
+		//	visible 1
+		//	border 1
+		//	bordercolor 1 1 1 .5
+		//}
+
+	}
+}
+

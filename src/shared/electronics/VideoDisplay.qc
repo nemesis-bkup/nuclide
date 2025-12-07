@@ -23,7 +23,7 @@ ncVideoDisplay::ncVideoDisplay(void)
 entity
 ncVideoDisplay::FindInputByName(string inputName)
 {
-	for (ncAVReceiver videoReceiver = 0; (videoReceiver = (ncAVReceiver)find(videoReceiver, ::classname, "ncAVReceiver"));) {
+	for (ncAVReceiver videoReceiver = 0; (videoReceiver = (ncAVReceiver)find(videoReceiver, ::spawnclass, "ncAVReceiver"));) {
 		if (videoReceiver.targetname == inputName) {
 			return (videoReceiver);
 		}
@@ -36,8 +36,8 @@ void
 ncVideoDisplay::SpawnKey(string strKey, string strValue)
 {
 	switch (strKey) {
-	case "input":
-		m_videoDisplayInput = FindInputByName(strValue);
+	case "ui_menu":
+		m_strUIClass = strValue;
 		break;
 	default:
 		super::SpawnKey(strKey, strValue);
@@ -49,12 +49,34 @@ ncVideoDisplay::SpawnKey(string strKey, string strValue)
 void
 ncVideoDisplay::Spawned(void)
 {
-	m_strUIClass = "ui/tv.menu";
 	m_flUseDistance = 64;
 	m_vecScreenLight = [1,1,1];
 
 	super::Spawned();
 	pvsflags = PVSF_NOREMOVE;
+
+	m_strUIClass = GetSpawnString("ui_menu");
+
+	if (STRING_SET(!m_strUIClass)) {
+		m_strUIClass = "ui/tv.menu";
+	}
+}
+
+void
+ncVideoDisplay::OnMapFinishedLoading(void)
+{
+	super::OnMapFinishedLoading();
+
+	string spawnInput = GetSpawnString("input");
+
+	if (STRING_SET(spawnInput)) {
+		m_videoDisplayInput = FindInputByName(spawnInput);
+	} else {
+		m_videoDisplayInput = world;
+	}
+
+	EntError("spawnInput: %S; %s (%d)", spawnInput, m_videoDisplayInput.classname, num_for_edict(m_videoDisplayInput));
+	SendFlags |= VIDEODISPLAYFL_INPUT;
 }
 
 
@@ -85,7 +107,7 @@ ncVideoDisplay::EvaluateEntity(void)
 	EVALUATE_VECTOR(m_vecScreenLight, 1, VIDEODISPLAYFL_LIGHT)
 	EVALUATE_VECTOR(m_vecScreenLight, 2, VIDEODISPLAYFL_LIGHT)
 	EVALUATE_FIELD(m_uiSurfaceEnabled, VIDEODISPLAYFL_ENABLED)
-	EVALUATE_FIELD(m_videoDisplayInput, VIDEODISPLAYFL_ENABLED)
+	EVALUATE_FIELD(m_videoDisplayInput, VIDEODISPLAYFL_INPUT)
 }
 
 float
@@ -99,6 +121,7 @@ ncVideoDisplay::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_ANGLE(angles[0], VIDEODISPLAYFL_ANGLES)
 	SENDENTITY_ANGLE(angles[1], VIDEODISPLAYFL_ANGLES)
 	SENDENTITY_ANGLE(angles[2], VIDEODISPLAYFL_ANGLES)
+	SENDENTITY_INT(num_for_edict(this), VIDEODISPLAYFL_INTERFACE)
 	SENDENTITY_STRING(m_strUIClass, VIDEODISPLAYFL_INTERFACE)
 	SENDENTITY_FLOAT(m_flScale, VIDEODISPLAYFL_SCALE)
 	SENDENTITY_FLOAT(m_flUseDistance, VIDEODISPLAYFL_DISTANCE)
@@ -108,7 +131,8 @@ ncVideoDisplay::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_FLOAT(m_vecScreenLight[1], VIDEODISPLAYFL_LIGHT)
 	SENDENTITY_FLOAT(m_vecScreenLight[2], VIDEODISPLAYFL_LIGHT)
 	SENDENTITY_BYTE(m_uiSurfaceEnabled, VIDEODISPLAYFL_ENABLED)
-	SENDENTITY_ENTITY(m_videoDisplayInput, VIDEODISPLAYFL_ENABLED)
+	SENDENTITY_ENTITY(m_videoDisplayInput, VIDEODISPLAYFL_INPUT)
+
 	return (1);
 }
 #endif
@@ -123,6 +147,7 @@ ncVideoDisplay::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_ANGLE(angles[0], VIDEODISPLAYFL_ANGLES)
 	READENTITY_ANGLE(angles[1], VIDEODISPLAYFL_ANGLES)
 	READENTITY_ANGLE(angles[2], VIDEODISPLAYFL_ANGLES)
+	READENTITY_INT(m_serverSideNum, VIDEODISPLAYFL_INTERFACE)
 	READENTITY_STRING(m_strUIClass, VIDEODISPLAYFL_INTERFACE)
 	READENTITY_FLOAT(m_flScale, VIDEODISPLAYFL_SCALE)
 	READENTITY_FLOAT(m_flUseDistance, VIDEODISPLAYFL_DISTANCE)
@@ -132,9 +157,9 @@ ncVideoDisplay::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(m_vecScreenLight[1], VIDEODISPLAYFL_LIGHT)
 	READENTITY_FLOAT(m_vecScreenLight[2], VIDEODISPLAYFL_LIGHT)
 	READENTITY_BYTE(m_uiSurfaceEnabled, VIDEODISPLAYFL_ENABLED)
-	READENTITY_ENTITY(m_videoDisplayInput, VIDEODISPLAYFL_ENABLED)
+	READENTITY_ENTNUM(m_videoDisplayInputNum, VIDEODISPLAYFL_INPUT)
 
-	if (flNew) {
+	if (flChanged & VIDEODISPLAYFL_INTERFACE) {
 		vguiWidget uiChain = (vguiWidget)m_UIChain;
 
 		m_vecWorldSize = m_vecUIRes * m_flScale;
@@ -146,6 +171,7 @@ ncVideoDisplay::ReceiveEntity(float flNew, float flChanged)
 		uiChain.m_iFlags = 1;
 
 		m_videoDisplayUI = vguiTrUIMenu::CreateFromMenuFile(m_UIChain, m_strUIClass);
+		m_videoDisplayUI.owner = this;
 
 		if (m_videoDisplayUI) {
 			uiChain.Add(m_videoDisplayUI);
@@ -160,6 +186,7 @@ ncVideoDisplay::ReceiveEntity(float flNew, float flChanged)
 void
 ncVideoDisplay::ReloadVideoResources(void)
 {
+	m_strSurfaceMat = sprintf("UISurface%d", num_for_edict(this));
 	m_flSurfaceMat = shaderforname(m_strSurfaceMat, sprintf("{\nsurfaceParm nolightmap\n{\nmap $rt:%s\n}\n}", m_strSurfaceMat));
 	m_bCached = true;
 }
@@ -167,6 +194,22 @@ ncVideoDisplay::ReloadVideoResources(void)
 void
 ncVideoDisplay::postdraw(void)
 {
+	ncAVReceiver oldInput = m_videoDisplayInput;
+
+	if (m_videoDisplayInputNum == 0) {
+		super::postdraw();
+		return;
+	}
+
+	m_videoDisplayInput = (ncAVReceiver)findfloat(world, ::entnum, m_videoDisplayInputNum);
+
+	if (oldInput != m_videoDisplayInput) {
+		if (m_videoDisplayInput) {
+			ncAVReceiver newInput = (ncAVReceiver)m_videoDisplayInput;
+			newInput.RefreshVideoDisplay(this);
+		}
+	}
+
 	RenderScene();
 }
 
@@ -174,19 +217,21 @@ float
 ncVideoDisplay::predraw(void)
 {
 	vector fsize = m_vecWorldSize / 2;
+	vector finalOrg = GetOrigin();
 
 	if (m_uiSurfaceEnabled == false || m_bCached == false)
 		return (PREDRAW_NEXT);
 
 	makevectors(angles);
 	R_BeginPolygon(m_strSurfaceMat, 0, 0);
-	R_PolygonVertex(origin + v_right * fsize[0] - v_up * fsize[1],
+	finalOrg += (v_forward * -0.25);
+	R_PolygonVertex(finalOrg + v_right * fsize[0] - v_up * fsize[1],
 		[1,1], [1,1,1], 1.0f);
-	R_PolygonVertex(origin - v_right * fsize[0] - v_up * fsize[1],
+	R_PolygonVertex(finalOrg - v_right * fsize[0] - v_up * fsize[1],
 		[0,1], [1,1,1], 1.0f);
-	R_PolygonVertex(origin - v_right * fsize[0] + v_up * fsize[1],
+	R_PolygonVertex(finalOrg - v_right * fsize[0] + v_up * fsize[1],
 		[0,0], [1,1,1], 1.0f);
-	R_PolygonVertex(origin + v_right * fsize[0] + v_up * fsize[1],
+	R_PolygonVertex(finalOrg + v_right * fsize[0] + v_up * fsize[1],
 		[1,0], [1,1,1], 1.0f);
 	R_EndPolygon();
 
@@ -207,6 +252,11 @@ ncVideoDisplay::predraw(void)
 void
 ncVideoDisplay::RenderScene(void)
 {
+	if (m_videoDisplayInputNum == 0) {
+		super::RenderScene();
+		return;
+	}
+
 	if (m_bCached == false)
 		return;
 
