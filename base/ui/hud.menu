@@ -161,16 +161,16 @@
 			ownerdraw CG_PLAYER_WEAPON_NAME
 		}
 
-		itemDef
-		{
-			name Radar
-			rect 498 16 128 128
-			forecolor 1 1 1 1
-			decoration
-			visible 1
-			border 1
-			bordercolor 1 1 1 .5
-		}
+		//itemDef
+		//{
+		//	name Radar
+		//	rect 498 16 128 128
+		//	forecolor 1 1 1 1
+		//	decoration
+		//	visible 1
+		//	border 1
+		//	bordercolor 1 1 1 .5
+		//}
 
 	}
 }

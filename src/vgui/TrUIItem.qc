@@ -296,7 +296,7 @@ vguiTrUIItem::Draw(void)
 	vector size;
 	int textAlignFlags = 0;
 
-	pos = m_parent.m_vecOrigin + m_trItemRectMins;
+	pos = m_parent.m_parent.m_vecOrigin + m_parent.m_vecOrigin + m_trItemRectMins;
 	size = m_trItemRectMaxs;
 	textPos = pos + [m_trItemTextAlignX, m_trItemTextAlignY];
 

@@ -96,9 +96,11 @@ HUDProgs_Draw(void)
 		if (g_hudDraw) {
 			g_hudDraw();
 		} else if (g_hudTrUIMenu) {
+			g_hudTrUIMenu.SetPos(video_mins + g_hudmins);
 			g_hudTrUIMenu.Draw();
 		}
 	} else if (g_hudTrUIMenu) {
+		g_hudTrUIMenu.SetPos(video_mins + g_hudmins);
 		g_hudTrUIMenu.Draw();
 	}
 }
