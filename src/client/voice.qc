@@ -41,8 +41,8 @@ Voice_DrawHUD(void)
 		/* icon */
 		drawpic(
 			pos + [2,0],
-			"gfx/vgui/icntlk_sv.tga",
-			[24,24],
+			"gfx/icon16/transmit",
+			[16,16],
 			UI_MAINCOLOR,
 			1.0f,
 			DRAWFLAG_NORMAL
@@ -67,7 +67,7 @@ Voice_Draw3D(entity t)
 	if (getplayerkeyfloat(t.entnum - 1, INFOKEY_P_VOIPSPEAKING)) {
 		vector vpos = t.origin + [0,0,48];
 		makevectors(view_angles);
-		R_BeginPolygon("gfx/vgui/icntlk_pl");
+		R_BeginPolygon("gfx/icon16/transmit");
 		R_PolygonVertex(vpos + v_right * 8 - v_up * 8, [1,1], [1,1,1], 1.0f);
 		R_PolygonVertex(vpos - v_right * 8 - v_up * 8, [0,1], [1,1,1], 1.0f);
 		R_PolygonVertex(vpos - v_right * 8 + v_up * 8, [0,0], [1,1,1], 1.0f);

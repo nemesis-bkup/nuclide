@@ -502,7 +502,6 @@ ncPortal::ReceiveEntity(float flNew, float flChanged)
 	}
 
 	_PortalUpdated();
-	drawmask = MASK_ENGINE;
 //	predraw = 0;
 }
 

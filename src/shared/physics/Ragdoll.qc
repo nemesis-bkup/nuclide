@@ -347,7 +347,6 @@ ncRagdoll_Create(string modelFile)
 	ncRagdoll rag = spawn(ncRagdoll);
 	rag.Spawn();
 	rag.SetMovetype(MOVETYPE_PHYSICS);
-	rag.drawmask = MASK_ENGINE;
 	rag.SetSolid(SOLID_CORPSE);
 	rag.SetOrigin(g_view.GetCameraOrigin());
 

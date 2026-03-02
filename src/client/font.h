@@ -31,7 +31,7 @@ typedef enum
 	DRAWFLAG_2XMODULATE /**< Not implemented in FTEQW. */
 } drawflag_t;
 
-/** Defines the valid alignment flags for text fields. 
+/** Defines the valid alignment flags for text fields.
 @sa Font_DrawField */
 typedef enumflags
 {
@@ -42,6 +42,7 @@ typedef enumflags
 } alignflags_t;
 #define AF_NONE 0
 #define AF_DEFAULT (AF_TOP | AF_LEFT)
+#define AF_CENTER AF_NONE
 
 /** Representation of a font. */
 typedef struct
@@ -75,7 +76,7 @@ void Font_DrawText(vector vecOrigin, string strText, font_s fnt);
 @param a is the alpha value to blend with.
 @param fnt is the font to be used. */
 void Font_DrawText_A(vector vecOrigin, string strText, float a, font_s fnt);
-/** Draw tinted text on the screen at the desired position with a desired font. 
+/** Draw tinted text on the screen at the desired position with a desired font.
 
 @param vecOrigin is the absolute starting position.
 @param strText is the text to be drawn.
@@ -83,7 +84,7 @@ void Font_DrawText_A(vector vecOrigin, string strText, float a, font_s fnt);
 @param fnt is the font to be used. */
 void Font_DrawText_RGB(vector vecOrigin, string strText, vector col, font_s fnt);
 /** Draw tinted and alpha blended text on the screen at the desired position
-with a desired font. 
+with a desired font.
 
 @param vecOrigin is the absolute starting position.
 @param strText is the text to be drawn.
@@ -131,7 +132,7 @@ void Font_DrawFieldAtHeight(vector vecOrigin, vector vecSize, int iTextHeight, s
 @return is a hex color string. e.g. "^xF00" */
 string Font_RGBtoHex(vector vecColor);
 
-/** @brief Returns the height of a specified font in pixels. 
+/** @brief Returns the height of a specified font in pixels.
 @param fnt is the font to be queried.
 @return is the height of a font in pixels.
 @sa Font_StringWidth
@@ -148,7 +149,7 @@ result instead of querying it every frame anyway.
 The return value is of type float, to be a drop-in replacement for the engine builtin
 stringwidth().
 
-@param strText is the text to get the length of. 
+@param strText is the text to get the length of.
 @param hasColor hints if funstring color codes are present in the string.
 @param fnt is the font used with the text in question. */
 float Font_StringWidth(string strText, bool hasColor, font_s fnt);
@@ -164,5 +165,10 @@ porting old code.
 @param fnt is the font to be queried.
 @return the internal 'drawfont' id of the specified font. */
 float Font_GetID(font_s fnt);
+
+void Font_DrawTextScroll(vector vecOrigin, string strText, vector canvasSize, font_s fnt);
+void Font_DrawTextScroll_A(vector vecOrigin, string strText, vector canvasSize, float a, font_s fnt);
+void Font_DrawTextScroll_RGB(vector vecOrigin, string strText, vector canvasSize, vector rgb, font_s fnt);
+void Font_DrawTextScroll_RGBA(vector vecOrigin, string strText, vector canvasSize, vector rgb, float a, font_s fnt);
 
 /** @} */ // end of client

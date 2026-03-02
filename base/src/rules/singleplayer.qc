@@ -15,7 +15,7 @@
  */
 
 void
-CodeCallback_Precaches(void)
+CodeCallback_Precache(void)
 {
 	precache.Entity("player");
 }

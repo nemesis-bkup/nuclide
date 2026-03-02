@@ -33,7 +33,7 @@ with the def system in id Tech 4 [1] (Doom 3, Quake 4, Prey, etc.)
 but does not guarantee to be compatible as-is.
 
 The first references to such a system existing can be found when
-Team Fortress Software was working on Team Fortress 2, 
+Team Fortress Software was working on Team Fortress 2,
 originally on Quake II's engine. [2]
 
 The gist is, that an entity def can set a base spawnclass (e.g. func_door)
@@ -130,6 +130,9 @@ void EntityDef_SetFromEntNum(ncItem targetItem, int defNum);
 int EntityDef_IDFromName(string);
 string EntityDef_GetSpawnData(int);
 bool EntityDef_HasSpawnClass(string className);
+
+int EntityDef_Count(void);
+string EntityDef_ClassForIndex(int index);
 
 #ifdef SERVER
 bool EntityDef_Precache(string);

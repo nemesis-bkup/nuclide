@@ -57,7 +57,7 @@ env_explosion:ncPointTrigger
 {
 public:
 	void env_explosion(void);
-	
+
 	/* overrides */
 	virtual void SpawnKey(string,string);
 	virtual void Spawned(void);
@@ -95,6 +95,7 @@ void
 env_explosion::SpawnKey(string strKey, string setValue)
 {
 	switch (strKey) {
+	case "dmg": /* in case it's a target_explosion from Q2 */
 	case "iMagnitude":
 		m_explosionMagnitude = ReadInt(setValue);
 		break;

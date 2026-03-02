@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop computer
+	diffusemap detail_pbr/computer.tga
+	normalmap detail_pbr/computer_local.tga
+	specularmap detail_pbr/computer_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

@@ -1,0 +1,7 @@
+{
+    program defaultskin
+    diffusemap models/keyb_white.tga
+    normalmap models/keyb_normal.tga
+    uppermap models/keyb_uppermap.tga
+    lowermap models/keyb_lowermap.tga
+}

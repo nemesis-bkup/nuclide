@@ -1,38 +1,38 @@
 "PropData.txt"
 {
-	"gs_material_glass"
+	"glass"
 	{
 		"breakable_model" "GlassChunks"
 	}
-	"gs_material_wood"
+	"wood"
 	{
 		"breakable_model" "WoodChunks"
 	}
-	"gs_material_metal"
+	"metal"
 	{
 		"breakable_model" "MetalChunks"
 	}
-	"gs_material_flesh"
+	"flesh"
 	{
 		"breakable_model" "PlayerGibs"
 	}
-	"gs_material_cinderblock"
+	"cinderblock"
 	{
 		"breakable_model" "CinderBlocks"
 	}
-	"gs_material_tile"
+	"tile"
 	{
 		"breakable_model" "CeilingTile"
 	}
-	"gs_material_computer"
+	"computer"
 	{
 		"breakable_model" "ComputerGibs"
 	}
-	"gs_material_unbreakableglass"
+	"unbreakableglass"
 	{
 		"breakable_model" "GlassChunks"
 	}
-	"gs_material_rocks"
+	"rocks"
 	{
 		"breakable_model" "RockGibs"
 	}
@@ -40,61 +40,61 @@
 	{
 		"breakable_model" "ArmyGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_demon"
 	{
 		"breakable_model" "DemonGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_dog"
 	{
 		"breakable_model" "DogGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_enforcer"
 	{
 		"breakable_model" "EnforcerGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_fish"
 	{
 		"breakable_model" "FishGibs"
 		"breakable_count" "3"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_knight"
 	{
 		"breakable_model" "KnightGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_hknight"
 	{
 		"breakable_model" "HKnightGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_ogre"
 	{
 		"breakable_model" "OgreGibs"
 		"breakable_count" "4"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_player"
 	{
 		"breakable_model" "PlayerGibs"
 		"breakable_count" "6"
-		"surfaceprop"	"gs_material_flesh"
+		"surfaceprop"	"flesh"
 	}
 	"actor_robot"
 	{
 		"breakable_model" "MetalChunks"
 		"breakable_count" "6"
-		"surfaceprop"	"gs_material_computer"
+		"surfaceprop"	"computer"
 	}
 	
 	

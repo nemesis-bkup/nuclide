@@ -89,11 +89,11 @@ public:
 	nonvirtual void SetBeamLength(float);
 
 private:
-	PREDICTED_VECTOR(m_vecColor)
-	PREDICTED_FLOAT(m_flBeamLength)
-	PREDICTED_FLOAT(m_flBeamWidth)
-	PREDICTED_INT(m_iState)
-	PREDICTED_FLOAT_N(style)
+	NETWORKED_VECTOR(m_vecColor)
+	NETWORKED_FLOAT(m_flBeamLength)
+	NETWORKED_FLOAT(m_flBeamWidth)
+	NETWORKED_INT(m_iState)
+	NETWORKED_FLOAT_N(style)
 };
 
 

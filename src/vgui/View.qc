@@ -37,13 +37,6 @@ vguiView::vguiView(void)
 void
 vguiView::Add(vguiWidget wNew)
 {
-	vguiWidget wNext = this;
-	vguiWidget wParent;
-	do {
-		wParent = wNext;
-		wNext = wNext.m_children;
-	} while (wNext);
-	wParent.m_children = wNew;
 	wNew.m_parent = this;
 }
 
@@ -51,30 +44,30 @@ void vguiView::Draw(void)
 {
 	vguiWidget wNext = this;
 	g_vguiWidgetCount = 0;
-	do {
-		wNext = wNext.m_children;
-		if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
-			g_vguiWidgetCount++;
-			wNext.Draw();
-		}
-	} while (wNext);
+
+	if (!Visible()) {
+		return;
+	}
+
+    for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
+        if (widgets.GetParent() == this && widgets.Visible()) {
+			widgets.Draw();
+        }
+    }
+
 }
 
 bool vguiView::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	float ret = false;
+    for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
+        if (widgets.GetParent() == this && widgets.Visible()) {
+            bool ret = widgets.Input(flEVType, flKey, flChar, flDevID);
 
-	vguiWidget wNext = this;
-	do {
-		wNext = wNext.m_children;
-		if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
-			ret = wNext.Input(flEVType, flKey, flChar, flDevID);
-		}
+            if (ret) {
+                return (true);
+            }
+        }
+    }
 
-		if (ret == true)
-			return true;
-
-	} while (wNext);
-
-	return (ret);
+	return (false);
 }

@@ -946,7 +946,7 @@ ncProjectile::_ApplyDamage(void)
 
 	/* the location _could_ be more accurate... */
 	if (targetEnt.HasSurfaceData()) {
-		SurfData_ImpactOfType(targetEnt.m_surfdataID, m_hitLocation, m_lastPlaneNormal);
+		ncSurfDataManager::ImpactOfType(targetEnt.m_surfdataID, m_hitLocation, m_lastPlaneNormal);
 	}
 
 	trace_surface_id = m_iMultiBody;
@@ -1036,15 +1036,15 @@ ncProjectile::_FireSingle(vector vecPos, vector vecAngles, float flDamage, float
 
 	/* water impact */
 	if (trace_endcontentsi & CONTENTBIT_WATER) {
-		SurfData_ImpactOfNamedType("water", m_hitLocation, m_lastPlaneNormal);
+		ncSurfDataManager::ImpactOfNamedType("water", m_hitLocation, m_lastPlaneNormal);
 		_FireSingle(m_hitLocation + ((vecAngles) * 2), vecAngles, flDamage / 2, flRange);
 		skipFX = true;
 	} else if (trace_endcontentsi & CONTENTBIT_SLIME) {
-		SurfData_ImpactOfNamedType("slime", m_hitLocation, m_lastPlaneNormal);
+		ncSurfDataManager::ImpactOfNamedType("slime", m_hitLocation, m_lastPlaneNormal);
 		_FireSingle(m_hitLocation + ((vecAngles) * 2), vecAngles, flDamage / 2, flRange);
 		skipFX = true;
 	} else if (trace_endcontentsi & CONTENTBIT_LAVA) {
-		SurfData_ImpactOfNamedType("lava", m_hitLocation, m_lastPlaneNormal);
+		ncSurfDataManager::ImpactOfNamedType("lava", m_hitLocation, m_lastPlaneNormal);
 		_FireSingle(m_hitLocation + ((vecAngles) * 2), vecAngles, flDamage / 2, flRange);
 		skipFX = true;
 	}
@@ -1074,7 +1074,7 @@ ncProjectile::_FireSingle(vector vecPos, vector vecAngles, float flDamage, float
 	if (impactTarget.iBleeds == 0 && skipFX == false) {
 		if (m_bDetonateOnWorld == true) {
 			StartSoundDef(m_sndExplode, CHAN_VOICE, true);
-			SurfData_Impact(impactTarget, m_hitLocation, m_lastPlaneNormal);
+			ncSurfDataManager::Impact(impactTarget, m_hitLocation, m_lastPlaneNormal);
 		}
 		
 		if (STRING_SET(m_strDecalGroup)) {
@@ -1443,7 +1443,6 @@ ncProjectile::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(m_vecLightColor[2], PROJ_CHANGED_RENDERCOLOR)
 	READENTITY_FLOAT(m_flLightRadius, PROJ_CHANGED_RENDERAMT)
 	setmodelindex(this, modelindex);
-	drawmask = MASK_ENGINE;
 }
 
 void

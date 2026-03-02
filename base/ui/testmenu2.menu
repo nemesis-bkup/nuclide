@@ -1,12 +1,18 @@
 {
-	menuDef 
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+	menuDef
 	{
 		name "testmenu2"
 		rect 0 0 114 192
 		backcolor 0 0 1 1
+		visible 1
 
 		// becomes a numeric textfield
-		itemDef 
+		itemDef
 		{
 			name NumField
 			text ""
@@ -19,7 +25,7 @@
 			maxCharsHit { activateOnText } // will activate the entity it's connected to when entity target string matches numfield
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num7
 			text "7"
@@ -28,13 +34,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 7 }
 			mouseEnter { setitemcolor Num7 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num7 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num8
 			text "8"
@@ -43,13 +50,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 8 }
 			mouseEnter { setitemcolor Num8 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num8 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num9
 			text "9"
@@ -58,13 +66,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 9 }
 			mouseEnter { setitemcolor Num9 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num9 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num4
 			text "4"
@@ -73,13 +82,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 4 }
 			mouseEnter { setitemcolor Num4 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num4 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num5
 			text "5"
@@ -88,13 +98,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 5 }
 			mouseEnter { setitemcolor Num5 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num5 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num6
 			text "6"
@@ -103,13 +114,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 6 }
 			mouseEnter { setitemcolor Num6 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num6 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num1
 			text "1"
@@ -118,13 +130,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 1 }
 			mouseEnter { setitemcolor Num1 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num1 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num2
 			text "2"
@@ -133,13 +146,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 2 }
 			mouseEnter { setitemcolor Num2 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num2 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num3
 			text "3"
@@ -148,13 +162,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 3 }
 			mouseEnter { setitemcolor Num3 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num3 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name NumStar
 			text "*"
@@ -163,13 +178,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField * }
 			mouseEnter { setitemcolor NumStar forecolor 1 1 1 1 }
 			mouseExit { setitemcolor NumStar forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name Num0
 			text "0"
@@ -178,13 +194,14 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField 0 }
 			mouseEnter { setitemcolor Num0 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Num0 forecolor .4 .4 .4 .4  }
 		}
 
-		itemDef 
+		itemDef
 		{
 			name NumPound
 			text "#"
@@ -193,6 +210,7 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addtext NumField # }
 			mouseEnter { setitemcolor NumPound forecolor 1 1 1 1 }

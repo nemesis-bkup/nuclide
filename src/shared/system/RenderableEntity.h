@@ -36,7 +36,8 @@ typedef enumflags
 	RDENT_CHANGED_RENDERCOLOR,
 	RDENT_CHANGED_RENDERAMT,
 	RDENT_CHANGED_RENDERMODE,
-	RDENT_CHANGED_CONTROLLER
+	RDENT_CHANGED_CONTROLLER,
+    RDENT_CHANGED_FRAMETIME
 } nsrenderableentity_changed_t;
 
 typedef enum
@@ -196,6 +197,9 @@ private:
 	NETWORKED_VECTOR_N(glowmod)
 	NETWORKED_FLOAT_N(frame1time)
 
+	NETWORKED_FLOAT_N(modelindex2)
+	NETWORKED_FLOAT_N(modelindex3)
+	NETWORKED_FLOAT_N(modelindex4)
 	NETWORKED_FLOAT(m_renderFX)
 	NETWORKED_FLOAT(m_renderMode)
 	NETWORKED_FLOAT(m_renderAmount)
@@ -230,3 +234,7 @@ private:
 	nonvirtual void _UpdateGeomset();
 #endif
 };
+
+.float modelindex2;
+.float modelindex3;
+.float modelindex4;

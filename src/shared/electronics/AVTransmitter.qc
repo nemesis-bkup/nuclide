@@ -40,6 +40,8 @@ ncAVTransmitter::ncAVTransmitter(void)
 	m_tvChannelBottomText = g_string_null;
 	m_tvChannelLight = g_vec_null;
 	m_tvChannelLightStyle = g_float_null;
+	m_tvChannelUI = "ui/tv.menu";
+	m_mediaSize = [320,240];
 }
 
 #ifdef SERVER
@@ -47,7 +49,7 @@ void
 ncAVTransmitter::TransmitSingleVideo(string videoFile, bool advancesSchedule)
 {
 	/* FIXME: easy network speedup: turn this into an event after, and set those _new fields to prevent networking them */
-	ncDict videoDict = ncDict::LoadDeclFromFile("video", sprintf("videos/%s.decl", videoFile));
+	ncDict videoDict = ncDict::LoadDeclFromFile(videoFile, sprintf("videos/%s.video", videoFile));
 	m_tvChannelVideo = videoDict.GetString("video");
 	m_tvChannelAudio = videoDict.GetString("audio");
 	m_tvChannelDOG = videoDict.GetString("dog");
@@ -149,6 +151,9 @@ ncAVTransmitter::SpawnKey(string keyName, string setValue)
 	case "bottomtext":
 		m_tvChannelBottomText = ReadString(setValue);
 		break;
+	case "ui":
+		m_tvChannelUI = ReadString(setValue);
+		break;
 	default:
 		super::SpawnKey(keyName, setValue);
 		break;
@@ -169,6 +174,7 @@ ncAVTransmitter::EvaluateEntity(void)
 	EVALUATE_FIELD(m_tvChannelDOG, TVCHANNELFL_DOG)
 	EVALUATE_FIELD(m_tvChannelTopText, TVCHANNELFL_TOPTEXT)
 	EVALUATE_FIELD(m_tvChannelBottomText, TVCHANNELFL_BOTTOMTEXT)
+	EVALUATE_FIELD(m_tvChannelUI, TVCHANNELFL_UI)
 	EVALUATE_VECTOR(m_tvChannelLight, 0, TVCHANNELFL_LIGHT)
 	EVALUATE_VECTOR(m_tvChannelLight, 1, TVCHANNELFL_LIGHT)
 	EVALUATE_VECTOR(m_tvChannelLight, 2, TVCHANNELFL_LIGHT)
@@ -181,6 +187,7 @@ ncAVTransmitter::SendEntity(entity ePEnt, float flChanged)
 {
 	WriteByte(MSG_ENTITY, ENT_TVCHANNEL);
 	WriteFloat(MSG_ENTITY, flChanged);
+	SENDENTITY_INT(num_for_edict(this), TVCHANNELFL_CHAN)
 	SENDENTITY_COORD(origin[0], TVCHANNELFL_ORIGIN)
 	SENDENTITY_COORD(origin[1], TVCHANNELFL_ORIGIN)
 	SENDENTITY_COORD(origin[2], TVCHANNELFL_ORIGIN)
@@ -191,6 +198,7 @@ ncAVTransmitter::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_STRING(m_tvChannelDOG, TVCHANNELFL_DOG)
 	SENDENTITY_STRING(m_tvChannelTopText, TVCHANNELFL_TOPTEXT)
 	SENDENTITY_STRING(m_tvChannelBottomText, TVCHANNELFL_BOTTOMTEXT)
+	SENDENTITY_STRING(m_tvChannelUI, TVCHANNELFL_UI)
 	SENDENTITY_FLOAT(m_tvChannelLight[0], TVCHANNELFL_LIGHT)
 	SENDENTITY_FLOAT(m_tvChannelLight[1], TVCHANNELFL_LIGHT)
 	SENDENTITY_FLOAT(m_tvChannelLight[2], TVCHANNELFL_LIGHT)
@@ -204,6 +212,7 @@ ncAVTransmitter::SendEntity(entity ePEnt, float flChanged)
 void
 ncAVTransmitter::ReceiveEntity(float flNew, float flChanged)
 {
+	READENTITY_INT(m_serverSideNum, TVCHANNELFL_CHAN)
 	READENTITY_COORD(origin[0], TVCHANNELFL_ORIGIN)
 	READENTITY_COORD(origin[1], TVCHANNELFL_ORIGIN)
 	READENTITY_COORD(origin[2], TVCHANNELFL_ORIGIN)
@@ -214,6 +223,7 @@ ncAVTransmitter::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_STRING(m_tvChannelDOG, TVCHANNELFL_DOG)
 	READENTITY_STRING(m_tvChannelTopText, TVCHANNELFL_TOPTEXT)
 	READENTITY_STRING(m_tvChannelBottomText, TVCHANNELFL_BOTTOMTEXT)
+	READENTITY_STRING(m_tvChannelUI, TVCHANNELFL_UI)
 	READENTITY_FLOAT(m_tvChannelLight[0], TVCHANNELFL_LIGHT)
 	READENTITY_FLOAT(m_tvChannelLight[1], TVCHANNELFL_LIGHT)
 	READENTITY_FLOAT(m_tvChannelLight[2], TVCHANNELFL_LIGHT)
@@ -239,6 +249,23 @@ ncAVTransmitter::ReceiveEntity(float flNew, float flChanged)
 		ReloadVideoResources();
 	}
 
+	if (flChanged & TVCHANNELFL_UI && STRING_SET(m_tvChannelUI)) {
+		/* initialize UI panel here */
+		m_tvChannelUIRootWindow = spawn(vguiWidget);
+		vguiWidget uiChain = (vguiWidget)m_tvChannelUIRootWindow;
+		uiChain.m_iFlags = 1;
+
+		vguiScriptedView videoDisplayUI = vguiScriptedView::CreateFromMenuFile(m_tvChannelUIRootWindow, m_tvChannelUI);
+		videoDisplayUI.owner = this;
+		m_tvChannelUIMenu = videoDisplayUI;
+
+		if (videoDisplayUI) {
+			uiChain.Add(videoDisplayUI);
+		} else {
+			ncError("Unable to allocate TV Channel %i Visual", m_tvChannelNum);
+		}
+	}
+
 	UpdateReceivers();
 }
 
@@ -252,19 +279,11 @@ ncAVTransmitter::UpdateReceivers(void)
 		}
 	}
 
-	/* now update all the 'static' displays... */
-	for (ncInteractiveSurface videoDisplay = 0; (videoDisplay = (ncInteractiveSurface)find(videoDisplay, ::classname, "ncInteractiveSurface"));) {
-		vguiTrUIMenu targetMenu = (vguiTrUIMenu)videoDisplay.m_videoDisplayUI;
-
-		string videoName = sprintf("videochannel_%i", -m_tvChannelNum);
-		printf("%s\n", sprintf("setbackground videochannel_%i_video %S", -m_tvChannelNum, videoName));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground videochannel_%i_video %S", -m_tvChannelNum, videoName));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground videochannel_%i_dog %S", -m_tvChannelNum, m_tvChannelDOG));
-		targetMenu.InterpretCommand(targetMenu, sprintf("settext videochannel_%i_toptext %S", -m_tvChannelNum, m_tvChannelTopText));
-		targetMenu.InterpretCommand(targetMenu, sprintf("settext videochannel_%i_bottomtext %S", -m_tvChannelNum, m_tvChannelBottomText));
-		printf("%s\n", sprintf("settext videochannel_%i_toptext %S", -m_tvChannelNum, m_tvChannelTopText));
-		printf("%s\n", sprintf("settext videochannel_%i_bottomtext %S", -m_tvChannelNum, m_tvChannelBottomText));
-	}
+	vguiScriptedView ourMenu = (vguiScriptedView)m_tvChannelUIMenu;
+	ourMenu.InterpretCommand(ourMenu, sprintf("setbackground channel %S", m_tvChannelVideoMat));
+	ourMenu.InterpretCommand(ourMenu, sprintf("setbackground dog %S", m_tvChannelDOG));
+	ourMenu.InterpretCommand(ourMenu, sprintf("settext toptext %S", m_tvChannelTopText));
+	ourMenu.InterpretCommand(ourMenu, sprintf("settext bottomtext %S", m_tvChannelBottomText));
 }
 
 void
@@ -304,5 +323,20 @@ ncAVTransmitter::FlipImages(void)
 	for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {
 		drawpic([0,0], receiverEnum.m_tvChannelMat, [1,1], [1,1,1], 1.0f, DRAWFLAG_NORMAL);
 	}
+}
+
+void
+ncAVTransmitter::Draw(void)
+{
+	if (m_tvChannelUIRootWindow) {
+		vguiWidget uiChain = (vguiWidget)m_tvChannelUIRootWindow;
+		uiChain.Draw();
+	}
+}
+
+void
+ncAVTransmitter::Input(float a,float b,float c,float d)
+{
+
 }
 #endif

@@ -1236,7 +1236,6 @@ SHPF_precache_Particle(string particleName)
 	return (int)particleeffectnum(particleName);
 }
 
-
 bool
 SHPF_precache_Entity(string defName)
 {

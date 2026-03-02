@@ -1,0 +1,161 @@
+{
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+	menuDef
+	{
+		name "testmenu1"
+		rect 0 0 114 192
+		backcolor .1 .4 .1 1
+		visible 1
+
+		itemDef
+		{
+			name backgroundmap
+			rect 0 0 114 192
+			forecolor 0 1 1 1
+			decoration
+			visible 1
+
+			camera_origin 134 -112 310
+			camera_avelocity 0 20 0
+
+			asset_model "maps/lqdm9.bsp"
+			model_fov 110
+		}
+
+		itemDef
+		{
+			name backgroundTint
+			rect 0 0 114 192
+			backcolor .5 .5 1 .25
+			decoration
+			visible 1
+		}
+
+		itemDef
+		{
+			name borderFrame
+			rect 0 0 114 192
+			bordercolor .5 .5 1 1
+			border 1
+			decoration
+			visible 1
+		}
+
+		itemDef
+		{
+			name "ButtonPlusBack"
+			background "gfx/icon16/arrow_left"
+			rect 16 16 24 24
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			type 3
+		}
+
+		itemDef
+		{
+			name prevButton
+			rect 16 16 24 24
+			bordercolor .4 .4 .4 .4
+			border 1
+			textalign 1
+			type 1
+
+			action { skindecrement testmodel 0; fireoutput_model_skin testmodel; }
+			mouseEnter { setitemcolor prevButton bordercolor 1 1 1 1 }
+			mouseExit { setitemcolor prevButton bordercolor .4 .4 .4 .4  }
+		}
+
+		itemDef
+		{
+			name "ButtonMinusBack"
+			background "gfx/icon16/arrow_right"
+			rect 80 16 24 24
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			type 3
+		}
+
+		itemDef
+		{
+			name nextButton
+			rect 80 16 24 24
+			bordercolor .4 .4 .4 .4
+			border 1
+			textalign 1
+			type 1
+
+			action { skinincrement testmodel 5; fireoutput_model_skin testmodel; }
+			mouseEnter { setitemcolor nextButton bordercolor 1 1 1 1 }
+			mouseExit { setitemcolor nextButton bordercolor .4 .4 .4 .4  }
+		}
+
+		itemDef
+		{
+			rect 16 48 114 192
+			text "^bSODA"
+			textalign 1
+			textscale 2
+			forecolor 0 1 1 1
+		}
+
+		itemDef
+		{
+			name testmodel
+			rect 0 0 114 192
+			forecolor 0 1 1 1
+			decoration
+			visible 1
+
+			asset_model "models/can.mdl"
+			model_origin 32 0 0
+			model_fov 60
+			model_angles 45 90 90
+			model_avelocity 0 250 0
+		}
+
+		itemDef
+		{
+			rect -16 16 114 192
+			text "^bSODA"
+			textalign 1
+			textscale 2
+			forecolor 1 0 1 1
+		}
+
+		itemDef
+		{
+			name backModel
+			rect 80 150 24 24
+			forecolor 0 1 1 1
+			decoration
+			visible 1
+
+			asset_model "models/can.mdl"
+			model_fov 90
+			model_angles 45
+			model_avelocity 0 120 60
+			model_bob .5 0 .5
+			model_origin 14 0 0
+		}
+
+		itemDef
+		{
+			name buyButton
+			rect 16 150 48 24
+			forecolor .75 .75 .75 .75
+			text "BUY!"
+			textalign 1
+			type 1
+
+			action { fireoutput 8 }
+			mouseEnter { setitemcolor buyButton forecolor 1 1 1 1 }
+			mouseExit { setitemcolor buyButton forecolor .75 .75 .75 .75 }
+		}
+	}
+}

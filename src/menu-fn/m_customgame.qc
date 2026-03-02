@@ -123,7 +123,7 @@ menu_customgame_init(void)
 	customgame_btnRefresh = spawn(CMainButton);
 	customgame_btnRefresh.SetImage(BTN_REFRESHLIST);
 	customgame_btnRefresh.SetPos(15,236);
-	customgame_btnRefresh.SetExecute(ModServer_Refresh);
+// 	//customgame_btnRefresh.SetExecute(ModServer_Refresh);
 	Widget_Add(fn_customgame, customgame_btnRefresh);
 
 	customgame_btnDeactivate = spawn(CMainButton);
@@ -203,7 +203,7 @@ menu_customgame_draw(void)
 					1.0f, 0, font_arial);
 
 	/* draw a frame for when we're refreshing the mod list */
-	if (g_iModServerLoading) {
+	if (1 /*g_iModServerLoading */) {
 		customgame_dlgWait.Draw();
 		WField_Static(162, 180, m_reslbl[IDS_MODREQ_TITLE], 320, 260,
 			col_prompt_text, 1.0f, 2, font_label_p);

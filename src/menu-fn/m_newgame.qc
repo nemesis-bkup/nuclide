@@ -26,7 +26,7 @@ ng_btneasy_start(void)
 {
 	static void ng_btneasy_end(void) {
 		g_menupage = PAGE_MAIN;
-		Map_NewGame(1i);
+		localcmd("set skill 1\nspawnSingle\n");
 	}
 	localsound("../media/launch_upmenu1.wav");
 	header.SetStartEndPos(45,45,70,208);
@@ -42,7 +42,7 @@ ng_btnnormal_start(void)
 {
 	static void ng_btnnormal_end(void) {
 		g_menupage = PAGE_MAIN;
-		Map_NewGame(2i);
+		localcmd("set skill 2\nspawnSingle\n");
 	}
 	localsound("../media/launch_upmenu1.wav");
 	header.SetStartEndPos(45,45,70,208);
@@ -58,7 +58,7 @@ ng_btnhard_start(void)
 {
 	static void ng_btnhard_end(void) {
 		g_menupage = PAGE_MAIN;
-		Map_NewGame(3i);
+		localcmd("set skill 3\nspawnSingle\n");
 	}
 	localsound("../media/launch_upmenu1.wav");
 	header.SetStartEndPos(45,45,70,208);

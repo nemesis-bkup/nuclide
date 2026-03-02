@@ -20,10 +20,11 @@ GameText_CharCount(float fadein, float timer, string msg)
 {
 	float len = (timer / fadein);
 
-	if (!fadein || len > strlen(msg))
+	if (!fadein || len > strlen(msg)) {
 		return strlen(msg);
-	else
+	} else {
 		return len;
+	}
 }
 
 /* the engine its drawstring doesn't like newlines that much */
@@ -151,8 +152,9 @@ GameText_Draw(void)
 {
 	vector debugPos = [16,16];
 	
-	if (cvar("r_showTexts") > 0)
+	if (cvar("r_showTexts") > 0) {
 		Font_DrawText(debugPos, "Text Debug Information", FONT_CON);
+	}
 
 	debugPos[1] += 20;
 
@@ -166,8 +168,9 @@ GameText_Draw(void)
 
 		g_textchannels[i].m_flTime += clframetime;
 
-		if (cvar("r_showTexts") <= 0)
+		if (cvar("r_showTexts") <= 0) {
 			continue;
+		}
 		
 		Font_DrawText(debugPos, sprintf("Chan %i: E %i T: %f/%f", i, g_textchannels[i].m_iEffect, g_textchannels[i].m_flTime, g_textchannels[i].m_flHoldTime), FONT_CON);
 		debugPos[1] += 20;
@@ -185,8 +188,9 @@ GameText_Draw(void)
 
 	GameText_DrawMessage(&g_textqueue[0], g_textqueue[0].m_flTime - g_textqueue[0].m_flFXTime, 0); /* first pass */
 
-	if (g_textqueue[0].m_iEffect != 0)
+	if (g_textqueue[0].m_iEffect != 0) {
 		GameText_DrawMessage(&g_textqueue[0], g_textqueue[0].m_flTime, 1); /* second pass */
+	}
 
 	g_textqueue[0].m_flTime += clframetime;
 
@@ -199,9 +203,9 @@ GameText_Draw(void)
 		maxTime = g_textqueue[0].m_flFadeIn + g_textqueue[0].m_flFadeOut + g_textqueue[0].m_flHoldTime + g_textqueue[0].m_flFXTime;
 	}
 
-	if (g_textqueue[0].m_flTime >= maxTime)
+	if (g_textqueue[0].m_flTime >= maxTime) {
 		g_textqueue[0].m_strMessage = __NULL__;
-
+	}
 }
 
 void
@@ -323,6 +327,9 @@ GameMessage_Parse(void)
 	flVolume = readfloat();
 	iAttenuation = readbyte();
 
-	if (strSound)
-		sound(self, CHAN_ITEM, strSound, flVolume, iAttenuation);
+	if (!STRING_SET(strSound)) {
+		return;
+	}
+
+	sound(self, CHAN_ITEM, strSound, flVolume, iAttenuation);
 }

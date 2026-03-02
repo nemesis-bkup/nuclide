@@ -1,0 +1,17 @@
+object crt_wood
+{
+    "name"      "Cathode Ray Tube (Wood)"
+    "model"     "models/crt.mdl"
+    "physics"   "1"
+    "phantom"   "0"
+    "mins" "-16 -16 -16"
+    "maxs" "16 16 16"
+    "scale" "1"
+
+    "gui_base64" "ewoJYXNzZXRnbG9iYWxkZWYKCXsKCQlmb250IGZvbnRzL2ZvbnQxNiAxNgoJCWN1cnNvciBnZngvaWNvbjE2L2N1cnNvcgoJfQoKCW1lbnVEZWYKCXsKCQluYW1lICJNZWRpYVZpZXciCgkJcmVjdCAwIDAgNjQwIDQ4MAoJCWJhY2tjb2xvciAwIDAgMSAxCgkJdmlzaWJsZSAxCgoJCWl0ZW1EZWYKCQl7CgkJCW5hbWUgY2hhbm5lbAoJCQliYWNrZ3JvdW5kICJzdGF0aWMiCgkJCXJlY3QgMCAwIDY0MCA0ODAKCQkJZm9yZWNvbG9yIC4yNSAuMjUgLjI1IDEKCQkJZGVjb3JhdGlvbgoJCQl2aXNpYmxlIDEKCQl9CgoJCWl0ZW1EZWYKCQl7CgkJCW5hbWUgc2hhcmVkX2FwcAoJCQlncm91cCBzaGFyZWRJdGVtCgkJCXR5cGUgMzIKCQkJcmVjdCAwIDAgNjQwIDQ4MAoJCQl2aXNpYmxlIDEKCQl9CgoJCWl0ZW1EZWYKCQl7CgkJCW5hbWUgc2hhcmVkX3dlYgoJCQlncm91cCBzaGFyZWRJdGVtCgkJCXR5cGUgMzIKCQkJcmVjdCAwIDAgNjQwIDQ4MAoJCQl2aXNpYmxlIDAKCQl9CgoJCWl0ZW1EZWYKCQl7CgkJCW5hbWUgc2hhcmVkX3ZpZGVvCgkJCWdyb3VwIHNoYXJlZEl0ZW0KCQkJcmVjdCAwIDAgNjQwIDQ4MAoJCQl2aXNpYmxlIDAKCQl9CgoJCWl0ZW1EZWYKCQl7CgkJCW5hbWUgc2hhcmVkX3BpY3R1cmUKCQkJZ3JvdXAgc2hhcmVkSXRlbQoJCQlyZWN0IDAgMCA2NDAgNDgwCgkJCXZpc2libGUgMAoJCQlzdHlsZSAzCgkJfQoKCQlpdGVtRGVmCgkJewoJCQluYW1lIHNoYXJlZF9hdWRpbwoJCQlncm91cCBzaGFyZWRJdGVtCgkJCXR5cGUgMzIKCQkJcmVjdCAwIDAgNjQwIDQ4MAoJCQl2aXNpYmxlIDAKCQl9Cgl9Cn0K"
+
+    "gui_origin" "10 0 1.75"
+    "gui_angles" "0 180 -1"
+    "gui_scale" "0.028"
+    "gui_res" "640 480"
+}

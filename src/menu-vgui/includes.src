@@ -17,6 +17,7 @@ ui_musicplayer.qc
 ui_options.qc
 ui_modelviewer.qc
 ui_loadgame.qc
+ui_profiles.qc
 ui_packages.qc
 desktop.qc
 main.qc

@@ -1,0 +1,9 @@
+video ad_movie
+{
+	"name"			"Advert: Movie Night"
+	"video"			"video/movie.roq"
+	"audio"			"video/movie.ogg"
+	"duration"		"51.644082"
+	"light_style"		"1"
+	"light_color"		"110 128 128"
+}

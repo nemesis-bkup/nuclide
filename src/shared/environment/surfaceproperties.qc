@@ -19,7 +19,7 @@
 static bool g_spDefaultSet;
 
 static void
-SurfData_ParseField(int i, int a)
+ncSurfDataManager::ParseField(int i, int a)
 {
 	switch (argv(0)) {
 	case "base":
@@ -93,7 +93,7 @@ SurfData_ParseField(int i, int a)
 
 /* concerned with dealing with keeping track of braces and parsing lines */
 static int
-SurfData_Parse(string line)
+ncSurfDataManager::Parse(string line)
 {
 	int c;
 	string key;
@@ -149,7 +149,7 @@ SurfData_Parse(string line)
 		break;
 	default:
 		if (braced == 1 && t_name != "") {
-			SurfData_ParseField(i, c);
+			ParseField(i, c);
 		} else if (braced == 0) {
 			t_name = strtolower(line);
 
@@ -164,7 +164,7 @@ SurfData_Parse(string line)
 }
 
 static int
-SurfData_Load(string type)
+ncSurfDataManager::Load(string type)
 {
 	int index;
 
@@ -185,7 +185,7 @@ SurfData_Load(string type)
 
 /* stripped down ParseLine that just counts how many slots we have to allocate */
 static void
-SurfData_CountLine(string line)
+ncSurfDataManager::CountLine(string line)
 {
 	int c;
 	string key;
@@ -224,19 +224,20 @@ SurfData_CountLine(string line)
 }
 
 int
-SurfData_TexToSurfData(string tex_name)
+ncSurfDataManager::TexToSurfData(string tex_name)
 {
 	string mat = Materials_SurfDataForTexture(tex_name);
 
 	/* we got the surfdata string, return that */
-	return SurfData_Load(mat);
+	return Load(mat);
 }
 
 /* Public API functions */
 __variant
-SurfData_GetInfo(int i, int type)
+ncSurfDataManager::GetInfo(int i, int type)
 {
 	if (g_surfdata_count <= 0i) {
+        ncError("NO SURFACE DATA");
 		return (__NULL__);
 	}
 
@@ -293,7 +294,7 @@ SurfData_GetInfo(int i, int type)
 }
 
 static void
-SurfData_CountEntries(string filePath)
+ncSurfDataManager::CountEntries(string filePath)
 {
 	filestream fh;
 	string line;
@@ -307,14 +308,14 @@ SurfData_CountEntries(string filePath)
 
 	/* count surfaceproperty definitions */
 	while ((line = fgets(fh))) {
-		SurfData_CountLine(line);
+		CountLine(line);
 	}
 
 	fclose(fh);
 }
 
 static void
-SurfData_LoadFile(string filePath)
+ncSurfDataManager::LoadFile(string filePath)
 {
 	filestream fh;
 	string line;
@@ -327,14 +328,14 @@ SurfData_LoadFile(string filePath)
 	}
 
 	while ((line = fgets(fh))) {
-		SurfData_Parse(line);
+		Parse(line);
 	}
 
 	fclose(fh);
 }
 
 void
-SurfData_Shutdown(void)
+ncSurfDataManager::Shutdown(void)
 {
 	if (g_surfdata) {
 		memfree(g_surfdata);
@@ -346,7 +347,7 @@ SurfData_Shutdown(void)
 }
 
 void
-SurfData_Init(void)
+ncSurfDataManager::Init(void)
 {
 	filestream fh;
 	string line;
@@ -359,7 +360,7 @@ SurfData_Init(void)
 	InitStart();
 
 	/* remove old data */
-	SurfData_Shutdown();
+	Shutdown();
 
 	index = g_surfdata_count;
 
@@ -385,7 +386,7 @@ SurfData_Init(void)
 			return;
 		}
 
-		SurfData_CountEntries("scripts/surfaceproperties.txt");
+		CountEntries("scripts/surfaceproperties.txt");
 	} else {
 
 		/* first we count all valid entries. yes, this is not how you're meant to parse it, but w/e */
@@ -394,7 +395,7 @@ SurfData_Init(void)
 
 			if (args == 2) {
 				if (argv(0) == "file") {
-					SurfData_CountEntries(argv(1));
+					CountEntries(argv(1));
 				}
 			}
 		}
@@ -403,7 +404,7 @@ SurfData_Init(void)
 	/* TODO: ensure that the above paths aren't necessary? */
 	sh = search_begin("scripts/surfaceproperties/*.txt", TRUE, TRUE);
 	for (int i = 0; i < search_getsize(sh); i++) {
-		SurfData_CountEntries(search_getfilename(sh, i));
+		CountEntries(search_getfilename(sh, i));
 	}
 
 	/* now that we've counted the valid entries, alocate our stuff */
@@ -449,14 +450,14 @@ SurfData_Init(void)
 	fseek(fh, 0);
 
 	if (fromManifest == false) {
-		SurfData_LoadFile("scripts/surfaceproperties.txt");
+		LoadFile("scripts/surfaceproperties.txt");
 	} else {
 		while ((line = fgets(fh))) {
 			args = tokenize_console(line);
 
 			if (args == 2) {
 				if (argv(0) == "file") {
-					SurfData_LoadFile(argv(1));
+					LoadFile(argv(1));
 				}
 			}
 		}
@@ -466,7 +467,7 @@ SurfData_Init(void)
 
 	/* GMod search paths */
 	for (int i = 0; i < search_getsize(sh); i++) {
-		SurfData_LoadFile(search_getfilename(sh, i));
+		LoadFile(search_getfilename(sh, i));
 	}
 
 #if 1
@@ -477,7 +478,7 @@ SurfData_Init(void)
 			continue;
 		}
 
-		matID = SurfData_Load(g_surfdata[i].m_strBase);
+		matID = Load(g_surfdata[i].m_strBase);
 
 		/* ugly inheriting */
 		if (matID == -1) {
@@ -531,6 +532,7 @@ SurfData_Init(void)
 		precache.Sound(g_surfdata[i].m_sndStrain);
 		precache.Sound(g_surfdata[i].m_sndRoll);
 		precache.Sound(g_surfdata[i].m_sndBreak);
+
 #if 1
 		/* HACK: HL2 hard-codes these! */
 		if (!STRING_SET(g_surfdata[i].m_fxBulletImpact) && g_surfdata[i].m_flMaterial != -1) {
@@ -588,7 +590,7 @@ SurfData_Init(void)
 
 static string g_curSurfData;
 void
-SurfData_SetStage(string type)
+ncSurfDataManager::SetStage(string type)
 {
 	if (!type) {
 		return;
@@ -598,13 +600,13 @@ SurfData_SetStage(string type)
 }
 
 int
-SurfData_Finish(void)
+ncSurfDataManager::Finish(void)
 {
 	string toload = g_curSurfData;
 	g_curSurfData = __NULL__;
 
 	if (toload) {
-		return SurfData_Load(toload);
+		return Load(toload);
 	} else {
 		return -1;
 	}
@@ -613,7 +615,7 @@ SurfData_Finish(void)
 
 #ifdef SERVER
 void
-SurfData_Impact_Net(entity e, vector org)
+ncSurfDataManager::Impact_Net(entity e, vector org)
 {
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EV_SURFIMPACT);
@@ -625,7 +627,7 @@ SurfData_Impact_Net(entity e, vector org)
 }
 
 void
-SurfData_ImpactID_Net(int id, vector org, vector ang)
+ncSurfDataManager::ImpactID_Net(int id, vector org, vector ang)
 {
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
 	WriteByte(MSG_MULTICAST, EV_SURFIMPACTID);
@@ -643,7 +645,7 @@ SurfData_ImpactID_Net(int id, vector org, vector ang)
 #ifdef CLIENT
 /** Called by EV_SURFIMPACT */
 void
-SurfData_Impact_Parse(void)
+ncSurfDataManager::Impact_Parse(void)
 {
 	entity surfnum = __NULL__;
 	vector impactorg = g_vec_null;
@@ -660,10 +662,10 @@ SurfData_Impact_Parse(void)
 	impactang = getsurfacenormal(surfnum, impactSurface);
 
 	string tex_name = getsurfacetexture(surfnum, impactSurface);
-	matid = SurfData_TexToSurfData(tex_name);
-	string impactsfx = SurfData_GetInfo(matid, SURFDATA_SND_BULLETIMPACT);
-	string impactfx = SurfData_GetInfo(matid, SURFDATA_FX_BULLETIMPACT);
-	float impactid = SurfData_GetInfo(matid, SURFDATA_FX_BULLETIMPACTID);
+	matid = TexToSurfData(tex_name);
+	string impactsfx = GetInfo(matid, SURFDATA_SND_BULLETIMPACT);
+	string impactfx = GetInfo(matid, SURFDATA_FX_BULLETIMPACT);
+	float impactid = GetInfo(matid, SURFDATA_FX_BULLETIMPACTID);
 
 	SoundDef_PlayAt(impactorg, impactsfx);
 
@@ -676,7 +678,7 @@ SurfData_Impact_Parse(void)
 
 /** Called by EV_SURFIMPACTID */
 void
-SurfData_ImpactID_Parse(void)
+ncSurfDataManager::ImpactID_Parse(void)
 {
 	int matid = __NULL__;
 	vector impactorg = g_vec_null;
@@ -691,57 +693,58 @@ SurfData_ImpactID_Parse(void)
 	impactang[2] = readcoord();
 	matid = readint();
 
-	string impactsfx = SurfData_GetInfo(matid, SURFDATA_SND_BULLETIMPACT);
-	float impactid = SurfData_GetInfo(matid, SURFDATA_FX_BULLETIMPACTID);
+	string impactsfx = GetInfo(matid, SURFDATA_SND_BULLETIMPACT);
+	float impactid = GetInfo(matid, SURFDATA_FX_BULLETIMPACTID);
 	SoundDef_PlayAt(impactorg, impactsfx);
 
 	pointparticles( impactid, impactorg, normalize(impactang), 1 );
 }
 #endif
 
+
 void
-SurfData_Impact(entity e, vector org, vector ang)
+ncSurfDataManager::Impact(entity e, vector org, vector ang)
 {
 #ifdef SERVER
-	static void SurfData_Impact_SurfaceParm(entity e, vector org, vector ang) {
-		SurfData_Impact_Net(e, org);
+	static void Impact_SurfaceParm(entity e, vector org, vector ang) {
+		Impact_Net(e, org);
 	}
 
 	/* the static world */
 	if (e == world || e.takedamage == DAMAGE_NO) {
 		if (trace_surfacename != "") {
 			string n = strcat(dirname(e.model), "/", trace_surfacename);
-			int texdata = SurfData_TexToSurfData(n);
-			SurfData_ImpactID_Net(texdata, org, ang);
+			int texdata = TexToSurfData(n);
+			ImpactID_Net(texdata, org, ang);
 		} else {
-			SurfData_Impact_SurfaceParm(e, org, ang);
+			Impact_SurfaceParm(e, org, ang);
 		}
 	} else { /* anything with else is a NSurfacePropEntity. */
 		ncSurfacePropEntity foo = (ncSurfacePropEntity)e;
 
 		if (foo.HasSurfaceData()) {
-			SurfData_ImpactOfType(foo.m_surfdataID, org, ang);
+			ImpactOfType(foo.m_surfdataID, org, ang);
 			//printf("Prop Impact Send %i\n", foo.m_surfdataID);
 		} else {
-			SurfData_Impact_SurfaceParm(e, org, ang);
+			Impact_SurfaceParm(e, org, ang);
 		}
 	}
 #endif
 }
 
 void
-SurfData_ImpactOfType(int materialID, vector worldPosition, vector impactNormal)
+ncSurfDataManager::ImpactOfType(int materialID, vector worldPosition, vector impactNormal)
 {
 #ifdef SERVER
-// 	printf("Impact: %i %s\n", materialID, SurfData_GetInfo(materialID, SURFDATA_FX_BULLETIMPACT));
-	SurfData_ImpactID_Net(materialID, worldPosition, impactNormal);
+// 	printf("Impact: %i %s\n", materialID, GetInfo(materialID, SURFDATA_FX_BULLETIMPACT));
+	ImpactID_Net(materialID, worldPosition, impactNormal);
 #endif
 	/* TODO: client side only version */
 }
 
 void
-SurfData_ImpactOfNamedType(string materialName, vector worldPosition, vector impactNormal)
+ncSurfDataManager::ImpactOfNamedType(string materialName, vector worldPosition, vector impactNormal)
 {
 	int index = (int)hash_get(g_hashsurfdata, materialName, -1);
-	SurfData_ImpactOfType(index, worldPosition, impactNormal);
+	ImpactOfType(index, worldPosition, impactNormal);
 }

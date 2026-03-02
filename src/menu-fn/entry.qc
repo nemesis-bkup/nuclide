@@ -31,10 +31,6 @@ m_init(void)
 		serverDisconnect = false;
 	}
 
-	ncLog("--------- Initializing Menu ----------");
-	ncLog("Built: %s %s", __DATE__, __TIME__);
-	ncLog("QCC: %s", __QCCVER__);
-
 	localcmd("plug_load ffmpeg\n");
 
 	Platform_Init();
@@ -57,7 +53,6 @@ m_init(void)
 
 	if (!Platform_FileInCurrentGamedir("gfx/shell/splash8bit.bmp")) {
 		m_intro_skip();
-		Music_MenuStart();
 	}
 
 	if (Platform_HasStartupVideos() == true) {
@@ -160,19 +155,6 @@ m_draw(vector screensize)
 	}
 
 	oldtime = time;
-}
-
-void
-m_drawloading(vector screensize, float opaque)
-{
-	vector pos;
-	pos = (screensize / 2) - [32,32];
-
-	if (opaque) {
-		drawfill([0,0], screensize, [0.25,0.25,0.25], 1.0f);
-	}
-
-	drawpic(pos, "gfx/loading", [64,64], [1,1,1], 1.0f);
 }
 
 float

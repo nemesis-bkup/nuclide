@@ -484,7 +484,7 @@ ncPlayer::Physics_InputPreMove(void)
 	ncVehicle currentVehicle = (ncVehicle)vehicle;
 
 	/* find all the valid ways to freeze a player... */
-	if (currentVehicle) {
+	if (currentVehicle && currentVehicle._isVehicle) {
 		if (currentVehicle.PreventPlayerMovement() == true)
 			canMove = false;
 	}
@@ -528,7 +528,7 @@ ncPlayer::Physics_InputPreMove(void)
 	}
 
 	/* suppress crouching in vehicles */
-	if (currentVehicle) {
+	if (currentVehicle && currentVehicle._isVehicle) {
 		if (currentVehicle.CanDriverCrouch() == false) {
 			input_buttons &= ~INPUT_CROUCH;
 			input_buttons &= ~INPUT_PRONE;

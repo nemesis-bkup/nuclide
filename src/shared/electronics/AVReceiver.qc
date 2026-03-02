@@ -17,12 +17,21 @@
 /* FIXME: the engine needs to fix sound offset in sound() calls before this gets set to false */
 var bool autocvar_avReceiver_ignoreSoundOffset = true;
 
+#ifdef CLIENT
+const string g_videoStaticMat = "{\n" \
+				"\t{\n" \
+				"\t\tvideomap video/static.roq\n" \
+				"\t}\n" \
+				"}\n";
+#endif
+
 void
 ncAVReceiver::ncAVReceiver(void)
 {
 	m_avReceiverChannel = g_int_null;
 	m_avReceiverVolume = 1.0f;
 	m_avReceiverMuted = false;
+	m_mediaSize = [320,240];
 }
 
 #ifdef SERVER
@@ -35,14 +44,14 @@ ncAVReceiver::Input(entity entityActivator, string inputName, string dataField)
 		break;
 	case "PreviousChannel":
 		m_avReceiverChannel--;
-		
+
 		if (m_avReceiverChannel < 0) {
 			m_avReceiverChannel = 0;
 		}
 		break;
 	case "SwitchChannel":
 		m_avReceiverChannel = ReadInt(dataField);
-		
+
 		if (m_avReceiverChannel < 0) {
 			m_avReceiverChannel = 0;
 		}
@@ -100,6 +109,7 @@ ncAVReceiver::SendEntity(entity ePEnt, float flChanged)
 {
 	WriteByte(MSG_ENTITY, ENT_AVRECEIVER);
 	WriteFloat(MSG_ENTITY, flChanged);
+	SENDENTITY_INT(num_for_edict(this), AVRECEIVERFL_ENABLED)
 	SENDENTITY_COORD(origin[0], AVRECEIVERFL_ORIGIN)
 	SENDENTITY_COORD(origin[1], AVRECEIVERFL_ORIGIN)
 	SENDENTITY_COORD(origin[2], AVRECEIVERFL_ORIGIN)
@@ -112,9 +122,36 @@ ncAVReceiver::SendEntity(entity ePEnt, float flChanged)
 #endif
 
 #ifdef CLIENT
+
+int
+ncAVReceiver::GlobalBroadcasters(void)
+{
+	int transmitterEnum = 0i;
+
+	for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {
+		transmitterEnum++;
+	}
+}
+
+string
+ncAVReceiver::GetMaterialForChannel(int channelNum)
+{
+	bool channelExists = false;
+
+	for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {
+		if (receiverEnum.m_tvChannelNum == channelNum) {
+			return sprintf("tvchannel_%i", channelNum);
+		}
+	}
+
+	shaderforname("video_static", g_videoStaticMat);
+	return ("video_static");
+}
+
 void
 ncAVReceiver::ReceiveEntity(float flNew, float flChanged)
 {
+	READENTITY_INT(m_serverSideNum, AVRECEIVERFL_ENABLED)
 	READENTITY_COORD(origin[0], AVRECEIVERFL_ORIGIN)
 	READENTITY_COORD(origin[1], AVRECEIVERFL_ORIGIN)
 	READENTITY_COORD(origin[2], AVRECEIVERFL_ORIGIN)
@@ -137,65 +174,25 @@ ncAVReceiver::OnRemoveEntity(void)
 }
 
 void
+ncAVReceiver::Draw(void)
+{
+	for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {
+		if (receiverEnum.m_tvChannelNum == m_avReceiverChannel) {
+			receiverEnum.Draw();
+		}
+	}
+}
+
+void
 ncAVReceiver::KillVideoOutputs(void)
 {
-	for (ncVideoDisplay videoDisplay = 0; (videoDisplay = (ncVideoDisplay)find(videoDisplay, ::classname, "ncVideoDisplay"));) {
-		vguiTrUIMenu targetMenu = (vguiTrUIMenu)videoDisplay.m_videoDisplayUI;
 
-		if (videoDisplay.m_videoDisplayInput != this) {
-			continue;
-		}
-
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground channel %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground dog %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground muted %s", m_avReceiverMuted ? "tvMuted" : ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground toptext %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground bottomtext %S", ""));
-		EntLog("disconnecting video display on entity %d", num_for_edict(videoDisplay));
-	}
 }
 
 void
 ncAVReceiver::RefreshVideoDisplay(entity targetEntity)
 {
-	ncVideoDisplay targetDisplay = (ncVideoDisplay)targetEntity;
-	
-	if (!targetDisplay) {
-		return;
-	}
 
-	ncAVTransmitter findTransmitter = world;
-	float bestDist = 99999;
-
-	/* find the closest transmitter source */
-	for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {
-		float distanceToTransmitter = distance(receiverEnum.GetOrigin(), GetOrigin());
-
-		if (receiverEnum.m_tvChannelNum == m_avReceiverChannel && distanceToTransmitter < bestDist) {
-			findTransmitter = receiverEnum;
-			bestDist = distanceToTransmitter;
-		}
-	}
-
-	vguiTrUIMenu targetMenu = (vguiTrUIMenu)targetDisplay.m_videoDisplayUI;
-
-	if (m_triggerEnabled == false) {
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground channel %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground dog %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground muted %s", m_avReceiverMuted ? "tvMuted" : ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground toptext %S", ""));
-		targetMenu.InterpretCommand(targetMenu, sprintf("setbackground bottomtext %S", ""));
-		return;
-	}
-
-	targetMenu.InterpretCommand(targetMenu, sprintf("setbackground channel tvchannel_%i", m_avReceiverChannel));
-	targetMenu.InterpretCommand(targetMenu, sprintf("setbackground dog %s", findTransmitter.m_tvChannelDOG));
-	targetMenu.InterpretCommand(targetMenu, sprintf("setbackground muted %s", m_avReceiverMuted ? "tvMuted" : ""));
-	targetMenu.InterpretCommand(targetMenu, sprintf("settext toptext %S", findTransmitter.m_tvChannelTopText));
-	targetMenu.InterpretCommand(targetMenu, sprintf("settext bottomtext %S", findTransmitter.m_tvChannelBottomText));
-	EntLog("connecting video display on entity %d to channel %i\n\tdog: %s\n\ttop text: %s\n\tbottom text: %s\n\tcolor: %v", num_for_edict(targetDisplay), m_avReceiverChannel, findTransmitter.m_tvChannelDOG, findTransmitter.m_tvChannelTopText, findTransmitter.m_tvChannelBottomText, findTransmitter.m_tvChannelLight);
-	targetDisplay.m_vecScreenLight = findTransmitter.m_tvChannelLight;
-	targetDisplay.m_vecScreenLightStyle = findTransmitter.m_tvChannelLightStyle;
 }
 
 void
@@ -220,15 +217,6 @@ ncAVReceiver::UpdateVideoOutputs(void)
 		return;
 	}
 
-	for (ncVideoDisplay videoDisplay = 0; (videoDisplay = (ncVideoDisplay)find(videoDisplay, ::classname, "ncVideoDisplay"));) {
-		printf("VIDEO DISPLAY (%d) FOUND with INPUT ent id %d \n", num_for_edict(videoDisplay), num_for_edict(videoDisplay.m_videoDisplayInput));
-
-		if (videoDisplay.m_videoDisplayInput != this) {
-			continue;
-		}
-		
-		RefreshVideoDisplay(videoDisplay);
-	}
 }
 
 void
@@ -256,7 +244,7 @@ ncAVReceiver::UpdateSpeakers(void)
 
 	float soundOffset = (time - findTransmitter.m_tvChannelTime);
 	float finalVolume = (m_avReceiverMuted) ? (0.001) : m_avReceiverVolume;
-		
+
 	if (soundOffset < 1 || autocvar_avReceiver_ignoreSoundOffset) {
 		sound(this, CHAN_BODY, findTransmitter.m_tvChannelAudio, finalVolume, ATTN_IDLE, 0, 0, 0);
 	} else {

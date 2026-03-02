@@ -33,7 +33,7 @@ None yet
 This entity was introduced in Nuclide (2025).
 */
 class
-ncAVReceiver:ncPointTrigger
+ncAVReceiver:ncMediaSource
 {
 public:
 	void ncAVReceiver(void);
@@ -47,12 +47,16 @@ public:
 #endif
 
 #ifdef CLIENT
+	virtual void Draw(void);
 	virtual void ReceiveEntity(float,float);
 	virtual void UpdateSpeakers(void);
 	virtual void UpdateVideoOutputs(void);
 	virtual void RefreshVideoDisplay(entity);
 	virtual void OnRemoveEntity(void);
-	virtual void KillVideoOutputs();
+	virtual void KillVideoOutputs(void);
+
+	nonvirtual int GlobalBroadcasters(void);
+	nonvirtual string GetMaterialForChannel(int channelNum);
 #endif
 
 private:

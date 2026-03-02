@@ -1,4 +1,20 @@
+/*
+ * Copyright (c) 2025 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
 
+var string autocvar_cg_hudFiles = "ui/hud.txt";
 var bool autocvar_g_showHud = true;
 var float g_flHUDProgs;
 var void(void) g_hudMain;
@@ -61,9 +77,7 @@ HUDProgs_Init(void)
 		}
 	}
 
-		g_hudTrUIMenu = spawn(vguiWidget);
-		g_hudTrUIMenu.Add(vguiTrUIMenu::CreateFromMenuFile(g_hudTrUIMenu, "ui/hud.menu"));
-
+	g_hudTrUIMenu = vguiScriptedView::CreateFromMenuFile(g_hudTrUIMenu, autocvar_cg_hudFiles);
 }
 
 void
@@ -77,6 +91,18 @@ HUDProgs_ReloadVideoResources(void)
 }
 
 void
+HUD_DrawScriptedView(vector pos, vector size)
+{
+    if (!g_hudTrUIMenu) {
+        return;
+    }
+
+    g_hudTrUIMenu.SetPos(pos);
+    g_hudTrUIMenu.SetSize(size);
+    g_hudTrUIMenu.Draw();
+}
+
+void
 HUDProgs_Draw(void)
 {
 	if (g_clientInitialized == false) {
@@ -84,6 +110,10 @@ HUDProgs_Draw(void)
 	}
 
 	if (autocvar_g_showHud == false) {
+		return;
+	}
+
+	if (pSeat->m_showInterface == true) {
 		return;
 	}
 
@@ -96,11 +126,11 @@ HUDProgs_Draw(void)
 		if (g_hudDraw) {
 			g_hudDraw();
 		} else if (g_hudTrUIMenu) {
-			g_hudTrUIMenu.SetPos(video_mins + g_hudmins);
-			g_hudTrUIMenu.Draw();
+			HUD_DrawScriptedView(video_mins + g_hudmins, g_vidsize);
 		}
 	} else if (g_hudTrUIMenu) {
 		g_hudTrUIMenu.SetPos(video_mins + g_hudmins);
+		g_hudTrUIMenu.SetSize(g_vidsize);
 		g_hudTrUIMenu.Draw();
 	}
 }

@@ -79,7 +79,6 @@ ncAddonManager::NPCDeath(ncActor a, ncEntity b, ncEntity c)
 	}
 }
 
-
 void
 ncAddonManager::LoadDefaultAddons(void)
 {
@@ -97,5 +96,81 @@ ncAddonManager::LoadDefaultAddons(void)
 
 		addonEnum.Load();
 		addonEnum.ServerActivate();
+	}
+}
+
+
+void
+AddonManager_LoadNamedAddon(string addonName)
+{
+	string addonPath = "";
+	ncAddonDelegate addonEnum = __NULL__;
+
+	/* Step 1: Check if our Addon is already in-game */
+	for (;(addonEnum = AddonManager_NextAddon(addonEnum));) {
+		if (addonEnum.Name() == addonName) {
+			ncError("Addon %S already loaded.", addonName);
+			return;
+		}
+	}
+
+	/* Step 2: Load a new addon module */
+	addonPath = strcat("plugins/", addonName, ".dat");
+	addonEnum = addonEnum.CreateFromProgs(addonName, addprogs(addonPath));
+
+	if (addonEnum == __NULL__) {
+		ncError("Failed to load named addon %S", addonName);
+		return;
+	}
+
+	addonEnum.Load();
+	addonEnum.LateActivate();
+}
+
+ncAddonDelegate
+AddonManager_NextAddon(ncAddonDelegate addon)
+{
+	return (ncAddonDelegate)find(addon, ::classname, "ncAddonDelegate");
+}
+
+void
+AddonManager_CloseNamedAddon(string addonName)
+{
+	string addonPath = "";
+
+	for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
+		if (addonEnum.Name() == addonName) {
+			addonEnum.Close();
+			return;
+		}
+	}
+
+	ncError("Addon named %S is not loaded.", addonName);
+}
+
+void
+CMD_Addon_f(void)
+{
+	switch (argv(1)) {
+	case "load":
+		AddonManager_LoadNamedAddon(argv(2));
+		break;
+	case "close":
+		AddonManager_CloseNamedAddon(argv(2));
+		break;
+	case "list":
+		int addonCounter = 0i;
+
+		printf("Active addons:\n");
+
+		for (ncAddonDelegate addonEnum = __NULL__; (addonEnum = AddonManager_NextAddon(addonEnum));) {
+			printf("\t%s\n", addonEnum.Name());
+			addonCounter++;
+		}
+
+		printf("%i addon(s) loaded\n", addonCounter);
+		break;
+	default:
+		printf("Available addon commands: load, close, list\n");
 	}
 }

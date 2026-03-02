@@ -321,6 +321,9 @@ with a desired font.
 	
 	/** Draws an opaque, rectangular radar that is centered around the current player, or the player that is being spectated. */
 	void RadarRect(vector vecOrigin, vector vecSize);
+
+	/** Draws an opaque, rectangular radar that is centered around the current player, or the player that is being spectated. */
+	void ScriptedView(vector vecOrigin, vector vecSize);
 } drawAPI_t;
 var drawAPI_t draw;/**< Access drawAPI_t functions using this variable. */
 
@@ -671,6 +674,7 @@ _client_main(void)
 	draw.Text_RGB= linkToClientProgs("Font_DrawText_RGB");
 	draw.Text_RGBA = linkToClientProgs("Font_DrawText_RGBA");
 	draw.RadarRect = linkToClientProgs("CLPF_draw_RadarRect");
+	draw.ScriptedView = linkToClientProgs("CLPF_draw_ScriptedView");
 
 	spectating.Mode = linkToClientProgs("CLPF_spectating_Mode");
 	spectating.LocalizedMode = linkToClientProgs("CLPF_spectating_LocalizedMode");

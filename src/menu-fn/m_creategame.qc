@@ -48,7 +48,13 @@ create_btnok_start(void)
 			localcmd(sprintf("set bot_minClients %S\n", "0"));
 		}
 		g_menupage = PAGE_MULTIPLAYER;
-		Map_SpawnServer(create_tbHostname.m_text, startmap, stof(create_tbMaxplayers.m_text), gameType, create_tbPassword.m_text);
+
+		cvar_set("ui_servername", create_tbHostname.m_text);
+		cvar_set("ui_numPlayers", create_tbMaxplayers.m_text);
+		cvar_set("ui_gameType", gameType);
+		cvar_set("ui_map", startmap);
+		cvar_set("sv_password", create_tbPassword.m_text);
+		localcmd("spawnServer\n");
 	}
 
 	/* random */

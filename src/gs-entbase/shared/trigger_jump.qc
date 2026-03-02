@@ -84,10 +84,10 @@ public:
 #endif
 
 private:
-	PREDICTED_FLOAT(m_flSpeed)
-	PREDICTED_VECTOR(m_vecMoveDir)
-	PREDICTED_VECTOR(m_pushAngle)
-	PREDICTED_BOOL(m_bHasTarget)
+	NETWORKED_FLOAT(m_flSpeed)
+	NETWORKED_VECTOR(m_vecMoveDir)
+	NETWORKED_VECTOR(m_pushAngle)
+	NETWORKED_BOOL(m_bHasTarget)
 };
 
 float

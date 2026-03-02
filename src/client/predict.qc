@@ -27,8 +27,9 @@ void
 Predict_EntityUpdate(ncPlayer pl, float new)
 {
 	/* people expect a static camera when paused */
-	if (Util_IsPaused())
+	if (Util_IsPaused()) {
 		return;
+	}
 
 	/* this is a new client entity, let's set it up right */
 	if (new || !is.Player(pl)) {

@@ -33,6 +33,7 @@ typedef enumflags
 /** Dictionary for sound effect definition.
 
 @ingroup decl
+@ingroup sound
 */
 class
 ncSoundDict:ncDict
@@ -55,19 +56,19 @@ public:
 #endif
 
 private:
-	float dist_min;		/**< Minimum playback distance. Default is 0. */
-	float dist_max;		/**< Maximum playback distance. */
-	float offset;		/**< Sound sample offset. Will start playback this many seconds in. */
-	float pitch_min;	/**< Minimum sound pitch. */
-	float pitch_max;	/**< Maximum sound pitch. */
-	float shakes;		/**< Earthquake/Shake amplifier. Default is 0. */
-	float volume;		/**< Desired playback volume. */
-	soundFlag_t flags;	/**< Sound flags that are applied to this soundDef. */
-	int playc;		/**< Number of plays. */
-	int sample_count;	/**< Total amount of samples within this soundDef. */
-	string samples;		/**< Separated list of samples. */
-	string name;		/**< Name of the soundDef. */
-	string distshader;	/**< soundDef to play where this soundDef is not audible. */
+	float dist_min;			/**< Minimum playback distance. Default is 0. */
+	float dist_max;			/**< Maximum playback distance. */
+	float offset;			/**< Sound sample offset. Will start playback this many seconds in. */
+	float pitch_min;		/**< Minimum sound pitch. */
+	float pitch_max;		/**< Maximum sound pitch. */
+	float shakes;			/**< Earthquake/Shake amplifier. Default is 0. */
+	float volume;			/**< Desired playback volume. */
+	soundFlag_t flags;		/**< Sound flags that are applied to this soundDef. */
+	int playc;				/**< Number of plays. */
+	int sample_count;		/**< Total amount of samples within this soundDef. */
+	string samples;			/**< Separated list of samples. */
+	string name;			/**< Name of the soundDef. */
+	string distshader;		/**< soundDef to play where this soundDef is not audible. */
 	float pointparticle;
 	string musictracks;
 	int music_count;

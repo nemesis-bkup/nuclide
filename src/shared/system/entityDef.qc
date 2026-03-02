@@ -117,7 +117,7 @@ EntityDef_ReadFile(string filePath)
 				} else if (braceDepth == 0 && lastWord == "#include") {
 					g_entDefInclude = strcat(g_entDefInclude, word, ";");
 				}  else if (braceDepth == 0 && lastWord == "#define") {
-					Constants_Add(argv(i), argv(i+1));
+					ncConstantManager::Add(argv(i), argv(i+1));
 				} else if (braceDepth == 1) {
 					/* spawnclass is reserved and the next keyword specs it */
 					if (word == "spawnclass") {
@@ -198,19 +198,16 @@ EntityDef_Init(void)
 	}
 
 	/* if spawnclass wasn't set, read the one from the inheritkeys entityDef */
-	for (int i = 0i; i < g_entDefCount; i++) {
-		if (!STRING_SET(g_entDefTable[i].spawnClass)) {
-			if (g_entDefTable[i].inheritID != -1i) {
-				int baseID = g_entDefTable[i].inheritID;
-
-				if (baseID == -1i) {
-					ncError("def %S inherits keys from non-existent def %S",
-						g_entDefTable[i].entClass,
-						g_entDefTable[i].inheritKeys );
-				} else {
-					g_entDefTable[i].spawnClass = g_entDefTable[baseID].spawnClass;
+	for (int i = 0; i < g_entDefCount; i++) {
+		if (!STRING_SET(g_entDefTable[i].spawnClass) && STRING_SET(g_entDefTable[i].inheritKeys)) {
+			for (int x = 0; x < g_entDefCount; x++) {
+				if (g_entDefTable[i].inheritKeys == g_entDefTable[x].entClass) {
+					g_entDefTable[i].inheritID = x;
+					break;
 				}
 			}
+
+			g_entDefTable[i].spawnClass = EntityDef_GetKeyValue(g_entDefTable[i].inheritKeys, "spawnclass");
 		}
 	}
 
@@ -309,7 +306,13 @@ EntityDef_GetKeyValue(string className, string keyName)
 
 				/* iterate over our own spawnkeys first */
 				for (int c = 0i; c < spawnWords; c+= 2i) {
-					if (argv(c) == keyName) {
+					/* we don't save a copy of this, so the query for spawnclass is manually intercepted */
+					if (keyName == "spawnclass") {
+						lastClass = className;
+						lastKey = keyName;
+						lastResult = defChain->spawnClass;
+						return (lastResult);
+					} else if (argv(c) == keyName) {
 						lastClass = className;
 						lastKey = keyName;
 						lastResult = argv(c+1);
@@ -340,7 +343,7 @@ EntityDef_PrepareEntity(entity target, int id)
 	ncEntity targetEnt = (ncEntity)target;
 	entity oldSelf = self;
 	bool isEntDefBased = false;
-	
+
 	if (!STRING_SET(g_entDefTable[id].spawnClass)) {
 		ncError("%S (%i) doesn't define spawnclass", g_entDefTable[id].entClass, id);
 		g_lastSpawnData = "";
@@ -627,11 +630,11 @@ EntityDef_SwitchClass(ncEntity targetEntity, string className)
 	for (int i = 0i; i < g_entDefCount; i++) {
 		if (className == g_entDefTable[i].entClass) {
 
-			/* ensure the previous class deconstructs */		
+			/* ensure the previous class deconstructs */
 			if (targetEntity.identity == 1) {
 				targetEntity.OnRemoveEntity();
 			}
-			
+
 			EntityDef_Precache(className);
 			returnEntity = EntityDef_PrepareEntity(targetEntity, i);
 			return (returnEntity);
@@ -685,6 +688,18 @@ EntityDef_HasSpawnClass(string className)
 	}
 
 	return false;
+}
+
+int
+EntityDef_Count(void)
+{
+	return (g_entDefCount);
+}
+
+string
+EntityDef_ClassForIndex(int entityIndex)
+{
+	return (g_entDefTable[entityIndex].spawnClass) ? (g_entDefTable[entityIndex].entClass) : "";
 }
 
 void

@@ -17,6 +17,8 @@ public:
 	/** Returns if the widget is active. */
 	nonvirtual bool IsEnabled(void);
 
+	nonvirtual bool HasFocus(void);
+
 	/** Set the position within its context. */
 	nonvirtual void SetPos(vector);
 	/** Return the position of the widget within its context. */
@@ -25,6 +27,8 @@ public:
 	nonvirtual int GetPosWidth(void);
 	/** Returns the Y coordinate of the widget position within its context. */
 	nonvirtual int GetPosHeight(void);
+
+	nonvirtual vector GetAbsPos(void);
 
 	/** Set the size of the widget to a new one. */
 	nonvirtual void SetSize(vector);
@@ -74,6 +78,8 @@ public:
 	virtual void NowEnabled(void);
 	virtual void NowDisabled(void);
 
+	virtual void ReloadVideoResources(void);
+
 	/** Called in order to draw the widget. */
 	virtual void Draw(void);
 	/** Called whenever the physical properties of the display change. */
@@ -85,6 +91,16 @@ public:
        the parent classes get to finish initializing also. */
 	virtual void Spawned(void);
 
+	/** Called when the widget gets removed, destroyed */
+	virtual void OnRemove(void);
+
+	nonvirtual void Remove(void);
+
+	nonvirtual vguiWidget GetRootWindow(void);
+    nonvirtual vector GetMousePos(void);
+
+	nonvirtual bool MouseAbove(void);
+
 private:
 	/* why are these 3D vectors? because drawpic() etc. take it. ..you never know what that may be used for some day! */
 	vector m_vecOrigin;
@@ -95,6 +111,11 @@ private:
 	vguiWidget m_next;
 	vguiWidget m_parent;
 	vguiWidget m_children;
+
+	vguiWidget m_windowNext; /* for windows */
+	vguiWidget m_windowPrev; /* for windows 2 */
+	vguiWidget m_rootNext; /* for root windows */
+	vguiWidget m_rootPrev; /* for root windows 2 */
 	int m_iFlags;
 	bool m_bVisible;
 	bool m_bEnabled;

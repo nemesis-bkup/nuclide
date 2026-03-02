@@ -52,6 +52,7 @@ public:
 	virtual float SendEntity(entity,float);
 	virtual void Save(float);
 	virtual void Restore(string,string);
+	virtual void Input(entity eAct, string strInput, string strData);
 #endif
 
 	nonvirtual entity GetDriver(void);
@@ -102,4 +103,70 @@ enumflags
 {
 	VHF_FROZEN,
 	VHF_NOATTACK
+};
+
+/*! \brief Shared-Entity: Model Based Vehicle */
+/*!QUAKED ncSeat (1 0 0) (-50 -50 0) (50 50 70)
+# OVERVIEW
+Point entity defining a 4-wheel vehicle that you can drive.
+
+# KEYS
+- "targetname" : Name
+
+# SPAWNFLAGS
+
+None currently.
+
+# NOTES
+
+None currently.
+
+# TRIVIA
+This entity was introduced in Half-Life 2 (2004).
+
+@ingroup sharedentity
+@ingroup pointentity
+*/
+class ncVehicleSeat:ncVehicle
+{
+private:
+	/* map-entity fields */
+	vector m_vecSeatOffest;
+
+	vector m_vecControlMins;
+	vector m_vecControlMaxs;
+
+	float m_flUseTime;
+	NETWORKED_VECTOR(vehicleOrigin)
+	NETWORKED_VECTOR(vehicleAngles)
+    NETWORKED_FLOAT(m_flTurn)
+	vector m_firstPersonOrg;
+
+#ifdef SERVER
+	vector entryPosition;
+#endif
+
+public:
+	void ncVehicleSeat(void);
+
+	virtual void Physics(void);
+	virtual void PlayerInput(void);
+	virtual void OnRemoveEntity(void);
+
+
+#ifdef CLIENT
+	virtual bool HideViewWeapon(void);
+	virtual void PredictPreFrame(void);
+	virtual void PredictPostFrame(void);
+	virtual void ReceiveEntity(float,float);
+	virtual void UpdateView(void);
+#endif
+
+#ifdef SERVER
+	virtual void Respawn(void);
+	virtual void OnPlayerUse(void);
+	virtual void EvaluateEntity(void);
+	virtual float SendEntity(entity,float);
+	virtual void SpawnKey(string keyName, string setValue);
+#endif
 };

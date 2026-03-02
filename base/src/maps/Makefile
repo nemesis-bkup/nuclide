@@ -7,6 +7,7 @@ all:
 	$(QCC) lqdm4.src
 	$(QCC) lqdm6.src
 	$(QCC) lqdm7.src
+	$(QCC) flat_moon.src
 	$(QCC) lqdm8.src
 	$(QCC) lqdm9.src
 	$(QCC) lqdm10.src

@@ -1,0 +1,9 @@
+video ad_swingwing
+{
+	"name"			"Advert: Swing Wing"
+	"video"			"video/swing_wing.roq"
+	"audio"			"video/swing_wing.ogg"
+	"duration"		"60.024036"
+	"light_style"		"1"
+	"light_color"		"164 164 164"
+}

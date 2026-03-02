@@ -41,11 +41,18 @@ LoadGame_ListUpdate ( void )
 
 void UI_LoadGame_Show ( void )
 {
-	static vguiWindow winLoadGame;
+	static vguiPanel winLoadGame;
 	static vguiButton btnLoad;
+
+	if (Saves_GetSaveCount() < 1) {
+        vguiWindow alertPanel = vguiPopups::NewAlertPanel("No saved games found", "There are no saves\navailable for the current profile.");
+        g_uiDesktop.Add(alertPanel);
+		return;
+	}
+
 	if ( !g_iLoadGameInitialized ) {
 		g_iLoadGameInitialized = TRUE;
-		winLoadGame = spawn( vguiWindow );
+		winLoadGame = spawn( vguiPanel );
 		winLoadGame.SetTitle( "Load Game" );
 		winLoadGame.SetSize( [256,180] );
 		winLoadGame.SetIcon( "gfx/icon16/music" );
@@ -84,6 +91,10 @@ void UI_LoadGame_Show ( void )
 void
 SavesCallback_EntriesUpdated(void)
 {
+    if (!g_iLoadGameInitialized) {
+        return;
+    }
+
 	lsbSaves.RemoveAllItems();
 	lsbSaves.SetItemCount( Saves_GetSaveCount() );
 	lsbSaves.CallOnScroll( LoadGame_ScrollUpdate );

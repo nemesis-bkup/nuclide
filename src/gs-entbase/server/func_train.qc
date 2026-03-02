@@ -75,9 +75,8 @@ public:
 	nonvirtual void SoundMove(void);
 	nonvirtual void SoundStop(void);
 	nonvirtual void AfterSpawn(void);
-	nonvirtual void PathNext(void);
-	nonvirtual void PathMove(void);
-	nonvirtual void PathDone(void);
+	nonvirtual void TrainFinishedMoving(void);
+	nonvirtual void MoveTrainToCurrentTarget(void);
 	virtual void Blocked(entity);
 
 private:
@@ -244,7 +243,7 @@ func_train::SoundStop(void)
 }
 
 void
-func_train::PathMove(void)
+func_train::MoveTrainToCurrentTarget(void)
 {
 	path_corner eNode;
 	float flTravelTime;
@@ -265,6 +264,13 @@ func_train::PathMove(void)
 		return;
 	}
 
+	/* warp */
+	if (eNode.HasSpawnFlags(PC_TELEPORT)) {
+        TrainFinishedMoving();
+        return;
+	}
+
+
 	if (!m_flCurrentSpeed) {
 		m_flCurrentSpeed = 100;
 	}
@@ -276,7 +282,7 @@ func_train::PathMove(void)
 	if (flTravelTime <= 0) {
 		EntLog("Distance is 0, advancing to next node.");
 		ClearVelocity();
-		ScheduleThink(PathNext, 0.0f);
+		ScheduleThink(TrainFinishedMoving, 0.0f);
 		return;
 	}
 
@@ -284,33 +290,34 @@ func_train::PathMove(void)
 	EntLog("Travelling at %f up/s", m_flCurrentSpeed);
 
 	SetVelocity(vecVelocity * (1 / flTravelTime));
-	ScheduleThink(PathNext, flTravelTime);
+	ScheduleThink(TrainFinishedMoving, flTravelTime);
 }
 
 void
-func_train::PathDone(void)
+func_train::ArrivedAtNode(path_corner targetNode)
 {
-	path_corner eNode = __NULL__;
-
-	eNode = (path_corner)find(world, ::targetname, target);
-
-	if (!eNode) {
+	if (!targetNode) {
 		return;
 	}
 
-	if (HasTargetname()) {
-		EntLog("Touched base with path_corner %S", target);
-	} else {
-		EntLog("Touched base with path_corner %S", target);
-	}
+	SetOrigin(targetNode.origin - (mins + maxs) * 0.5);
+    EntLog("Touched base with path_corner %S", targetNode.targetname);
 
 	/* fire the path_corners' target */
-	eNode.PathPassTrigger(this, TRIG_TOGGLE);
+	targetNode.PathPassTrigger(this, TRIG_TOGGLE);
 	SoundStop();
+	m_flWait = targetNode.DesiredWaitTime();
+	SetTriggerTarget(targetNode.target);
+
+	if (targetNode.DesiredTrainSpeed() > 0.0f) {
+		m_flCurrentSpeed = targetNode.DesiredTrainSpeed();
+	} else {
+		m_flCurrentSpeed = m_flSpeed;
+	}
 }
 
 void
-func_train::PathNext(void)
+func_train::TrainFinishedMoving(void)
 {
 	path_corner eNode = __NULL__;
 
@@ -328,34 +335,21 @@ func_train::PathNext(void)
 		return;
 	}
 
-	SetOrigin(eNode.origin - (mins + maxs) * 0.5);
-	PathDone();
-	m_flWait = eNode.DesiredWaitTime();
-	SetTriggerTarget(eNode.target);
-	ClearVelocity();
+	ArrivedAtNode(eNode);
 
-	if (eNode.DesiredTrainSpeed() > 0.0f) {
-		m_flCurrentSpeed = eNode.DesiredTrainSpeed();
-	} else {
-		m_flCurrentSpeed = m_flSpeed;
-	}
-
-	/* warp */
-	if (eNode.HasSpawnFlags(PC_TELEPORT)) {
-		SetOrigin(eNode.origin - (mins + maxs) * 0.5);
-	}
+	eNode = (path_corner)find(world, ::targetname, target);
 
 	/* stop until triggered again */
-	if (eNode.HasSpawnFlags(PC_WAIT) || HasSpawnFlags(TRAIN_WAIT)) {
+	if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
 		SoundStop();
 		return;
 	}
 
 	/* move after delay, or instantly when none is given */
 	if (m_flWait > 0) {
-		ScheduleThink(PathMove, m_flWait);
+		ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
 	} else {
-		PathMove();
+		MoveTrainToCurrentTarget();
 	}
 }
 
@@ -363,7 +357,25 @@ func_train::PathNext(void)
 void
 func_train::Trigger(entity act, triggermode_t state)
 {
-	PathMove();
+	path_corner eNode = (path_corner)find(world, ::targetname, target);
+
+	/* warp */
+	if (eNode.HasSpawnFlags(PC_TELEPORT)) {
+        ArrivedAtNode(eNode);
+	}
+
+	/* stop until triggered again */
+	if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
+		SoundStop();
+		return;
+	}
+
+	/* move after delay, or instantly when none is given */
+	if (m_flWait > 0) {
+		ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
+	} else {
+		MoveTrainToCurrentTarget();
+	}
 }
 
 void
@@ -383,21 +395,10 @@ func_train::AfterSpawn(void)
 		return;
 	}
 
-	/* place us to the first node. */
-	SetOrigin(eNode.origin - (mins + maxs) * 0.5);
-	SetTriggerTarget(eNode.target);
-	ClearVelocity();
-	PathDone();
-
-	/* FIXME: Is this authentic? */
-	if (eNode.DesiredTrainSpeed() > 0.0f) {
-		m_flCurrentSpeed = eNode.DesiredTrainSpeed();
-	} else {
-		m_flCurrentSpeed = m_flSpeed;
-	}
+	ArrivedAtNode(eNode);
 
 	/* if we're unable to be triggered by anything, begin moving */
 	if (HasTargetname() == false) {
-		PathMove();
+		MoveTrainToCurrentTarget();
 	}
 }

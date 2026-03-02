@@ -1085,10 +1085,6 @@ BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int coun
 		gib.SetImpactDecal(impactDecal);
 		//print(sprintf("%S\n", mname));
 
-		#ifdef CLIENT
-			gib.drawmask = MASK_ENGINE;
-		#endif
-
 		/* re-calculate the tokenization */
 		x = tokenize(g_breakmodel[index].data);
 	}

@@ -1,11 +1,17 @@
 {
-	menuDef 
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+	menuDef
 	{
 		name "testmenu1"
 		rect 0 0 320 240
 		backcolor .1 .4 .1 1
+		visible 1
 
-		itemDef 
+		itemDef
 		{
 			name backgroundmap
 			rect 0 0 320 240
@@ -15,12 +21,24 @@
 
 			camera_origin 512 -768 128
 			camera_avelocity -5 45 5
-			
+
 			asset_model "maps/lqdm1.bsp"
 			model_fov 110
 		}
 
-		itemDef 
+		
+		
+		itemDef
+		{
+			name channel
+			background "static_additive"
+			rect 0 0 320 240
+			forecolor .25 .25 .25 1
+			decoration
+			visible 1
+		}
+
+		itemDef
 		{
 			name bgtext
 			text "Background Text"
@@ -30,14 +48,14 @@
 			visible 1
 		}
 
-		itemDef 
+		itemDef
 		{
 			name testmodel
 			rect 0 0 320 240
 			forecolor 0 1 1 1
 			decoration
 			visible 1
-			
+
 			asset_model "progs/player.mdl"
 			model_origin 96 0 0
 			model_angles 0 135 0
@@ -45,7 +63,7 @@
 			model_fov 60
 		}
 
-		itemDef 
+		itemDef
 		{
 			name fgtext
 			text "Foreground Text"
@@ -54,10 +72,10 @@
 			decoration
 			visible 1
 		}
-		
-		
 
-		itemDef 
+
+
+		itemDef
 		{
 			name ButtonPlus
 			text "+"
@@ -66,15 +84,16 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { addframe testmodel 1 }
 			mouseEnter { setitemcolor Button1 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Button1 forecolor .4 .4 .4 .4  }
 		}
-		
-		
 
-		itemDef 
+
+
+		itemDef
 		{
 			name Button2
 			text "-"
@@ -83,15 +102,16 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { removeframe testmodel 1 }
 			mouseEnter { setitemcolor Button2 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Button2 forecolor .4 .4 .4 .4  }
 		}
-		
-		
 
-		itemDef 
+
+
+		itemDef
 		{
 			name Button1
 			text "Player"
@@ -100,15 +120,16 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { setmodel testmodel progs/player.mdl }
 			mouseEnter { setitemcolor Button1 forecolor 1 1 1 1 }
 			mouseExit { setitemcolor Button1 forecolor .4 .4 .4 .4  }
 		}
-		
-		
 
-		itemDef 
+
+
+		itemDef
 		{
 			name Button2
 			text "NPC"
@@ -117,6 +138,7 @@
 			forecolor .4 .4 .4 .4
 			border 1
 			textalign 1
+			type 1
 
 			action { setmodel testmodel progs/enforcer.mdl }
 			mouseEnter { setitemcolor Button2 forecolor 1 1 1 1 }

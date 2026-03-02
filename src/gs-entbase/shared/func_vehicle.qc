@@ -162,7 +162,7 @@ private:
 	float m_flWidth;
 	float m_flLength;
 
-	PREDICTED_FLOAT(m_flTurn)
+	NETWORKED_FLOAT(m_flTurn)
 };
 
 void

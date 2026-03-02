@@ -128,6 +128,8 @@ ncWorldSpawn::ncWorldSpawn(void)
 	lightstyle(64, "m");
 	lightstyle(65, "z");
 	lightstyle(69, "vv");
+	lightstyle(70, "nmmmmmmmmm"); /* cathode ray tube */
+	lightstyle(71, "f"); /* lcd display */
 
 	precache.Model("models/error.vvm");
 
@@ -302,10 +304,11 @@ worldspawn(void)
 {
 	ncWorldSpawn ourWorld = spawn(ncWorldSpawn);
 	ourWorld.pvsflags = PVSF_IGNOREPVS;
+    ourWorld.m_rawSpawnData = __fullspawndata;
 
 	/* fill the delegate with spawndata */
-	if (__fullspawndata) {
-		for (int i = 1; i < (tokenize(__fullspawndata) - 1); i += 2) {
+	if (STRING_SET(ourWorld.m_rawSpawnData)) {
+		for (int i = 1; i < (tokenize(ourWorld.m_rawSpawnData) - 1); i += 2) {
 			ourWorld.SpawnKey(argv(i), argv(i+1));
 		}
 	}

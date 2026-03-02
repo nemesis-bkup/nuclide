@@ -589,6 +589,7 @@ ncIO::SetSendFlags(float flSendFlags)
 void
 ncIO::_ReceiveComplete(float flNew, float flChanged)
 {
+	drawmask = (modelindex != 0) ? MASK_CLIENTENTITY : 0;
 }
 #endif
 

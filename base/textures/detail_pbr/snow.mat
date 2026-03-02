@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop snow
+	diffusemap detail_pbr/snow.tga
+	normalmap detail_pbr/snow_local.tga
+	specularmap detail_pbr/snow_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

@@ -76,7 +76,6 @@ private:
 void
 vguiTabViewItem::vguiTabViewItem(void)
 {
-	m_vecColor = UI_MAINCOLOR;
 	m_flAlpha = 1.0f;
 	m_vecIconColor = [1,1,1];
 	m_keyEquivalent = -1;
@@ -105,7 +104,7 @@ vguiTabViewItem::SetTitle(string strName)
 {
 	vector newsize = [0.0f, 0.0f, 0.0f];
 
-	m_strTitle = sprintf("%s%s", Font_RGBtoHex(UI_FGCOLOR), strName);
+	m_strTitle = localize(strName);
 	m_strTitleActive = sprintf("^3%s", m_strTitle);
 	//m_strTitle = sprintf("%s%s", Font_RGBtoHex(UI_MAINCOLOR), strName);
 	drawfont = g_fntDefault.iID;
@@ -183,7 +182,7 @@ vguiTabViewItem::Draw(void)
 		theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [8, 8], keyText, m_vecSize, g_fntDefault);
 	}
 
-	if (STRING_SET(m_strIcon) && UI_NOICONS == false) {
+	if (STRING_SET(m_strIcon) && theme.IconsEnabled() == false) {
 		if (m_iFlags & BUTTON_DOWN)
 			drawpic(m_parent.m_vecOrigin + m_vecOrigin + [4,4], m_strIcon, m_vecIMGSize, m_vecIconColor * 0.25, 1.0f, 0);
 		else

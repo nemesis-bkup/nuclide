@@ -39,6 +39,7 @@ typedef enum
 	ENT_ENTITY,	/**< of type ncEntity */
 	ENT_SOUND,	/**< of type ncSound */
 	ENT_PMOVEVARS, /**< of type ncPMoveVars */
+    ENT_ANIMATIONMANAGER, /**< of type ncAnimationManager */
 	ENT_ENTITYRENDERABLE, /**< of type ncRenderableEntity */
 	ENT_ENTITYPROJECTILE, /**< of type ncProjectile */
 	ENT_SURFPROP, /**< of type ncSurfacePropEntity */
@@ -69,11 +70,19 @@ typedef enum
 	ENT_SPRITE,	/**< of type env_sprite */
 	ENT_GLOW, /**< of type env_glow */
 	ENT_SPRAY,	/**< of type ncSpraylogo */
+	ENT_SPRAYVIDEO, /**< of type ncSprayVideo */
+	ENT_SPRAYAUDIO, /**< of type ncSprayAudio */
+	ENT_SPRAYIMAGE, /**< of type ncSprayPoster */
+	ENT_SPRAYWWW, /**< of type ncSprayWWW */
+	ENT_USERENTITY, /**< of type ncUserEntity_GameEntity */
+	ENT_USEROBJECT, /**< of type ncUserEntity_GameEntity */
+    ENT_MEDIASOURCE, /**< of type ncMediaSource */
 	ENT_DECAL,	/**< of type ncDecal */
 	ENT_OLDCAMERA,	/**< of type trigger_camera */
 	ENT_MONITOR,	/**< of type func_monitor */
 	ENT_VEHICLE,	/**< Reserved. */
 	ENT_TRACKTRAIN, /**< of type func_tracktrain */
+	ENT_VEH_SEAT,	/**< of type ncVehicleSeat */
 	ENT_VEH_BRUSH,	/**< of type func_vehicle */
 	ENT_VEH_TANKMORTAR,	/**< of type func_tankmortar */
 	ENT_VEH_4WHEEL,	/**< of type prop_vehicle_driveable */
@@ -86,10 +95,15 @@ typedef enum
 	ENT_HUDCOUNTER,	/**< of type env_hudcounter */
 	ENT_PUSH,		/**< of type trigger_push */
 	ENT_SOUNDSCAPE, /**< of type ncSoundScape */
+	ENT_MEDIASURFACE, /**< of type ncMediaSurface */
 	ENT_UISURFACE, /**< of type ncInteractiveSurface */
 	ENT_TVCHANNEL,	/**< of type ncAVTransmitter */
 	ENT_AVRECEIVER, /**< of type ncAVReceiver */
 	ENT_VIDEODISPLAY, /**< of type ncVideoDisplay */
+	ENT_SECURITYCAMERA, /**< of type ncSecurityCamera */
+	ENT_XTERMINAL, /**< of type ncXTerminal */
+	ENT_INPUTDEVICE, /**< of type ncInputDevice */
+	ENT_DESKTOPCOMPUTER, /**< of type ncComputerDesktop */
 	ENT_SEPARATOR,	/**< This is a separator. This separator is used by you to add game-specific networked entities. When declaring your own entity-update types, you want the first value to equal ENT_SEPARATOR at all times to ensure you'll not be overriding existing slots. */
 } entupdate_t;
 

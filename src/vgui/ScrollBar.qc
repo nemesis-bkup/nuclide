@@ -153,7 +153,7 @@ vguiScrollBar::Draw(void)
 		return;
 	}
 
-	drawfill([m_parent.m_vecOrigin[0]+m_vecOrigin[0],m_parent.m_vecOrigin[1]+m_vecOrigin[1]+vguiScrollBar_ArrowSize[1]+barstep], [vguiScrollBar_ArrowSize[0],visualBarHeight], UI_MAINCOLOR, UI_MAINALPHA);
+	drawfill([m_parent.m_vecOrigin[0]+m_vecOrigin[0],m_parent.m_vecOrigin[1]+m_vecOrigin[1]+vguiScrollBar_ArrowSize[1]+barstep], [vguiScrollBar_ArrowSize[0],visualBarHeight], theme.m_windowBackgroundColor.GetColor(), theme.m_windowBackgroundColor.GetAlpha());
 
 	if (!m_hold) {
 		theme.DrawButton([m_parent.m_vecOrigin[0]+m_vecOrigin[0],m_parent.m_vecOrigin[1]+m_vecOrigin[1]+vguiScrollBar_ArrowSize[1]+barstep], [vguiScrollBar_ArrowSize[0],visualBarHeight], VGUI_STATE_NORMAL);

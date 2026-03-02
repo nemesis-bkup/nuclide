@@ -475,7 +475,7 @@ ncSurfacePropEntity::Save(float handle)
 	SaveString(handle, "burningWeapon", m_burningWeapon);
 	SaveFloat(handle,"timeUntilBurningStops", m_timeUntilBurningStops);
 	SaveFloat(handle, "timeUntilNextBurnDamage", m_timeUntilNextBurnDamage);
-	
+
 	SaveString(handle, "outputOnDamaged", m_outputOnDamaged);
 	SaveString(handle, "outputOnDamagedByPlayer", m_outputOnDamagedByPlayer);
 	SaveString(handle, "outputOnHalfHealth", m_outputOnHalfHealth);
@@ -686,7 +686,7 @@ ncSurfacePropEntity::BreakModel(int damage, vector dir, int location)
 
 	if (GetPropData(PROPINFO_SKIN) != 0) {
 		SetSkin(GetPropData(PROPINFO_SKIN));
-	} 
+	}
 
 	if (GetPropData(PROPINFO_BREAKMODEL) != __NULL__) {
 		speedValue = length(GetVelocity());
@@ -697,7 +697,7 @@ ncSurfacePropEntity::BreakModel(int damage, vector dir, int location)
 		} else {
 			BreakModel_Entity(this, dir, damage);
 		}
-		
+
 		SoundDef_PlayAt(GetOrigin(), GetSurfaceData(SURFDATA_SND_BREAK));
 		Disappear();
 	} else {
@@ -918,7 +918,7 @@ ncSurfacePropEntity::RenderFire(void)
 	if (IsOnFire() == false) {
 		return;
 	}
-	
+
 	if (m_timeUntilNextBurnDamage < time) {
 		vector randomOrg;
 		randomOrg[0] = absmin[0] + ( random() * ( absmax[0] - absmin[0] ) );
@@ -940,7 +940,6 @@ ncSurfacePropEntity::predraw(void)
 
 	float returnValue = super::predraw();
 
-	frame1time += clframetime;
 	effects = oldEffects;
 	return returnValue;
 }
@@ -1001,16 +1000,16 @@ ncSurfacePropEntity::HasSurfaceData(void)
 __variant
 ncSurfacePropEntity::GetSurfaceData(int type)
 {
-	return SurfData_GetInfo(m_surfdataID, type);
+	return ncSurfDataManager::GetInfo(m_surfdataID, type);
 }
 
 void
 ncSurfacePropEntity::_SurfaceDataFinish(void)
 {
-	SurfData_SetStage(m_surfData);
+	ncSurfDataManager::SetStage(m_surfData);
 
 	if (STRING_SET(m_surfData)) {
-		m_surfdataID = SurfData_Finish();
+		m_surfdataID = ncSurfDataManager::Finish();
 	} else {
 		m_surfdataID = -1i;
 	}

@@ -34,66 +34,9 @@ Similar to surfaces in Doom III and Duke 4
 This entity was introduced in Nuclide (2022).
 */
 class
-ncInteractiveSurface:ncEntity
+ncInteractiveSurface:ncMediaSurface
 {
 public:
 	void ncInteractiveSurface(void);
 
-#ifdef SERVER
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Input(entity, string, string);
-#endif
-
-#ifdef CLIENT
-	virtual float predraw(void);
-	virtual void postdraw(void);
-	virtual void RenderScene(void);
-	virtual bool FocusCheck(vector,vector);
-	virtual void ReloadVideoResources(void);
-	virtual void ReceiveEntity(float,float);
-	virtual bool Input(float,float,float,float);
-#endif
-
-private:
-	NETWORKED_FLOAT(m_flScale)
-	NETWORKED_STRING(m_strUIClass)
-	NETWORKED_VECTOR(m_vecUIRes)
-	NETWORKED_FLOAT(m_flUseDistance)
-	NETWORKED_VECTOR(m_vecScreenLight)
-	NETWORKED_BOOL(m_uiSurfaceEnabled)
-
-#ifdef CLIENT
-	entity m_videoDisplayUI;
-	entity m_UIChain;
-	string m_strSurfaceMat;
-	bool m_bInFocus;
-	float m_flSurfaceMat;
-	vector m_vecCursorPos;
-	bool m_bCached;
-	vector m_vecWorldSize;
-#endif
-
-#ifdef SERVER
-	string m_outputOnActivate;
-	string m_outputOnActivateFailed;
-	string m_outputOnOutput1;
-	string m_outputOnOutput2;
-	string m_outputOnOutput3;
-	string m_outputOnOutput4;
-#endif
-};
-
-typedef enumflags
-{
-	UISURFACEFL_ORIGIN,
-	UISURFACEFL_ANGLES,
-	UISURFACEFL_INTERFACE,
-	UISURFACEFL_RESOLUTION,
-	UISURFACEFL_SCALE,
-	UISURFACEFL_DISTANCE,
-	UISURFACEFL_LIGHT,
-	UISURFACEFL_ENABLED,
 };

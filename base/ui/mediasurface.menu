@@ -1,0 +1,69 @@
+{
+	assetglobaldef
+	{
+		font fonts/font16 16
+		cursor gfx/icon16/cursor
+	}
+
+	menuDef
+	{
+		name "MediaView"
+		rect 0 0 640 480
+		backcolor 0 0 1 1
+		visible 1
+
+		itemDef
+		{
+			name channel
+			background "static"
+			rect 0 0 640 480
+			forecolor .25 .25 .25 1
+			decoration
+			visible 1
+		}
+
+		itemDef
+		{
+			name shared_app
+			group sharedItem
+			type 32
+			rect 0 0 640 480
+			visible 1
+		}
+
+		itemDef
+		{
+			name shared_web
+			group sharedItem
+			type 32
+			rect 0 0 640 480
+			visible 0
+		}
+
+		itemDef
+		{
+			name shared_video
+			group sharedItem
+			rect 0 0 640 480
+			visible 0
+		}
+
+		itemDef
+		{
+			name shared_picture
+			group sharedItem
+			rect 0 0 640 480
+			visible 0
+			style 3
+		}
+
+		itemDef
+		{
+			name shared_audio
+			group sharedItem
+			type 32
+			rect 0 0 640 480
+			visible 0
+		}
+	}
+}

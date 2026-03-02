@@ -88,9 +88,13 @@ monster_furniture::SpawnKey(string strKey, string setValue)
 void
 monster_furniture::Respawn(void)
 {
+	_m_bStartDead = true;
+	super::Respawn();
 	SetMovetype(MOVETYPE_NOCLIP);
 
 	if (GetSolid() == SOLID_BBOX) {
 		SetSize([-16, -16, 0], [16, 16, 72]);
 	}
+
+	RestoreAngles();
 }

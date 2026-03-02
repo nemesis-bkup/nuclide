@@ -24,14 +24,17 @@
 !!cvardf r_skipNormal
 !!cvardf r_skipSpecular
 !!cvardf r_skipLightmap
+!!cvardf gl_specular
+!!cvardf r_skipDiffuse
 
 #ifndef FRESNEL
-#define FRESNEL 0.25f
+#define FRESNEL gl_specular
 #endif
 
 #include "sys/defs.h"
 
 varying vec2 tex_c;
+varying vec4 vex_color;
 
 #ifdef BUMP
 varying vec3 eyevector;
@@ -71,6 +74,7 @@ varying vec2 lm1, lm2, lm3;
 		invsurface[0] = v_svector;
 		invsurface[1] = v_tvector;
 		invsurface[2] = v_normal;
+		vex_color = v_colour;
 		vec3 eyeminusvertex = e_eyepos - v_position.xyz;
 		eyevector.x = dot(eyeminusvertex, v_svector.xyz);
 		eyevector.y = dot(eyeminusvertex, v_tvector.xyz);
@@ -95,25 +99,35 @@ varying vec2 lm1, lm2, lm3;
 	#endif
 
 	#ifndef VERTEXLIT
-#if r_skipLightmap==0
-	#ifdef LIGHTSTYLED
-		#define LIGHTMAP0 texture2D(s_lightmap0, lm0).rgb
-		#define LIGHTMAP1 texture2D(s_lightmap1, lm1).rgb
-		#define LIGHTMAP2 texture2D(s_lightmap2, lm2).rgb
-		#define LIGHTMAP3 texture2D(s_lightmap3, lm3).rgb
-	#else
-		#define LIGHTMAP texture2D(s_lightmap, lm0).rgb 
-	#endif
-#else
-	#ifdef LIGHTSTYLED
-		#define LIGHTMAP0 vec3(0.5,0.5,0.5)
-		#define LIGHTMAP1 vec3(0.5,0.5,0.5)
-		#define LIGHTMAP2 vec3(0.5,0.5,0.5)
-		#define LIGHTMAP3 vec3(0.5,0.5,0.5)
-	#else
-		#define LIGHTMAP vec3(0.5,0.5,0.5)
-	#endif
-#endif
+
+    #if r_skipLightmap==0
+        #ifdef LIGHTSTYLED
+            #define LIGHTMAP0 texture2D(s_lightmap0, lm0).rgb
+            #define LIGHTMAP1 texture2D(s_lightmap1, lm1).rgb
+            #define LIGHTMAP2 texture2D(s_lightmap2, lm2).rgb
+            #define LIGHTMAP3 texture2D(s_lightmap3, lm3).rgb
+        #else
+            #define LIGHTMAP texture2D(s_lightmap, lm0).rgb
+        #endif
+    #elif r_skipLightmap==2
+        #ifdef LIGHTSTYLED
+            #define LIGHTMAP0 vec3(0.0,0.0,0.0)
+            #define LIGHTMAP1 vec3(0.0,0.0,0.0)
+            #define LIGHTMAP2 vec3(0.0,0.0,0.0)
+            #define LIGHTMAP3 vec3(0.0,0.0,0.0)
+        #else
+            #define LIGHTMAP vec3(0.0,0.0,0.0)
+        #endif
+    #else
+        #ifdef LIGHTSTYLED
+            #define LIGHTMAP0 vec3(1.0,1.0,1.0)
+            #define LIGHTMAP1 vec3(1.0,1.0,1.0)
+            #define LIGHTMAP2 vec3(1.0,1.0,1.0)
+            #define LIGHTMAP3 vec3(1.0,1.0,1.0)
+        #else
+            #define LIGHTMAP vec3(1.0,1.0,1.0)
+        #endif
+    #endif
 
 	vec3 lightmap_fragment()
 	{
@@ -195,15 +209,51 @@ varying vec2 lm1, lm2, lm3;
 
 		/* samplers */
 		vec4 albedo_f = texture2D(s_diffuse, tcoffsetmap); // diffuse RGBA
+
+
+    #if r_skipDiffuse==1
+        albedo_f.rgb = vec3(1.0,1.0,1.0);
+    #endif
+
+		#if defined(MASK)
+            #if defined(MASKLT)
+                if (albedo_f.a < MASK)
+                    discard;
+            #else
+                if (albedo_f.a >= MASK)
+                    discard;
+            #endif
+        #endif
+
 		vec3 normal_f = normalize(texture2D(s_normalmap, tcoffsetmap).rgb - 0.5); // normalmap RGB
+		normal_f.g *= -1.0f;
+
+        #ifdef TINT_R
+            albedo_f.r = (TINT_R * TINT_R) + (albedo_f.r * TINT_R);
+        #endif
+
+        #ifdef TINT_G
+            albedo_f.g = (TINT_G * TINT_G) + (albedo_f.g * TINT_G);
+        #endif
+
+        #ifdef TINT_B
+            albedo_f.b = (TINT_B * TINT_B) + (albedo_f.b * TINT_B);
+        #endif
+
 
 		/* deluxe/light */
 		vec3 deluxe = normalize(texture2D(s_deluxemap, lm0).rgb);
 
 	#ifdef PBR
-		float metalness_f =texture2D(s_specular, tcoffsetmap).r; // specularmap R
-		float roughness_f = texture2D(s_specular, tcoffsetmap).g; // specularmap G
-		float ao = texture2D(s_specular, tcoffsetmap).b; // specularmap B
+        #ifdef SPECULAR
+            float metalness_f = 1.0 - texture2D(s_specular, tcoffsetmap).r;
+            float roughness_f = texture2D(s_specular, tcoffsetmap).g;
+            float ao = texture2D(s_specular, tcoffsetmap).b;
+        #else
+            float metalness_f = 0.0;
+            float roughness_f = 0.0;
+            float ao = 1.0;
+        #endif
 		
 		/* coords */
 		vec3 cube_c;
@@ -213,15 +263,12 @@ varying vec2 lm1, lm2, lm3;
 		cube_c = cube_c.x * invsurface[0] + cube_c.y * invsurface[1] + cube_c.z * invsurface[2];
 		cube_c = (m_model * vec4(cube_c.xyz, 0.0)).xyz;
 
-		gl_FragColor = albedo_f;
+		gl_FragColor.rgb = albedo_f.rgb;
 
 		/* do PBR reflection using cubemap */
-		gl_FragColor += (metalness_f * textureCube(s_reflectcube, cube_c));
-
-		/* do PBR specular using our handy function */
-		gl_FragColor += (LightingFuncGGX(normal_f, normalize(eyevector), deluxe, roughness_f, FRESNEL) * gl_FragColor);
+		gl_FragColor.rgb += ao * ((metalness_f * (textureCube(s_reflectcube, cube_c).rgb)) + (LightingFuncGGX(normal_f, normalize(eyevector), deluxe, roughness_f, FRESNEL) * gl_FragColor.rgb));
 	#else
-		gl_FragColor = albedo_f;
+		gl_FragColor.rgb = albedo_f.rgb;
 	#endif
 
 	#ifndef VERTEXLIT
@@ -239,11 +286,8 @@ varying vec2 lm1, lm2, lm3;
 		vec3 emission_f = texture2D(s_fullbright, tcoffsetmap).rgb; // fullbrightmap RGB
 		gl_FragColor.rgb += emission_f;
 	#endif
-
-		/* ambient occlusion */
-	#ifdef PBR
-		gl_FragColor.rgb *= ao;
-	#endif
+	
+		gl_FragColor.a = e_colourident.a;
 
 	#if defined(MASK)
 	#if defined(MASKLT)
@@ -252,6 +296,15 @@ varying vec2 lm1, lm2, lm3;
 	#else
 		if (gl_FragColor.a >= MASK)
 			discard;
+
+		/* HACK: terrible hack, CSQC sets this to mark surface as an entity
+		   only entities are alphatested - ever */
+		if (e_glowmod.r == 0.5)
+		if (diffuse_f.a < 0.6) {
+			discard;
+		}
+
+
 	#endif
 		gl_FragColor.a = 1.0;	//alpha blending AND alpha testing usually looks stupid, plus it screws up our fog.
 	#endif

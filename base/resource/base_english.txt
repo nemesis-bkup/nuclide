@@ -4,6 +4,7 @@
 	"Tokens" 
 	{ 
 		"MAYHEM_Chapter1_Title"		"LQ Episode 0"
+		"WEAPON_UNARMED"			"Unarmed"
 		"WEAPON_AXE"			"Axe"
 		"WEAPON_SHOTGUN"		"Shotgun"
 		"WEAPON_SUPERSHOTGUN"		"Super Shotgun"
@@ -12,6 +13,9 @@
 		"WEAPON_ROCKETLAUNCHER"		"Rocket Launcher"
 		"WEAPON_GRENADELAUNCHER"		"Grenade Launcher"
 		"WEAPON_LIGHTNING"		"Lightning"
+
+		"LOCATION_UNKNOWN"    "Unknown"
+		"LOCATION_HOME"       "Home"
 
 		"Team_AutoAssign"		"Auto assign"
 		"Menu_Spectate"			"Spectate"

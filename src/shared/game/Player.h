@@ -262,13 +262,6 @@ private:
 	NETWORKED_FLOAT(health)
 	NETWORKED_FLOAT(sndindex_idle)
 
-	/* animation */
-	NETWORKED_FLOAT(anim_top)
-	NETWORKED_FLOAT(anim_top_time)
-	NETWORKED_FLOAT(anim_top_delay)
-	NETWORKED_FLOAT(anim_bottom)
-	NETWORKED_FLOAT(anim_bottom_time)
-
 	NETWORKED_FLOAT_N(colormap)
 	NETWORKED_FLOAT_N(gflags)
 	NETWORKED_FLOAT(viewzoom)
@@ -334,7 +327,6 @@ private:
 #endif
 
 	entity m_holdingEntity;
-	NETWORKED_FLOAT(m_animBackend)
 
 
 
@@ -344,10 +336,6 @@ private:
 	virtual void Event_ReloadWeapon(void);
 	virtual void Event_ReloadWeaponEnd(void);
 	virtual void Event_HolsterWeapon(void);
-
-	nonvirtual void UpdatePlayerAnimation_Skeletal(float timelength);
-	nonvirtual void UpdatePlayerAnimation_Goose(float timelength);
-	nonvirtual void UpdatePlayerAnimation_Valve(float timelength);
 };
 
 /* all potential SendFlags bits we can possibly send */

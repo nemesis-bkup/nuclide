@@ -17,7 +17,13 @@
 /*
 
 This is the Client Game API. Used by client-side scriptobjects, hud progs etc.
-There's no header because the main code is not supposed to use this.
+There's no header with function prototypes
+because the main code is not supposed to use this.
+
+Progs' their init() functions are supposed to call hooks into these
+so they're dynamically re-linked at runtime. This is crucial
+for ensuring progs from different sources and eras
+stay compatible.
 
 */
 
@@ -130,7 +136,6 @@ CLPF_player_IsFalling(string itemName)
 	return (((ncPlayer)pSeat->m_ePlayer).flags & FL_ONGROUND) ? false : true;
 }
 
-
 string
 CLPF_player_GetString(string keyName)
 {
@@ -161,23 +166,27 @@ CLPF_player_GetVector(string keyName)
 	return stov(CLPF_player_GetString(keyName));
 }
 
-
-
 bool
 CLPF_player_IsMoving(string itemName)
 {
-	if (pSeat->m_ePlayer.velocity[0] > 1.0f)
+	if (pSeat->m_ePlayer.velocity[0] > 1.0f) {
 		return (true);
-	if (pSeat->m_ePlayer.velocity[1] > 1.0f)
+	}
+	if (pSeat->m_ePlayer.velocity[1] > 1.0f) {
 		return (true);
-	if (pSeat->m_ePlayer.velocity[2] > 1.0f)
+	}
+	if (pSeat->m_ePlayer.velocity[2] > 1.0f) {
 		return (true);
-	if (pSeat->m_ePlayer.velocity[0] < -1.0f)
+	}
+	if (pSeat->m_ePlayer.velocity[0] < -1.0f) {
 		return (true);
-	if (pSeat->m_ePlayer.velocity[1] < -1.0f)
+	}
+	if (pSeat->m_ePlayer.velocity[1] < -1.0f) {
 		return (true);
-	if (pSeat->m_ePlayer.velocity[2] < -1.0f)
+	}
+	if (pSeat->m_ePlayer.velocity[2] < -1.0f) {
 		return (true);
+	}
 
 	return (false);
 }
@@ -200,52 +209,20 @@ CLPF_player_GetGameFlags(void)
 	return (pSeat->m_ePlayer.gflags);
 }
 
-
-/* teamplay functions */
-string
-CLPF_team_GetName(int teamNumber)
-{
-	return serverkey(sprintf("team_%i", teamNumber));
-}
-
-vector
-CLPF_team_GetColor(int teamNumber)
-{
-	return g_vec_null;
-}
-
-int
-CLPF_team_GetScore(int teamNumber)
-{
-	return (int)serverkeyfloat(sprintf("teamscore_%i", teamNumber));
-}
-
-int
-CLPF_team_GetPlayers(int teamNumber)
-{
-	return 0i;
-}
-
-int
-CLPF_team_GetCount(void)
-{
-	return (int)serverkeyfloat("teams");
-}
-
 bool
 CLPF_weapon_IsValid(entity activeWeapon)
 {
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
-	if (weapon && weapon._isItem == true && weapon._isWeapon == true) {
-		return (true);
+	if (weapon) {
+		if ((weapon._isItem == true) && (weapon._isWeapon == true)) {
+			return (true);
+		}
 	}
 
 	return (false);
@@ -255,12 +232,10 @@ string
 CLPF_weapon_GetTitle(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -274,12 +249,10 @@ string
 CLPF_weapon_GetIcon(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -293,12 +266,10 @@ string
 CLPF_weapon_GetSelectedIcon(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -312,109 +283,97 @@ int
 CLPF_weapon_GetSlot(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDSlot);
 	}
 
-	return -1i;
+	return (-1i);
 }
 
 int
 CLPF_CLPF_weapon_GetSlotPos(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return (weapon.m_weaponHUDSlotPos);
 	}
 
-	return -1i;
+	return (-1i);
 }
 
 int
 CLPF_weapon_GetClip(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return (weapon.m_weaponClip);
 	}
 
-	return 0;
+	return (0i);
 }
 
 int
 CLPF_weapon_MaxAmmo(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
-		if (weapon.m_primaryAmmoType >= 0) {
+		if (weapon.m_primaryAmmoType >= 0i) {
 			return ammoMaxForNum(weapon.m_primaryAmmoType);
 		}
 	}
 
-	return 0;
+	return (0i);
 }
 
 int
 CLPF_CLPF_weapon_GetClipSize(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return (weapon.m_weaponClipSize);
 	}
 
-	return 0;
+	return (0i);
 }
 
 bool
 CLPF_weapon_IsEmpty(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -428,12 +387,10 @@ bool
 CLPF_weapon_UsesSecondaryAmmo(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -447,50 +404,44 @@ int
 CLPF_weapon_GetAmmo1(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return owner.GetReserveAmmo(weapon.m_primaryAmmoType);
 	}
 
-	return -1i;
+	return (-1i);
 }
 
 int
 CLPF_weapon_GetAmmo2(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
 		return owner.GetReserveAmmo(weapon.m_secondaryAmmoType);
 	}
 
-	return -1i;
+	return (-1i);
 }
 
 bool
 CLPF_weapon_AmmoRequired(entity activeWeapon)
 {
 	ncActor owner = (ncActor)pSeat->m_ePlayer;
-	ncWeapon weapon;
+	ncWeapon weapon = (ncWeapon)activeWeapon;
 
-	if (activeWeapon == __NULL__) {
+	if (weapon == __NULL__) {
 		weapon = owner.m_activeWeapon;
-	} else {
-		weapon = (ncWeapon)activeWeapon;
 	}
 
 	if (weapon) {
@@ -521,10 +472,11 @@ CLPF_weapon_GetLastWeaponInInventory(void)
 entity
 CLPF_weapon_GetNextWeaponRelativeTo(entity weaponCheck)
 {
-	if (weaponCheck)
+	if (weaponCheck) {
 		return ((ncWeapon)weaponCheck).m_nextWeapon;
+	}
 
-	return __NULL__;
+	return (__NULL__);
 }
 
 entity
@@ -533,7 +485,7 @@ CLPF_weapon_GetPreviousWeaponRelativeTo(entity weaponCheck)
 	if (weaponCheck)
 		return ((ncWeapon)weaponCheck).m_prevWeapon;
 
-	return __NULL__;
+	return (__NULL__);
 }
 
 bool
@@ -551,6 +503,12 @@ void
 CLPF_draw_RadarRect(vector pos, vector size)
 {
 	Radar_Draw(pos, size);
+}
+
+void
+CLPF_draw_ScriptedView(vector pos, vector size)
+{
+	HUD_DrawScriptedView(pos, size);
 }
 
 void
@@ -727,9 +685,6 @@ CLPF_atlasPic_DrawRight_RGBA(int atlasPic, vector drawAtPos, float percentageDra
 {
 	ncInterfaceSpriteSheet::DrawRight_RGBA(atlasPic, drawAtPos, percentageDrawn, picColor, picAlpha, forceAdditive);
 }
-
-
-
 
 void
 CLPF_atlasPic_DrawTop_RGB(int atlasPic, vector drawAtPos, float percentageDrawn, vector picColor, bool forceAdditive)

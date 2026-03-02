@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop concrete
+	diffusemap detail_pbr/concrete.tga
+	normalmap detail_pbr/concrete_local.tga
+	specularmap detail_pbr/concrete_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

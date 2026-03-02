@@ -45,6 +45,8 @@ public:
 
 	nonvirtual void SetDeclBody(string);
 	nonvirtual string GetDeclBody(void);
+	nonvirtual string GetDeclBodyBase64(void);
+    nonvirtual ncDict InitWithSpawnDataFromBase64(string base64Data);
 
 	nonvirtual void AddKey(string, string);
 	nonvirtual void RemoveKey(string);
@@ -59,6 +61,8 @@ private:
 	string m_strBody;
 	string m_declPath;
 	string m_filePath;
+
+	string m_dictType;
 };
 
 /** @} */ // end of decl

@@ -55,7 +55,7 @@ vguiTextView::Spawned(void)
 	super::Spawned();
 
 	m_frameColor = spawn(vguiColor);
-	m_frameColor. SetColorWithAlpha(UI_MAINCOLOR, 0.0f);
+	m_frameColor. SetColorWithAlpha([0,0,0], 0.0f);
 
 	string conName = sprintf("UIBuffer_%d", num_for_edict(this));
 
@@ -73,7 +73,7 @@ void
 vguiTextView::Draw(void)
 {
 	vguiTheme ourTheme = GetTheme();
-	ourTheme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, m_frameColor);
+	ourTheme.DrawTextBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
 	drawfont = g_fntDefault.iID;
 	float xPos = m_parent.m_vecOrigin[0] + m_vecOrigin[0] + 4;
 	float yPos = m_parent.m_vecOrigin[1] + m_vecOrigin[1] + 4;

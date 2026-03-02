@@ -359,7 +359,11 @@ ncView::UpdateView(void)
 
 	/* put entities into the scene (and call their predraws */
 	if (m_bDrawEntities) {
-		addentities(MASK_ENGINE);
+		if (!autocvar(r_maskEngineTest, 0))
+			addentities(MASK_ENGINE);
+
+		addentities(MASK_CLIENTENTITY);
+		addentities(MASK_MEDIASURFACE);
 	}
 
 	/* after predraws we can act upon their new positions */

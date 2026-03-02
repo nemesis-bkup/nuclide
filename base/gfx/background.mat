@@ -1,10 +1,24 @@
-{
+
+{
 	nopicmip
 	nocompress
 
 	{
 		rgbGen const (0 1 1)
 		map gfx/console2.tga
+	}
+
+	{
+		rgbGen const (2 2 2)
+		map gfx/console1.tga
+		tcMod scroll 0.01 0.02
+		tcMod scale 16 8
+		blendFunc add
+	}
+
+	{
+		map gfx/background.tga
+		blendFunc blend
 	}
 
 	{

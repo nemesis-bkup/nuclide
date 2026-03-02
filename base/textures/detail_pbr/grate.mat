@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop grate
+	diffusemap detail_pbr/grate.tga
+	normalmap detail_pbr/grate_local.tga
+	specularmap detail_pbr/grate_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

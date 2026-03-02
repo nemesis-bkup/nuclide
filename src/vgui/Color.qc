@@ -15,6 +15,7 @@ public:
 	nonvirtual void SetColorWithAlpha(vector, float);
 	nonvirtual vector GetColor(void);
 	nonvirtual float GetAlpha(void);
+	nonvirtual string GetFunStringColor(void);
 
 private:
 	vector m_colorValue;
@@ -51,4 +52,10 @@ float
 vguiColor::GetAlpha(void)
 {
 	return m_alphaValue;
+}
+
+string
+vguiColor::GetFunStringColor(void)
+{
+	return Font_RGBtoHex(m_colorValue);
 }

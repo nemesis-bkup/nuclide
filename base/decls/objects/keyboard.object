@@ -1,0 +1,18 @@
+object keyboard
+{
+    "name"      "Keyboard"
+    "model"     "models/keyb.vvm"
+    "physics"   "1"
+    "phantom"   "0"
+    "mins" "-16 -16 -16"
+    "maxs" "16 16 16"
+    "scale" "1"
+    "skin" "0"
+
+    "gui_base64" "ewoJYXNzZXRnbG9iYWxkZWYKCXsKCQlmb250IGZvbnRzL2ZvbnQxNiAxNgoJCWN1cnNvciBnZngvaWNvbjE2L2N1cnNvcgoJfQoKCW1lbnVEZWYKCXsKCQluYW1lICJLZXlib2FyZCIKCQlyZWN0IDAgMCA2NDAgMjQwCgkJYmFja2NvbG9yIDAgMCAxIDEKCQl2aXNpYmxlIDEKCgkJaXRlbURlZgoJCXsKCQkJbmFtZSBrZXlib2FyZAoJCQlncm91cCBpbnB1dGRldmljZQoJCQl0eXBlIDMzCgkJCXJlY3QgMCAwIDY0MCAyNDAKCQkJdmlzaWJsZSAxCgkJfQoJfQp9Cg"
+
+    "gui_origin" "1 0 -6"
+    "gui_angles" "90 90 -1"
+    "gui_scale" "0.03"
+    "gui_res" "640 240"
+}

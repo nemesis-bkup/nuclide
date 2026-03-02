@@ -1,0 +1,60 @@
+entityDef func_computer
+{
+	"editor_name"	"Desktop Computer"
+	"editor_color"	"1 1 0"
+	"spawnclass"	"ncComputerDesktop"
+	"model"			"models/comp.mdl"
+} 
+
+entityDef computerDisplay
+{
+	"spawnclass"	"ncMediaSurface"
+	"ui_scale"	    "0.04"
+	"ui_res"	    "640 480"
+}
+
+entityDef avTransmitter
+{
+    "editor_color"      "1 0 1"
+    "editor_name"       "TV Channel Test"
+    "editor_model"      "progs/missile.mdl"
+
+	"spawnclass"		"ncAVTransmitter"
+	"channel"			"1"
+	"mindset_idle"		"videoIdle"
+	"mindset_pickmovie"	"videoBC,videoBC1"
+
+	"mindset_movie1"	"videoBC"
+	"mindset_movie2"	"videoBC1"
+	"ui"				"ui/tv.menu"
+	"targetname"		"foobar"
+}
+
+entityDef avReceiver
+{
+	"spawnclass"	"ncAVReceiver"
+	"channel"		"1"
+	"targetname"	"interactivesurface_tv2"
+}
+
+entityDef videoDisplay
+{
+	"spawnclass"	"ncMediaSurface"
+	"targetname"	"videoScreen"
+	"input"		      "interactivesurface_tv2"
+}
+
+entityDef radioTransmitter
+{
+	"spawnclass"	"ncAVTransmitter"
+	"channel"		"-20"
+	"audio"			"sound/misc/intermission.ogg"
+	"targetname"		"radioStation"
+}
+
+entityDef radioReceiver
+{
+	"spawnclass"	"ncAVReceiver"
+	"channel"	     "-20"
+}
+

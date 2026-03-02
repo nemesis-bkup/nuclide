@@ -23,7 +23,7 @@ static int g_constCount;
 const string g_constantsFile = "scripts/constants.txt";
 
 void
-Constants_Init(void)
+ncConstantManager::Init(void)
 {
 	filestream constFile;
 	string tempString;
@@ -54,7 +54,7 @@ Constants_Init(void)
 		}
 
 		/* sanity bounds check */
-		if (!Constants_Add(argv(0), argv(1))) {
+		if (!ncConstantManager::Add(argv(0), argv(1))) {
 			fclose(constFile);
 			InitEnd();
 			return;
@@ -65,13 +65,28 @@ Constants_Init(void)
 	InitEnd();
 }
 
+
+void
+ncConstantManager::Shutdown(void)
+{
+    g_constCount = 0;
+    hash_destroytab(g_hashConstants);
+}
+
 bool
-Constants_Add(string constantName, string constantValue)
+ncConstantManager::Add(string constantName, string constantValue)
 {
 	/* sanity bounds check */
 	if (g_constCount == MAX_CONSTANTS_ID) {
 		ncError("Hit maximum number of %d constants.", MAX_CONSTANTS_ID);
 		return (false);
+	}
+
+	int checkIndex = hash_get(g_hashConstants, constantName, -1i);
+
+	/* already added */
+	if (checkIndex != -1i) {
+		return (true);
 	}
 
 	g_constIndex[g_constCount] = constantValue;
@@ -81,7 +96,7 @@ Constants_Add(string constantName, string constantValue)
 }
 
 string
-Constants_LookUp(string constName, string returnValue)
+ncConstantManager::LookUp(string constName, string returnValue)
 {
 	int constIndex = -1i;
 

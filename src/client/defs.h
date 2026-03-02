@@ -14,7 +14,7 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include "../platform/localize.h"
+#include "../platform/Locale.h"
 #include "api_func.h"
 #include "../shared/api.h"
 #include "../shared/system/entityDef.h"
@@ -33,6 +33,9 @@
 #include "UserInfoManager.h"
 #include "ServerInfo.h"
 #include "WadIndexer.h"
+#include "ClientDataFeed.h"
+#include "UserInventory.h"
+#include "../platform/MapLibrary.h"
 
 var bool g_net_debug = false;
 var bool g_cheats = false;
@@ -41,6 +44,7 @@ var float g_modelSpinAngle;
 var float g_modelSpinPitch;
 var float g_modelSpinRoll;
 var float g_modelBobHeight;
+
 var float autocvar_cg_modelSpinSpeed = 120.0f;
 var float autocvar_cg_modelSpinRoll = 0.0f;
 var float autocvar_cg_modelSpinRollSpeed = 0.0f;
@@ -50,7 +54,6 @@ var float autocvar_cg_modelBobHeight = 0.0f;
 var float autocvar_cg_modelBobHeightSpeed = 0.0f;
 
 var bool autocvar_net_showUpdates = false;
-
 var bool g_clientInitialized = false;
 
 #define PRINTFLAG(x) if (autocvar_net_showUpdates || g_net_debug) \
@@ -359,6 +362,7 @@ struct
 	float m_flHUDWeaponSelectTime;
 
 	int m_iScoresVisible;
+	bool m_showInterface;
 
 	/* saturn controller */
 	int m_iSaturnMenu;
@@ -427,11 +431,15 @@ struct
 	float m_weaponModel;
 	string m_weaponClass;
 	string m_weaponFireInfo;
+    entity m_inputFocus;
 } g_seats[4], *pSeat;
 
 .float modelindex2;
 .float modelindex3;
 .float modelindex4;
+
+#define MASK_CLIENTENTITY 10
+#define MASK_MEDIASURFACE 11
 
 var vector g_vecMousePos;
 var vector g_hudmins;

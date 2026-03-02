@@ -40,6 +40,8 @@ public:
 	nonvirtual int GetBorder(void);
 	nonvirtual void AdjustBounds(void);
 
+	virtual void ReloadVideoResources(void);
+
 private:
 	string m_strImage;
 	int m_borderThickness;
@@ -63,17 +65,23 @@ vguiPic::Spawned(void)
 }
 
 void
+vguiPic::ReloadVideoResources(void)
+{
+	precache_pic(m_strImage);
+}
+
+void
 vguiPic::Draw(void)
 {
 	if (m_borderThickness <= 0) {
-		if (m_strImage) {
+		if (STRING_SET(m_strImage)) {
 			drawpic(m_parent.m_vecOrigin + m_vecOrigin, m_strImage, m_vecSize, m_picColorTint, 1.0f, 0);
 		}
 	} else {
 		vguiTheme ourTheme = GetTheme();
 		ourTheme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, __NULL__);
 
-		if (m_strImage) {
+		if (STRING_SET(m_strImage)) {
 			drawpic(m_parent.m_vecOrigin + m_vecOrigin + m_picMins, m_strImage, m_picSize, m_picColorTint, 1.0f, 0);
 		}
 	}

@@ -18,7 +18,7 @@ int g_iPackagesInitialized;
 
 void UI_Packages_Show ( void )
 {
-	static vguiWindow winPackages;
+	static vguiPanel winPackages;
 	static vguiList listPatches;
 	static vguiList listMods;
 	static vguiList listMaps;
@@ -45,6 +45,12 @@ void UI_Packages_Show ( void )
 	static vguiLabel lblVersion;
 	static vguiList targetCategory;
 	static vguiList targetCategoryID;
+
+    if (Updates_GetPackageCount() < 1) {
+        vguiWindow alertPanel = vguiPopups::NewAlertPanel("Try again later", "There are no packages\navailable for the current game.");
+        g_uiDesktop.Add(alertPanel);
+        return;
+    }
 
 	static void Packages_ScrollUpdate ( void ) {
 		scrlSaves.SetValue( listPatches.GetOffset() );
@@ -158,7 +164,7 @@ void UI_Packages_Show ( void )
 	if ( !g_iPackagesInitialized ) {
 		g_iPackagesInitialized = TRUE;
 		Updates_Init();
-		winPackages = spawn( vguiWindow );
+		winPackages = spawn( vguiPanel );
 		winPackages.SetTitle( "Packages" );
 		winPackages.SetSize( [480,360] );
 		winPackages.SetIcon( "gfx/icon16/package" );

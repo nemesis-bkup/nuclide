@@ -20,7 +20,11 @@
 #include "ServerGame.h"
 #include "Output.h"
 #include "GameRules.h"
-#include "skill.h"
+#include "GameRules_Editor.h"
+#include "GameRules_Home.h"
+#include "GameRules_SinglePlayer.h"
+#include "GameRules_DevShutterbug.h"
+#include "SkillManager.h"
 #include "Stats.h"
 
 #include "../nav/linkflags.h"
@@ -31,15 +35,14 @@
 #include "../nav/NavInfo.h"
 #include "../nav/Hint.h"
 
-#include "spawn.h"
+#include "SpawnManager.h"
 #include "AddonDelegate.h"
 #include "AddonManager.h"
 #include "MapDelegate.h"
-#include "plugins.h"
-#include "lament.h"
-#include "vote.h"
-#include "mapcycle.h"
-#include "maptweaks.h"
+#include "AntiCheat.h"
+#include "VoteManager.h"
+#include "MapCycle.h"
+#include "MapTweaks.h"
 #include "Schedule.h"
 #include "SessionManager.h"
 
@@ -201,6 +204,27 @@ WriteEntityEvent(float to, entity targetEntity, float eventType)
 	WriteByte(to, EV_ENTITYEVENT);
 	WriteEntity(to, targetEntity);
 	WriteFloat(to, eventType);
+}
+
+void
+CallFunctionAsEntity(entity targetEntity, void(void) functionToCall)
+{
+	if (!functionToCall) {
+		breakpoint();
+		ncError("Invalid function call");
+		return;
+	}
+
+	if (!targetEntity) {
+		breakpoint();
+		ncError("Invalid target entity");
+		return;
+	}
+
+	entity oldSelf = self;
+	self = targetEntity;
+	functionToCall();
+	self = oldSelf;
 }
 
 /** @defgroup serverentity Entities that are server-side

@@ -31,7 +31,7 @@ enumflags
 };
 
 static class
-prop_vehicle_driveable_wheel:ncIO
+prop_vehicle_driveable_wheel:ncEntity
 {
 public:
 	void prop_vehicle_driveable_wheel(void);
@@ -105,14 +105,19 @@ private:
 	prop_vehicle_driveable_wheel m_wlBR;
 	vector m_vecControlMins;
 	vector m_vecControlMaxs;
-	PREDICTED_FLOAT(m_flTurn)
+	NETWORKED_FLOAT(m_flTurn)
 
-	float m_flBRWheelAxel;
-	float m_flBLWheelAxel;
-	float m_flFLWheelAxel;
-	float m_flFRWheelAxel;
+	vector m_vecBRWheelAxel;
+	vector m_vecBLWheelAxel;
+	vector m_vecFLWheelAxel;
+	vector m_vecFRWheelAxel;
+	bool m_vehicleNoFlip;
+	float m_flSuspensionScale;
 
 	float m_flUseTime;
+	NETWORKED_VECTOR(vehicleOrigin)
+	NETWORKED_VECTOR(vehicleAngles)
+	vector m_firstPersonOrg;
 
 public:
 	void prop_vehicle_driveable(void);
@@ -144,13 +149,15 @@ public:
 };
 
 var float autocvar_car_bounceFactor = 1.0f;
-var float autocvar_car_acceleration = 600.0f;
+var float autocvar_car_acceleration = 320.0f;
 var float autocvar_car_skidSpeed = 1024.0f;
-var float autocvar_car_traction = 10.0f;
+var float autocvar_car_traction = 7.5f;
 var float autocvar_car_breakFactor = 1.0f;
 var float autocvar_car_steerFactor = 1.0f;
 var float autocvar_car_straightenFactor = 1.0f;
-var vector autocvar_car_gravityDir = [0,0,-0.65f];
+var vector autocvar_car_gravityDir = [0,0,-0.5f];
+var float autocvar_car_suspensionScale = 5.0f;
+var vector autocvar_car_firstPersonOffset = [0,0,0];
 
 void
 prop_vehicle_driveable::prop_vehicle_driveable(void)
@@ -228,10 +235,19 @@ prop_vehicle_driveable::OnRemoveEntity(void)
 }
 
 #ifdef CLIENT
+var bool autocvar_car_firstPerson = false;
+
 void
 prop_vehicle_driveable::UpdateView(void)
 {
 	vector vecStart, vecEnd;
+
+	if (autocvar_car_firstPerson) {
+		makevectors(angles);
+		g_view.SetCameraOrigin(origin + (v_forward * m_firstPersonOrg[0]) + (v_right * m_firstPersonOrg[1]) + (v_up * m_firstPersonOrg[2]));
+		g_view.SetClientAngle(angles);
+		return;
+	}
 
 	pSeat->m_vecPredictedOrigin = origin;
 	makevectors(view_angles);
@@ -412,7 +428,7 @@ prop_vehicle_driveable_wheel::Accel(float flMoveTime, float m_flTurn)
 
 	/* air friction, doubles up for general rolling friction, ish */
 	velocity *= 1 - flMoveTime * 0.1;
-	
+
 	if (flags & FL_ONGROUND && flTraction) {
 		if (eDriver) {
 			velocity += v_forward * bound(-1, vehParent.m_vecMoveValues[0] / 400, 1) * vehParent.m_flAcceleration * flMoveTime * flTraction;
@@ -450,7 +466,7 @@ prop_vehicle_driveable_wheel::Accel(float flMoveTime, float m_flTurn)
 			if (vlen(t) < 15) {
 				velocity -= t;
 			}
-			
+
 			/* don't bother with gravity if we're already on the ground and
 			   breaking. this avoids weird slides. */
 			if (!trace_fraction && trace_plane_normal * vehParent.m_vecGravityDir < -0.7f) {
@@ -475,7 +491,7 @@ prop_vehicle_driveable_wheel::Accel(float flMoveTime, float m_flTurn)
 				vector dmgDir = dirFromTarget(trace_endpos, foo.origin);
 				ncDict damageDecl = spawn(ncDict);
 				damageDecl.AddKey("damage", itos(iImpactDamage));
-				combat.Damage(foo, this, vehParent.m_eDriver, damageDecl.GetDeclBody(), trace_endpos, dmgDir, foo.origin);
+				foo.Damage(this, vehParent.m_eDriver, damageDecl, 1.0, dmgDir, foo.origin);
 				remove(damageDecl);
 				//print(sprintf("Delivering %i impact damage\n", iImpactDamage));
 			}
@@ -493,14 +509,14 @@ prop_vehicle_driveable_wheel::UpdateSuspension(float flTimeLength)
 	if (fabs(m_flSuspension) > 0.001 || fabs(m_flSuspensionForce) > 0.001) {
 		m_flSuspension += m_flSuspensionForce * flTimeLength;
 		
-		flForce = bound(0, flTimeLength * 65, 2);
-		flDamp = 1 - (flTimeLength * 4);
+		flForce = bound(0, flTimeLength * 60, 2);
+		flDamp = 1 - (flTimeLength * 2);
 		if (flDamp < 0) {
 			flDamp = 0;
 		}
 		m_flSuspensionForce *= flDamp;
 		m_flSuspensionForce -= m_flSuspension * flForce;
-		m_flSuspension = bound(-15, m_flSuspension, 15);
+		m_flSuspension = bound(-16, m_flSuspension, 16);
 	}
 }
 
@@ -508,7 +524,7 @@ void
 prop_vehicle_driveable_wheel::Physics(float turnrate, float flTimeLength)
 {
 	vector owner_pos;
-	geomtype = GEOMTYPE_SPHERE;
+	//geomtype = GEOMTYPE_SPHERE;
 
 	/* try to correct the wheel's position, in case it got stuck */
 	owner_pos = owner.origin + (owner.mins + owner.maxs) * 0.5f;
@@ -531,7 +547,7 @@ prop_vehicle_driveable_wheel::Physics(float turnrate, float flTimeLength)
 	Move(flTimeLength);
 	Accel(flTimeLength / 2, turnrate);
 	UpdateSuspension(flTimeLength);
-	//print(sprintf("suspension: %d, force: %d\n", m_flSuspension, m_flSuspensionForce));
+	//print(sprintf("suspension: %f, force: %f\n", m_flSuspension, m_flSuspensionForce));
 }
 
 void
@@ -614,6 +630,10 @@ prop_vehicle_driveable::PlayerInput(void)
 void
 prop_vehicle_driveable::RunVehiclePhysics(void)
 {
+#ifdef CLIENT
+	return;
+#endif
+
 #if SERVER
 	/* eject the dead */
 	if (m_eDriver && m_eDriver.health <= 0) {
@@ -639,37 +659,39 @@ prop_vehicle_driveable::RunVehiclePhysics(void)
 		} else {
 			/* straighten wheels forward over time */
 			if (m_flTurn < 0) {
-				m_flTurn = min(0, m_flTurn + m_flTimeLength * m_flStraightenFactor);
+				m_flTurn = min(0, m_flTurn + (m_flTimeLength * m_flStraightenFactor));
 			} else if (m_flTurn > 0) {
-				m_flTurn = max(0, m_flTurn - m_flTimeLength * m_flStraightenFactor);
+				m_flTurn = max(0, m_flTurn - (m_flTimeLength * m_flStraightenFactor));
 			}
 		}
 
 		PlayerUpdateFlags();
 	}
 
-	//if (spawnflags & VEHSF_NOFLIP) {
-		angles[0] = bound (-45, angles[0], 45);
-		angles[2] = bound (-45, angles[2], 45);
-	//}
+	angles = fixAngle(angles);
+
+	if ((angles[2] > 45) || (angles[2] < -45)) {
+		if (0) {
+			PlayerLeave(m_eDriver);
+		}
+		if (m_vehicleNoFlip) {
+			angles[0] = bound(-45, angles[0], 45);
+			angles[2] = bound(-45, angles[2], 45);
+		}
+	}
 
 	m_nuclideFlags &= ~VEH_SKIDDING;
-
-	angles = fixAngle(angles);
 
 	velocity[0] = bound(-1000, velocity[0], 1000);
 	velocity[1] = bound(-1000, velocity[1], 1000);
 	velocity[2] = bound(-1000, velocity[2], 1000);
 
-	makevectors(angles);
-
 	setorigin( m_wlFL, origin );
-	setorigin( m_wlBL, m_wlFL.origin - v_forward * 85 );
-	setorigin( m_wlFL, m_wlFL.origin + v_forward * 85 );
-	setorigin( m_wlFR, m_wlFL.origin + v_right * 40 );
-	setorigin( m_wlFL, m_wlFL.origin - v_right * 40 );
-	setorigin( m_wlBR, m_wlBL.origin + v_right * 40 );
-	setorigin( m_wlBL, m_wlBL.origin - v_right * 40 );
+	makevectors(angles);
+	setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
+	setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
+	setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
+	setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
 
 	m_wlFL.Physics( this.m_flTurn, m_flTimeLength);
 	m_wlFR.Physics( this.m_flTurn, m_flTimeLength);
@@ -682,14 +704,39 @@ prop_vehicle_driveable::RunVehiclePhysics(void)
 	velocity += m_wlBR.velocity;
 	velocity *= 0.25f;
 
-	v_right = (m_wlFR.origin - m_wlFL.origin);
-	v_right += (m_wlBR.origin - m_wlBL.origin);
-	v_forward = (m_wlFL.origin + m_wlFR.origin);
-	v_forward -= (m_wlBL.origin + m_wlBR.origin);
+	/* figure out the new visual chassis position */
+	vector wheelFR = m_wlFR.origin + [0,0,(m_wlFR.m_flSuspension * m_flSuspensionScale)];
+	vector wheelFL = m_wlFL.origin + [0,0,(m_wlFL.m_flSuspension * m_flSuspensionScale)];
+	vector wheelBR = m_wlBR.origin + [0,0,(m_wlBR.m_flSuspension * m_flSuspensionScale)];
+	vector wheelBL = m_wlBL.origin + [0,0,(m_wlBL.m_flSuspension * m_flSuspensionScale)];
+
+	v_right = (wheelFR - wheelFL);
+	v_right += (wheelBR - wheelBL);
+	v_forward = (wheelFL + wheelFR);
+	v_forward -= (wheelBL + wheelBR);
+	v_up = -crossproduct(v_forward, v_right);
+	vehicleAngles = vectoangles( v_forward, v_up );
+
+	vehicleOrigin = wheelFL;
+	vehicleOrigin += wheelFR;
+	vehicleOrigin += wheelBL;
+	vehicleOrigin += wheelBR;
+	vehicleOrigin *= 0.25f;
+
+	/* real chassis position */
+	wheelFR = m_wlFR.origin;
+	wheelFL = m_wlFL.origin;
+	wheelBR = m_wlBR.origin;
+	wheelBL = m_wlBL.origin;
+
+	v_right = (wheelFR - wheelFL);
+	v_right += (wheelBR - wheelBL);
+	v_forward = (wheelFL + wheelFR);
+	v_forward -= (wheelBL + wheelBR);
 	v_up = -crossproduct(v_forward, v_right);
 	angles = vectoangles( v_forward, v_up );
 
-	/* figure out the new chassis position */
+	/* figure out the new visual chassis position */
 	vector new_origin;
 	new_origin = m_wlFL.origin;
 	new_origin += m_wlFR.origin;
@@ -701,8 +748,8 @@ prop_vehicle_driveable::RunVehiclePhysics(void)
 	makevectors(angles);
 	m_eCollBox1.SetOrigin(origin + (v_forward * 64));
 	m_eCollBox2.SetOrigin(origin + (v_forward * -72));
-	m_eCollBox1.SetSolid(SOLID_BBOX);
-	m_eCollBox2.SetSolid(SOLID_BBOX);
+	m_eCollBox1.SetSolid(SOLID_NOT);
+	m_eCollBox2.SetSolid(SOLID_NOT);
 
 	PlayerAlign();
 
@@ -716,10 +763,26 @@ prop_vehicle_driveable::OnPlayerUse(void)
 	if (m_flUseTime > time)
 		return;
 
+	if (eActivator) {
+		ncPlayer theActivator = (ncPlayer)eActivator;
+
+		if (theActivator.vehicle) {
+			ncVehicle ourVehicle = (ncVehicle)theActivator.vehicle;
+			ourVehicle.PlayerLeave(theActivator);
+			return;
+		}
+	}
+
 	if (m_eDriver == eActivator) {
 		PlayerLeave((ncPlayer)eActivator);
 		setorigin(eActivator, GetExitPos());
 	} else if (!m_eDriver) {
+		angles = fixAngle(angles);
+		if ((angles[2] > 45) || (angles[2] < -45)) {
+			angles = [0,angles[1],200];
+			velocity = [0,0,200];
+		}
+
 		PlayerEnter((ncPlayer)eActivator);
 		m_vecPlayerPos = [0,0,0];
 	}
@@ -731,14 +794,43 @@ prop_vehicle_driveable::Respawn(void)
 {
 	SetMovetype(MOVETYPE_NONE);
 	SetSolid(SOLID_BBOX);
-	SetOrigin(GetSpawnVector("origin") + [0,0,32]);
+	SetOrigin(GetSpawnVector("origin"));
 	SetAngles(GetSpawnVector("angles"));
 	SetModel(GetSpawnString("model"));
 
-	m_flBRWheelAxel = gettagindex( this, "RRWheelAxel" );
-	m_flBLWheelAxel = gettagindex( this, "RLWheelAxel" );
-	m_flFLWheelAxel = gettagindex( this, "FLWheelAxel" );
-	m_flFRWheelAxel = gettagindex( this, "FRWheelAxel" );
+	m_vecBRWheelAxel = GetSpawnVector( "wheelRearRight" );
+	m_vecBLWheelAxel = GetSpawnVector( "wheelRearLeft" );
+	m_vecFLWheelAxel = GetSpawnVector( "wheelFrontLeft" );
+	m_vecFRWheelAxel = GetSpawnVector( "wheelFrontRight" );
+	m_vehicleNoFlip = GetSpawnBool("vehicleNoFlip");
+	m_flBounceFactor = GetSpawnFloat("bounceFactor");
+	m_flAcceleration = GetSpawnFloat("accelerationSpeed");
+	m_flSkidSpeed = GetSpawnFloat("skidSpeed");
+	m_flTraction = GetSpawnFloat("tractionScale");
+	m_flBreakFactor = GetSpawnFloat("breakFactor");
+	m_flSteerFactor = GetSpawnFloat("steerFactor");
+	m_flStraightenFactor = GetSpawnFloat("straightenFactor");
+	m_flSuspensionScale = GetSpawnFloat("suspensionScale");
+	m_vecGravityDir = GetSpawnVector( "gravityDir" );
+
+	if (m_flBounceFactor <= 0.0f)
+		m_flBounceFactor = autocvar_car_bounceFactor;
+	if (m_flAcceleration <= 0.0f)
+		m_flAcceleration = autocvar_car_acceleration;
+	if (m_flSkidSpeed <= 0.0f)
+		m_flSkidSpeed = autocvar_car_skidSpeed;
+	if (m_flTraction <= 0.0f)
+		m_flTraction = autocvar_car_traction;
+	if (m_flBreakFactor <= 0.0f)
+		m_flBreakFactor = autocvar_car_breakFactor;
+	if (m_flSteerFactor <= 0.0f)
+		m_flSteerFactor = autocvar_car_steerFactor;
+	if (m_flStraightenFactor <= 0.0f)
+		m_flStraightenFactor = autocvar_car_straightenFactor;
+	if (m_flSuspensionScale <= 0.0f)
+		m_flSuspensionScale = autocvar_car_suspensionScale;
+	if (m_vecGravityDir == g_vec_null)
+		m_vecGravityDir = autocvar_car_gravityDir;
 
 	m_wlFL.velocity =
 	m_wlFR.velocity =
@@ -746,7 +838,7 @@ prop_vehicle_driveable::Respawn(void)
 	m_wlBR.velocity =
 	velocity = [0,0,0];
 	PlayerUse = OnPlayerUse;
-	setsize( this, [-50,-50,0], [50,50,64]);
+	setsize( this, GetSpawnVector("mins"), GetSpawnVector("maxs"));
 
 	if (m_eDriver)
 		PlayerLeave((ncPlayer)m_eDriver);
@@ -783,6 +875,18 @@ prop_vehicle_driveable::SpawnWheels(void)
 	m_eCollBox1.owner = m_eCollBox2.owner = \
 		m_wlFL.owner = m_wlFR.owner = \
 		m_wlBL.owner = m_wlBR.owner = this;
+
+	float wheelSize = GetSpawnFloat("wheelSize");
+
+	if (wheelSize < 0) {
+		wheelSize = 16;
+	}
+
+	setsize( this, [-50,-50,0], [50,50,64]);
+	setsize(m_wlFL, [-wheelSize,-wheelSize,m_vecFLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+	setsize(m_wlFR, [-wheelSize,-wheelSize,m_vecFRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+	setsize(m_wlBL, [-wheelSize,-wheelSize,m_vecBLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+	setsize(m_wlBR, [-wheelSize,-wheelSize,m_vecBRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
 }
 
 #ifdef CLIENT
@@ -795,6 +899,8 @@ prop_vehicle_driveable::ReceiveEntity(float flNew, float flSendFlags)
 	}
 
 	if (flSendFlags & VEHFL_MODELINDEX) {
+		entityDefID = readint();
+		EntityDef_SetFromEntNum(this, entityDefID);
 		modelindex = readshort();
 		m_vecSeatOffest[0] = readfloat();
 		m_vecSeatOffest[1] = readfloat();
@@ -811,24 +917,23 @@ prop_vehicle_driveable::ReceiveEntity(float flNew, float flSendFlags)
 		origin[1] = readcoord();
 		origin[2] = readcoord();
 		setorigin(this, origin);
-
-		makevectors(angles);
-
-		setorigin( m_wlFL, origin );
-		setorigin( m_wlBL, m_wlFL.origin - v_forward * 85 );
-		setorigin( m_wlFL, m_wlFL.origin + v_forward * 85 );
-		setorigin( m_wlFR, m_wlFL.origin + v_right * 40 );
-		setorigin( m_wlFL, m_wlFL.origin - v_right * 40 );
-		setorigin( m_wlBR, m_wlBL.origin + v_right * 40 );
-		setorigin( m_wlBL, m_wlBL.origin - v_right * 40 );
-		m_eCollBox1.SetOrigin(origin + (v_forward * 64));
-		m_eCollBox2.SetOrigin(origin + (v_forward * -72));
 	}
 
 	if (flSendFlags & VEHFL_ANGLES) {
 		angles[0] = readfloat();
 		angles[1] = readfloat();
 		angles[2] = readfloat();
+	}
+
+	if ((flSendFlags & VEHFL_ORIGIN) || (flSendFlags & VEHFL_ANGLES)) {
+		makevectors(angles);
+		setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
+		setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
+		setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
+		setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
+
+		m_eCollBox1.SetOrigin(origin + (v_forward * 64));
+		m_eCollBox2.SetOrigin(origin + (v_forward * -72));
 	}
 
 	if (flSendFlags & VEHFL_VELOCITY) {
@@ -848,10 +953,12 @@ prop_vehicle_driveable::ReceiveEntity(float flNew, float flSendFlags)
 		SetMovetype(MOVETYPE_NONE);
 		SetSolid(SOLID_BBOX);
 
-		m_flBRWheelAxel = gettagindex( this, "RRWheelAxel" );
-		m_flBLWheelAxel = gettagindex( this, "RLWheelAxel" );
-		m_flFLWheelAxel = gettagindex( this, "FLWheelAxel" );
-		m_flFRWheelAxel = gettagindex( this, "FRWheelAxel" );
+		m_vecBRWheelAxel = GetSpawnVector("RRWheelAxel");
+		m_vecBLWheelAxel = GetSpawnVector("RLWheelAxel");
+		m_vecFLWheelAxel = GetSpawnVector("FLWheelAxel");
+		m_vecFRWheelAxel = GetSpawnVector("FRWheelAxel");
+
+		m_firstPersonOrg = GetSpawnVector("firstPersonOffset");
 
 		m_wlFL.velocity =
 		m_wlFR.velocity =
@@ -910,7 +1017,6 @@ prop_vehicle_driveable::EvaluateEntity(void)
 		SetSendFlags(VEHFL_ORIGIN);
 
 	if (ATTR_CHANGED(angles)) {
-		angles = fixAngle(angles);
 		SetSendFlags(VEHFL_ANGLES);
 	}
 	if (ATTR_CHANGED(modelindex))
@@ -947,6 +1053,7 @@ prop_vehicle_driveable::SendEntity(entity ePVSent, float flSendFlags)
 	}
 
 	if (flSendFlags & VEHFL_MODELINDEX) {
+		WriteInt(MSG_ENTITY, entityDefID);
 		WriteShort(MSG_ENTITY, modelindex);
 		WriteFloat(MSG_ENTITY, m_vecSeatOffest[0]);
 		WriteFloat(MSG_ENTITY, m_vecSeatOffest[1]);
@@ -954,15 +1061,15 @@ prop_vehicle_driveable::SendEntity(entity ePVSent, float flSendFlags)
 	}
 
 	if (flSendFlags & VEHFL_ORIGIN) {
-		WriteCoord(MSG_ENTITY, origin[0]);
-		WriteCoord(MSG_ENTITY, origin[1]);
-		WriteCoord(MSG_ENTITY, origin[2]);
+		WriteCoord(MSG_ENTITY, vehicleOrigin[0]);
+		WriteCoord(MSG_ENTITY, vehicleOrigin[1]);
+		WriteCoord(MSG_ENTITY, vehicleOrigin[2]);
 	}
 
 	if (flSendFlags & VEHFL_ANGLES) {
-		WriteFloat(MSG_ENTITY, angles[0]);
-		WriteFloat(MSG_ENTITY, angles[1]);
-		WriteFloat(MSG_ENTITY, angles[2]);
+		WriteFloat(MSG_ENTITY, vehicleAngles[0]);
+		WriteFloat(MSG_ENTITY, vehicleAngles[1]);
+		WriteFloat(MSG_ENTITY, vehicleAngles[2]);
 	}
 
 	if (flSendFlags & VEHFL_VELOCITY) {
@@ -985,7 +1092,6 @@ void
 prop_vehicle_driveable::Spawned(void)
 {
 	super::Spawned();
-
 	m_iVehicleFlags |= VHF_FROZEN;
 	hitcontentsmaski = CONTENTBIT_BODY | CONTENTBITS_POINTSOLID | CONTENTBIT_VEHICLECLIP | CONTENTBIT_VEHICLECLIP;
 

@@ -29,7 +29,9 @@ class vguiSlider:vguiWidget
 public:
 	void vguiSlider(void);
 
-	nonvirtual void SetTitle(string);
+	nonvirtual void SetValue(float);
+	nonvirtual float GetValue(void);
+    nonvirtual void SetTitle(string);
 
 	/* overrides */
 	virtual void Draw(void);
@@ -40,12 +42,17 @@ private:
 	float m_flAlpha;
 	vector m_vecSize;
 	vector m_vecColor;
+
+	float m_value;
+    string m_strTitle;
+	virtual void m_changed(float) = 0;
 };
 
 void vguiSlider::vguiSlider(void)
 {
 	m_vecColor = [76,88,68] / 255;
 	m_flAlpha = 1.0f;
+    m_strTitle = "";
 }
 
 void
@@ -54,36 +61,78 @@ vguiSlider::Spawned(void)
 	SetSize([96,24]);
 }
 
+void
+vguiSlider::SetTitle(string newTitle)
+{
+    m_strTitle = newTitle;
+}
+
 void vguiSlider::Draw(void)
 {
-	drawfill(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, m_vecColor, m_flAlpha);
-	
-	if (m_iFlags & BUTTON_DOWN) {
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin, [m_vecSize[0], 1], [0,0,0], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [0, m_vecSize[1] - 1], [m_vecSize[0], 1], [1,1,1], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [0, 1], [1, m_vecSize[1] - 2], [0,0,0], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] - 1, 1], [1, m_vecSize[1] - 2], [1,1,1], 0.5f);
+	vguiTheme theme = GetTheme();
+
+    theme.DrawSlider(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, "", m_vecSize, VGUI_STATE_NORMAL);
+
+	if (HasFlag(BUTTON_DOWN)) {
+		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] * m_value, (m_vecSize[1]/2) - 8], [8,16], VGUI_STATE_CHECKED);
 	} else {
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin, [m_vecSize[0], 1], [1,1,1], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [0, m_vecSize[1] - 1], [m_vecSize[0], 1], [0,0,0], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [0, 1], [1, m_vecSize[1] - 2], [1,1,1], 0.5f);
-		drawfill(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] - 1, 1], [1, m_vecSize[1] - 2], [0,0,0], 0.5f);
-	}
-	
-	if (m_strTitle) {
-		Font_DrawText(m_parent.m_vecOrigin + m_vecOrigin + [8, 8], m_strTitle, g_fntDefault);
-	}
-	if (m_strIcon) {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin + [2,2], m_strIcon, [16,16], [1,1,1], 1.0f);
+		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] * m_value, (m_vecSize[1]/2) - 8], [8,16], VGUI_STATE_NORMAL);
 	}
 }
 
 bool vguiSlider::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	return false;
+    vector mousePos = GetMousePos();
+
+	if (MouseAbove() == true) {
+		FlagAdd(BUTTON_HOVER);
+	} else {
+		FlagRemove(BUTTON_HOVER);
+	}
+
+	if (HasFlag(BUTTON_HOVER) && flEVType == IE_KEYDOWN && flKey == K_MOUSE1) {
+		FlagAdd(BUTTON_DOWN);
+	}
+
+	if (flEVType == IE_KEYUP && flKey == K_MOUSE1) {
+		if (HasFlag(BUTTON_DOWN)) {
+            FlagRemove(BUTTON_DOWN);
+		}
+	}
+
+	if (HasFlag(BUTTON_DOWN)) {
+		if (mousePos[0] != g_lastmousepos[0] || mousePos[1] != g_lastmousepos[1]) {
+			float mdelta;
+            float posWidth = m_parent.m_vecOrigin[0] + m_vecOrigin[0];
+			/* The - 10 is putting the slider in the middle of the cursor */
+			mdelta = (mousePos[0] - 4) - (posWidth);
+			m_value = ((float)mdelta / (float)m_vecSize[0]);
+			m_value = bound(0.0f, m_value, 1.0f);
+			g_lastmousepos[0] = mousePos[0];
+			g_lastmousepos[1] = mousePos[1];
+
+			if (m_changed) {
+				m_changed(m_value);
+			}
+		}
+	}
 }
 
-void vguiSlider::SetTitle (string strName)
+void
+vguiSlider::SetValue(float val)
 {
-	m_strTitle = strName;
+	m_value = bound(0.0, val, 1.0);
+}
+
+
+float
+vguiSlider::GetValue(void)
+{
+	return (m_value);
+}
+
+void
+vguiSlider::SetCallback(void(float val) vFunc)
+{
+	m_changed = vFunc;
 }

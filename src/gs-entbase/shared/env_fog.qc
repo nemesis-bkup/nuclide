@@ -94,12 +94,12 @@ public:
 #endif
 
 private:
-	PREDICTED_FLOAT(m_flStartDist)
-	PREDICTED_FLOAT(m_flEndDist)
-	PREDICTED_FLOAT(m_flDensity)
-	PREDICTED_VECTOR(m_vecColor)
-	PREDICTED_BOOL(m_bEnabled)
-	PREDICTED_BOOL(m_fogIsLinear)
+	NETWORKED_FLOAT(m_flStartDist)
+	NETWORKED_FLOAT(m_flEndDist)
+	NETWORKED_FLOAT(m_flDensity)
+	NETWORKED_VECTOR(m_vecColor)
+	NETWORKED_BOOL(m_bEnabled)
+	NETWORKED_BOOL(m_fogIsLinear)
 
 #ifdef SERVER
 	float m_holdTime;

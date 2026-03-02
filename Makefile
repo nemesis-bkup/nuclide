@@ -2,7 +2,7 @@
 # Nuclide GNUMakefile
 #
 # Apr 2024 by Marco Cawthorne <marco@vera-visions.com>
-# Last updated: 2025/01/30
+# Last updated: 2025/12/29
 #
 
 # set `GAME` when issuing make. E.g. `make GAME=wastes`
@@ -78,22 +78,22 @@ help:
 	@printf "################################################################################\n"
 	@printf "\nSwitch games by setting GAME=gamedir after the target\n\n"
 	@printf "main targets:\n"
-	@printf "\tgame \t\t\t\t# Builds the game logic\n"
-	@printf "\t\t\t\t\t# alternatively: client, server, menu\n\n"
-	@printf "\tdefs \t\t\t\t# Editor definitions\n"
+	@printf "\tgame \t\t\t# Builds the game logic\n"
+	@printf "\t\t\t\t# alternatively: client, server, menu\n\n"
+	@printf "\tdefs \t\t\t# Editor definitions\n"
 	@printf "\tdefs-wad \t\t\t# WAD favoring editor definitions\n"
-	@printf "\tengine [NAME=MyGame] \t\t# Branded engine binary\n"
-	@printf "\tdedicated \t\t\t# Branded dedicated server binary\n"
+	@printf "\tengine [NAME=MyGame] \t# Branded engine binary\n"
+	@printf "\tdedicated \t\t# Branded dedicated server binary\n"
 	@printf "\tplugins \t\t\t# Plugins required by game\n"
-	@printf "\ttools \t\t\t\t# Builds the various tools\n"
-	@printf "\tfteqw \t\t\t\t# Builds FTEQW\n"
-	@printf "\tfteqw \t\t\t\t# Builds FTEQCC\n"
+	@printf "\ttools \t\t\t# Builds the various tools\n"
+	@printf "\tfteqw \t\t\t# Builds FTEQW\n"
+	@printf "\tfteqw \t\t\t# Builds FTEQCC\n"
 	@printf "\tradiant \t\t\t# Builds GtkRadiant\n"
 	@printf "\tnetradiant-custom \t\t# Builds NetRadiant-Custom\n"
-	@printf "\tdocs \t\t\t\t# Builds Documentation/html/*.html\n"
-	@printf "\tdist \t\t\t\t# Builds binary for distribution\n"
+	@printf "\tdocs \t\t\t# Builds Documentation/html/*.html\n"
+	@printf "\tdist \t\t\t# Builds binary for distribution\n"
 	@printf "\tclean[-game,engine,tools] \t# Cleans temp files\n"
-	@printf "\tupdate \t\t\t\t# Update online repos.\n"
+	@printf "\tupdate \t\t\t# Update online repos.\n"
 
 all: game engine dedicated plugins
 

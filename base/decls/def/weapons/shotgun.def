@@ -16,6 +16,7 @@ entityDef weapon_shotgun
 
 	// weapon specific
 	"def_fireInfo"		"fireInfo_shotgun"
+	"def_altFireInfo"	"fireInfo_shotgunAlt"
 	"inv_name"			"#WEAPON_SHOTGUN"
 	"ammoType"			"ammo_shells"
 	"ammoRequired"		"1"
@@ -37,14 +38,25 @@ entityDef weapon_shotgun
 	"ammoIcon"			"weapon_shotgun.ammo"
 	"icon"				"weapon_shotgun.weapon"
 	"iconSelected"		"weapon_shotgun.weapon_s"
+	"gui"               "ui/weapon_shotgun.menu"
 }
 
 entityDef projectile_shotgun
 {
 	"inherit"			"projectile_bullet_base"
 	"damage"			"skill:plr_shotgun"
+	"hitscans"			"3"
+	"spread"			"0.025 0.025"
+	"fx_path"			"weapon_shotgun.tracer"
+//	"range"				"2048"
+}
+
+entityDef projectile_shotgun2
+{
+	"inherit"			"projectile_bullet_base"
+	"damage"			"skill:plr_shotgun"
 	"hitscans"			"6"
-	"spread"			"0.08716 0.08716"
+	"spread"			"0.05 0.025"
 	"fx_path"			"weapon_shotgun.tracer"
 //	"range"				"2048"
 }
@@ -52,6 +64,15 @@ entityDef projectile_shotgun
 entityDef fireInfo_shotgun
 {
 	"def_onFire"		"projectile_shotgun"
+	"fireRate"			"0.25"
+	"punchSpring"		"-1.5 0 0"
+}
+
+entityDef fireInfo_shotgunAlt
+{
+	"def_onFire"		"projectile_shotgun2"
+	"ammoRequired"		"2"
+	"ammoPerShot"		"2"
 	"fireRate"			"0.5"
-	"punchSpring"		"-5 0 0"
+	"punchSpring"		"-4 0 0"
 }

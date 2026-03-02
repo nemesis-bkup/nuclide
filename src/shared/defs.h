@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2024 Vera Visions LLC.
+ * Copyright (c) 2016-2025 Vera Visions LLC.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -22,23 +22,16 @@
 #define NETWORKED_STRING(x) string x; string x ##_net;
 #define NETWORKED_BOOL(x) bool x; bool x ##_net;
 #define NETWORKED_MODELINDEX(x) float x; float x ##_net;
+#define NETWORKED_ENTITY(x) entity x; entity x ##_net;
 
 #define NETWORKED_INT_N(x) int x ##_net;
 #define NETWORKED_FLOAT_N(x) float x ##_net;
 #define NETWORKED_VECTOR_N(x) vector x ##_net;
+#define NETWORKED_ENT_N(x) entity x ##_net;
 #define NETWORKED_STRING_N(x) string x ##_net;
-
-#define PREDICTED_INT(x) int x; int x ##_net;
-#define PREDICTED_FLOAT(x) float x; float x ##_net;
-#define PREDICTED_VECTOR(x) vector x; vector x ##_net;
-#define PREDICTED_ENT(x) entity x; entity x ##_net;
-#define PREDICTED_STRING(x) string x; string x ##_net;
-#define PREDICTED_BOOL(x) bool x; bool x ##_net;
-
-#define PREDICTED_INT_N(x) int x ##_net;
-#define PREDICTED_FLOAT_N(x) float x ##_net;
-#define PREDICTED_VECTOR_N(x) vector x ##_net;
-#define PREDICTED_STRING_N(x) string x ##_net;
+#define NETWORKED_BOOL_N(x) bool x ##_net;
+#define NETWORKED_MODELINDEX_N(x) float x ##_net;
+#define NETWORKED_ENTITY_N(x) entity x ##_net;
 
 #ifdef CLIENT
 var bool autocvar_net_showArrivals = false;
@@ -70,6 +63,7 @@ var bool autocvar_net_showArrivals = false;
 #define SAVE_STATE_FIELD(x, y) x ##_net[y] = x[y];
 #define ATTR_CHANGED(x) (x ##_net != x)
 #define VEC_CHANGED(x,y) (x ##_net[y] != x[y])
+#define OUTPUT_ALLOC(x) if (STRING_SET(x)) { x = CreateOutput(x); }
 
 #ifndef MAX_AMMO_TYPES
 #define MAX_AMMO_TYPES 16i
@@ -109,10 +103,14 @@ string __fullspawndata;
 #include "physics/PhysicsEntity.h"
 #include "triggers/BrushTrigger.h"
 #include "triggers/PointTrigger.h"
+#include "environment/Zone.h"
+#include "environment/ZoneManager.h"
 #include "game/Item.h"
 #include "game/Dispenser.h"
 #include "game/Weapon.h"
+#include "system/AnimationManager.h"
 #include "game/Actor.h"
+#include "system/AnimationSkeleton.h"
 #include "ai/Monster.h"
 #include "ai/SquadMonster.h"
 #include "ai/TalkMonster.h"
@@ -120,18 +118,17 @@ string __fullspawndata;
 #include "audio/SoundScape.h"
 #include "game/Attack.h"
 #include "game/Projectile.h"
-#include "environment/Spraylogo.h"
+#include "user/UserEntity_Graffiti.h"
 #include "physics/Portal.h"
 #include "audio/Sound.h"
 #include "physics/Debris.h"
-#include "input/InteractiveSurface.h"
 #include "input/XRSpace.h"
 #include "input/XRInput.h"
 #include "input/XRManager.h"
 #include "../botlib/Bot.h"
 #include "game/Client.h"
 #include "game/Spectator.h"
-#include "physics/pmove.h"
+#include "physics/PMoveVars.h"
 #include "game/Player.h"
 #include "physics/Vehicle.h"
 #include "environment/materials.h"
@@ -147,10 +144,28 @@ string __fullspawndata;
 #include "game/AmmoManager.h"
 #include "system/ActivityManager.h"
 #include "environment/BreakableBrushManager.h"
+#include "electronics/MediaSource.h"
+#include "electronics/MediaSurface.h"
+#include "electronics/XTerminal.h"
+#include "electronics/ComputerDesktop.h"
+#include "input/InteractiveSurface.h"
 #include "electronics/AVTransmitter.h"
 #include "electronics/AVReceiver.h"
 #include "electronics/VideoDisplay.h"
+#include "electronics/Camera.h"
 #include "electronics/SecurityCamera.h"
+#include "electronics/AudioDict.h"
+#include "electronics/VideoDict.h"
+#include "electronics/MailDict.h"
+#include "electronics/InputDevice.h"
+#include "user/UserEntityManager.h"
+#include "user/UserEntity.h"
+#include "user/UserEntity_Video.h"
+#include "user/UserEntity_Audio.h"
+#include "user/UserEntity_Picture.h"
+#include "user/UserEntity_URL.h"
+#include "user/UserEntity_GameEntity.h"
+#include "user/UserEntity_Object.h"
 
 #define BSPVER_PREREL 	28
 #define BSPVER_Q1		29
@@ -213,7 +228,7 @@ crossprint(string m)
 #endif
 }
 
-#if 0
+#if 1
 __wrap string
 precache_model(string m)
 {
@@ -247,6 +262,20 @@ pseudorandom()
 	seed += (float)input_sequence % 4.0f;
 	seed += (float)input_sequence % 13.0f;
 	seed += (float)input_sequence % 70.0f;
+
+	/* like the engine its random(), never return 0, never return 1 */
+	return bound(0.01, (seed) / 100.0f, 0.99f);
+}
+
+
+float
+randomWithSeed(int seedVa)
+{
+	float seed = (float)seedVa % 5.0f;
+	seed += (float)seedVa % 8.0f;
+	seed += (float)seedVa % 4.0f;
+	seed += (float)seedVa % 13.0f;
+	seed += (float)seedVa % 70.0f;
 
 	/* like the engine its random(), never return 0, never return 1 */
 	return bound(0.01, (seed) / 100.0f, 0.99f);
@@ -383,7 +412,7 @@ unpackStringCommand(string commandString)
 	}
 #endif
 
-	return Constants_LookUp(commandString, commandString);
+	return ncConstantManager::LookUp(commandString, commandString);
 }
 
 #ifdef NO_LEGACY
@@ -435,7 +464,7 @@ string Util_FixModel(string mdl)
 		mdl = substring(mdl, 1, -1);
 
 	mdl = strreplace("/ ", "/", mdl);
-	
+
 	return mdl;
 }
 
@@ -458,6 +487,14 @@ Util_ChangeExtension(string baseString, string newExtension)
 			break;
 
 		stringOffset++;
+	}
+
+	if (!STRING_SET(newExtension)) {
+		if (foundOffset == 0) {
+			return strcat(baseString);
+		}
+
+		return strcat(substring(baseString, 0, foundOffset));
 	}
 
 	/* no extension found? append to the end then. */
@@ -483,32 +520,6 @@ Util_IsSingleplayer(void)
 
 	/* else we're multiplayer */
 	return false;
-}
-
-float
-crandom(void)
-{
-	return ((random() - 0.5f) * 2.0f);
-}
-
-string
-dirname(string input)
-{
-	if (!input) {
-		return "";
-	}
-
-	int c = tokenizebyseparator(input, "/", "\\ ", "!");
-	string newpath = "";
-
-	for (int i = 0; i < (c-1); i++) {
-		newpath = sprintf("%s/%s", newpath, argv(i));
-	}
-
-	/* Kill the first / */
-	newpath = substring(newpath, 1, strlen(newpath)-1);
-
-	return newpath;
 }
 
 string

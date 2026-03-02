@@ -21,10 +21,10 @@ Not sure what the benefit of it is besides that.
 
 @ingroup vgui
 */
-class VGUIConsole:vguiWindow
+class vguiConsole:vguiWindow
 {
 public:
-	void VGUIConsole(void);
+	void vguiConsole(void);
 	virtual void Spawned(void);
 	nonvirtual void ConsoleResized(void);
 
@@ -40,7 +40,7 @@ private:
 };
 
 void
-VGUIConsole::VGUIConsole(void)
+vguiConsole::vguiConsole(void)
 {
 	m_outlineFrame = __NULL__;
 	m_submitButton = __NULL__;
@@ -49,7 +49,7 @@ VGUIConsole::VGUIConsole(void)
 }
 
 void
-VGUIConsole::ConsoleResized(void)
+vguiConsole::ConsoleResized(void)
 {
 	m_outlineFrame.SetSize(GetSize() - [16, 76]);
 	m_commandBox.SetSize([GetWidth() - 88,24]);
@@ -58,7 +58,7 @@ VGUIConsole::ConsoleResized(void)
 }
 
 void
-VGUIConsole::Submit(void)
+vguiConsole::Submit(void)
 {
 	localcmd(strcat(m_commandBox.GetText(), "\n"));
 	//con_printf(m_conInstance, strcat("/", m_commandBox.GetText(), "\n"));
@@ -66,11 +66,11 @@ VGUIConsole::Submit(void)
 }
 
 void
-VGUIConsole::Spawned(void)
+vguiConsole::Spawned(void)
 {
-	static void VGUIConsole_Submit(void) {
+	static void vguiConsole_Submit(void) {
 		vguiWidget winSelf = (vguiWidget)self;
-		VGUIConsole ourConsole = (VGUIConsole)winSelf.m_parent;
+		vguiConsole ourConsole = (vguiConsole)winSelf.m_parent;
 		ourConsole.Submit();
 	}
 
@@ -87,13 +87,13 @@ VGUIConsole::Spawned(void)
 	m_commandBox = spawn(vguiTextBox);
 	m_commandBox.SetPos([8,368]);
 	m_commandBox.SetSize([472,24]);
-	m_commandBox.CallOnEnter(VGUIConsole_Submit);
+	m_commandBox.CallOnEnter(vguiConsole_Submit);
 
 	m_submitButton = spawn(vguiButton);
 	m_submitButton.SetSize([64,24]);
 	m_submitButton.SetPos([488,368]);
 	m_submitButton.SetTitle("Submit");
-	m_submitButton.SetFunc(VGUIConsole_Submit);
+	m_submitButton.SetFunc(vguiConsole_Submit);
 
 	SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
 	CallOnResize(ConsoleResized);
@@ -105,7 +105,7 @@ VGUIConsole::Spawned(void)
 }
 
 void
-VGUIConsole::Draw(void)
+vguiConsole::Draw(void)
 {
 	super::Draw();
 
@@ -122,7 +122,7 @@ VGUIConsole::Draw(void)
 }
 
 float
-VGUIConsole::Input(float type, float x, float y, float devid)
+vguiConsole::Input(float type, float x, float y, float devid)
 {
 	float ret = super::Input(type, x, y, devid);
 

@@ -14,6 +14,8 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+.bool _isVehicle;
+
 void
 ncVehicle::ncVehicle(void)
 {
@@ -24,6 +26,7 @@ ncVehicle::ncVehicle(void)
 	m_eDriverLast = __NULL__;
 	m_vecPlayerPos = [0.0f, 0.0f, 0.0f];
 	m_vecExitPos = [0.0f, 0.0f, 0.0f];
+	_isVehicle = true;
 }
 
 #ifdef SERVER
@@ -67,6 +70,19 @@ ncVehicle::Restore(string keyName, string setValue)
 		break;
 	default:
 		super::Restore(keyName, setValue);
+	}
+}
+
+void
+ncVehicle::Input(entity eAct, string strInput, string strData)
+{
+	switch (strInput) {
+	case "EjectDriver":
+		if (m_eDriver)
+			PlayerLeave(m_eDriver);
+		break;
+	default:
+		super::Input(eAct, strInput, strData);
 	}
 }
 #endif
@@ -217,9 +233,6 @@ ncVehicle::ReceiveEntity(float new, float fChanged)
 	if (fChanged & VEHFL_CHANGED_DRIVER) {
 		m_eDriver = (ncEntity)findfloat(world, ::entnum, readentitynum());
 	}
-
-	if (new)
-		drawmask = MASK_ENGINE;
 }
 #else
 vector

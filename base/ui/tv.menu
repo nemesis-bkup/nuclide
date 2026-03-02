@@ -1,4 +1,9 @@
 {
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
 	menuDef 
 	{
 		name "DefaultTV"

@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2025 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
 typedef enum
 {
 	CAMSWEEP_IDLE,
@@ -33,21 +49,25 @@ It can also alert enemies in the area.
 
 */
 class
-ncSecurityCamera:ncActor
+ncSecurityCamera:ncCamera
 {
 	void ncSecurityCamera(void);
 
 #ifdef SERVER
 	virtual void Spawned(void);
-	virtual void Respawn(void);
 	virtual void SpawnKey(string, string);
 	virtual void EvaluateEntity(void);
-	virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
+	virtual float SendEntity(entity,float);
 
 	nonvirtual bool SecurityCameraIsEnemy(entity);
 	nonvirtual bool SecurityCameraCheck(ncActor toCheck);
 	nonvirtual void SecurityCameraMovement(void);
 	nonvirtual void SecurityCameraVisionTick(void);
+#endif
+
+#ifdef CLIENT
+	virtual void Draw(void);
+	virtual void ReceiveEntity(float,float);
 #endif
 
 private:
@@ -63,11 +83,12 @@ private:
 
 	entity m_securiCamTrackingRef;
 	float m_securiCamTrackingTime;
-	
+
 	float m_securiCamSweepTime;
 	camsweepstate_t m_securiCamSweepState;
 	float m_securiCamSpawnYaw;
 	float m_securiCamSweepWaitTime;
+
 };
 
 

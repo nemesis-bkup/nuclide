@@ -46,6 +46,8 @@ public:
 	/** Sets the function to call for when input events happen within the 3D view. */
 	nonvirtual void SetInputFunc(float(float, float, float, float));
 
+    nonvirtual void SetAngularFieldOfView(float angularFov);
+
 	/* overrides */
 	virtual void Draw(void);
 	virtual bool Input(float, float, float, float);
@@ -68,6 +70,12 @@ void
 vgui3DView::Spawned(void)
 {
 	SetSize([64,64]);
+}
+
+void
+vgui3DView::SetAngularFieldOfView(float angularFov)
+{
+	m_flFOV = angularFov;
 }
 
 void
@@ -115,7 +123,7 @@ vgui3DView::Draw(void)
 
 	clearscene();
 	setproperty(VF_VIEWPORT, m_vecOrigin + m_parent.m_vecOrigin, m_vecSize);
-	setproperty(VF_AFOV, 90);
+	setproperty(VF_AFOV, m_flFOV);
 	setproperty(VF_ORIGIN, m_vec3DPos);
 	setproperty(VF_ANGLES, m_vec3DAngles);
 #ifndef MENU

@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop sand
+	diffusemap detail_pbr/moonsand.tga
+	normalmap detail_pbr/moonsand_local.tga
+	specularmap detail_pbr/moonsand_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

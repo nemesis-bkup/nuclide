@@ -1,0 +1,10 @@
+video willie_1
+{
+	"name"			"Movie: Steamboat Willie R1"
+	"video"			"video/willie_1.roq"
+	"audio"			"video/willie_1.ogg"
+	"duration"		"230.000000"
+	"light_style"		"1"
+	"light_color"		"164 164 164"
+	"dog"			"vtvDOG"
+}

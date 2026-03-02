@@ -84,9 +84,9 @@ public:
 #endif
 
 private:
-	PREDICTED_FLOAT(m_flSpeed)
-	PREDICTED_VECTOR(m_vecMoveDir)
-	PREDICTED_FLOAT_N(spawnflags)
+	NETWORKED_FLOAT(m_flSpeed)
+	NETWORKED_VECTOR(m_vecMoveDir)
+	NETWORKED_FLOAT_N(spawnflags)
 };
 
 void

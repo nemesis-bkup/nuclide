@@ -22,13 +22,15 @@ int g_iCreateServerInitialized;
 void UI_CreateServer_Show ( void )
 {
 	static vguiScrollBar scrlMaps;
-	static vguiScrollBar scrlModes;
-	static vguiWindow winCreate;
+	static vguiPanel winCreate;
 	static vguiButton btnCancel;
 	static vguiButton btnStart;
-	static vguiList lsbMaps;
-	static vguiList lsbModes;
+	static vguiFeeder lsbMaps;
+	static vguiFeederListBox lsbModes;
 	static vguiLabel lblModes;
+	static vguiFeederListBox lsbEntities;
+	static vguiLabel lblEntities;
+    static vguiLabel lblMaps;
 	static vguiLabel lblHostname;
 	static vguiTextBox txbHostname;
 	static vguiLabel lblMaxplayers;
@@ -36,6 +38,7 @@ void UI_CreateServer_Show ( void )
 	static vguiLabel lblPassword;
 	static vguiTextBox txbPassword;
 	static vguiCheckbox chkLAN;
+    static vguiPic picMapPreview;
 
 	static void CreateServer_Start ( void ) {
 		int iEndMap = lsbMaps.GetSelected();
@@ -43,7 +46,7 @@ void UI_CreateServer_Show ( void )
 			iEndMap = (int)( rint( random( 1, lsbMaps.GetItemCount() ) ) );
 		}
 
-		string gameType = lsbModes.GetItem( lsbModes.GetSelected() );
+		string gameType = lsbModes.GetItem();
 
 		if (chkLAN.GetValue() == true) {
 			cvar_set("sv_public", "0");	
@@ -51,7 +54,12 @@ void UI_CreateServer_Show ( void )
 			cvar_set("sv_public", "2");	
 		}
 
-		Map_SpawnServer(txbHostname.GetText(), lsbMaps.GetItem( iEndMap ), stof(txbMaxplayers.GetText()), gameType, txbPassword.GetText());
+		cvar_set("ui_servername", txbHostname.GetText());
+		cvar_set("ui_numPlayers", txbMaxplayers.GetText());
+		cvar_set("ui_gameType", gameType);
+		cvar_set("ui_map", lsbMaps.GetItem( iEndMap ));
+		cvar_set("sv_password", txbPassword.GetText());
+		localcmd("spawnServer\n");
 		winCreate.Hide();
 	}
 	static void CreateServer_Cancel ( void ) {
@@ -60,75 +68,69 @@ void UI_CreateServer_Show ( void )
 	static void CreateServer_ListUpdate ( void ) {
 		lsbMaps.SetOffset( scrlMaps.GetValue(), FALSE );
 	}
-	static void CreateServer_ListUpdateMode ( void ) {
-		lsbModes.SetOffset( scrlModes.GetValue(), FALSE );
-	}
 	static void CreateServer_Scrolled ( void ) {
 		scrlMaps.SetValue( lsbMaps.GetOffset() );
 	}
-	static void CreateServer_ScrolledMode ( void ) {
-		scrlModes.SetValue( lsbModes.GetOffset() );
-	}
+	static void MapSelection_Changed(void) {
+        picMapPreview.SetImage(MapLibrary_GetInfo(lsbMaps.GetSelected(), MAPINFO_PREVIEW));
+    }
 
 	if ( !g_iCreateServerInitialized ) {
 		g_iCreateServerInitialized = TRUE;
-		winCreate = spawn( vguiWindow );
-		winCreate.SetTitle( "Create Server" );
+		winCreate = spawn( vguiPanel );
+		winCreate.SetTitle( "Create World" );
 		winCreate.SetSize( '338 385' );
-		winCreate.SetIcon( "gfx/icon16/server_add" );
+		winCreate.SetIcon( "gfx/icon16/world_add" );
 
-		lsbMaps = spawn( vguiList );
-		lsbMaps.SetSize( '128 306' );
-		lsbMaps.SetPos( '175 32 ' );
-		lsbMaps.SetItemCount( MapLibrary_GetMapCount() + 1 );
+		lblMaps = spawn( vguiLabel );
+		lblMaps.SetPos( [175,32] );
+		lblMaps.SetTitle( "Maps" );
+        winCreate.Add(lblMaps);
+
+        picMapPreview = spawn( vguiPic );
+        picMapPreview.SetPos( lblMaps.GetPos() + [0, lblMaps.GetHeight() + 4] );
+		picMapPreview.SetSize( [128,96] );
+		picMapPreview.SetBorder(4);
+
+		lsbMaps = spawn( vguiFeeder );
+		lsbMaps.SetSize( [128,192] );
+		lsbMaps.SetPos( picMapPreview.GetPos() + [0, picMapPreview.GetHeight() + 4] );
+		lsbMaps.SetFeederType(FEEDER_ALLMAPS);
 		lsbMaps.CallOnScroll( CreateServer_Scrolled );
 		lsbMaps.SetSelected( 0 );
-
-		lsbMaps.AddItem( "< Random Map >" );
-		for ( int i = 0; i < MapLibrary_GetMapCount(); i++ ) {
-			string strMap = MapLibrary_GetInfo(i, MAPINFO_NAME);
-			lsbMaps.AddItem( strMap );
-			//lsbMaps.AddItem( search_getfilename( shMaps, i ) );
-		}
+        lsbMaps.CallOnSelectionChanged(MapSelection_Changed);
 
 		chkLAN = spawn( vguiCheckbox );
-		chkLAN.SetTitle( "LAN Game" );
+		chkLAN.SetTitle( "LAN only" );
 		chkLAN.SetValue( TRUE );
 		chkLAN.SetSize( '124 24' );
 		chkLAN.SetPos( '20 186' );
+
+		scrlMaps = spawn( vguiScrollBar );
+		scrlMaps.SetLength( lsbMaps.GetHeight() );
+		scrlMaps.SetPos(lsbMaps.GetPos() + [lsbMaps.GetWidth(), 0] );
+		scrlMaps.SetMin( 0 );
+		scrlMaps.SetStep( 1 );
+		scrlMaps.SetMax( Feeder_Count(FEEDER_ALLMAPS) );
+		scrlMaps.CallOnChange( CreateServer_ListUpdate );
 
 		lblModes = spawn( vguiLabel );
 		lblModes.SetPos( '20 218' );
 		lblModes.SetTitle( "Gametype" );
 
-		scrlMaps = spawn( vguiScrollBar );
-		scrlMaps.SetLength( 306 );
-		scrlMaps.SetPos( '303 32' );
-		scrlMaps.SetMin( 0 );
-		scrlMaps.SetStep( 1 );
-		scrlMaps.SetMax( lsbMaps.GetMaxVisibleItems() );
-		scrlMaps.CallOnChange( CreateServer_ListUpdate );
-
-		lsbModes = spawn( vguiList );
-		lsbModes.SetSize( '128 128' );
+		lsbModes = spawn( vguiFeederListBox );
+		lsbModes.SetSize( '128 24' );
 		lsbModes.SetPos( '20 234' );
-		lsbModes.SetItemCount( ModeLibrary_GetModeCount() );
-		lsbModes.CallOnScroll( CreateServer_ScrolledMode );
-		lsbModes.SetSelected( 0 );
+		lsbModes.SetFeederType(FEEDER_GAMETYPES);
 
-		for ( int i = 0; i < ModeLibrary_GetModeCount(); i++ ) {
-			string strMode = substring(ModeLibrary_GetInfo(i, MODEINFO_NAME), 0, -5);
-			lsbModes.AddItem( strMode );
-			//lsbMaps.AddItem( search_getfilename( shMaps, i ) );
-		}
+		lblEntities = spawn( vguiLabel );
+		lblEntities.SetPos(lsbModes.GetPos() + [0, lsbModes.GetHeight() + 16] );
+		lblEntities.SetTitle( "Entities" );
 
-		scrlModes = spawn( vguiScrollBar );
-		scrlModes.SetLength( 128 );
-		scrlModes.SetPos(  '195 234' );
-		scrlModes.SetMin( 0 );
-		scrlModes.SetStep( 1 );
-		scrlModes.SetMax( lsbModes.GetMaxVisibleItems() );
-		scrlModes.CallOnChange( CreateServer_ListUpdateMode );
+		lsbEntities = spawn( vguiFeederListBox );
+		lsbEntities.SetSize( '128 24' );
+		lsbEntities.SetPos(lblEntities.GetPos() + [0, lblEntities.GetHeight() + 4] );
+		//lsbEntities.SetFeederType(FEEDER_MAPENTITIES);
 
 		btnStart = spawn( vguiButton );
 		btnStart.SetTitle( "Start" );
@@ -170,11 +172,13 @@ void UI_CreateServer_Show ( void )
 		txbPassword.SetText( cvar_string( "sv_password" ) );
 
 		g_uiDesktop.Add( winCreate );
+        winCreate.Add( picMapPreview );
 		winCreate.Add( lsbMaps );
 		winCreate.Add( lblModes );
 		winCreate.Add( scrlMaps );
 		winCreate.Add( lsbModes );
-		winCreate.Add( scrlModes );
+        winCreate.Add( lblEntities );
+        winCreate.Add( lsbEntities );
 		winCreate.Add( btnStart );
 		winCreate.Add( btnCancel );
 		winCreate.Add( lblHostname );
@@ -186,6 +190,7 @@ void UI_CreateServer_Show ( void )
 		winCreate.Add( chkLAN );
 	}
 
+	MapSelection_Changed();
 	winCreate.Show();
 	winCreate.SetPos( ( g_vidsize / 2 ) - ( winCreate.GetSize() / 2 ) );
 }

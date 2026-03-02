@@ -104,7 +104,7 @@ private:
 void
 env_cascade_light::env_cascade_light(void)
 {
-	m_vecLightColor = [1.0, 1.0, 1.0];
+	m_vecLightColor = [255, 255, 255];
 	m_bLightActive = true;
 	m_flShadowDistance = 512.0f;
 

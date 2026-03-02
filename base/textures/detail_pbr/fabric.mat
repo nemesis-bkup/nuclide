@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop fabric
+	diffusemap detail_pbr/fabric.tga
+	normalmap detail_pbr/fabric_local.tga
+	specularmap detail_pbr/fabric_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

@@ -1,0 +1,19 @@
+"lang" 
+{ 
+	"Language" "English" 
+	"Tokens" 
+	{ 
+		"EDITOR_BUILD"					"Build"
+		"EDITOR_HEADSUPDISPLAY"			"HUD"
+		"EDITOR_UIEDIT"					"UI Editor"
+		"EDITOR_ENABLE"					"Enable"
+		"EDITOR_DISABLE"				"Disable"
+		"EDITOR_ENTITIES"				"Entities"
+		"EDITOR_ENTITYDEFS"				"EntityDef List"
+		"EDITOR_CLEANUP"				"Clean Up"
+		"EDITOR_GAME"					"Game"
+		"EDITOR_BE_PLAYER"				"Be Player"
+		"EDITOR_BE_EDITOR"				"Be Editor"
+		"EDITOR_CHANGECLASS"			"Change Player Class"
+	} 
+}

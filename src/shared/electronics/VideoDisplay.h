@@ -33,47 +33,9 @@ None yet
 This entity was introduced in Nuclide (2025).
 */
 class
-ncVideoDisplay:ncInteractiveSurface
+ncVideoDisplay:ncMediaSurface
 {
 public:
 	void ncVideoDisplay(void);
 
-#ifdef SERVER
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Input(entity, string, string);
-	virtual void OnMapFinishedLoading(void);
-#endif
-
-#ifdef CLIENT
-	virtual float predraw(void);
-	virtual void postdraw(void);
-	virtual void RenderScene(void);
-	virtual void ReloadVideoResources(void);
-	virtual void ReceiveEntity(float,float);
-#endif
-
-private:
-	entity m_videoDisplayInput;
-	entity m_videoDisplayInput_net;
-
-#ifdef CLIENT
-	float m_vecScreenLightStyle;
-	float m_videoDisplayInputNum;
-#endif
-};
-
-typedef enumflags
-{
-	VIDEODISPLAYFL_ORIGIN,
-	VIDEODISPLAYFL_ANGLES,
-	VIDEODISPLAYFL_INTERFACE,
-	VIDEODISPLAYFL_RESOLUTION,
-	VIDEODISPLAYFL_SCALE,
-	VIDEODISPLAYFL_DISTANCE,
-	VIDEODISPLAYFL_LIGHT,
-	VIDEODISPLAYFL_ENABLED,
-	VIDEODISPLAYFL_INPUT
 };

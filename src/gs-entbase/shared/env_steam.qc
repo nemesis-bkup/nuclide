@@ -157,18 +157,18 @@ env_steam:ncPointTrigger
 	float m_flNexTime;
 #endif
 
-	PREDICTED_BOOL(m_bEmissive)
-	PREDICTED_BOOL(m_bState)
-	PREDICTED_BOOL(m_bType)
-	PREDICTED_FLOAT(m_flSpread)
-	PREDICTED_FLOAT(m_flSpeed)
-	PREDICTED_FLOAT(m_flStartSize)
-	PREDICTED_FLOAT(m_flEndSize)
-	PREDICTED_FLOAT(m_flRate)
-	PREDICTED_VECTOR(m_vecColor)
-	PREDICTED_FLOAT(m_flLength)
-	PREDICTED_FLOAT(m_flAlpha)
-	PREDICTED_FLOAT(m_flRollSpeed)
+	NETWORKED_BOOL(m_bEmissive)
+	NETWORKED_BOOL(m_bState)
+	NETWORKED_BOOL(m_bType)
+	NETWORKED_FLOAT(m_flSpread)
+	NETWORKED_FLOAT(m_flSpeed)
+	NETWORKED_FLOAT(m_flStartSize)
+	NETWORKED_FLOAT(m_flEndSize)
+	NETWORKED_FLOAT(m_flRate)
+	NETWORKED_VECTOR(m_vecColor)
+	NETWORKED_FLOAT(m_flLength)
+	NETWORKED_FLOAT(m_flAlpha)
+	NETWORKED_FLOAT(m_flRollSpeed)
 
 	void env_steam(void);
 

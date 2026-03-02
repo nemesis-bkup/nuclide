@@ -105,7 +105,6 @@ ncDecal::ReceiveEntity(void)
 	mins = v_up / size[0];
 	maxs = t_dir / size[1];
 	color = getlight(origin) / 255;
-	drawmask = MASK_ENGINE;
 }
 
 float

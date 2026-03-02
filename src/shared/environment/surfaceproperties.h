@@ -97,40 +97,39 @@ Scripts are formatted like our soundDefs:
 
 Available keys are:
 
-        "base"          <string>    what type to inherit
-        "gamematerial"      <char>      material character, e.g. W for wood
-        "climbable"     <bool>      ???
-        "thickness"     <float>     non-solid, air (?) thickness
-        "density"       <int>       material density in kg / m^3
+        "base"                  <string>    what type to inherit
+        "gamematerial"          <char>      material character, e.g. W for wood
+        "climbable"             <bool>      ???
+        "thickness"             <float>     non-solid, air (?) thickness
+        "density"               <int>       material density in kg / m^3
 
-        "elasticity"        <float>     0.0 - 1.0 ; soft to hard
-        "friction"      <float>     friction multiplier
-        "dampening"     <float>     drag multiplier
-        "jumpfactor"        <float>     bouncyness?
-        "maxspeedfactor"    <float>     maxvelocity?
+        "elasticity"            <float>     0.0 - 1.0 ; soft to hard
+        "friction"              <float>     friction multiplier
+        "dampening"             <float>     drag multiplier
+        "jumpfactor"            <float>     bouncyness?
+        "maxspeedfactor"        <float>     maxvelocity?
 
-        "stepleft"      <string>    footstep left
-        "stepright"     <string>    footstep right
-        "fx_bulletimpact"      <string>    particle effect to cast on impact
-        "bulletimpact"      <string>    soundDef to play on impact
-        "scraperough"       <string>    soundDef to play on rough scraping
-        "scrapesmooth"      <string>    soundDef to play on smooth scraping
-        "impacthard"        <string>    soundDef for hard impacts
-        "impactsoft"        <string>    soundDef for soft impacts
+        "stepleft"              <string>    footstep left
+        "stepright"             <string>    footstep right
+        "fx_bulletimpact"       <string>    particle effect to cast on impact
+        "bulletimpact"          <string>    soundDef to play on impact
+        "scraperough"           <string>    soundDef to play on rough scraping
+        "scrapesmooth"          <string>    soundDef to play on smooth scraping
+        "impacthard"            <string>    soundDef for hard impacts
+        "impactsoft"            <string>    soundDef for soft impacts
 
-        "shake"         <string>    sound to play when object is being shaken
-        "strain"        <string>    sound to play when object is being strained?
-        "break"         <string>    sound to play when object breaks
-        "roll/rolling"      <string>    sound to play when object rolls
+        "shake"                 <string>    sound to play when object is being shaken
+        "strain"                <string>    sound to play when object is being strained?
+        "break"                 <string>    sound to play when object breaks
+        "roll/rolling"          <string>    sound to play when object rolls
 
         none of these are concerning us right now:
-        "audioreflectivity" <float>
+        "audioreflectivity"     <float>
         "audiohardnessfactor"   <float>
         "audioroughnessfactor"  <float>
         "scrapeRoughThreshold"  <float>
         "impactHardThreshold"   <float>
         "audioHardMinVelocity"  <float>
-
 @{
 
 */
@@ -194,30 +193,32 @@ typedef enum
 	SURFDATA_FX_BULLETIMPACTID
 } surfinfo_t;
 
-/* initialized SurfData */
-void SurfData_Init(void);
+class
+ncSurfDataManager
+{
+    /* initialized SurfData */
+    nonvirtual void Init(void);
 
-/* Prepares an object for SurfData initialization */
-void SurfData_SetStage(string type);
+    /* Prepares an object for SurfData initialization */
+    nonvirtual void SetStage(string type);
 
-/* Finishes initialization, returns valid SurfData id */
-int SurfData_Finish(void);
+    /* Finishes initialization, returns valid SurfData id */
+    nonvirtual int Finish(void);
+    nonvirtual int TexToSurfData(string tex_name);
 
-int SurfData_TexToSurfData(string tex_name);
+    /* Call an impact effect against an entity surface */
+    nonvirtual void Impact(entity e, vector org, vector ang);
 
-/* Call an impact effect against an entity surface */
-void SurfData_Impact(entity e, vector org, vector ang);
+    /* Get information from a Surface */
+    nonvirtual __variant GetInfo(int, int);
 
-/* Get information from a Surface */
-__variant SurfData_GetInfo(int, int);
+    #ifdef CLIENT
+    nonvirtual void Impact_Parse(void);
+    nonvirtual void ImpactID_Parse(void);
+    #endif
 
-#ifdef CLIENT
-void SurfData_Impact_Parse(void);
-void SurfData_ImpactID_Parse(void);
-#endif
-
-void SurfData_ImpactOfType(int materialID, vector worldPosition, vector impactNormal);
-
-void SurfData_ImpactOfNamedType(string materialName, vector worldPosition, vector impactNormal);
+    nonvirtual void ImpactOfType(int materialID, vector worldPosition, vector impactNormal);
+    nonvirtual void ImpactOfNamedType(string materialName, vector worldPosition, vector impactNormal);
+};
 
 /** @} */ // end of surfdata

@@ -834,7 +834,7 @@ ncMonster::SeeThink(void)
 		/* this will make the actor 'aim" at the target */
 		{
 			vector tmp = vectorToAngles(anglesToForward(v_angle));
-			subblendfrac = tmp[0] / 90;
+			subblendfrac = tmp[0] / 45;
 			bonecontrol1 = lerp(bonecontrol1, m_flHeadYaw, frametime * 15.0f);	/* head turning */
 		}
 	}
@@ -1426,6 +1426,12 @@ void
 ncMonster::ScriptedSequenceEnded_Moved(void)
 {
 	vector new_origin;
+
+	if (wasfreed(this) || !is.AI(this)) {
+		ncWarning("sequence called on invalid entity");
+		return;
+	}
+
 	new_origin = gettaginfo(this, 1);
 	ncMonsterLog("Moved to %v", new_origin);
 	SetOrigin(new_origin);
@@ -1434,6 +1440,7 @@ ncMonster::ScriptedSequenceEnded_Moved(void)
 		DropToFloor();
 	}
 
+	eprint(this);
 	ScriptedSequenceEnded();
 }
 
@@ -1750,7 +1757,7 @@ ncMonster::Physics(void)
 	}
 
 	/* editors like Hammer like putting 'sequence' into spawndata
-	   of monsters. so only ever force the animation when flagged as dead */
+	   of monsters. so only ever force the animation when flagged as 'dead' */
 	if (_m_bStartDead && m_flForceSequence) {
 		if (m_iSequenceState != SEQUENCESTATE_IDLE) {
 			SetFrame(m_flForceSequence);
@@ -2219,6 +2226,16 @@ ncMonster::Respawn(void)
 	ClearVelocity();
 	RouteClear();
 
+    modelindex2 = getmodelindex(GetSpawnString("model2"));
+
+    string turnRate = GetSpawnString("turn_rate");
+
+    if (STRING_SET(turnRate)) {
+        m_turnRate = GetSpawnFloat("turn_rate");
+    } else {
+        m_turnRate = 1.0f;
+    }
+
 	SetEyePos([0, 0, m_flEyeHeight]);
 	SetOrigin(GetSpawnVector("origin"));
 
@@ -2435,6 +2452,13 @@ ncMonster::Input( entity entityActivator, string inputName, string dataField )
 			CancelSchedule();
 		}
 		break;
+    case "TaskCheck_FriendlyFire":
+		traceline(GetEyePos(), GetEyePos() + (anglesToForward(GetAngles()) * 2048.0f), MOVE_NORMAL, this);
+
+		if (trace_ent != m_eEnemy && m_eEnemy.team == team) {
+			CancelSchedule();
+		}
+        break;
 	case "TaskCheck_MeleeEnemy":
 		float dist = distance(m_eEnemy.origin, origin);
 
@@ -2484,7 +2508,18 @@ ncMonster::Input( entity entityActivator, string inputName, string dataField )
 	case "TurnToIdealPosition":
 		ideal_yaw = random(-179,180);
 		break;
+	case "ForgetEnemy":
+		m_eEnemy = __NULL__;
+		break;
 	case "TurnToEnemy":
+        if (!m_eEnemy) {
+			CancelSchedule();
+            break;
+        }
+        if (Visible(m_eEnemy) == false) {
+			CancelSchedule();
+            break;
+        }
 		vector turnTo = vectoangles(m_eEnemy.origin - origin);
 		ideal_yaw = turnTo[1];
 		v_angle = turnTo;
@@ -2509,6 +2544,9 @@ ncMonster::Input( entity entityActivator, string inputName, string dataField )
 		AnimationRewind();
 		AnimPlay(GetDefAct("rangeAttack2"));
 		break;
+    case "SetWeaponModel":
+        modelindex2 = getmodelindex(dataField);
+        break;
 	default:
 		super::Input(entityActivator, inputName, dataField);
 	}
@@ -2744,6 +2782,11 @@ ncMonster::SpawnKey(string keyName, string setValue)
 void
 ncMonster::EvaluateEntity(void)
 {
+	/* turret / sentry */
+	if (m_turnRate == 0.0) {
+        v_angle = angles = m_vecSequenceAngle;
+    }
+
 	EVALUATE_VECTOR(origin, 0, MONFL_CHANGED_ORIGIN_X)
 	EVALUATE_VECTOR(origin, 1, MONFL_CHANGED_ORIGIN_Y)
 	EVALUATE_VECTOR(origin, 2, MONFL_CHANGED_ORIGIN_Z)
@@ -2752,6 +2795,8 @@ ncMonster::EvaluateEntity(void)
 	EVALUATE_VECTOR(angles, 2, MONFL_CHANGED_ANGLES_Z)
 	EVALUATE_VECTOR(v_angle, 0, MONFL_CHANGED_ANGLES_X)
 	EVALUATE_FIELD(modelindex, MONFL_CHANGED_MODELINDEX)
+	EVALUATE_FIELD(modelindex2, MONFL_CHANGED_MODELINDEX)
+	EVALUATE_FIELD(modelindex3, MONFL_CHANGED_MODELINDEX)
 	EVALUATE_VECTOR(view_ofs, 2, MONFL_CHANGED_MODELINDEX)
 	EVALUATE_FIELD(solid, MONFL_CHANGED_SOLID)
 	EVALUATE_FIELD(movetype, MONFL_CHANGED_FLAGS)
@@ -2810,6 +2855,8 @@ ncMonster::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_ANGLE(angles[2], MONFL_CHANGED_ANGLES_Z)
 	SENDENTITY_ANGLE(v_angle[0], MONFL_CHANGED_ANGLES_X)
 	SENDENTITY_SHORT(modelindex, MONFL_CHANGED_MODELINDEX)
+	SENDENTITY_SHORT(modelindex2, MONFL_CHANGED_MODELINDEX)
+	SENDENTITY_SHORT(modelindex3, MONFL_CHANGED_MODELINDEX)
 	SENDENTITY_BYTE(view_ofs[2], MONFL_CHANGED_MODELINDEX)
 	SENDENTITY_BYTE(solid, MONFL_CHANGED_SOLID)
 	SENDENTITY_BYTE(movetype, MONFL_CHANGED_FLAGS)
@@ -2877,6 +2924,8 @@ ncMonster::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_ANGLE(angles[2], MONFL_CHANGED_ANGLES_Z)
 	READENTITY_ANGLE(v_angle[0], MONFL_CHANGED_ANGLES_X)
 	READENTITY_SHORT(modelindex, MONFL_CHANGED_MODELINDEX)
+	READENTITY_SHORT(modelindex2, MONFL_CHANGED_MODELINDEX)
+	READENTITY_SHORT(modelindex3, MONFL_CHANGED_MODELINDEX)
 	READENTITY_BYTE(view_ofs[2], MONFL_CHANGED_MODELINDEX)
 	READENTITY_BYTE(solid, MONFL_CHANGED_SOLID)
 	READENTITY_BYTE(movetype, MONFL_CHANGED_FLAGS)
@@ -2925,6 +2974,13 @@ ncMonster::ReceiveEntity(float flNew, float flChanged)
 		_ModelChanged();
 		_UpdateBoneCount();
 	}
+
+	if (autocvar(bonetest, 0) & 1) {
+        printf("%f\n", subblendfrac);
+    }
+	if (autocvar(bonetest, 0) & 2) {
+        subblendfrac = autocvar(bonetest_var, 0);
+    }
 }
 
 void
@@ -2944,11 +3000,11 @@ ncMonster::_RenderDebugViewCone(void)
 
 	testOrg = pSeat->m_ePlayer.origin;
 	v = normalize(testOrg - GetEyePos());
-	flDot = v * anglesToForward(angles);
+	flDot = v * anglesToForward(angles + [0, bonecontrol1, 0]);
 
 	/* not inside our FoV at all */
 	if (flDot < 90.0f/180) {
-		drawcone(GetEyePos(), angles, 16, 60, 90, [0.25,0,0], 0.25f);
+		drawcone(GetEyePos(), angles + [0, bonecontrol1, 0], 16, 60, 90, [0.25,0,0], 0.25f);
 		return;
 	}
 
@@ -2956,9 +3012,9 @@ ncMonster::_RenderDebugViewCone(void)
 
 	/* we have line of sight with the client */
 	if (trace_fraction == 1.0f || trace_ent == pSeat->m_ePlayer) {
-		drawcone(GetEyePos(), angles, 16, 60, 90, [1,0,0], 0.75f);
+		drawcone(GetEyePos(), angles + [0, bonecontrol1, 0], 16, 60, 90, [1,0,0], 0.75f);
 	} else { /* in FoV, no line of sight */
-		drawcone(GetEyePos(), angles, 16, 60, 90, [1,1,1], 0.25f);
+		drawcone(GetEyePos(), angles + [0, bonecontrol1, 0], 16, 60, 90, [1,1,1], 0.25f);
 	}
 }
 #endif
@@ -2970,14 +3026,14 @@ var float g_monsteralert_timer;
 void
 ncMonster_AlertEnemyAlliance(vector pos, float radius, int alliance)
 {
+#if 1
+	if (autocvar_ai_debugAlerts)
+		ncLogAlways("AI alert from %v with radius %f and alliance %i", pos, radius, alliance);
+
 	/* sometimes many alert-sounds happen at once... we don't really want that */
 	if (g_monsteralert_timer > time) {
 		return;
 	}
-
-#if 1
-	if (autocvar_ai_debugAlerts)
-		ncLog("AI alert from %v with radius %f and alliance %i", pos, radius, alliance);
 
 	/* always check for the fastest-to-check attributes first here */
 	for (entity w = world; (w = nextent(w));) {
@@ -2990,21 +3046,21 @@ ncMonster_AlertEnemyAlliance(vector pos, float radius, int alliance)
 		/* they already got a target of some kind */
 		if (f.m_eEnemy) {
 			if (autocvar_ai_debugAlerts)
-				ncLog("\t%S already has a target", w.classname);
+				ncLogAlways("\t%S already has a target", w.classname);
 			continue;
 		}
 
 		/* if they're our friend... ignore*/
 		if (f.IsFriend(alliance)) {
 			if (autocvar_ai_debugAlerts)
-				ncLog("\t%S is friend of alliance %i", w.classname, alliance);
+				ncLogAlways("\t%S is friend of alliance %i", w.classname, alliance);
 			continue;
 		}
 
 		/* if the monster is dead... ignore */
 		if (f.IsAlive() == false) {
 			if (autocvar_ai_debugAlerts)
-				ncLog("\t%S is dead, cannot be alerted", w.classname);
+				ncLogAlways("\t%S is dead, cannot be alerted", w.classname);
 			continue;
 		}
 
@@ -3014,11 +3070,17 @@ ncMonster_AlertEnemyAlliance(vector pos, float radius, int alliance)
 		}
 
 		if (autocvar_ai_debugAlerts) {
-			ncLog("\twe're alerting %S to go to %v", w.classname, pos);
+			ncLogAlways("\twe're alerting %S to go to %v", w.classname, pos);
 		}
 
 		/* we've heard a noise. investigate the location */
 		f.AlertNoise();
+
+        if (f.IsFacingPosition(pos) != false) {
+            f.RouteToPosition(f.GetOrigin() + (anglesToForward(f.GetAngles()) * -16.0));
+        } else {
+            f.RouteToPosition(pos);
+        }
 	}
 #endif
 	g_monsteralert_timer = time + 0.5f;

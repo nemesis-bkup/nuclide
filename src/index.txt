@@ -1,0 +1,19 @@
+Index of the src/ directory:
+
+addons/ - Example sources for AddonC server-side plugins. Chat sounds, banners etc.
+botlib/ - isolates Multiplayer Bot AI
+client/ - basis for the csprogs.dat
+common/ - Included into most components
+gs-entbase/ - Implementations of historical entity classes
+menu-fn/ - Menu inspired by the original 1998 WON menu used in HL
+menu-vgui/ - Our modern Vera GUI menu
+nav/ - Code related to routing/nav-mesh. Used by server-entities and botlib
+platform/ - Basis for menu.dat
+server/ - Basis for progs.dat
+shared/ - Shared by csprogs.dat and progs.dat
+vgui/ - Vera GUI objects and classes
+
+addon.src = Include this into your AddonC progs
+app.src = Include this into your AppC progs
+hud.src = Include this into your HudC progs
+rules.src = Include this into your RuleC progs.

@@ -48,70 +48,17 @@ ncActor::ncActor(void)
 	}
 }
 
-float
-ncActor::__ActForPrefix(string actName, string animPrefix, string emotionString)
-{
-	float returnValue = Activities_GetSequenceForEntity(this, sprintf("%s_%s_%s", actName, animPrefix, emotionString));
-
-	if (returnValue != ACTIVITY_NOTFOUND) {
-		return (returnValue);
-	}
-
-	returnValue = Activities_GetSequenceForEntity(this, sprintf("%s_%s", actName, animPrefix));
-
-	if (returnValue != ACTIVITY_NOTFOUND) {
-		return (returnValue);
-	}
-
-	returnValue = Activities_GetSequenceForEntity(this, actName);
-
-	return (returnValue);
-}
 
 void
 ncActor::SetAnimationPrefix(string animPrefix)
 {
-	string stanceString = "";
-	string emotionString = "stimulated"; /* Future plans: angry, relaxed, stimulated, agitated, USER DEFINED! */
+	if (!m_animationManager) {
+			m_animationManager = ncAnimationManager::ManagerForEntity(this);
+	}
 
-	/* bottom/body */
-	m_actIdle = __ActForPrefix("idle", animPrefix, emotionString);
-	m_actIdleCrouch = __ActForPrefix("idle_crouch", animPrefix, emotionString);
-	m_actIdleProne = __ActForPrefix("idle_prone", animPrefix, emotionString);
-	m_actWalk = __ActForPrefix("walk", animPrefix, emotionString);
-	m_actWalkCrouch = __ActForPrefix("walk_crouch", animPrefix, emotionString);
-	m_actWalkProne = __ActForPrefix("walk_prone", animPrefix, emotionString);
-	m_actRun = __ActForPrefix("run", animPrefix, emotionString);
-	m_actJump = __ActForPrefix("jump", animPrefix, emotionString);
-
-	/* top 'gestures' */
-	m_actAim = __ActForPrefix("aim", animPrefix, emotionString);
-	m_actDraw = __ActForPrefix("draw", animPrefix, emotionString);
-	m_actAttack = __ActForPrefix("attack", animPrefix, emotionString);
-	m_actReload = __ActForPrefix("reload", animPrefix, emotionString);
-	m_actReloadStart = __ActForPrefix("reloadStart", animPrefix, emotionString);
-	m_actReloadEnd = __ActForPrefix("reloadEnd", animPrefix, emotionString);
-
-	m_boneSpine = gettagindex(this, GetDefString("spine"));
-	m_torsoFirst = gettagindex(this, GetDefString("torsoStart"));
-	m_torsoLast = gettagindex(this, GetDefString("torsoEnd"));
-	m_torsoTwistYaw = gettagindex(this, GetDefString("twistYaw"));
-
-#if 1
-	EntLog("Activity Set for prefix %S:", animPrefix);
-	EntLog("\tm_boneSpine: %i", m_boneSpine);
-	EntLog("\tm_actIdle: %d", m_actIdle);
-	EntLog("\tm_actIdleCrouch: %d", m_actIdleCrouch);
-	EntLog("\tm_actIdleProne: %d", m_actIdleProne);
-	EntLog("\tm_actWalk: %d", m_actWalk);
-	EntLog("\tm_actWalkCrouch: %d", m_actWalkCrouch);
-	EntLog("\tm_actWalkProne: %d", m_actWalkProne);
-	EntLog("\tm_actRun: %d", m_actRun);
-	EntLog("\tm_actAim: %d", m_actAim);
-	EntLog("\tm_actDraw: %d", m_actDraw);
-	EntLog("\tm_actAttack: %d", m_actAttack);
-	EntLog("\tm_actReload: %d", m_actReload);
-#endif
+	if (m_animationManager) {
+		m_animationManager.SetAnimationPrefix(animPrefix);
+	}
 }
 
 void
@@ -166,7 +113,7 @@ ncActor::Event_StepLeft(void)
 	string tex_name = getsurfacetexture(trace_ent, getsurfacenearpoint(trace_ent, trace_endpos));
 
 	StartSoundDef(
-		SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPLEFT),
+		ncSurfDataManager::GetInfo(ncSurfDataManager::TexToSurfData(tex_name), SURFDATA_SND_STEPLEFT),
 		CHAN_BODY,
 		true);
 #endif
@@ -186,7 +133,7 @@ ncActor::Event_StepRight(void)
 	string tex_name = getsurfacetexture(trace_ent, getsurfacenearpoint(trace_ent, trace_endpos));
 
 	StartSoundDef(
-		SurfData_GetInfo(SurfData_TexToSurfData(tex_name), SURFDATA_SND_STEPRIGHT),
+		ncSurfDataManager::GetInfo(ncSurfDataManager::TexToSurfData(tex_name), SURFDATA_SND_STEPRIGHT),
 		CHAN_BODY,
 		true);
 #endif
@@ -1286,13 +1233,19 @@ ncActor::RouteToPositionDenyFlags(vector destination, int denylinkflags)
 		}
 	}
 
+#if 0
 	if (!Nodes_Available()) {
 		Nodes_Init();
 		return;
 	}
+#endif
 
 	/* still nothing... give up */
 	if (!Nodes_Available()) {
+        m_pathfindingDestination = destination;
+        m_pathfindingNodeCount = 1;
+        m_pathfindingCurrentNode = -1;
+        m_timeUntilDroppingRoute = time + 5.0f;
 		return;
 	}
 

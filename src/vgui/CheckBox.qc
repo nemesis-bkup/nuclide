@@ -29,7 +29,7 @@ class vguiCheckbox:vguiWidget
 {
 public:
 	void vguiCheckbox(void);
-	
+
 	nonvirtual void SetTitle(string);
 	nonvirtual int GetValue(void);
 	nonvirtual void SetValue(int);
@@ -46,7 +46,6 @@ private:
 
 void vguiCheckbox::vguiCheckbox(void)
 {
-	m_vecColor = UI_MAINCOLOR;
 	m_flAlpha = 1.0f;
 }
 
@@ -81,20 +80,12 @@ void vguiCheckbox::Draw(void)
 {
 	vguiTheme theme = GetTheme();
 
-	theme.DrawControlBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_ACTIVE);
-	
-	if (m_iFlags & CHECKBOX_DOWN) {
-		theme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, __NULL__);
-	}
-	
-	if (m_iFlags & CHECKBOX_CHECKED) {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/bullet_toggle_plus", [16,16], [1,1,1], 1.0f, 0);
+	if (m_iFlags & RADIO_DOWN) {
+		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
+	} else if (m_iFlags & RADIO_ACTIVE) {
+		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
 	} else {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/bullet_black", [16,16], [1,1,1], 1.0f, 0);
-	}
-
-	if (m_strTitle) {
-		theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [24, 3], m_strTitle, m_vecSize, g_fntDefault);
+		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
 	}
 }
 

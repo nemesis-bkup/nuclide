@@ -14,13 +14,6 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-enum
-{
-	ANIMATIONMODEL_SKELETAL,
-	ANIMATIONMODEL_HLMDL_VALVE,
-	ANIMATIONMODEL_HLMDL_GOOSE,
-};
-
 void
 ncPlayer::ncPlayer(void)
 {
@@ -54,11 +47,6 @@ ncPlayer::ncPlayer(void)
 
 	health = 0;
 	sndindex_idle = 0;
-	anim_top = 0.0f;
-	anim_top_time = 0.0f;
-	anim_top_delay = 0.0f;
-	anim_bottom = 0.0f;
-	anim_bottom_time = 0.0f;
 	viewzoom = 0;
 	m_timeUntilNextAttack = 0.0f;
 	m_timeUntilNextIdle = 0.0f;
@@ -210,7 +198,7 @@ ncPlayer::CanProne(void)
 bool
 ncPlayer::CanLean(void)
 {
-	return (true);
+	return m_pmoveVars.pm_leanspeed > 0 ? (true) : false;
 }
 
 bool
@@ -219,28 +207,10 @@ ncPlayer::CanCrouch(void)
 	return m_pmoveVars.pm_crouchheight > 0 ? (true) : false;
 }
 
-static ncPMoveVars
-FindPMoveVars(entity playerEntity)
-{
-	ncPMoveVars foundSpace = __NULL__;
-
-	for (ncPMoveVars spaceList = 0; (spaceList = (ncPMoveVars)find(spaceList, ::classname, "ncPMoveVars"));) {
-		if (spaceList.owner == playerEntity) {
-			spaceList.LinkToEntity(playerEntity.declclass);
-			return (spaceList);
-		}
-	}
-
-	foundSpace = spawn(ncPMoveVars);
-	foundSpace.owner = playerEntity;
-	foundSpace.LinkToEntity(playerEntity.declclass);
-	return (foundSpace);
-}
-
 void
 ncPlayer::_UpdatePMoveVars(void)
 {
-	m_pmoveVars = FindPMoveVars(this);
+	m_pmoveVars = ncPMoveVars::ManagerForEntity(this);
 }
 
 void
@@ -254,6 +224,10 @@ ncPlayer::PreFrame(void)
 	/* this is where a game/mod would decide to add more prediction rollback
 	 * information. */
 	PredictPreFrame();
+
+	if (m_animationManager) {
+		m_animationManager.PredictPreFrame();
+	}
 
 	ncItem itemEntry = m_itemList;
 	ncItem oldItem = __NULL__;
@@ -281,7 +255,7 @@ ncPlayer::PreFrame(void)
 		}
 	}
 
-	if (vehicle) {
+	if (vehicle && vehicle._isVehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPreFrame();
 	}
@@ -334,7 +308,7 @@ ncPlayer::PostFrame(void)
 
 	setorigin(this, origin);  /* update bounds */
 
-	if (vehicle) {
+	if (vehicle && vehicle._isVehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPostFrame();
 		setorigin(veh, veh.origin);
@@ -353,6 +327,9 @@ ncPlayer::ProcessInput(void)
 	if (Util_IsPaused())
 		return;
 
+    m_animationManager = ncAnimationManager::ManagerForEntity(this);
+	m_pmoveVars = ncPMoveVars::ManagerForEntity(this);
+
 	ncXRManager::InputFrame(this);
 
 	if (!Client_InIntermission() && IsFakeSpectator()) {
@@ -362,7 +339,7 @@ ncPlayer::ProcessInput(void)
 	}
 
 	/* allow vehicles to prevent weapon logic from happening */
-	if (vehicle && !Client_InIntermission()) {
+	if ((vehicle && vehicle._isVehicle) && !Client_InIntermission()) {
 		if (veh.PlayerInput)
 			veh.PlayerInput();
 	}
@@ -414,7 +391,7 @@ ncPlayer::ProcessInput(void)
 	}
 
 	/* can't fire in some vehicles */
-	if (veh)
+	if (veh && veh._isVehicle)
 		if (veh.PreventPlayerFire() == true)
 			canfire = false;
 
@@ -459,235 +436,61 @@ ncPlayer::ProcessInput(void)
 	}
 }
 
-void
-ncPlayer::UpdatePlayerAnimation_Skeletal(float timelength)
-{
-	if (!skeletonindex) {
-		skeletonindex = skel_create(modelindex);
-	}
-
-	angles[0] = 0.0f;
-	angles[1] = v_angle[1];
-	angles[2] = 0.0f;
-
-	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
-
-	/* Correct the legs */
-	angles[1] -= fCorrect;
-
-
-	/* TODO: Needs interpolation */
-	/* lower body */
-	frame = anim_bottom;
-	frame1time = anim_bottom_time;
-	skel_build(skeletonindex, this, modelindex, 0, 0, 0, 1);
-
-	// Build the top body
-	frame = anim_top;
-	frame1time = anim_top_time;
-//  	lerpfrac = 1.0f;
-	skel_build(skeletonindex, this, modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
-
-	skel_postmul_bone( skeletonindex, m_torsoTwistYaw, [0,0,0], anglesToForward([ 0, fCorrect, 0 ]) );
-
-}
-
-void
-ncPlayer::UpdatePlayerAnimation_Valve(float timelength)
-{
-	basebone = m_boneSpine;
-	frame = anim_top;
-	frame1time = anim_top_time;
-	baseframe = anim_bottom;
-	baseframe1time = anim_bottom_time;
-
-	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
-	bonecontrol1 = -fCorrect;
-	bonecontrol2 = bonecontrol1 * 0.5f;
-	bonecontrol3 = bonecontrol2 * 0.5f;
-	bonecontrol4 = bonecontrol3 * 0.5f;
-
-	angles[1] = v_angle[1] - fCorrect;
-	angles[0] = angles[2] = 0;
-
-	subblendfrac =
-	subblend2frac = v_angle[0] / 90;
-}
-
-void
-ncPlayer::UpdatePlayerAnimation_Goose(float timelength)
-{
-	basebone = m_boneSpine;
-	baseframe = anim_top;
-	baseframe1time = anim_top_time;
-	frame = anim_bottom;
-	frame1time = anim_bottom_time;
-
-	float fCorrect = dotproduct(velocity, anglesToRight([0, v_angle[1], 0])) * 0.25f;
-
-	subblendfrac = -fCorrect * 0.05f;
-	angles[1] = v_angle[1] - fCorrect;
-	subblend2frac = v_angle[0] / 90;
-	angles[0] = angles[2] = 0;
-}
-
 /* this is where it gets mod specific really fast,
    as some models may not even support skeletal animation */
 void
 ncPlayer::UpdatePlayerAnimation(float timelength)
 {
-	float maxTopTime;
-	float maxBottomTime;
-
-#ifdef SERVER
-	if (anim_top_delay <= 0.0f) {
-		anim_top = m_actAim;
-	}
-
-	if (vlen(velocity) < 1) {
-		if (IsCrouching()) {
-			anim_bottom = m_actIdleCrouch;
-		} else if (IsProne()) {
-			anim_bottom = m_actIdleProne;
-		} else {
-			anim_bottom = m_actIdle;
-		}
-	} else if (vlen(velocity) < 150) {
-		if (IsCrouching()) {
-			anim_bottom = m_actWalkCrouch;
-		} else if (IsProne()) {
-			anim_bottom = m_actWalkProne;
-		} else {
-			anim_bottom = m_actWalk;
-		}
-	} else if (vlen(velocity) > 200) {
-		if (IsCrouching()) {
-			anim_bottom = m_actWalkCrouch;
-		} else if (IsProne()) {
-			anim_bottom = m_actWalkProne;
-		} else {
-			anim_bottom = m_actRun;
-		}
-	}
-
-	if (anim_top == ACTIVITY_NOTFOUND) {
-		if (m_actAim == ACTIVITY_NOTFOUND) {
-			anim_top = anim_bottom;
-		}
-	}
-
-	if (HasVFlags(VFL_INVEHICLE)) {
-		float rq = -1;
-		ncVehicle veh = (ncVehicle)vehicle;
-
-		if (veh) {
-			rq = veh.DriverAnimation();
-		}
-
-		if (rq == -1) {
-			//anim_top = ANIMATION_CAR_SIT_IDLE;
-			//anim_bottom = ANIMATION_CAR_SIT_IDLE;
-			angles = vehicle.angles;
-		} else {
-			anim_top = rq;
-			anim_bottom = rq;
-			angles = vehicle.angles;
-		}
-	}
-
-	maxTopTime = frameduration(modelindex, anim_top);
-	maxBottomTime = frameduration(modelindex, anim_bottom);
-
-	if (anim_bottom_time > maxBottomTime) {
-		anim_bottom_time = (anim_bottom_time - maxBottomTime);
-	} else if (anim_bottom_time < 0.0f) {
-		anim_bottom_time = (maxBottomTime - anim_bottom_time);
-	}
-
-	if (anim_top_time > maxTopTime) {
-		anim_top_time = (anim_top_time - maxTopTime);
-	} else if (anim_bottom_time < 0.0f) {
-		anim_top_time = (maxTopTime - anim_top_time);
-	}
-#endif
-
-	switch (m_animBackend) {
-	case ANIMATIONMODEL_HLMDL_VALVE:
-		UpdatePlayerAnimation_Valve(timelength);
-		break;
-	case ANIMATIONMODEL_HLMDL_GOOSE:
-		UpdatePlayerAnimation_Goose(timelength);
-		break;
-	case ANIMATIONMODEL_SKELETAL:
-		UpdatePlayerAnimation_Skeletal(timelength);
-		break;
-	}
-
-#ifdef SERVER
-	/* timer update last */
-	/* top animation is always just being incremented */
-	anim_top_time += timelength;
-	anim_top_delay -= timelength;
-
-	/* we may be walking backwards, thus decrement bottom */
-	if (dotproduct(velocity, anglesToForward([0, v_angle[1], 0])) < 0) {
-		anim_bottom_time -= timelength;
-	} else {
-		anim_bottom_time += timelength;
-	}
-#endif
+	if (m_animationManager)
+    m_animationManager.AdvanceAnimation(timelength);
 }
 
 void
 ncPlayer::Event_DrawWeapon(void)
 {
-	PlayGesture(m_actDraw, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actDraw, -1);
 }
 
 void
 ncPlayer::Event_FireWeapon(void)
 {
-	PlayGesture(m_actAttack, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actAttack, -1);
 }
 
 void
 ncPlayer::Event_ReloadWeaponStart(void)
 {
-	PlayGesture(m_actReloadStart, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actReloadStart, -1);
 }
 
 void
 ncPlayer::Event_ReloadWeapon(void)
 {
-	PlayGesture(m_actReload, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actReload, -1);
 }
 
 void
 ncPlayer::Event_ReloadWeaponEnd(void)
 {
-	PlayGesture(m_actReloadEnd, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actReloadEnd, -1);
 }
 
 void
 ncPlayer::Event_HolsterWeapon(void)
 {
-	PlayGesture(m_actHolster, -1);
+	if (m_animationManager)
+	PlayGesture(m_animationManager.m_actHolster, -1);
 }
 
 void
 ncPlayer::PlayGesture(float gestureAnim, float overrideTime)
 {
-	if (gestureAnim == ACTIVITY_NOTFOUND) {
-		return;
-	}
-
-	if (overrideTime == -1) {
-		overrideTime = frameduration(modelindex, gestureAnim);
-	}
-
-	anim_top = gestureAnim;
-	anim_top_time = 0.0f;
-	anim_top_delay = overrideTime;
+	m_animationManager.PlayGesture(gestureAnim, overrideTime);
 }
 
 #ifdef CLIENT
@@ -708,6 +511,9 @@ ncPlayer::predraw(void)
 	bool localplayer = false;
 
 	ncPlayer cl = (ncPlayer)pSeat->m_ePlayer;
+
+	if (m_animationManager)
+		m_animationManager.TransferAnimationData(this);
 
 	/* figure out if this is the local player. it's either us or us spectating */
 	if (Client_IsSpectator(cl)) {
@@ -731,7 +537,7 @@ ncPlayer::predraw(void)
 
 	/* if this player is not the local player, then physics aren't being run on them
       so we need to advance their animation manually */
-	if (entnum != player_localentnum) {
+	if (localplayer == false) {
 		if (autocvar(cg_extrapolateClients, 1)) {
 			input_movevalues[0] = dotproduct(velocity, anglesToForward(v_angle));
 			input_movevalues[1] = dotproduct(velocity, anglesToRight(v_angle));
@@ -742,8 +548,11 @@ ncPlayer::predraw(void)
 			input_impulse = 0;
 			input_timelength = frametime;
 			Physics_Run();
-		} else {
-			/* advance animation, usually done in physics */
+		}
+
+		/* we don't run physics/input/prediction on these, so advance timers here for external players */
+		if (m_animationManager) {
+			m_animationManager = ncAnimationManager::ManagerForEntity(this);
 			UpdatePlayerAnimation(frametime);
 		}
 	}
@@ -776,7 +585,7 @@ ncPlayer::predraw(void)
 	if (localplayer && HasVFlags(VFL_INVEHICLE)) {
 		ncVehicle veh = (ncVehicle)vehicle;
 
-		if (veh)
+		if (veh && veh._isVehicle)
 			localplayer = veh.HidePlayermodel();
 	}
 
@@ -840,6 +649,7 @@ ncPlayer::predraw(void)
 void
 ncPlayer::postdraw(void)
 {
+	UpdatePlayerAnimation(frametime);
 }
 
 void
@@ -847,9 +657,6 @@ ncPlayer::OnRemoveEntity(void)
 {
 	if (p_model)
 		p_model.Destroy();
-
-	if (m_pmoveVars)
-		m_pmoveVars.Destroy();
 
 	super::OnRemoveEntity();
 }
@@ -864,11 +671,11 @@ ncPlayer::CalculateLean(vector viewAngle)
 	ncPlayer pl = (ncPlayer)pSeat->m_ePlayer;
 
 	if (pSeat->m_iLeanDir > 0i) {
-		pSeat->m_flLeaning += frametime * 5;
+		pSeat->m_flLeaning += frametime * m_pmoveVars.pm_leanspeed;
 	} else if (pSeat->m_iLeanDir < 0i) {
-		pSeat->m_flLeaning -= frametime * 5;
+		pSeat->m_flLeaning -= frametime * m_pmoveVars.pm_leanspeed;
 	} else {
-		pSeat->m_flLeaning = lerp(pSeat->m_flLeaning, 0.0, frametime * 10);
+		pSeat->m_flLeaning = lerp(pSeat->m_flLeaning, 0.0, frametime * (m_pmoveVars.pm_leanspeed * 2));
 	}
 
 	if (pSeat->m_flLeaning > 1.0) {
@@ -898,7 +705,7 @@ ncPlayer::UpdateAliveCam(void)
 	g_view.SetCameraAngle(view_angles);
 	g_view.SetCameraOrigin(cam_pos + Camera_AddCamBob(view_angles));
 
-	if (vehicle) {
+	if (vehicle && vehicle._isVehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 
 		if (veh.UpdateView)
@@ -923,6 +730,8 @@ var float autocvar_cl_backspeed = 133;
 void
 ncPlayer::ClientInputFrame(void)
 {
+    bool allowWeaponSwitch = true;
+
 	if (Util_IsPaused())
 		return;
 
@@ -933,7 +742,7 @@ ncPlayer::ClientInputFrame(void)
 	}
 
 	/* If we are inside a VGUI, don't let the client do stuff outside */
-	if (VGUI_Active() || pSeat->m_bInterfaceFocused) {
+	if (pSeat->m_bInterfaceFocused) {
 		input_impulse = 0;
 		input_buttons = 0;
 		return;
@@ -965,12 +774,6 @@ ncPlayer::ClientInputFrame(void)
 		input_buttons |= INPUT_JUMP;
 	}
 
-	if (pSeat->m_iHUDWeaponSelected) {
-		input_cursor_entitynumber = pSeat->m_iHUDWeaponSelected;
-	} else {
-		input_cursor_entitynumber = 0;
-	}
-
 	/* IW style stance override */
 	if (pSeat->m_dForceStance == STANCE_CROUCH) {
 		input_buttons |= INPUT_CROUCH;
@@ -987,6 +790,24 @@ ncPlayer::ClientInputFrame(void)
 		if (pSeat->m_iInputAttack) {
 			input_buttons |= INPUT_PRIMARY;
 		}
+	}
+
+	/* this will prevent people from holding down fire while switching
+     * through their weapons with scripts or the mwheel */
+	if (input_buttons & INPUT_PRIMARY) {
+        allowWeaponSwitch = false;
+	}
+	if (input_buttons & INPUT_SECONDARY) {
+        allowWeaponSwitch = false;
+	}
+	if (input_buttons & INPUT_RELOAD) {
+        allowWeaponSwitch = false;
+	}
+
+	if (allowWeaponSwitch && pSeat->m_iHUDWeaponSelected) {
+		input_cursor_entitynumber = pSeat->m_iHUDWeaponSelected;
+	} else {
+		input_cursor_entitynumber = 0;
 	}
 
 	/* compat */
@@ -1111,19 +932,10 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 	READENTITY_BYTE(m_spectatingEntity, PLAYER_SPECTATE)
 	READENTITY_BYTE(m_spectatingMode, PLAYER_SPECTATE)
 	READENTITY_BYTE(m_spectatingFlags, PLAYER_SPECTATE)
-	READENTITY_BYTE(m_animBackend, PLAYER_TOPFRAME)
-	READENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
-	READENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
-	READENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
-	READENTITY_BYTE(anim_bottom, PLAYER_BOTTOMFRAME)
-	READENTITY_FLOAT(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
 	/* we only really care about the declclass for decl lookups. */
 	if (flChanged & PLAYER_MODELINDEX) {
 		declclass = EntityDef_NameFromNetID(entityDefID);
-	}
-
-	if (isNew || flChanged & PLAYER_MODELINDEX || flChanged == UPDATE_ALL) {
 		_UpdatePMoveVars();
 		setsize(this, mins, maxs);
 	}
@@ -1161,7 +973,7 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 void
 ncPlayer::PredictPreFrame(void)
 {
-	if (vehicle) {
+	if (vehicle && vehicle._isVehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPreFrame();
 	}
@@ -1212,14 +1024,8 @@ ncPlayer::PredictPreFrame(void)
 	SAVE_STATE(m_spectatingEntity)
 	SAVE_STATE(m_spectatingMode)
 	SAVE_STATE(m_spectatingFlags)
-	SAVE_STATE(anim_top)
-	SAVE_STATE(anim_top_delay)
-	SAVE_STATE(anim_top_time)
-	SAVE_STATE(anim_bottom)
-	SAVE_STATE(anim_bottom_time)
 	SAVE_STATE(sndindex_idle)
 	SAVE_STATE(activeweapon)
-	SAVE_STATE(m_animBackend)
 
 	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
 		m_ammoTypes_net[i] = m_ammoTypes[i];
@@ -1269,24 +1075,22 @@ ncPlayer::PredictPostFrame(void)
 	ROLL_BACK(m_spectatingEntity)
 	ROLL_BACK(m_spectatingMode)
 	ROLL_BACK(m_spectatingFlags)
-	ROLL_BACK(anim_top)
-	ROLL_BACK(anim_top_delay)
-	ROLL_BACK(anim_top_time)
-	ROLL_BACK(anim_bottom)
-	ROLL_BACK(anim_bottom_time)
 	ROLL_BACK(sndindex_idle)
-	ROLL_BACK(m_animBackend)
 
 	/* make sure to relink these */
 	ROLL_BACK(vehicle_entnum)
 	ROLL_BACK(activeweapon)
 	ROLL_BACK(m_itemList)
 
+	if (m_animationManager) {
+		m_animationManager.PredictPostFrame();
+	}
+
 	for (ncItem items = __NULL__; (items = (ncItem)findfloat(items, ::_isItem, true));) {
 		items.PredictPostFrame();
 	}
 
-	if (vehicle) {
+	if (vehicle && vehicle._isVehicle) {
 		ncVehicle veh = (ncVehicle)vehicle;
 		veh.PredictPostFrame();
 	}
@@ -1686,6 +1490,9 @@ ncPlayer::MakePlayer(void)
 	SetScale(1.0f);
 	Physics_SetViewParms();
 	SetSize(m_pmoveVars.GetStandingMins(), m_pmoveVars.GetStandingMaxs());
+	AddFlags(FL_CLIENT);
+	RemoveVFlags(VFL_FAKESPEC);
+    m_pmoveHookVelocity = g_vec_null;
 
 	userinfo.SetFloat(this, "*deaths", deaths);
 	userinfo.SetBool(this, "*spectator", false);
@@ -1704,7 +1511,7 @@ void
 ncPlayer::EvaluateEntity(void)
 {
 	pvsflags = !HasVFlags(VFL_FAKESPEC) ? 0 : PVSF_IGNOREPVS;
-
+	flags |= FL_CLIENT;
 	EVALUATE_FIELD(entityDefID, PLAYER_MODELINDEX)
 	EVALUATE_FIELD(modelindex, PLAYER_MODELINDEX)
 	EVALUATE_FIELD(vw_index, PLAYER_MODELINDEX)
@@ -1776,12 +1583,6 @@ ncPlayer::EvaluateEntity(void)
 	EVALUATE_FIELD(m_spectatingEntity, PLAYER_SPECTATE)
 	EVALUATE_FIELD(m_spectatingMode, PLAYER_SPECTATE)
 	EVALUATE_FIELD(m_spectatingFlags, PLAYER_SPECTATE)
-	EVALUATE_FIELD(m_animBackend, PLAYER_TOPFRAME)
-	EVALUATE_FIELD(anim_top, PLAYER_TOPFRAME)
-	EVALUATE_FIELD(anim_top_time, PLAYER_TOPFRAME)
-	EVALUATE_FIELD(anim_top_delay, PLAYER_TOPFRAME)
-	EVALUATE_FIELD(anim_bottom, PLAYER_BOTTOMFRAME)
-	EVALUATE_FIELD(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
 	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
 		EVALUATE_VECTOR(m_ammoTypes, i, PLAYER_AMMOTYPES)
@@ -1892,13 +1693,6 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_BYTE(m_spectatingEntity, PLAYER_SPECTATE)
 	SENDENTITY_BYTE(m_spectatingMode, PLAYER_SPECTATE)
 	SENDENTITY_BYTE(m_spectatingFlags, PLAYER_SPECTATE)
-
-	SENDENTITY_BYTE(m_animBackend, PLAYER_TOPFRAME)
-	SENDENTITY_BYTE(anim_top, PLAYER_TOPFRAME)
-	SENDENTITY_FLOAT(anim_top_time, PLAYER_TOPFRAME)
-	SENDENTITY_FLOAT(anim_top_delay, PLAYER_TOPFRAME)
-	SENDENTITY_BYTE(anim_bottom, PLAYER_BOTTOMFRAME)
-	SENDENTITY_FLOAT(anim_bottom_time, PLAYER_BOTTOMFRAME)
 
 	for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
 		SENDENTITY_BYTE(m_ammoTypes[i], PLAYER_AMMOTYPES)
@@ -2102,8 +1896,6 @@ ncPlayer::Spawned(void)
 	Physics_SetViewParms();
 	mins = m_pmoveVars.GetStandingMins();
 	maxs = m_pmoveVars.GetStandingMaxs();
-
-	m_animBackend = GetSpawnFloat("animBackend");
 
 #ifdef SERVER
 	MakePlayer();

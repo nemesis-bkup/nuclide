@@ -1,9 +1,0 @@
-typeInfo video
-{
-	"video"			"video/popeye_1.roq"
-	"audio"			"video/popeye_1.ogg"
-	"duration"		"280.000000"
-	"light_style"		"1"
-	"light_color"		"112 128 128"
-	"dog"			"vtvDOG"
-}

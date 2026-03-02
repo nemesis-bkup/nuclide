@@ -165,3 +165,16 @@ func_brush::Trigger(entity act, triggermode_t state)
 			SetModel(GetSpawnString("model"));
 	}
 }
+
+#define MAX_DIST 999999
+
+void
+func_static(void)
+{
+    precache_model(self.model);
+    setmodel(self, self.model);
+    self.scale = 0.001;
+    setorigin(self, self.origin);
+    setsize(self, [0,0,0], [0,0,0]);
+    self.pvsflags = PVSF_NOTRACECHECK;
+}

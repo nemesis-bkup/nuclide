@@ -92,6 +92,11 @@ public:
 	virtual void Trigger(entity, triggermode_t);
 	virtual void Input(entity, string, string);
 
+	nonvirtual void EnableTouchActivation(void);
+	nonvirtual void DisableTouchActivation(void);
+	nonvirtual void Lock(void);
+	nonvirtual void Unlock(void);
+
 #ifdef GS_PHYSICS
 	nonvirtual void Unhinge(void);
 #endif
@@ -115,6 +120,30 @@ private:
 	float m_flNextTrigger;
 	float m_preventTouch;
 };
+
+void
+func_door_rotating::EnableTouchActivation(void)
+{
+	m_bCanTouch = true;
+}
+
+void
+func_door_rotating::DisableTouchActivation(void)
+{
+	m_bCanTouch = false;
+}
+
+void
+func_door_rotating::Lock(void)
+{
+	m_bLocked = true;
+}
+
+void
+func_door_rotating::Unlock(void)
+{
+	m_bLocked = false;
+}
 
 void
 func_door_rotating::func_door_rotating(void)
@@ -244,11 +273,6 @@ func_door_rotating::Respawn(void)
 		m_bCanTouch = true;
 	}
 
-	/* this is a terrible hack */
-	if (m_flWait == 0) {
-		m_flWait = 0.01f;
-	}
-
 	if (HasSpawnFlags(SF_ROT_USE)) {
 		PlayerUse = Use;
 	} else {
@@ -263,14 +287,14 @@ func_door_rotating::Respawn(void)
 		m_vecTurnDir = [0,1,0];
 	}
 
-	float distanceFloat = GetSpawnFloat("distance");
-
-	if (HasSpawnFlags(2)) {
+	/* mesh pitch flipped */
+	if (!HasSpawnFlags(2)) {
 		m_vecTurnDir[0] *= -1.0f;
 	} 
 
-	SetMoverRotation1(GetSpawnVector("angles"));
-	SetMoverRotation2(GetDirectionalRotation(m_vecTurnDir, distanceFloat));
+	vector angleAdd = [0, GetSpawnFloat("angle"), 0];
+	SetMoverRotation1(GetSpawnVector("angles") + angleAdd);
+	SetMoverRotation2(GetDirectionalRotation(m_vecTurnDir, m_flDistance) + angleAdd);
 	ClearAngles();
 
 	if (HasSpawnFlags(SF_ROT_OPEN)) {
@@ -284,6 +308,8 @@ func_door_rotating::Respawn(void)
 	}
 
 	if (HasTargetname() || m_flDistance == 0.0) {
+		m_bCanTouch = false;
+
 		if (m_flDistance == 0.0 || m_strLockedSfx != __NULL__) {
 			m_bLocked = true;
 		} else {
@@ -464,7 +490,7 @@ func_door_rotating::Trigger(entity act, triggermode_t state)
 			/* get the door facing dir */
 			vector door_dir = vectoangles(WorldSpaceCenter() - origin);
 			makevectors(door_dir);
-			float flDir = dotproduct(origin - act.origin, v_right);
+			float flDir = dotproduct(WorldSpaceCenter() - act.origin, v_right);
 
 			if (flDir > 0) {
 				flDirection = -1.0f;

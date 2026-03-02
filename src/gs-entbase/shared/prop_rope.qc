@@ -77,10 +77,10 @@ public:
 
 private:
 	string m_strShader;
-	PREDICTED_FLOAT(m_flSag)
-	PREDICTED_FLOAT(m_flSwingFactor)
-	PREDICTED_INT(m_iSegments)
-	PREDICTED_VECTOR(m_vecTarget)
+	NETWORKED_FLOAT(m_flSag)
+	NETWORKED_FLOAT(m_flSwingFactor)
+	NETWORKED_INT(m_iSegments)
+	NETWORKED_VECTOR(m_vecTarget)
 };
 
 #ifdef CLIENT
@@ -293,6 +293,7 @@ prop_rope::SpawnKey(string strKey, string setValue)
 	case "segments":
 		m_iSegments = stoi(setValue);
 		break;
+	case "material":
 	case "RopeMaterial":
 	case "shader":
 		m_strShader = setValue;

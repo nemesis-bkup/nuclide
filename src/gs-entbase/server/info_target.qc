@@ -37,13 +37,27 @@ misc_teleporter_dest::misc_teleporter_dest(void)
 
 
 class
-target_location:ncPointTrigger
+target_location:ncZone
 {
 	void target_location(void);
 };
 
 void
 target_location::target_location(void)
+{
+
+}
+
+
+
+class
+dod_location:ncZone
+{
+	void dod_location(void);
+};
+
+void
+dod_location::dod_location(void)
 {
 
 }

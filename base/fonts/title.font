@@ -1,6 +1,6 @@
 rendersize "32"
-path fonts/nimbus/NimbusSanL-Reg.otf
+path fonts/nimbus/NimbusSanL-Bol.otf
 size 32
 
 path_bitmap fonts/nimbus/NimbusSanL-Reg.png
-size_bitmap "16 32"
+size_bitmap "32"

@@ -1,0 +1,10 @@
+video vtv_back
+{
+	"name"			"VTV - Back"
+	"video"			"video/vtv_back.roq"
+	"audio"			"music/track06.ogg"
+	"duration"		"10"
+	"light_style"		"1"
+	"light_color"		"64 128 128"
+	"top_text"		"Back to:"
+}

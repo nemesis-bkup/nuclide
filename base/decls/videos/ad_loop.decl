@@ -1,8 +1,0 @@
-typeInfo video
-{
-	"video"			"video/loop.roq"
-	"audio"			"video/loop.ogg"
-	"duration"		"60.048027"
-	"light_style"		"1"
-	"light_color"		"119 128 112"
-}

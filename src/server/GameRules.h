@@ -237,6 +237,8 @@ public:
 	virtual void IntermissionToPlayer(ncPlayer);
 	/** Returns if the gamerules find themselves in an intermission. */
 	virtual bool InIntermission(void);
+	/** Called whenever the camera angle changed in the intermission. */
+	virtual void OnIntermissionCycle(void);
 
 	/** Returns if this gamerule considers itself teamplay oriented. */
 	virtual bool IsTeamplay(void);

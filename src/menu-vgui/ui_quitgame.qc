@@ -18,7 +18,7 @@ int g_iQuitGameInitialized;
 
 void UI_QuitGame_Show ( void )
 {
-	static vguiWindow winQuitGame;
+	static vguiPanel winQuitGame;
 	static vguiLabel lblSure;
 	static vguiButton btnQuit;
 	static vguiButton btnCancel;
@@ -32,7 +32,7 @@ void UI_QuitGame_Show ( void )
 	}
 	if ( !g_iQuitGameInitialized ) {
 		g_iQuitGameInitialized = TRUE;
-		winQuitGame = spawn( vguiWindow );
+		winQuitGame = spawn( vguiPanel );
 		winQuitGame.SetTitle( "Quit Game" );
 		winQuitGame.SetSize( '256 128' );
 		winQuitGame.SetIcon( "gfx/icon16/stop" );
@@ -62,6 +62,7 @@ void UI_QuitGame_Show ( void )
 		winQuitGame.Add( lblSure );
 	}
 
+	vguiTheme::PlaySound("window-question");
 	winQuitGame.Show();
 	winQuitGame.SetPos( ( g_vidsize / 2 ) - ( winQuitGame.GetSize() / 2 ) );
 }

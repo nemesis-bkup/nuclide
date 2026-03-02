@@ -313,10 +313,10 @@ Event_Parse(float type)
 		EV_Angle();
 		break;
 	case EV_SURFIMPACT:
-		SurfData_Impact_Parse();
+		ncSurfDataManager::Impact_Parse();
 		break;
 	case EV_SURFIMPACTID:
-		SurfData_ImpactID_Parse();
+		ncSurfDataManager::ImpactID_Parse();
 		break;
 	case EV_DECALGROUP:
 		DecalGroups_Receive();
@@ -364,6 +364,18 @@ Event_Parse(float type)
 		string sMessage2 = readstring();
 
 		CSQC_Parse_Print(Util_ChatFormat(fSender2, fTeam2, sMessage2), PRINT_CHAT);
+		break;
+	case EV_CHAT_LOCAL:
+		float localSender = readbyte();
+		float localTeam = readbyte();
+		int reachedClients = readint();
+		float localRadius = readfloat();
+		string localMessage = readstring();
+
+		if (localSender == player_localnum)
+			CSQC_Parse_Print(sprintf("[%i Heard] %s", reachedClients, Util_ChatFormat(localSender, 0, localMessage)), PRINT_CHAT);
+		else
+			CSQC_Parse_Print(Util_ChatFormat(localSender, 0, localMessage), PRINT_CHAT);
 		break;
 	case EV_GPRINT:
 		float chatLevel =  readbyte();

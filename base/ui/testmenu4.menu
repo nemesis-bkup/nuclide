@@ -1,0 +1,125 @@
+{
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+	menuDef
+	{
+		name "MPD Con"
+		rect 0 0 320 240
+		backcolor 0 0 1 1
+		visible 1
+
+		itemDef
+		{
+			name toptext
+			text "Artist:"
+			rect 48 48 320 20
+			forecolor 1 0 1 1
+			decoration
+			visible 1
+		}
+		itemDef
+		{
+			name toptext
+			text " "
+			rect 128 48 320 20
+			forecolor 1 0 1 1
+			decoration
+			type 4
+			cvar "ui_mpd_songArtist"
+			visible 1
+		}
+
+		itemDef
+		{
+			name toptext
+			text "Title:"
+			rect 48 96 320 20
+			forecolor 1 0 1 1
+			decoration
+			visible 1
+		}
+		itemDef
+		{
+			name toptext
+			text " "
+			rect 128 96 320 20
+			forecolor 1 0 1 1
+			decoration
+			type 4
+			cvar "ui_mpd_songTitle"
+			visible 1
+		}
+
+		itemDef
+		{
+			name toptext
+			text "State:"
+			rect 48 128 320 20
+			forecolor 1 0 1 1
+			decoration
+			visible 1
+		}
+		itemDef
+		{
+			name toptext
+			text " "
+			rect 128 128 320 20
+			forecolor 1 0 1 1
+			decoration
+			type 4
+			cvar "ui_mpd_state"
+			visible 1
+		}
+
+		itemDef
+		{
+			name Button1
+			text "Connect"
+			rect 16 196 96 24
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+			type 1
+
+			action { exec mpd_connectToHost }
+			mouseEnter { setitemcolor Button1 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Button1 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef
+		{
+			name Button2
+			text "<<"
+			rect 128 196 32 24
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+			type 1
+
+			action { exec mpd_prevSong }
+			mouseEnter { setitemcolor Button2 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Button2 forecolor .4 .4 .4 .4  }
+		}
+
+		itemDef
+		{
+			name Button3
+			text ">>"
+			rect 164 196 32 24
+			bordercolor 1 1 1 1
+			forecolor .4 .4 .4 .4
+			border 1
+			textalign 1
+			type 1
+
+			action { exec mpd_nextSong }
+			mouseEnter { setitemcolor Button3 forecolor 1 1 1 1 }
+			mouseExit { setitemcolor Button3 forecolor .4 .4 .4 .4  }
+		}
+	}
+}

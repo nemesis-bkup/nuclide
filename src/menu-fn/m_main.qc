@@ -76,7 +76,7 @@ btn_newgame_start(void)
 void
 btn_training(void)
 {
-	Map_Training();
+	localcmd("set skill 2\nspawnTraining\n");
 }
 
 void

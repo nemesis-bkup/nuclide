@@ -1,3 +1,16 @@
+DoSpark
+{
+	attenuation idle
+	pitch_min 90
+	pitch_max 110
+	sample buttons/spark1.wav
+	sample buttons/spark2.wav
+	sample buttons/spark3.wav
+	sample buttons/spark4.wav
+	sample buttons/spark5.wav
+	sample buttons/spark6.wav
+}
+
 sfx_impact.default
 {
 	sample weapons/ric1.wav
@@ -95,4 +108,3 @@ sfx_impact.grate
 	sample weapons/ric2.wav
 	sample weapons/ric3.wav
 }
-

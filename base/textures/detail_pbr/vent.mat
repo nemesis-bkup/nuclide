@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop vent
+	diffusemap detail_pbr/vent.tga
+	normalmap detail_pbr/vent_local.tga
+	specularmap detail_pbr/vent_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

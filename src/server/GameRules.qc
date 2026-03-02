@@ -22,6 +22,7 @@ void
 ncRuleDelegate::ncRuleDelegate(void)
 {
 	identity = 2;
+	m_flIntermissionCycle = 0;
 }
 
 void
@@ -69,6 +70,10 @@ ncRuleDelegate::InitPostEnts(void)
 void
 ncRuleDelegate::Precache(void)
 {
+	if (!g_ruleCProgs)
+		return;
+
+	ncWarning("Gamerule progs with no CodeCallback_Precache");
 }
 
 void
@@ -83,15 +88,18 @@ ncRuleDelegate::FrameStart(void)
 	if (!m_iIntermission) {
 		if (cvar("timelimit")) {
 			if (time >= (cvar("timelimit") * 60)) {
-				ncStats::EndGame("timelimit");
-				IntermissionStart();
+
+				if (serverinfo.GetString("mode") != "singleplayer") {
+					ncStats::EndGame("timelimit");
+					IntermissionStart();
+				}
 			}
 		}
 	}
 
 	IntermissionCycle();
-
 }
+
 bool
 ncRuleDelegate::ConsoleCommand(ncPlayer pl, string cmd)
 {
@@ -173,39 +181,19 @@ ncRuleDelegate::PlayerPostFrame(ncPlayer pl)
 void
 ncRuleDelegate::LevelDecodeParms(ncPlayer pl)
 {
-	g_landmarkpos[0] = parm1;
-	g_landmarkpos[1] = parm2;
-	g_landmarkpos[2] = parm3;
-	pl.angles[0] = parm4;
-	pl.angles[1] = parm5;
-	pl.angles[2] = parm6;
-	pl.velocity[0] = parm7;
-	pl.velocity[1] = parm8;
-	pl.velocity[2] = parm9;
-	pl.flags = parm18;
+
 }
 
 void
 ncRuleDelegate::LevelChangeParms(ncPlayer pl)
 {
-	parm1 = g_landmarkpos[0];
-	parm2 = g_landmarkpos[1];
-	parm3 = g_landmarkpos[2];
-	parm4 = pl.angles[0];
-	parm5 = pl.angles[1];
-	parm6 = pl.angles[2];
-	parm7 = pl.velocity[0];
-	parm8 = pl.velocity[1];
-	parm9 = pl.velocity[2];
-	parm18 = pl.flags;
+
 }
 
 void
 ncRuleDelegate::LevelNewParms(void)
 {
-	parm1 = parm2 = parm3 = parm4 = parm5 = parm6 = parm7 =
-	parm8 = parm9 = 0;
-	parm18 = 0;
+
 }
 
 /* spectator */
@@ -246,15 +234,27 @@ ncRuleDelegate::IntermissionStart(void)
 }
 
 void
+ncRuleDelegate::OnIntermissionCycle(void)
+{
+
+}
+
+void
 ncRuleDelegate::IntermissionCycle(void)
 {
 	ncEntity targ;
 
-	if (!m_iIntermission)
+	if (!m_iIntermission) {
 		return;
+	}
 
-	if (time < m_flIntermissionCycle)
+	if (time < m_flIntermissionCycle) {
 		return;
+	}
+
+	if (m_flIntermissionCycle == -1) {
+		return;
+	}
 
 	/* make the clients aware */
 	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
@@ -292,8 +292,10 @@ ncRuleDelegate::IntermissionCycle(void)
 	msg_entity = world;
 	multicast([0,0,0], MULTICAST_ALL);
 
+	OnIntermissionCycle();
+
 	if (!m_eIntermissionPoint)
-		m_flIntermissionCycle = 0.0f;
+		m_flIntermissionCycle = -1;
 	else
 		m_flIntermissionCycle = time + 5.0f;
 }
@@ -453,9 +455,21 @@ ncRuleDelegate::ActiveInstance(void)
 void
 ncRuleDelegate::LinkProgs(void)
 {
-	ncRuleDelegate newRule = spawn(ncRuleDelegate);
+	ncRuleDelegate newRule;
 
-	if (g_ruleCProgs) {
+	if (g_ruleCName == "singleplayer") {
+		newRule = spawn(ncGameRule_SinglePlayer);
+	} else if (g_ruleCName == "editor") {
+		newRule = spawn(ncGameRule_Editor);
+	} else if (g_ruleCName == "home") {
+		newRule = spawn(ncGameRule_Home);
+	} else if (g_ruleCName == "shutterbug") {
+		newRule = spawn(ncGameRule_DevShutterbug);
+	} else {
+		newRule = spawn(ncRuleDelegate);
+	}
+
+	if (g_ruleCProgs && g_ruleCName != "editor" && g_ruleCName != "home") {
 		RULEMAP(newRule, ClientCommand, "CodeCallback_ClientCommand")
 		RULEMAP(newRule, ConsoleCommand, "CodeCallback_ConsoleCommand")
 		RULEMAP(newRule, FrameStart, "CodeCallback_FrameStart")
@@ -513,9 +527,9 @@ RuleC_Init(void)
 		return;
 	}
 
-	ncLog("Active RuleC:");
-	ncLog("\tType: %S", gameType);
-	ncLog("\tProgs: %S", pathToProgs);
+	ncLogAlways("Active RuleC:");
+	ncLogAlways("\tType: %S", gameType);
+	ncLogAlways("\tProgs: %S", pathToProgs);
 
 	g_ruleCProgs = addprogs(pathToProgs);
 
@@ -526,7 +540,7 @@ RuleC_Init(void)
 		if (mainFunction) {
 			mainFunction();
 		} else {
-			error(sprintf("RuleC %S does not have a main function.", pathToProgs));
+			ncError("RuleC progs %S does not have a main function.", pathToProgs);
 		}
 	}
 }

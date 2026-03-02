@@ -1,0 +1,95 @@
+{
+	assetglobaldef
+	{
+		font fonts/extraBigFont 32
+		cursor gfx/icon16/cursor
+	}
+
+	menuDef
+	{
+		name "MediaView"
+		rect 0 0 640 480
+		backcolor 0 0 1 1
+		visible 1
+
+		itemDef
+		{
+			name backgroundmap
+			rect 0 0 640 480
+			forecolor 0 1 1 1
+			decoration
+			visible 1
+
+			camera_origin 512 -768 128
+			camera_avelocity -5 45 5
+
+			asset_model "maps/lqdm1.bsp"
+			model_fov 110
+		}
+
+
+		itemDef
+		{
+			name testmodel
+			rect 0 0 640 480
+			forecolor 0 1 1 1
+			decoration
+			visible 1
+
+			asset_model "models/crt.mdl"
+			model_origin 64 0 0
+			model_angles 0 0 45
+			model_avelocity 0 90 0
+			model_skin 1
+			model_fov 60
+		}
+
+
+		itemDef
+		{
+			name channel
+			background "static_additive"
+			rect 0 0 640 480
+			forecolor .25 .25 .25 1
+			decoration
+			visible 1
+		}
+
+		itemDef
+		{
+			name fgtext
+			text "^bTRY ANOTHER WORLD"
+			rect 0 0 640 480
+			forecolor 1 1 1 0.1
+			decoration
+			textalign 3
+			visible 1
+		}
+
+		itemDef
+		{
+			name shared_web
+			group sharedItem
+			type 32
+			rect 0 0 640 480
+			visible 0
+		}
+
+		itemDef
+		{
+			name shared_video
+			group sharedItem
+			rect 0 0 640 480
+			visible 0
+		}
+
+		itemDef
+		{
+			name shared_audio
+			group sharedItem
+			type 32
+			rect 0 0 640 480
+			visible 0
+		}
+	}
+}

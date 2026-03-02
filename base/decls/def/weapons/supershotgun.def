@@ -44,14 +44,14 @@ entityDef projectile_superShotgun
 	"inherit"			"projectile_bullet_base"
 	"damage"			"skill:plr_supershotgun"
 	"hitscans"			"14"
-	"spread"			"0.08716 0.08716"
+	"spread"			"0.08716 0.01824"
 //	"range"				"2048"
 	"fx_path"			"weapon_shotgun.tracer"
 }
 
 entityDef fireInfo_superShotgun
 {
-	"def_onFire"		"projectile_shotgun"
+	"def_onFire"		"projectile_superShotgun"
 	"ammoPerShot"		"2"
 	"fireRate"			"0.7"
 	"punchSpring"		"-5 0 0"

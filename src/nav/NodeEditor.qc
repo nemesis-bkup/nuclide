@@ -560,6 +560,9 @@ ncNodeEditor::DrawDebugInfo(void)
 	}
 
 	R_BeginPolygon("", 1, 0);
+
+    float dynOffset = fabs(sin(time * 4.0) * 1.5f) + 1.0;
+
 	for (int i = 0i; i < g_nodeCount; i++) {
 		graphNode_t *w = g_nodeGraph+i;
 		vector org = w->m_origin;
@@ -579,28 +582,58 @@ ncNodeEditor::DrawDebugInfo(void)
 				vector middle;
 				middle = (w2->m_origin + org) / 2;
 				R_PolygonVertex(org + [0,0,1], [0,1], [1,1,0], 1);
-				R_PolygonVertex(middle + [0,0,32], [0,1], [0.5,0.5,0], 1);
+				R_PolygonVertex(middle + ([0,0,16] * dynOffset), [0,1], [0.5,0.5,0], 1);
 				R_EndPolygon();
-				R_PolygonVertex(middle + [0,0,32], [0,1], [0.5,0.5,0], 1);
+				R_PolygonVertex(middle + ([0,0,16] * dynOffset), [0,1], [0.5,0.5,0], 1);
 				R_PolygonVertex(w2->m_origin + [0,0,1], [1,1], [0,0,0], 1);
 				R_EndPolygon();
 			}
 
+
+			if (fl & LF_USER) {
+				R_PolygonVertex(org + [0,0,dynOffset], [0,1], [0,1,1], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,dynOffset], [1,1], [0,0,0], 1);
+				R_EndPolygon();
+			}
+
 			if (fl & LF_CROUCH) {
-				R_PolygonVertex(org + [0,0,-2], [0,1], [0,1,0], 1);
-				R_PolygonVertex(w2->m_origin + [0,0,-2], [1,1], [0,0,0], 1);
+                vector middle;
+				middle = (w2->m_origin + org) / 2;
+				R_PolygonVertex(org + [0,0,1], [0,1], [0,1,0], 1);
+				R_PolygonVertex(middle - ([0,0,8] * dynOffset), [0,1], [0,0.5,0], 1);
+				R_EndPolygon();
+				R_PolygonVertex(middle - ([0,0,8] * dynOffset), [0,1], [0,0.5,0], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,1], [1,1], [0,0,0], 1);
 				R_EndPolygon();
 			}
 
 			if (fl & LF_WALK) {
-				R_PolygonVertex(org + [0,0,-1], [0,1], [1,0,0], 1);
-				R_PolygonVertex(w2->m_origin + [0,0,-1], [1,1], [0,0,0], 1);
+				R_PolygonVertex(org + [0,0,-dynOffset], [0,1], [1,0,1], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,-dynOffset], [1,1], [0,0,0], 1);
+				R_EndPolygon();
+			}
+
+			if (fl & LF_HAZARDOUS) {
+				vector middle;
+				middle = (w2->m_origin + org) / 2;
+				R_PolygonVertex(org + [0,0,1], [0,1], [1,0,0], 1);
+				R_PolygonVertex(middle + ([0,0,4] * dynOffset), [0,1], [0.5,0,0.0], 1);
+				R_EndPolygon();
+				R_PolygonVertex(middle + ([0,0,4] * dynOffset), [0,1], [0.5,0,0.0], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,1], [1,1], [0,0,0], 1);
+				R_EndPolygon();
+
+				R_PolygonVertex(org + [0,0,1], [0,1], [1,0,0], 1);
+				R_PolygonVertex(middle - ([0,0,4] * dynOffset), [0,1], [0.5,0,0.0], 1);
+				R_EndPolygon();
+				R_PolygonVertex(middle - ([0,0,4] * dynOffset), [0,1], [0.5,0,0.0], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,1], [1,1], [0,0,0], 1);
 				R_EndPolygon();
 			}
 
 			if (fl & LF_AIM) {
-				R_PolygonVertex(org + [0,0,4], [0,1], [0.25,0.25,1], 1);
-				R_PolygonVertex(w2->m_origin + [0,0,4], [1,1], [0,0,0], 1);
+				R_PolygonVertex(org + [0,0,dynOffset], [0,1], [0,0,1], 1);
+				R_PolygonVertex(w2->m_origin + [0,0,dynOffset], [1,1], [0,0,0], 1);
 				R_EndPolygon();
 			}
 
@@ -795,11 +828,16 @@ ncNodeEditor::Cmd(void)
 /* draws debug graphics of our node tree */
 var bool autocvar_r_renderEntityInfo = false;
 var bool autocvar_nav_visualize = false;
+var bool autocvar_zone_visualize = false;
 void
 SV_AddDebugPolygons(void)
 {
 	if (autocvar_nav_visualize) {
 		ncNodeEditor::DrawDebugInfo();
+	}
+
+	if (autocvar_zone_visualize) {
+		ncZoneManager::DrawDebugInfo();
 	}
 
 	if (autocvar_r_renderEntityInfo) {

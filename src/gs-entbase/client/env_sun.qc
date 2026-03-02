@@ -163,7 +163,8 @@ env_sun::postdraw(void)
 	drawpic(lens_1 - c * 0.5f, m_mtrFlare3, FLARE_SIZE, [1,1,1] * m_flLensAlpha, 1.0f, DRAWFLAG_ADDITIVE);
 
 	float flGlare = bound(0.0, 1.0f - (vlen(c) * (1/400)), 1.0f) * m_flLensAlpha;
-	drawpic(video_mins, m_mtrOverlay, g_vidsize, [1,1,1], flGlare, DRAWFLAG_ADDITIVE);
+    vector glareSize = ([g_vidsize[0], g_vidsize[0]] * 2.0f) * (0.25f + ((1.0 - flGlare) * 0.75));
+	drawpic(video_mins + [(g_vidsize[0] / 2) - (glareSize[0]/2), (g_vidsize[1] / 2) - (glareSize[1]/2)], m_mtrOverlay, [glareSize[0], glareSize[1]], [1,1,1], flGlare, DRAWFLAG_ADDITIVE);
 }
 
 void
@@ -223,8 +224,8 @@ env_sun_lensflare(vector m_vecLensPos, float m_flLensAlpha, vector vecColor, boo
 {
 	vector lens_pos = project(m_vecLensPos);
 	vector lens_1 = lens_pos - (FLARE_SIZE / 2);
-	vector player_pos = g_view.GetCameraOrigin();;
-	vector player_angle = g_view.GetCameraAngle();;
+	vector player_pos = pSeat->m_vecPredictedOrigin;
+	vector player_angle = g_view.GetCameraAngle();
 
 	m_flLensAlpha *= 0.5f;
 

@@ -443,6 +443,8 @@ private:
 
 #ifdef CLIENT
 	virtual void HandleAnimEvent(float, int, string);
+    entity m_uiRootWindow;
+    entity m_uiInteractive;
 #endif
 
 #ifdef SERVER
@@ -474,6 +476,7 @@ private:
 	NETWORKED_BOOL(m_weaponIsFiring)
 	NETWORKED_BOOL(m_weaponOverheating)
 	NETWORKED_FLOAT(m_burstCount)
+    NETWORKED_STRING(m_interfaceFile)
 
 	/* cached variables. don't save - recalculate! */
 	string m_weaponLastFireInfo;

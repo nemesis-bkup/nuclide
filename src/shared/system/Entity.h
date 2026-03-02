@@ -64,7 +64,7 @@ what you are doing. Otherwise, you will deal with loss of savegames and much mor
 - "SpawnProjectileDef" : Launches a projectile relative to us, on the first attachment position (defined in the model).
 - "StartSoundDef" : Plays a sound on the VOICE channel.
 - "AddVelocity" : Applies linear velocity to the entity, relative to the view angle. "forward" "right" "up"
-- "Shockwave" : Casts a shockwave effect. 
+- "Shockwave" : Casts a shockwave effect.
 - "SetOrigin" : Sets the absolute position in-world.
 - "SetEditorColor" : Reserved.
 - "Respawn" : Requests the item to respawn, which resets it to its initial state.
@@ -84,6 +84,8 @@ public:
 
 	virtual void ReceiveEvent(float);
 
+	virtual void preframe(void);
+	virtual void postframe(void);
 	virtual float predraw(void);
 
 	/** Client: Run after the rendering of 3D world is complete. 2D calls can happen here. */
@@ -361,7 +363,7 @@ public:
 	/** Stops a sound sample or soundDef that is playing on the given channel. */
 	nonvirtual void StopSound(float,bool);
 
-	/** Returns the nearest point on a wall of this entity within a specified radius. 
+	/** Returns the nearest point on a wall of this entity within a specified radius.
 		If there is nothing nearby, it'll return the position of the entity. */
 	nonvirtual vector NearestWallPointForRadius(float);
 
@@ -442,6 +444,10 @@ private:
 	vector m_modelMins;
 	vector m_modelMaxs;
 	bool _loading;
+
+#ifdef CLIENT
+	entity m_contextUI; /* UI Chain for Context Menus */
+#endif
 
 #ifdef SERVER
 	string m_parent;

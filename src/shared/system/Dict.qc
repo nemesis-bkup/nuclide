@@ -26,6 +26,12 @@ ncDict::GetDeclBody(void)
 	return (m_strBody);
 }
 
+string
+ncDict::GetDeclBodyBase64(void)
+{
+	return base64encode(m_strBody, 256, 0);
+}
+
 void
 ncDict::SetDeclBody(string textBody)
 {
@@ -110,6 +116,15 @@ ncDict::TokenCount(void)
 }
 
 ncDict
+ncDict::InitWithSpawnDataFromBase64(string base64Data)
+{
+	ncDict newDict = spawn(ncDict);
+    int byteCount = 0i;
+	newDict.SetDeclBody(base64decode(base64Data, byteCount));
+	return (newDict);
+}
+
+ncDict
 ncDict::InitWithSpawnData(string spawnData)
 {
 	ncDict newDict = spawn(ncDict);
@@ -123,6 +138,24 @@ ncDict::Name(void)
 	return (m_declPath);
 }
 
+bool
+ncDict::ValidType(string type)
+{
+    switch (type) {
+    case "typeinfo":
+    case "video":
+    case "audio":
+    case "email":
+    case "picture":
+    case "app":
+    case "object":
+    case "text":
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 ncDict
 ncDict::LoadDeclFromFile(string declName, string fileName)
 {
@@ -133,19 +166,37 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 	string lastWord = __NULL__;
 	string lastDecl = "";
 
+	string cachedPath = g_string_null;
+	string cachedFile = g_string_null;
+	string cachedContents = g_string_null;
+	string dictType = g_string_null;
+
 	/* find an existing dict in memory */
 	for (ncDict dictSearch = 0; (dictSearch = (ncDict)find(dictSearch, ::classname, "ncDict"));) {
 		if (dictSearch.m_filePath == fileName && dictSearch.m_declPath == declName) {
+			ncLog("found cached decl %S", declName);
 			return (dictSearch);
 		}
 	}
 
 	fh = fopen(strcat("decls/", fileName), FILE_READ);
 
+#ifdef CLIENT
+	/* then check the player dir */
+	if (fh < 0) {
+		fh = fopen(strcat("data/players/", cvars.GetString("cl_cred"), "/decls/", fileName), FILE_READ);
+
+		if (fh < 0) {
+			ncError("Can't read %S", fileName);
+			return __NULL__;
+		}
+	}
+#else
 	if (fh < 0) {
 		ncError("Can't read %S", fileName);
 		return __NULL__;
 	}
+#endif
 
 	newDict = spawn(ncDict);
 	newDict.m_declPath = declName;
@@ -164,16 +215,20 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 
 				/* we've reached the end of a definition */
 				if (braceDepth == 0) {
+					newDict.m_dictType = dictType;
+
 					/* we found it, we're done */
 					if (STRING_SET(lastDecl) && lastDecl == declName) {
 						break;
 					}
 					lastDecl = "";
+					dictType = "";
 				}
 				break;
 			default:
 				/* anything outside braces defines the classname for the next def */
-				if (braceDepth == 0 && lastWord == "typeInfo") {
+				if (braceDepth == 0 && ValidType(lastWord) == true ) {
+					dictType = lastWord;
 					lastDecl = word;
 				} else if (braceDepth == 1) {
 					if (lastDecl == declName) { /* rest gets dumped into spawndata */
@@ -181,7 +236,7 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 					}
 				}
 			}
-			lastWord = word;
+			lastWord = strtolower(word);
 		}
 
 #if 0
@@ -197,10 +252,12 @@ ncDict::LoadDeclFromFile(string declName, string fileName)
 
 	/* failed to find any key-value pairs. empty */
 	if (!STRING_SET(newDict.m_strBody)) {
+		ncLog("discarding empty dict %S", declName);
 		remove(newDict);
 		return (__NULL__);
 	}
 
+	ncLog("allocated dict %S", declName);
 	return (newDict);
 }
 

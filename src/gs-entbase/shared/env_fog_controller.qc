@@ -113,15 +113,15 @@ private:
 #endif
 
 	/* networked attributes */
-	PREDICTED_INT(m_iFogActive)
-	PREDICTED_INT(m_iFogBlend)
-	PREDICTED_FLOAT(m_flFogStart)
-	PREDICTED_FLOAT(m_flFogEnd)
-	PREDICTED_FLOAT(m_flFogMaxDensity)
-	PREDICTED_FLOAT(m_flFogFarZ)
-	PREDICTED_VECTOR(m_vecFogColor)
-	PREDICTED_VECTOR(m_vecFogColor2)
-	PREDICTED_VECTOR(m_vecFogDir)
+	NETWORKED_INT(m_iFogActive)
+	NETWORKED_INT(m_iFogBlend)
+	NETWORKED_FLOAT(m_flFogStart)
+	NETWORKED_FLOAT(m_flFogEnd)
+	NETWORKED_FLOAT(m_flFogMaxDensity)
+	NETWORKED_FLOAT(m_flFogFarZ)
+	NETWORKED_VECTOR(m_vecFogColor)
+	NETWORKED_VECTOR(m_vecFogColor2)
+	NETWORKED_VECTOR(m_vecFogDir)
 };
 
 void

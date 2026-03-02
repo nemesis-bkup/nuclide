@@ -18,7 +18,7 @@ int g_iNewGameInitialized;
 
 void UI_NewGame_Show ( void )
 {
-	static vguiWindow winNewGame;
+	static vguiPanel winNewGame;
 	static vguiButton btnPlay;
 	static vguiButton btnCancel;
 	static vguiRadio radTraining;
@@ -28,9 +28,9 @@ void UI_NewGame_Show ( void )
 
 	static void NewGame_Play ( void ) {
 		if (radTraining.GetValue())
-			Map_Training();
+			localcmd("spawnTraining\n");
 		else
-			Map_NewGame(cvar("skill"));
+			localcmd("spawnSingle\n");
 
 		winNewGame.Hide();
 	}
@@ -46,7 +46,7 @@ void UI_NewGame_Show ( void )
 
 	if ( !g_iNewGameInitialized ) {
 		g_iNewGameInitialized = TRUE;
-		winNewGame = spawn( vguiWindow );
+		winNewGame = spawn( vguiPanel );
 		winNewGame.SetTitle( "New Game" );
 		winNewGame.SetSize( '192 168' );
 		winNewGame.SetIcon( "gfx/icon16/new" );

@@ -87,11 +87,11 @@ public:
 #endif
 
 private:
-	PREDICTED_STRING(m_strIcon)
-	PREDICTED_STRING(m_strIconOff)
-	PREDICTED_STRING(m_strText)
-	PREDICTED_VECTOR(m_vecTextColor)
-	PREDICTED_BOOL(m_bEnabled)
+	NETWORKED_STRING(m_strIcon)
+	NETWORKED_STRING(m_strIconOff)
+	NETWORKED_STRING(m_strText)
+	NETWORKED_VECTOR(m_vecTextColor)
+	NETWORKED_BOOL(m_bEnabled)
 	NETWORKED_FLOAT(m_flTimeOut)
 	NETWORKED_FLOAT(m_flOffset)
 

@@ -61,6 +61,12 @@ public:
 
 	/** Overridable: Called from initents(). */
 	virtual void Precache(void);
+
+	/** Overridable: Called from initents(). */
+	virtual void InitPostEnts(void);
+
+	/** Overridable: Called from shutdown(). */
+	virtual void Shutdown(void);
 	
 	/* logic */
 	/** Overridable: Called every server frame. */
@@ -80,8 +86,12 @@ public:
 	/** Overridable:: Called when an NPC gets killed. */
 	virtual void NPCDeath(ncActor, ncEntity, ncEntity);
 
-	/* Imports additional entities from the named file. */
+	/* Imports new entities from the named file. */
 	nonvirtual bool AppendEntitiesFromFile(string fileName);
+	/* Imports restored/saved entities from the named file. */
+	nonvirtual bool RestoreEntitiesFromFile( string fileName );
+
+    nonvirtual ncEntity SpawnEntityWithSpawnData(string desiredClass, string spawnData, entity entRef, void() spawnfunc);
 	
 	nonvirtual void InitialRespawn(void);
 

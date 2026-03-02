@@ -45,3 +45,10 @@ public:
 	/** Called when the plugin gets unloaded. */
 	nonvirtual void LoadDefaultAddons(void);
 };
+
+
+void AddonManager_LoadNamedAddon(string addonName);
+ncAddonDelegate AddonManager_NextAddon(ncAddonDelegate previous);
+void AddonManager_CloseNamedAddon(string addonName);
+
+void CMD_Addon_f(void);

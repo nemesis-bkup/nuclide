@@ -7,6 +7,7 @@
 	surfaceParm trans
 	surfaceParm water
 	surfaceParm nodlight
+	surfaceParm nolightmap
 	cull none
 	diffusemap "liquid/water2.ktx"
 	normalmap "liquid/water1_n.tga"

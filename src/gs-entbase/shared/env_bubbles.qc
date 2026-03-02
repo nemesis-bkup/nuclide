@@ -85,10 +85,10 @@ public:
 #endif
 
 private:
-	PREDICTED_INT(m_iDensity)
-	PREDICTED_FLOAT(m_flFrequency)
-	PREDICTED_FLOAT(m_flCurrent)
-	PREDICTED_BOOL(m_bEnabled)
+	NETWORKED_INT(m_iDensity)
+	NETWORKED_FLOAT(m_flFrequency)
+	NETWORKED_FLOAT(m_flCurrent)
+	NETWORKED_BOOL(m_bEnabled)
 
 	/* spawn values */
 	int m_iSpawnDensity;

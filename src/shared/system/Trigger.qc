@@ -290,7 +290,13 @@ ncTrigger::HasTargetname(void)
 	if not (targetname)
 		return false;
 
-	return true;
+	return (true);
+}
+
+string
+ncTrigger::Name(void)
+{
+	return (targetname);
 }
 
 void

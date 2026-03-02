@@ -14,17 +14,11 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#warning vguiWidget needs methods to deal with .res/.gui type files.
-
 #include "Widget.h"
 
 .string classname;
 .bool isVGUI;
 
-font_s g_fntDefault;
-font_s g_fntTitle;
-font_s g_fntSubTitle;
-font_s g_fntMenuButton;
 var int g_vguiWidgetCount;
 vector g_lastmousepos;
 
@@ -124,100 +118,7 @@ Util_MouseAbove(vector vecMousePos, vector vecPos, vector vecSize)
 void
 UISystem_Init(void)
 {
-	string strTemp;
 
-#ifdef CLIENT
-	string strUIFile = "scripts/client_style.txt";
-#else
-	string strUIFile = "scripts/menu_style.txt";
-#endif
-
-	filestream fileUI = fopen(strUIFile, FILE_READ);
-
-	if (fileUI < 0) {
-		strUIFile = "scripts/ui_style.txt";
-		fileUI = fopen(strUIFile, FILE_READ);
-	}
-
-	UI_MAINCOLOR = [68,68,68] / 255;
-	UI_FGCOLOR = [255,255,255] / 255;
-	UI_MAINALPHA = 1.0f;
-	UI_ROUNDED = false;
-	UI_NOICONS = false;
-	UI_HICOLOR = [255,255,255] / 255;
-	UI_LOCOLOR = [0,0,0] / 255;
-	UI_BORDERCOLOR = [255,255,255] / 255;
-	UI_BORDERALPHA = 0 / 255;
-	UI_FILLCOLOR = [255,255,255] / 255;
-	UI_HOVERCOLOR = [255,255,255] / 255;
-	UI_HOVERALPHA = 0;
-
-	if (fileUI >= 0) {
-		while ((strTemp = fgets(fileUI))) {
-			if (tokenizebyseparator(strTemp, "=") == 2) {
-				switch (argv(0)) {
-					case "BG_COLOR":
-					case "COLOR":
-						UI_MAINCOLOR = stov(argv(1)) / 255;
-						break;
-					case "FG_COLOR":
-						UI_FGCOLOR = stov(argv(1)) / 255;
-						break;
-					case "HILIGHT_COLOR":
-						UI_HICOLOR = stov(argv(1)) / 255;
-						break;
-					case "SHADOW_COLOR":
-						UI_LOCOLOR = stov(argv(1)) / 255;
-						break;
-					case "BORDER_COLOR":
-						UI_BORDERCOLOR = stov(argv(1)) / 255;
-						break;
-					case "FILL_COLOR":
-						UI_FILLCOLOR = stov(argv(1)) / 255;
-						break;
-					case "BORDER_ALPHA":
-						UI_BORDERALPHA = stof(argv(1)) / 255;
-						break;
-					case "HOVER_COLOR":
-						UI_HOVERCOLOR = stov(argv(1)) / 255;
-						break;
-					case "HOVER_ALPHA":
-						UI_HOVERALPHA = stof(argv(1)) / 255;
-						break;
-					case "BG_ALPHA":
-					case "ALPHA":
-						UI_MAINALPHA = stof(argv(1)) / 255;
-						break;
-					case "ROUNDED":
-						UI_ROUNDED = (bool)stof(argv(1));
-						break;
-					case "NOICONS":
-						UI_NOICONS = (bool)stof(argv(1));
-						break;
-				}
-			}
-		}
-		fclose(fileUI);
-	} else {
-		ncError(sprintf("[MENU] Cannot load UI file %s!", strUIFile));
-	}
-
-	Font_Load("fonts/ui.font", g_fntDefault);
-	Font_Load("fonts/title.font", g_fntTitle);
-	Font_Load("fonts/subtitle.font", g_fntSubTitle);
-	Font_Load("fonts/menu_button.font", g_fntMenuButton);
-
-	if (g_fntMenuButton.iID == 0) {
-		g_fntMenuButton = g_fntDefault;
-	}
-
-	if (g_fntSubTitle.iID == 0) {
-		g_fntSubTitle = g_fntDefault;
-	}
-
-	if (g_fntTitle.iID == 0) {
-		g_fntTitle = g_fntDefault;
-	}
 }
 
 #ifdef CLIENT

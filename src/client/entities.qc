@@ -73,6 +73,9 @@ Entity_EntityUpdate(float type, float new)
 	case ENT_PORTAL:
 		NSENTITY_READENTITY(ncPortal, new)
 		break;
+	case ENT_VEH_SEAT:
+		NSENTITY_READENTITY(ncVehicleSeat, new)
+		break;
 	case ENT_VEH_BRUSH:
 		NSENTITY_READENTITY(func_vehicle, new)
 		break;
@@ -81,6 +84,9 @@ Entity_EntityUpdate(float type, float new)
 		break;
 	case ENT_VEH_4WHEEL:
 		NSENTITY_READENTITY(prop_vehicle_driveable, new)
+		break;
+	case ENT_ANIMATIONMANAGER:
+		NSENTITY_READENTITY(ncAnimationManager, new)
 		break;
 	case ENT_PLAYER:
 		ncPlayer pl = (ncPlayer)self;
@@ -111,6 +117,24 @@ Entity_EntityUpdate(float type, float new)
 		break;
 	case ENT_SPRAY:
 		Spray_Parse();
+		break;
+	case ENT_SPRAYVIDEO:
+		NSENTITY_READENTITY(ncUserEntity_Video, new)
+		break;
+	case ENT_SPRAYAUDIO:
+		NSENTITY_READENTITY(ncUserEntity_Audio, new)
+		break;
+	case ENT_SPRAYIMAGE:
+		NSENTITY_READENTITY(ncUserEntity_Picture, new)
+		break;
+	case ENT_SPRAYWWW:
+		NSENTITY_READENTITY(ncUserEntity_URL, new)
+		break;
+	case ENT_USERENTITY:
+		NSENTITY_READENTITY(ncUserEntity_GameEntity, new)
+		break;
+	case ENT_USEROBJECT:
+		NSENTITY_READENTITY(ncUserEntity_Object, new)
 		break;
 	case ENT_DECAL:
 		Decal_Parse();
@@ -187,6 +211,9 @@ Entity_EntityUpdate(float type, float new)
 	case ENT_SOUNDSCAPE:
 		NSENTITY_READENTITY(ncSoundScape, new)
 		break;
+	case ENT_MEDIASURFACE:
+		NSENTITY_READENTITY(ncMediaSurface, new)
+		break;
 	case ENT_UISURFACE:
 		NSENTITY_READENTITY(ncInteractiveSurface, new)
 		break;
@@ -196,9 +223,24 @@ Entity_EntityUpdate(float type, float new)
 	case ENT_AVRECEIVER:
 		NSENTITY_READENTITY(ncAVReceiver, new)
 		break;
+	case ENT_SECURITYCAMERA:
+		NSENTITY_READENTITY(ncSecurityCamera, new)
+		break;
 	case ENT_VIDEODISPLAY:
 		NSENTITY_READENTITY(ncVideoDisplay, new)
 		break;
+	case ENT_XTERMINAL:
+		NSENTITY_READENTITY(ncXTerminal, new)
+		break;
+	case ENT_DESKTOPCOMPUTER:
+		NSENTITY_READENTITY(ncComputerDesktop, new)
+		break;
+	case ENT_INPUTDEVICE:
+		NSENTITY_READENTITY(ncInputDevice, new)
+		break;
+    case ENT_MEDIASOURCE:
+		NSENTITY_READENTITY(ncMediaSource, new)
+        break;
 	default:
 			//error(sprintf("Unknown entity type update received. (%d)\n", t));
 	}
@@ -292,6 +334,7 @@ Entities_ReloadVideoResources(void)
 {
 	int c = 0i;
 	int f = 0i;
+	int v = 0i;
 
 	for (entity b = world; (b = findfloat(b, ::isCSQC, TRUE));) {
 		ncEntity pf = (ncEntity) b;
@@ -305,5 +348,12 @@ Entities_ReloadVideoResources(void)
 		}
 	}
 
+	for (entity b = world; (b = findfloat(b, ::isVGUI, TRUE));) {
+		vguiWidget pf = (vguiWidget) b;
+		pf.ReloadVideoResources();
+		v++;
+	}
+
 	ncLog("...resource reload called on %i entities, flushed %i", c, f);
+	ncLog("...reloaded %i vgui widgets", v);
 }

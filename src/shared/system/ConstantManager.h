@@ -50,24 +50,29 @@ The same applies to data read within level files and most routines related to pa
 
 @{
 */
+class
+ncConstantManager
+{
+    /** Called upon game init internally to populate our look-up table. */
+    nonvirtual void Init(void);
 
-/** Called upon game init internally to populate our look-up table.
-*/
-void Constants_Init(void);
+    /** Called upon game init internally to populate our look-up table. */
+    nonvirtual void Shutdown(void);
 
-/** Look up a name and retrieve its value.
+    /** Look up a name and retrieve its value.
 
-@param constName Name of the constant to look up.
-@param returnValue The value to return if constName is not defined.
-@return The value of the named constant. Will return returnValue if it does not exist. */
-string Constants_LookUp(string constName, string returnValue);
+    @param constName Name of the constant to look up.
+    @param returnValue The value to return if constName is not defined.
+    @return The value of the named constant. Will return returnValue if it does not exist. */
+    nonvirtual string LookUp(string constName, string returnValue);
 
-/** Call to add a custom constant with a specific value. 
+    /** Call to add a custom constant with a specific value.
 
-@param constantName Name of the constant to set.
-@param constantValue The value to set the constant as.
-@return Will return true upon success. Will return false when out of memory. */
-bool Constants_Add(string constantName, string constantValue);
+    @param constantName Name of the constant to set.
+    @param constantValue The value to set the constant as.
+    @return Will return true upon success. Will return false when out of memory. */
+    nonvirtual bool Add(string constantName, string constantValue);
+}
 
 /** @} */ // end of constants
 

@@ -1,0 +1,5 @@
+path fonts/IBMPlexMono-Text.otf
+size 20
+
+path_bitmap fonts/IBMPlexMono-Text.png
+size_bitmap "16 20"

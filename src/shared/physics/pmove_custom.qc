@@ -400,7 +400,7 @@ PMoveCustom_Acceleration(float move_time, float premove)
 	PMoveCustom_Categorize();
 
 	/* everything but MOVETYPE_NOCLIP has acceleration */
-	if (pl.movetype != MOVETYPE_NOCLIP) {
+	if ((pl.movetype != MOVETYPE_NOCLIP) && (pl.movetype != MOVETYPE_FLY)) {
 		if (pl.movetype == MOVETYPE_TOSS) {
 			PMoveCustom_AccelToss(move_time, premove);
 			return;
@@ -442,6 +442,7 @@ PMoveCustom_Acceleration(float move_time, float premove)
 	if (g_pmoveVars.pm_nospeedcap == 0 && wish_speed > pl.maxspeed) {
 		wish_speed = pl.maxspeed;
 	}
+
 
 	if (pl.m_nuclideFlags & VFL_ONLADDER) {
 		PMoveCustom_AccelLadder(move_time, premove, wish_dir, wish_speed);
@@ -578,15 +579,15 @@ PMoveCustom_Move(void)
 		/* move us into place */
 		self.origin = trace_endpos;
 
+		/* there's something in the way, so let's try to bounce off of it, or step up */
+		saved_plane = trace_plane_normal;
+		move_time -= move_time * trace_fraction;
+
 		/* no obstacles? no further tests needed */
 		if (trace_fraction >= 1.0f) {
 			setorigin(self, self.origin);
 			break;
 		}
-
-		/* there's something in the way, so let's try to bounce off of it, or step up */
-		saved_plane = trace_plane_normal;
-		move_time -= move_time * trace_fraction;
 
 		if (move_time > 0.0) {
 			/* step up if we can */

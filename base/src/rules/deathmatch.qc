@@ -14,6 +14,9 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+var string autocvar_dm_spawnPoint = "info_player_deathmatch";
+var string autocvar_dm_playerClass = "player_mp";
+
 /* Basic Deathmatch
 
    Whoever reaches the designated score-limit, wins.
@@ -21,22 +24,24 @@
 void
 DM_PlayerSpawn(entity playerTarget)
 {
-	ents.ChangeToClass(playerTarget, "player_mp");
+	ents.ChangeToClass(playerTarget, autocvar_dm_playerClass);
 	game.TeleportToSpawn(playerTarget);
 }
 
 /* rule callbacks, called by Nuclide if present */
 void
-CodeCallback_Precaches(void)
+CodeCallback_Precache(void)
 {
 	Util_SharedPrecaches();
+	precache.Entity(autocvar_dm_spawnPoint);
+	precache.Entity(autocvar_dm_playerClass);
 }
 
 void
 CodeCallback_StartGameType(void)
 {
 	motd.LoadDefault();
-	game.SetSpawnPoint("info_player_deathmatch");
+	game.SetSpawnPoint(autocvar_dm_spawnPoint);
 
 	/* from shared.qc */
 	Util_RemoveAllMonsters();

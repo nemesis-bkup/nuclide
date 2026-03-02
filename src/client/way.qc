@@ -109,10 +109,10 @@ Way_Init(void)
 		way_flags.m_strName = "WAY_FLAGS";
 		way_flags.m_strMessage = "1.\tFlag ^3JUMP^7 (2 steps)\n" \
 								"2.\tFlag ^2CROUCH^7 (2 steps)\n" \
-								"3.\tFlag ^1WALK^7 (2 steps)\n" \
+								"3.\tFlag ^6WALK^7 (2 steps)\n" \
 								"4.\tFlag ^4AIM^7 (2 steps)\n" \
-								"5.\tFlag ^4USE^7 (2 steps)\n" \
-								"6.\tFlag ^6HAZARDOUS^7 (2 steps)\n" \
+								"5.\tFlag ^5USE^7 (2 steps)\n" \
+								"6.\tFlag ^1HAZARDOUS^7 (2 steps)\n" \
 								"\n" \
 								"\n" \
 								"9.\tBack\n";

@@ -27,21 +27,22 @@ createinet_btnok_start(void)
 	static void createinet_btnok_end(void) {
 		int r = random(1000,9999);
 		localcmd(sprintf("stopmusic\nset sv_public /%i\n", r));
-		localcmd(sprintf("set hostname %s\n", create_tbHostname.m_text));
-		localcmd(sprintf("set sv_playerslots %S\n", create_tbMaxplayers.m_text));
-		localcmd(sprintf("set password %S\n", create_tbPassword.m_text));
-		localcmd(sprintf("set g_gametype %S\n", gameType));
-		localcmd(sprintf("set ui_maxclients %S\n", create_tbMaxplayers.m_text));
 
 		if (cvar("ui_fillServer") > 0) {
 			localcmd(sprintf("set bot_minClients %S\n", create_tbMaxplayers.m_text));
 		} else {
 			localcmd(sprintf("set bot_minClients %S\n", "0"));
 		}
-	
-		localcmd(sprintf("map %s\n", startmap));
+
+		cvar_set("ui_servername", create_tbHostname.m_text);
+		cvar_set("ui_numPlayers", create_tbMaxplayers.m_text);
+		cvar_set("ui_gameType", gameType);
+		cvar_set("ui_map", startmap);
+		cvar_set("sv_password", create_tbPassword.m_text);
+		localcmd("spawnServer\n");
+
 		g_menupage = PAGE_MULTIPLAYER;
-		cr_input_enter(sprintf("ACTION is now hosting '%s' on the map %s\n", create_tbHostname.m_text, startmap));
+		//cr_input_enter(sprintf("ACTION is now hosting '%s' on the map %s\n", create_tbHostname.m_text, startmap));
 
 		RichPresence_Clear();
 		RichPresence_Set("status", sprintf("Multiplayer: %s", startmap));

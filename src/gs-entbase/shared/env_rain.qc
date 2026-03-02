@@ -44,9 +44,9 @@ Environmental rain fall volume entity.
 - "m_burstSize" : Drips per emit-frame. Default is "2".
 - "m_flMaxUpdateTime": Max random count. If 0, equals 1.
 - "m_flUpdateTime": Min delay between updates.
-- "texture" : Drip sprite. Default is "sprites/rain.spr"
 - "target" : Trigger on emit-frame. 
 - "m_axis" : Beam direction. 0 - down/up, 1 - X axis, 2 = Y axis.
+- "fx_rain" : Particle effect to use for rain. E.g. `fx_rain.main`
 
 ## UNUSED KEYS
 - "m_iExtent" : Volume emitting types? Currently not respected.
@@ -71,21 +71,20 @@ env_rain:ncBrushTrigger
 
 #ifdef CLIENT
 	float m_flNexTime;
-	float m_rainParticleID;
 #endif
 
-	PREDICTED_VECTOR_N(absmin)
-	PREDICTED_VECTOR_N(absmax)
+	NETWORKED_VECTOR_N(absmin)
+	NETWORKED_VECTOR_N(absmax)
 
-	PREDICTED_FLOAT(m_rainModel)
-	PREDICTED_FLOAT(m_rainSpeed)
-	PREDICTED_FLOAT(m_rainSize)
-	PREDICTED_VECTOR(m_rainColor)
-	PREDICTED_FLOAT(m_rainBrightness)
-	PREDICTED_INT(m_rainCount)
-	PREDICTED_FLOAT(m_rainMaxEmitDelay)
-	PREDICTED_INT(m_rainAxis)
-	PREDICTED_BOOL(m_rainEnabled)
+	NETWORKED_FLOAT(m_rainParticleFX)
+	NETWORKED_FLOAT(m_rainSpeed)
+	NETWORKED_FLOAT(m_rainSize)
+	NETWORKED_VECTOR(m_rainColor)
+	NETWORKED_FLOAT(m_rainBrightness)
+	NETWORKED_INT(m_rainCount)
+	NETWORKED_FLOAT(m_rainMaxEmitDelay)
+	NETWORKED_INT(m_rainAxis)
+	NETWORKED_BOOL(m_rainEnabled)
 
 	void env_rain(void);
 
@@ -113,6 +112,7 @@ env_rain::env_rain(void)
 	m_rainEnabled = false;
 	m_rainMaxEmitDelay = 0.5f;
 	m_rainSpeed = 40.0f;
+    m_rainCount = 5.0f;
 #endif
 }
 
@@ -146,9 +146,6 @@ env_rain::SpawnKey(string strKey, string setValue)
 	switch (strKey) {
 	case "m_flMaxUpdateTime":
 		m_rainMaxEmitDelay = stof(setValue);
-		break;
-	case "texture":
-		m_rainModel = getmodelindex(setValue);
 		break;
 
 	case "m_dripspeed":
@@ -219,7 +216,15 @@ env_rain::Respawn(void)
 	SetOrigin(GetSpawnVector("origin"));	
 	SetAngles(GetSpawnVector("angles"));
 	m_rainEnabled = true;
-	particleeffectnum("fx_rain.main");
+
+    string particleRain = GetSpawnString("fx_rain");
+
+    /* not set */
+    if (!STRING_SET(particleRain)) {
+        m_rainParticleFX = particleeffectnum("fx_rain.main");
+    } else {
+        m_rainParticleFX = particleeffectnum(particleRain);
+    }
 }
 
 void
@@ -238,7 +243,7 @@ env_rain::EvaluateEntity(void)
 	EVALUATE_VECTOR(absmax, 1, EVRAIN_CHANGED_SIZE)
 	EVALUATE_VECTOR(absmax, 2, EVRAIN_CHANGED_SIZE)
 
-	EVALUATE_FIELD(m_rainModel, EVRAIN_CHANGED_MODEL)
+	EVALUATE_FIELD(m_rainParticleFX, EVRAIN_CHANGED_MODEL)
 	EVALUATE_FIELD(m_rainSpeed, EVRAIN_CHANGED_SPEED)
 	EVALUATE_FIELD(m_rainSize, EVRAIN_CHANGED_SIZE)
 	EVALUATE_FIELD(m_rainColor, EVRAIN_CHANGED_COLOR)
@@ -268,7 +273,7 @@ env_rain::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_COORD(absmax[1], EVRAIN_CHANGED_SIZE)
 	SENDENTITY_COORD(absmax[2], EVRAIN_CHANGED_SIZE)
 
-	SENDENTITY_MODELINDEX(m_rainModel, EVRAIN_CHANGED_MODEL)
+	SENDENTITY_FLOAT(m_rainParticleFX, EVRAIN_CHANGED_MODEL)
 	SENDENTITY_FLOAT(m_rainSpeed, EVRAIN_CHANGED_SPEED)
 	SENDENTITY_FLOAT(m_rainSize, EVRAIN_CHANGED_SIZE)
 	SENDENTITY_BYTE(m_rainColor[0], EVRAIN_CHANGED_COLOR)
@@ -303,7 +308,7 @@ env_rain::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_COORD(absmax[1], EVRAIN_CHANGED_SIZE)
 	READENTITY_COORD(absmax[2], EVRAIN_CHANGED_SIZE)
 
-	READENTITY_MODELINDEX(m_rainModel, EVRAIN_CHANGED_MODEL)
+	READENTITY_FLOAT(m_rainParticleFX, EVRAIN_CHANGED_MODEL)
 	READENTITY_FLOAT(m_rainSpeed, EVRAIN_CHANGED_SPEED)
 	READENTITY_FLOAT(m_rainSize, EVRAIN_CHANGED_SIZE)
 	READENTITY_BYTE(m_rainColor[0], EVRAIN_CHANGED_COLOR)
@@ -315,12 +320,10 @@ env_rain::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_INT(m_rainAxis, EVRAIN_CHANGED_AXIS)
 	READENTITY_BYTE(m_rainEnabled, EVRAIN_CHANGED_STATE)
 
-	drawmask = MASK_ENGINE;
+	drawmask = MASK_CLIENTENTITY;
 	mins = absmin;
 	maxs = absmax;
 	Relink();
-	
-	m_rainParticleID = particleeffectnum("fx_rain.main");
 }
 
 float
@@ -364,7 +367,7 @@ env_rain::predraw(void)
 
 		//printf("(%d) Emit rain at %v\n", num_for_edict(this), vecPos);
 		ncRenderableEntity gib = spawn(ncRenderableEntity);
-		gib.SetModelindex(m_rainModel);
+		gib.SetModelindex(m_rainParticleFX);
 		gib.SetRenderColor(m_rainColor);
 		gib.SetRenderAmt(m_rainBrightness);
 		gib.SetRenderMode(RM_ADDITIVE);
@@ -383,11 +386,11 @@ env_rain::predraw(void)
 		vecPos[1] = mins[1] + (random() * (maxs[1] - mins[1]));
 		vecPos[2] = maxs[2] - 8;
 		//printf("(%d) Emit rain at %v\n", num_for_edict(this), vecPos);
-		pointparticles(particleeffectnum("fx_rain.main"), vecPos, anglesToForward(angles) * (m_rainSpeed * 10.0f), 1);
+		pointparticles(m_rainParticleFX, vecPos, anglesToForward(angles) * (m_rainSpeed * 10.0f), 1);
 	}
 #endif
 
-	addentity(self);
+	addentity(this);
 	return (PREDRAW_NEXT);
 }
 #endif

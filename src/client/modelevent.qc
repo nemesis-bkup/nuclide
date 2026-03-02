@@ -27,23 +27,27 @@ void
 Event_Callback(float mtime, __inout float btime)
 {
 	/* don't bother if no valid function is set */
-	if (pSeat->m_pEventCall == __NULL__)
+	if (pSeat->m_pEventCall == __NULL__) {
 		return;
+	}
 
 	/* if the sequence ain't the same anymore... */
-	if (pSeat->m_flEventFrame != pSeat->m_eViewModel.frame)
+	if (pSeat->m_flEventFrame != pSeat->m_eViewModel.frame) {
 		return;
+	}
 
 	/* if the model changed... */
-	if (pSeat->m_flEventMdl != pSeat->m_eViewModel.modelindex)
+	if (pSeat->m_flEventMdl != pSeat->m_eViewModel.modelindex) {
 		return;
+	}
 
 	/* weapon changed */
 	ncPlayer pl = (ncPlayer)(pSeat->m_ePlayer);
 
 	/* only play once */
-	if (mtime == btime)
+	if (mtime == btime) {
 		return;
+	}
 
 	/* call when we've passed the keyframe the first time */
 	if (btime <= pSeat->m_flEventTime && (mtime > pSeat->m_flEventTime)) {

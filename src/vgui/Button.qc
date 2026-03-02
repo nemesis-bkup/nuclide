@@ -23,7 +23,7 @@ enumflags
 };
 
 /* TODO: MOVE THESE INTO vguiButton! COMPILER NEEDS TO BE FIXED FIRST HOWEVER. */
-.void(void) tmpvguiButton1;
+.void(vguiControl sender) tmpvguiButton1;
 .vguiWidget tmpvguiButton1Delegate;
 
 /** VGUI Widget: Button
@@ -44,26 +44,26 @@ public:
 	/** Sets the color of the icon on the button. */
 	nonvirtual void SetIconColor(vector);
 
-	/** Sets the key to be pressed to order to simulate a click event. */
-	nonvirtual void SetKeyEquivalent(string);
-	/** Returns the key to be pressed in order to simulate a click event. */
-	nonvirtual string GetKeyEquivalent(void);
-
 	/** Gets the title of the button. */
 	nonvirtual string GetTitle(void);
-
 	/** Sets the function to call when the button is pressed. */
 	nonvirtual void SetFunc(void(void));
-
+	/** Sets the function to call when the button is pressed. */
+	nonvirtual void SetAction(void(vguiControl sender));
 	/** Sets the command to execute when the button is pressed. */
 	nonvirtual void SetExec(string);
 
+	/** Returns whether this button is disabled (true) or active (false). */
 	nonvirtual bool ButtonDisabled(void);
+
+    nonvirtual void ResizeToContents(void);
 
 	/* overrides */
 	virtual void Draw(void);
 	virtual bool Input(float,float,float,float);
 	virtual void Spawned(void);
+	virtual vguiWidget InitWithFrame(vector pos, vector size);
+
 private:
 	vector m_vecIMGSize;
 	vector m_vecColor;
@@ -73,20 +73,27 @@ private:
 	string m_strTitleActive;
 	string m_strIcon;
 	string m_strExec;
-	int m_keyEquivalent;
 };
 
 void
 vguiButton::vguiButton(void)
 {
 	m_strExec = __NULL__;
-	m_vecColor = UI_MAINCOLOR;
 	m_flAlpha = 1.0f;
 	m_vecIconColor = [1,1,1];
-	m_keyEquivalent = -1;
 	tmpvguiButton1 = 0;
 	tmpvguiButton1Delegate = 0;
 }
+
+vguiWidget
+vguiButton::InitWithFrame(vector atPos, vector withSize)
+{
+	vguiButton newButton = spawn(vguiButton);
+	newButton.SetPos(atPos);
+	newButton.SetSize(withSize);
+	return (newButton);
+}
+
 
 void
 vguiButton::Spawned(void)
@@ -107,19 +114,30 @@ vguiButton::SetIconColor(vector vecColor)
 }
 
 void
-vguiButton::SetTitle(string strName)
+vguiButton::ResizeToContents(void)
 {
 	vector newsize = [0.0f, 0.0f, 0.0f];
 
-	m_strTitle = sprintf("%s%s", Font_RGBtoHex(UI_FGCOLOR), strName);
+	if (STRING_SET(m_strIcon)) {
+        newsize[0] = stringwidth(m_strTitle, TRUE, [g_fntDefault.iScaleX, g_fntDefault.iScaleY]) + 16 + (m_vecIMGSize[0] + 2);
+	} else {
+        newsize[0] = stringwidth(m_strTitle, TRUE, [g_fntDefault.iScaleX, g_fntDefault.iScaleY]) + 16;
+    }
+
+    newsize[1] = 24;
+    SetSize(newsize);
+}
+
+void
+vguiButton::SetTitle(string strName)
+{
+	m_strTitle = localize(strName);
 	m_strTitleActive = sprintf("^3%s", m_strTitle);
 	//m_strTitle = sprintf("%s%s", Font_RGBtoHex(UI_MAINCOLOR), strName);
 	drawfont = g_fntDefault.iID;
 
 	if (GetSize() == [0,0]) {
-		newsize[0] = stringwidth(m_strTitle, TRUE, [g_fntDefault.iScaleX, g_fntDefault.iScaleY]) + 16;
-		newsize[1] = 24;
-		SetSize(newsize);
+		ResizeToContents();
 	}
 }
 
@@ -135,10 +153,19 @@ vguiButton::SetIcon(string strName)
 	m_strIcon = strName;
 	m_vecIMGSize = drawgetimagesize(strName);
 
-	if (vlen(GetSize()) < vlen(m_vecIMGSize)) {
+	if (length(GetSize()) < length(m_vecIMGSize)) {
 		SetSize(m_vecIMGSize + [4,4]);
 	}
 }
+
+void
+vguiButton::SetAction(void(vguiControl sender) func)
+{
+	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
+	//m_vFunc = vFunc;
+	tmpvguiButton1 = func;
+}
+
 void
 vguiButton::SetFunc(void(void) func)
 {
@@ -146,8 +173,9 @@ vguiButton::SetFunc(void(void) func)
 	//m_vFunc = vFunc;
 	tmpvguiButton1 = func;
 }
+
 void
-vguiButton::SetFuncWithDelegate(void(void) func, vguiWidget delegateWidget)
+vguiButton::SetFuncWithDelegate(void(void) func, vguiControl delegateWidget)
 {
 	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
 	//m_vFunc = vFunc;
@@ -159,18 +187,6 @@ void
 vguiButton::SetExec(string exe)
 {
 	m_strExec = exe;
-}
-
-void
-vguiButton::SetKeyEquivalent(string keyValue)
-{
-	m_keyEquivalent = stringtokeynum(keyValue);
-}
-
-string
-vguiButton::GetKeyEquivalent(void)
-{
-	return keynumtostring(m_keyEquivalent);
 }
 
 bool
@@ -193,46 +209,20 @@ vguiButton::Draw(void)
 	vguiTheme theme = GetTheme();
 
 	if (IsEnabled() == false) {
-		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_DISABLED);
+		theme.DrawButton(GetAbsPos(), GetSize(), VGUI_STATE_DISABLED);
 	} else if (m_iFlags & BUTTON_DOWN) {
-		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_ACTIVE);
+		theme.DrawButton(GetAbsPos(), GetSize(), VGUI_STATE_ACTIVE);
 	} else if (m_iFlags & BUTTON_HOVER) {
-		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_HOVER);
+		theme.DrawButton(GetAbsPos(), GetSize(), VGUI_STATE_HOVER);
 	} else {
-		theme.DrawButton(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
+		theme.DrawButton(GetAbsPos(), GetSize(), VGUI_STATE_NORMAL);
 	}
 
-	float textPadding = 8;
-
-	if (m_keyEquivalent >= 0) {
-		float length;
-		string keyText = GetKeyEquivalent();
-
-		length = Font_StringWidth(keyText, FALSE, g_fntDefault);
-		textPadding += length + 8;
-		theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [8, 8], keyText, m_vecSize, g_fntDefault);
-	}
-
-	if ((STRING_SET(m_strIcon) && theme.IconsEnabled()) || (!STRING_SET(m_strTitle) && STRING_SET(m_strIcon))) {
-		if (m_iFlags & BUTTON_DOWN)
-			drawpic(m_parent.m_vecOrigin + m_vecOrigin + [4,4], m_strIcon, m_vecIMGSize, m_vecIconColor * 0.25, 1.0f, 0);
-		else
-			drawpic(m_parent.m_vecOrigin + m_vecOrigin + [4,4], m_strIcon, m_vecIMGSize, m_vecIconColor, 1.0f, 0);
-
-		textPadding += m_vecIMGSize[0] + 4;
-	}
-
-	if (STRING_SET(m_strTitle)) {
-		if (m_iFlags & BUTTON_HOVER) {
-			theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [textPadding, 8], m_strTitle, m_vecSize, g_fntDefault);
-		} else {
-			theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [textPadding, 8], m_strTitle, m_vecSize, g_fntDefault);
-		}
-	}
+	theme.DrawControlTextWithIcon(GetAbsPos(), m_strTitle, m_keyEquivalent, m_strIcon, m_vecIconColor, [16,16], GetSize(), VGUI_STATE_NORMAL, g_fntDefault);
 }
 
 static void
-vguiButton_CallFunctionWithDelegate(void(void) targetFunc, vguiWidget delegateWidget)
+vguiButton_CallFunctionWithDelegateSender(void(vguiControl sender) targetFunc, vguiWidget delegateWidget, vguiControl sender)
 {
 	entity oldSelf = self;
 
@@ -241,7 +231,7 @@ vguiButton_CallFunctionWithDelegate(void(void) targetFunc, vguiWidget delegateWi
 	}
 
 	if (targetFunc) {
-		targetFunc();
+		targetFunc(sender);
 	}
 
 	self = oldSelf;
@@ -257,7 +247,7 @@ vguiButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 		return (false);
 	}
 
-	if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
+	if (MouseAbove()) {
 		mouseHover = true;
 	}
 
@@ -272,6 +262,7 @@ vguiButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 	if (flEVType == IE_KEYDOWN) {
 		if (flKey == K_MOUSE1) {
 			FlagRemove(BUTTON_LASTACTIVE);
+
 			if (mouseHover) {
 				OnMouseDown();
 
@@ -282,18 +273,19 @@ vguiButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 		}
 	} else if (flEVType == IE_KEYUP) {
 		/* simulate click */
-		if (m_keyEquivalent >= 0)
-		if (flKey == m_keyEquivalent) {
-			m_iFlags |= BUTTON_DOWN;
-			mouseHover = true;
-			flKey = K_MOUSE1;
+		if (m_keyEquivalent >= 0) {
+			if (flKey == m_keyEquivalent) {
+				m_iFlags |= BUTTON_DOWN;
+				mouseHover = true;
+				flKey = K_MOUSE1;
+			}
 		}
 
 		if (flKey == K_MOUSE1) {
-			if (m_iFlags & BUTTON_DOWN && mouseHover) {
+			if ((m_iFlags & BUTTON_DOWN) && (mouseHover == true)) {
 				OnMouseUp();
 
-				vguiButton_CallFunctionWithDelegate(tmpvguiButton1, tmpvguiButton1Delegate);
+				vguiButton_CallFunctionWithDelegateSender(tmpvguiButton1, tmpvguiButton1Delegate ? tmpvguiButton1Delegate : m_parent, this);
 
 				if (STRING_SET(m_strExec)) {
 					localcmd(sprintf("%s\n", m_strExec));
@@ -301,6 +293,7 @@ vguiButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 
 				ret = true;
 			}
+
 			FlagRemove(BUTTON_DOWN);
 		}
 	}

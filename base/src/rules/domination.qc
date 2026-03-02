@@ -14,6 +14,10 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+var string autocvar_dom_spawnPoint = "info_player_deathmatch";
+var string autocvar_dom_team1PlayerClass = "player_enforcer";
+var string autocvar_dom_team2PlayerClass = "player_mp";
+
 var int g_team1_scoring = 0;
 var int g_team2_scoring = 0;
 var int autocvar_dom_scoreLimit = 100;
@@ -49,6 +53,10 @@ void
 CodeCallback_Precaches(void)
 {
 	Util_SharedPrecaches();
+
+	precache.Entity(autocvar_dom_spawnPoint);
+	precache.Entity(autocvar_dom_team1PlayerClass);
+	precache.Entity(autocvar_dom_team2PlayerClass);
 }
 
 void
@@ -60,8 +68,8 @@ CodeCallback_StartGameType(void)
 	teams.SetUp(1, "Enforcers", [255, 64, 64], true);
 	teams.SetUp(2, "Rangers", [155, 205, 255], true);
 
-	teams.SetSpawnPoint(1, "info_player_deathmatch");
-	teams.SetSpawnPoint(2, "info_player_deathmatch");
+	teams.SetSpawnPoint(1, autocvar_dom_spawnPoint);
+	teams.SetSpawnPoint(2, autocvar_dom_spawnPoint);
 
 	dom_team1WinMessage = ents.Create("domination_team1win", [0, 0, 0] );
 	dom_team2WinMessage = ents.Create("domination_team2win", [0, 0, 0] );
@@ -150,11 +158,11 @@ CodeCallback_CallRequestTeam(entity playerEntity, int teamNum)
 
 	if (is.Alive(playerEntity) == false) {
 		if (playerEntity.team == 1) {
-			ents.ChangeToClass(playerEntity, "player_enforcer");
+			ents.ChangeToClass(playerEntity, autocvar_dom_team1PlayerClass);
 			userinfo.SetString(playerEntity, "topcolor", "0xff1800");
 			userinfo.SetString(playerEntity, "bottomcolor", "0xff1800");
 		} else {
-			ents.ChangeToClass(playerEntity, "player_mp");
+			ents.ChangeToClass(playerEntity, autocvar_dom_team2PlayerClass);
 			userinfo.SetString(playerEntity, "topcolor", "0x9aff");
 			userinfo.SetString(playerEntity, "bottomcolor", "0x9aff");
 		}

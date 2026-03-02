@@ -100,7 +100,7 @@
 #define HALFLIFEMODELS
 
 /* physics */
-#undef USE_INTERNAL_ODE
+#define USE_INTERNAL_ODE
 #undef USE_INTERNAL_BULLET
 #define RAGDOLL
 #define USERBE
@@ -214,6 +214,10 @@
 #endif
 #ifdef AVAIL_FREETYPE
 -DLINK_FREETYPE
+#endif
+
+#if defined(USE_INTERNAL_ODE)
+-DLINK_ODE
 #endif
 
 /* makefile will respond to this by trying to link bullet into the

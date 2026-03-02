@@ -14,6 +14,22 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+static void
+vguiRadio_CallFunctionWithDelegateSender(void(vguiControl sender) targetFunc, vguiWidget delegateWidget, vguiControl sender)
+{
+	entity oldSelf = self;
+
+	if (delegateWidget) {
+		self = delegateWidget;
+	}
+
+	if (targetFunc) {
+		targetFunc(sender);
+	}
+
+	self = oldSelf;
+}
+
 enumflags
 {
 	RADIO_HOVER,
@@ -22,6 +38,9 @@ enumflags
 };
 
 .void(void) tmpvguiRadio1;
+.vguiWidget tmpvguiRadio1Delegate;
+.void(void) tmpvguiRadio2;
+.vguiWidget tmpvguiRadio2Delegate;
 
 /** VGUI Widget: Radio Button
 
@@ -36,6 +55,8 @@ public:
 	nonvirtual int GetValue(void);
 	nonvirtual void SetValue(int);
 	nonvirtual void SetFunc(void(void));
+	virtual void CallOnChangeWithDelegate(void(void) targetFunc, entity delegateEntity);
+	virtual void CallOnPressedWithDelegate(void(void) targetFunc, entity delegateEntity);
 
 	virtual void Draw(void);
 	virtual bool Input(float, float, float, float);
@@ -50,9 +71,24 @@ private:
 
 void vguiRadio::vguiRadio(void)
 {
-	m_vecColor = UI_MAINCOLOR;
 	m_flAlpha = 1.0f;
 }
+
+
+void
+vguiRadio::CallOnChangeWithDelegate(void(void) vFunc, entity delegateEntity)
+{
+	tmpvguiRadio1 = vFunc;
+	tmpvguiRadio1Delegate = delegateEntity;
+}
+
+void
+vguiRadio::CallOnPressedWithDelegate(void(void) vFunc, entity delegateEntity)
+{
+	tmpvguiRadio2 = vFunc;
+	tmpvguiRadio2Delegate = delegateEntity;
+}
+
 
 void
 vguiRadio::Spawned(void)
@@ -90,19 +126,12 @@ void vguiRadio::Draw(void)
 {
 	vguiTheme theme = GetTheme();
 
-	theme.DrawControlBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_ACTIVE);
-	
 	if (m_iFlags & RADIO_DOWN) {
-		theme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, __NULL__);
-	}
-	if (m_iFlags & RADIO_ACTIVE) {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/bullet_white", [16,16], [1,1,1], 1.0f, 0);
+		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
+	} else if (m_iFlags & RADIO_ACTIVE) {
+		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
 	} else {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/bullet_black", [16,16], [1,1,1], 1.0f, 0);
-	}
-
-	if (m_strTitle) {
-		theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + [24, 3], m_strTitle, m_vecSize, g_fntDefault);
+		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
 	}
 }
 
@@ -121,9 +150,14 @@ bool vguiRadio::Input (float flEVType, float flKey, float flChar, float flDevID)
 		if (flKey == K_MOUSE1) {
 			if (m_iFlags & RADIO_DOWN && Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
 				if (tmpvguiRadio1) {
-					tmpvguiRadio1();
+					vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio1, tmpvguiRadio1Delegate, this);
 				}
 				SetValue(TRUE);
+
+				if (tmpvguiRadio2) {
+					vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio2, tmpvguiRadio2Delegate, this);
+				}
+
 				ret = true;
 			}
 			m_iFlags -= (m_iFlags & RADIO_DOWN);

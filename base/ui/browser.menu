@@ -1,0 +1,22 @@
+{
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+	menuDef 
+	{
+		name "WebView"
+		rect 0 0 1024 768
+		backcolor 0 0 1 1
+
+		itemDef 
+		{
+			name view
+			type 32
+			rect 0 0 1024 768
+			visible 1
+		}
+
+	}
+}

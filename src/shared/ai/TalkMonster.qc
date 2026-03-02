@@ -744,15 +744,10 @@ ncTalkMonster::RunAI(void)
 	SeeThink();
 	AttackThink();
 
-#if 0
-	if (m_followingEntity != world && m_iNodes <= 0) {
+#if 1
+	if (m_followingEntity != world && m_pathfindingNodeCount <= 0) {
 		m_eLookAt = m_followingEntity;
 		FollowPlayer();
-	} else {
-		if (random() < 0.5) {
-			TalkPlayerAsk();
-		} else {
-		}
 	}
 #endif
 }
@@ -1086,7 +1081,7 @@ ncTalkMonster::predraw(void)
 	}
 
 	/* subblendfrac == -1 == up, 0.99 is down */
-	subblendfrac = bound(-0.99, v_angle[0] / 45, 0.99);
+	//subblendfrac = bound(-0.99, v_angle[0] / 45, 0.99);
 
 #if 0
 	if (autocvar_boney1 != 0.0f)
@@ -1216,6 +1211,13 @@ ncTalkMonster::ReceiveEntity(float flNew, float flChanged)
 		_ModelChanged();
 		_UpdateBoneCount();
 	}
+
+	if (autocvar(bonetest, 0) & 1) {
+        printf("%f\n", bonecontrol1);
+    }
+	if (autocvar(bonetest, 0) & 2) {
+        bonecontrol1 = autocvar(bonetest_var, 0);
+    }
 }
 
 void

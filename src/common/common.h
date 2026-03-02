@@ -26,7 +26,9 @@
 
 var bool autocvar_g_logTimestamps = false;
 
+/* objects are really just entities. */
 typedef entity id;
+
 typedef float musictrack_t;
 
 typedef enum
@@ -41,6 +43,7 @@ typedef enum
 var logLevel_t autocvar_g_logLevel = LOGLEVEL_DEFAULT;
 
 #define printf(...) print(sprintf(__VA_ARGS__))
+#define conprintf(...) localcmd(sprintf(__VA_ARGS__))
 
 #ifdef DOXYGEN
 /** Doxygen doesn't know what enumflags (aka bitfields) are, used as e.g. */
@@ -49,6 +52,7 @@ var logLevel_t autocvar_g_logLevel = LOGLEVEL_DEFAULT;
 
 #define ICN_SIZE 8
 
+/* I too wish this could be a macro */
 string
 imageToConsole(string imageName, int imgSize, string toolTip)
 {
@@ -68,7 +72,7 @@ imageToConsole(string imageName, int imgSize, string toolTip)
 #define UI_ERROR		imageToConsole("gfx/icon16/exclamation", ICN_SIZE, "Menu Game Error")
 
 #define RULE_LOG		imageToConsole("gfx/icon16/script_go", ICN_SIZE, "RuleC Log")
-#define RULE_WARNING		imageToConsole("gfx/icon16/error", ICN_SIZE, "RuleC Warning")
+#define RULE_WARNING	imageToConsole("gfx/icon16/error", ICN_SIZE, "RuleC Warning")
 #define RULE_ERROR		imageToConsole("gfx/icon16/exclamation", ICN_SIZE, "RuleC Error")
 
 #define MAP_LOG			imageToConsole("gfx/icon16/map_go", ICN_SIZE, "MapC Log")
@@ -80,7 +84,7 @@ imageToConsole(string imageName, int imgSize, string toolTip)
 #define HUD_ERROR		imageToConsole("gfx/icon16/exclamation", ICN_SIZE, "HudC Error")
 
 #define ADDON_LOG		imageToConsole("gfx/icon16/plugin_go", ICN_SIZE, "AddonC Log")
-#define ADDON_WARNING		imageToConsole("gfx/icon16/error", ICN_SIZE, "AddonC Warning")
+#define ADDON_WARNING	imageToConsole("gfx/icon16/error", ICN_SIZE, "AddonC Warning")
 #define ADDON_ERROR		imageToConsole("gfx/icon16/exclamation", ICN_SIZE, "AddonC Error")
 
 void
@@ -294,7 +298,6 @@ _NSAssert(bool condition, string function, string descr)
 
 @param condition is the expression to be evaluated.
 @param description(...) contains a formatted string containing an error description. */
-
 #define NSAssert(condition, ...) if (autocvar_g_logLevel >= LOGLEVEL_ERRORS) _NSAssert(condition, __FUNC__, sprintf(__VA_ARGS__))
 
 typedef enumflags
@@ -323,7 +326,7 @@ InitPrint(string functionName)
 	string sideRight = "";
 
 	if (functionName == __NULL__) {
-		ncLog("---------------------------------------------------");
+		ncLogAlways("---------------------------------------------------");
 		return;
 	}
 
@@ -412,6 +415,75 @@ wordInString(string fullString, string wordToFind)
 	}
 
 	return (false);
+}
+
+
+float
+crandom(void)
+{
+	return ((random() - 0.5f) * 2.0f);
+}
+
+string
+basename(string input)
+{
+	if (!input) {
+		return "";
+	}
+
+	int c = tokenizebyseparator(input, "/", "\\ ", "!");
+	return (argv(c-1));
+}
+
+string
+dirname(string input)
+{
+	if (!input) {
+		return "";
+	}
+
+	int c = tokenizebyseparator(input, "/", "\\ ", "!");
+	string newpath = "";
+
+	for (int i = 0; i < (c-1); i++) {
+		newpath = sprintf("%s/%s", newpath, argv(i));
+	}
+
+	/* Kill the first / */
+	newpath = substring(newpath, 1, strlen(newpath)-1);
+
+	return newpath;
+}
+
+
+string
+skimFile(string filename)
+{
+	filestream fs_mapcycle;
+	string temp;
+	int mapCount = 0i;
+	string lastMap = "";
+	int nextMapID = 0i;
+
+	fs_mapcycle = fopen(filename, FILE_READ);
+
+	if (fs_mapcycle < 0) {
+		ncError("Missing file %s", filename);
+		return (__NULL__);
+	}
+
+	/* read the lines in, see if the map exists and define an enumerated alias */
+	while ((temp = fgets(fs_mapcycle))) {
+		tokenize_console(temp);
+		string mapName = argv(0);
+
+		if (STRING_SET(mapName)) {
+			return (mapName);
+		}
+
+	}
+
+	return (__NULL__);
 }
 
 void

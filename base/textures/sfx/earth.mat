@@ -1,0 +1,13 @@
+// Vera Visions Material
+{
+	surfaceParm trans
+	surfaceParm nomarks
+	surfaceParm nolightmap
+	surfaceParm nonsolid
+
+	{
+		clampmap "sfx/earth.tga"
+		blendFunc blend
+	}
+}
+

@@ -273,8 +273,6 @@ public:
 private:
 
 
-	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
-
 #ifdef SERVER
 	bool m_pvsSleep;
 
@@ -332,27 +330,9 @@ private:
 	ncSoundDict m_sndJump;
 
 	/* recalculate these */
-	float m_actIdle;
-	float m_actIdleCrouch;
-	float m_actIdleProne;
-	float m_actWalk;
-	float m_actWalkCrouch;
-	float m_actWalkProne;
-	float m_actRun;
-	float m_actJump;
-	float m_actAim;
-	float m_actDraw;
-	float m_actAttack;
-	float m_actReloadStart;
-	float m_actReload;
-	float m_actReloadEnd;
-	float m_actHolster;
-	int m_boneSpine;
-	int m_torsoFirst;
-	int m_torsoLast;
-	int m_torsoTwistYaw;
 	int m_gibHealth;
 	entity m_lastCorpse;
+    ncAnimationManager m_animationManager;
 
 	/* taken from player, makes sense though */
 	float m_timeUnderwater;

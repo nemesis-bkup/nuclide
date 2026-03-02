@@ -116,7 +116,7 @@ vguiMenuTitle::Draw(void)
 		return;
 	}
 
-	string title = 	GameLibrary_GetInfo(GAMEINFO_TITLE);
+	string title = GameLibrary_GetInfo(GAMEINFO_TITLE);
 	string subTitle = GameLibrary_GetInfo(GAMEINFO_SUBTITLE);
 
 	vector pos;
@@ -125,11 +125,13 @@ vguiMenuTitle::Draw(void)
 	pos = m_parent.m_vecOrigin + m_vecOrigin;
 	size = m_vecSize;
 
-	if (STRING_SET(title))
-		Font_DrawField(pos, size + [64,0], title, g_fntTitle, m_labelFlags);
+	if (STRING_SET(title)) {
+		Font_DrawField(pos, g_vidsize * 0.5, title, g_fntTitle, m_labelFlags, AF_TOP);
+	}
 
-	if (STRING_SET(subTitle))
-		Font_DrawField(pos + [0, 32], size + [64,0], subTitle, g_fntSubTitle, AF_RIGHT | AF_TOP);
+	if (STRING_SET(subTitle)) {
+		Font_DrawField(pos + [0, 32], g_vidsize * 0.5, subTitle, g_fntSubTitle, AF_TOP);
+	}
 }
 
 bool

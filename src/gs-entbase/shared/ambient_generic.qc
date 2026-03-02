@@ -95,11 +95,11 @@ public:
 
 private:
 	/* networked attributes */
-	PREDICTED_STRING(m_strActivePath)
-	PREDICTED_FLOAT(m_flVolume)
-	PREDICTED_FLOAT(m_flRadius)
-	PREDICTED_FLOAT(m_flPitch)
-	PREDICTED_BOOL(m_bLoops)
+	NETWORKED_STRING(m_strActivePath)
+	NETWORKED_FLOAT(m_flVolume)
+	NETWORKED_FLOAT(m_flRadius)
+	NETWORKED_FLOAT(m_flPitch)
+	NETWORKED_BOOL(m_bLoops)
 	bool m_bToggle;
 	bool m_bIsModern;
 

@@ -120,20 +120,6 @@ CMD_dev_sunpos(void)
 }
 
 static void
-CMD_dev_measure(void)
-{
-	static vector measurepos;
-
-	if (lengthSquared(measurepos) > 0.0f) {
-		measurepos = g_view.GetCameraOrigin();
-		CSQC_Parse_CenterPrint(sprintf( "First marker set at\n%v", measurepos));
-	} else {
-		CSQC_Parse_CenterPrint(sprintf("Distance: %d\n", vlen(measurepos - g_view.GetCameraOrigin())));
-		measurepos = [0,0,0];
-	}
-}
-
-static void
 CMD_vote(void)
 {
 	if (argv(1) == "yes") {
@@ -259,13 +245,13 @@ CMD_ListTitles(void)
 	int i = 0i;
 
 	for (i = 0; i < g_titles_count; i++) {
-		printf("%s, (x: %d, y: %d)\n", 
+		printf("%s, (x: %d, y: %d)\n",
 			g_titles[i].m_strName, g_titles[i].m_flPosX, g_titles[i].m_flPosY);
-		printf("\teffect: %i, fade-in: %f, fade-out: %f\n", 
+		printf("\teffect: %i, fade-in: %f, fade-out: %f\n",
 			g_titles[i].m_iEffect, g_titles[i].m_flFadeIn, g_titles[i].m_flFadeOut);
-		printf("\thold-time: %f, fx-time: %f\n", 
+		printf("\thold-time: %f, fx-time: %f\n",
 			g_titles[i].m_flHoldTime, g_titles[i].m_flFXTime);
-		printf("\tcolor 1: %v, color 2: %v\n", 
+		printf("\tcolor 1: %v, color 2: %v\n",
 			g_titles[i].m_vecColor1, g_titles[i].m_vecColor2);
 	}
 	printf("\t%i total titles loaded\n", g_titles_count);
@@ -276,6 +262,7 @@ CMD_ListModelFramegroups(void)
 {
 	string modelName = argv(1);
 	float modelIndex = getmodelindex(modelName);
+	string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
 	string temp = "";
 
 	printf("// model: %S\n", modelName);
@@ -283,9 +270,74 @@ CMD_ListModelFramegroups(void)
 	print("typedef enum {\n");
 	for (int i = 0; i < modelframecount(modelIndex); i++) {
 		temp = frametoname(modelIndex, i);
-		printf("\t%s = %i,\n", strtoupper(temp), i);
+		printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
 	}
 	print("} framegroups_e;\n");
+
+	print("// as macros\n");
+	for (int i = 0; i < modelframecount(modelIndex); i++) {
+		temp = frametoname(modelIndex, i);
+		printf("#define %s %i\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
+	}
+}
+
+static void
+CMD_ListModelFramesAsGroups(void)
+{
+	string modelName = argv(1);
+	float modelIndex = getmodelindex(modelName);
+	string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
+	string temp = "";
+
+	printf("// model: %S\n", modelName);
+
+	print("typedef enum {\n");
+	for (int i = 0; i < modelframecount(modelIndex); i++) {
+		temp = frametoname(modelIndex, i);
+		printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
+	}
+	print("} framegroups_e;\n");
+}
+
+static void
+CMD_csvMatDump(void)
+{
+	filestream csvFile;
+	filestream outFile;
+	string temp;
+
+	csvFile = fopen(argv(1), FILE_READ);
+	outFile = fopen(argv(2), FILE_WRITE);
+
+	if (csvFile < 0) {
+		ncError("");
+		return;
+	}
+
+	if (outFile < 0) {
+		ncError("");
+		return;
+	}
+
+	while ((temp = fgets(csvFile))) {
+		int tokens = tokenizebyseparator(temp, ",");
+		string textureName = argv(0);
+		string arg2 = argv(1);
+		string arg3 = argv(2);
+		string arg4 = argv(3);
+		string arg5 = argv(4);
+		string arg6 = argv(5);
+		string materialName = Materials_SurfDataForTexture(textureName);
+
+		if (!STRING_SET(materialName)) {
+			fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, "default"));
+		} else {
+			fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, materialName));
+		}
+	}
+
+	fclose(csvFile);
+	fclose(outFile);
 }
 
 void
@@ -301,14 +353,28 @@ ncWeapon_SelectWeapon(ncWeapon nextWeapon)
 	pSeat->m_flHUDWeaponSelectTime = time + 0.5f;
 }
 
+void
+CMD_zoneAdd(string zoneName)
+{
+    if (!STRING_SET(zoneName)) {
+        zoneName = cvars.GetString("zone_name");
+    }
+
+    if (!STRING_SET(zoneName)) {
+        zoneName = "Unnamed Zone";
+    }
+
+    localcmd(sprintf("cmd zoneAdd %S\n", zoneName));
+}
+
 bool
 Cmd_Parse(string sCMD)
 {
 	ncClient localPlayer = (ncClient)pSeat->m_ePlayer;
-	
+
 	static void Cmd_Parse_HudCmd(int i, string sCMD) {
 		Textmenu_Input(i);
-		
+
 		if (!Textmenu_IsActive()) {
 			HUD_ConsoleCommand(sCMD);
 		}
@@ -317,7 +383,9 @@ Cmd_Parse(string sCMD)
 	tokenize(sCMD);
 
 	switch (argv(0)) {
-
+    case "zoneAdd":
+        CMD_zoneAdd(argv(1));
+        break;
 	case "slot1":
 		Cmd_Parse_HudCmd(0, sCMD);
 		break;
@@ -352,6 +420,9 @@ Cmd_Parse(string sCMD)
 	case "listFramegroups":
 		CMD_ListModelFramegroups();
 		break;
+	case "listFramesAsGroups":
+		CMD_ListModelFramesAsGroups();
+		break;
 	case "listTitles":
 		CMD_ListTitles();
 		break;
@@ -385,9 +456,6 @@ Cmd_Parse(string sCMD)
 	case "dev_sunpos":
 		CMD_dev_sunpos();
 		break;
-	case "dev_measure":
-		CMD_dev_measure();
-		break;
 	case "vote":
 		CMD_vote();
 		break;
@@ -405,6 +473,9 @@ Cmd_Parse(string sCMD)
 		break;
 	case "-zoomin":
 		pSeat->m_iZoomed = false;
+		break;
+	case "toggleZoom":
+		pSeat->m_iZoomed = !pSeat->m_iZoomed;
 		break;
 	case "buildcubemaps":
 		CMap_Build();
@@ -507,6 +578,15 @@ Cmd_Parse(string sCMD)
 	case "addChatLine":
 		CSQC_Parse_Print(argv(1), PRINT_CHAT);
 		break;
+	case "addGopherLine":
+		vguiTool_Gopher::AddGopherLine(argv(1), argv(2), argv(3), argv(4), argv(5));
+		break;
+	case "addGopherText":
+		vguiTool_Gopher::AddGopherText(stoi(argv(1)), argv(2));
+		break;
+	case "addFingerLine":
+		vguiTool_Finger::AddFingerLine(argv(1));
+		break;
 	case "view_geomtest":
 		CMD_view_geomtest();
 		break;
@@ -571,7 +651,10 @@ Cmd_Parse(string sCMD)
 	case "listEntitiesByClass":
 	case "listEntityData":
 	case "listEntitiesByTarget":
+	case "listZones":
 	case "addon":
+    case "findTarget":
+    case "unlockDoors":
 		localcmd(sprintf("sv %s\n", sCMD));
 		break;
 	/* client aliases for client commands */
@@ -588,6 +671,7 @@ Cmd_Parse(string sCMD)
 	case "ent_remove":
 	case "ent_remove_all":
 	case "ent_teleport":
+    case "zoneDelete":
 		localcmd(sprintf("cmd %s\n", sCMD));
 		break;
 
@@ -621,30 +705,38 @@ Cmd_Parse(string sCMD)
 	case "showTeamSelectionMenu":
 		VGUI_ShowTeamSelectionMenu();
 		break;
-	case "showMOTD":
-		VGUI_ShowMOTD();
+	case "+showInterface":
+		pSeat->m_showInterface = true;
 		break;
-	case "showDesktop":
-		vguiDesktop winDesktop = spawn(vguiDesktop);
-		g_uiDesktop.Add(winDesktop);
+	case "-showInterface":
+		pSeat->m_showInterface = false;
+		break;
+	case "toggleInterface":
+		pSeat->m_showInterface = !pSeat->m_showInterface;
 		break;
 	case "showModelSpawner":
-		VGUI_ModelSpawner();
+		VGUI_ModelSpawner(g_uiDesktop);
+		break;
+	case "showMOTD":
+		VGUI_ShowMOTD(g_uiDesktop, true);
 		break;
 	case "showPlayerList":
-		VGUI_PlayerList();
+		VGUI_PlayerList(g_uiDesktop);
 		break;
 	case "showServerInfo":
-		VGUI_ShowServerInfo();
+		VGUI_ShowServerInfo(g_uiDesktop);
+		break;
+	case "showSunEditor":
+		VGUI_ShowSunEditor();
 		break;
 	case "reloadClientLocale":
 		Locale_Reload();
 		break;
+	case "reloadClientInventory":
+		ncUserEntityManager::IndexClientInventory();
+		break;
 	case "showEditor":
 		VGUI_ShowEditor();
-		break;
-	case "showSunEditor":
-		VGUI_ShowSunEditor();
 		break;
 	case "listUserInfo":
 		g_userInfo.DebugPrint();
@@ -662,10 +754,80 @@ Cmd_Parse(string sCMD)
 		VGUI_CloseMenu();
 		break;
 	case "trMenuOpen":
-		vguiTrUIMenu newMenu = vguiTrUIMenu::CreateFromMenuFile(g_uiDesktop, argv(1));
+		vguiScriptedView newMenu = vguiScriptedView::CreateFromMenuFile(g_uiDesktop, argv(1));
 		break;
 	case "trMenuClose":
-	   	vguiTrUIMenu::CloseAll();
+	   	vguiScriptedView::CloseAll();
+		break;
+	case "runApp":
+		vguiApp_Delegate::RunApplicationFromProgs(argv(1), argv(2));
+		break;
+	case "runWebApp":
+		vguiDesktop ourDesktop = (vguiDesktop)edict_num(stof(argv(1)));
+
+		string appName = argv(2);
+		string appIcon = argv(3);
+		string appURL = argv(4);
+		vector appResolution = [stof(argv(5)), stof(argv(6))];
+		bool captureMouse = stof(argv(7));
+		bool isResizable = stof(argv(8));
+
+		ourDesktop.OpenWebApp(appName, appIcon, appURL, appResolution, captureMouse, isResizable);
+		break;
+
+	case "objectSpawn":
+		string objectName = argv(1);
+		string objectOrg = argv(2);
+		string objectAng = argv(3);
+		ncDict objectDict = ncDict::LoadDeclFromFile(objectName, sprintf("objects/%s.object", objectName));
+		string objectTitle = objectDict.GetString("name");
+		string objectFile = objectDict.GetString("model");
+		string colorMod = objectDict.GetString("color");
+		string scaleMod = objectDict.GetString("scale");
+		string newMins = objectDict.GetString("mins");
+		string newMaxs = objectDict.GetString("maxs");
+		string gui64 = objectDict.GetString("gui_base64");
+		string guiOrg = objectDict.GetString("gui_origin");
+		string guiAng = objectDict.GetString("gui_angles");
+		string guiScale = objectDict.GetString("gui_scale");
+		string guiRes = objectDict.GetString("gui_res");
+
+		if (!STRING_SET(colorMod)) {
+			colorMod = "1 1 1";
+		}
+
+		if (!STRING_SET(scaleMod)) {
+			scaleMod = "1";
+		}
+
+		if (!STRING_SET(newMins)) {
+			newMins = "-16 -16 0";
+		}
+
+		if (!STRING_SET(newMaxs)) {
+			newMaxs = "16 16 16";
+		}
+
+		//localcmd(sprintf("echo cmd placeObject %S %S %S %S %S %S %S %S %S %S %S\n", objectName, objectFile, colorMod, scaleMod, newMins, newMaxs, gui64, guiOrg, guiAng, guiScale, guiRes));
+
+		localcmd(sprintf("cmd placeObject %S %S ", objectName, objectFile));
+		localcmd(sprintf("%S %S %S %S ", colorMod, scaleMod, newMins, newMaxs ));
+		localcmd(sprintf("%S %S %S %S %S\n", gui64, guiOrg, guiAng, guiScale, guiRes));
+        localcmd(sprintf("wait;wait;cmd moveObject \"%s\" \"%s\"\n",objectOrg, objectAng));
+		break;
+	case "reloadTextDecl":
+		break;
+	case "reloadVideoDecl":
+		break;
+	case "reloadAudioDecl":
+		break;
+	case "reloadAppDecl":
+		break;
+	case "reloadPictureDecl":
+		break;
+
+	case "csvMatDump":
+		CMD_csvMatDump();
 		break;
 	default:
 		return HUD_ConsoleCommand(sCMD);
@@ -686,11 +848,18 @@ Cmd_Init(void)
 	registercommand("showServerInfo");
 	registercommand("showEditor");
 	registercommand("showSunEditor");
+	registercommand("+showInterface");
+	registercommand("-showInterface");
+	registercommand("toggleInterface");
+
+	registercommand("runApp");
+	registercommand("runWebApp");
 
 	/* developer/debug commands */
 	registercommand("killAllBots");
 	registercommand("killClass");
 	registercommand("killMovables");
+	registercommand("findTarget");
 	registercommand("listAmmo");
 	registercommand("listBotProfiles");
 	registercommand("listClientEntityDef");
@@ -701,6 +870,7 @@ Cmd_Init(void)
 	registercommand("listEntitiesByClass");
 	registercommand("listEntitySpawnData");
 	registercommand("listFramegroups");
+	registercommand("listFramesAsGroups");
 	registercommand("listInventory");
 	registercommand("listMapTweaks");
 	registercommand("listModels");
@@ -745,7 +915,6 @@ Cmd_Init(void)
 	registercommand("titles_test");
 	registercommand("buildcubemaps");
 	registercommand("dev_sunpos");
-	registercommand("dev_measure");
 	registercommand("view_geomtest");
 	registercommand("player_geomtest");
 	registercommand("way_menu");
@@ -820,11 +989,12 @@ Cmd_Init(void)
 	/* Requested by Slacer */
 	registercommand("+zoomin");
 	registercommand("-zoomin");
+	registercommand("toggleZoom");
 
 	/* text menu */
 	registercommand("textMenuOpen");
 	registercommand("textMenuClose");
-	
+
 	/* vgui menu */
 	registercommand("vguiMenuOpen");
 	registercommand("vguiMenuClose");
@@ -843,6 +1013,13 @@ Cmd_Init(void)
 	registercommand("+menu_right");
 	registercommand("-menu_right");
 	registercommand("reloadClientLocale");
+	registercommand("reloadClientInventory");
+
+	registercommand("reloadTextDecl");
+	registercommand("reloadVideoDecl");
+	registercommand("reloadAudioDecl");
+	registercommand("reloadAppDecl");
+	registercommand("reloadPictureDecl");
 
 	/* Source Engine compat */
 	registercommand("ent_create");
@@ -851,7 +1028,15 @@ Cmd_Init(void)
 	registercommand("ent_remove_all");
 	registercommand("ent_teleport");
 
+
 	registercommand("listUserInfo");
+
+	registercommand("csvMatDump");
+	registercommand("objectSpawn");
+	registercommand("unlockDoors");
+	registercommand("zoneAdd");
+	registercommand("zoneDelete");
+	registercommand("listZones");
 
 	InitEnd();
 }

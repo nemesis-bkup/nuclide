@@ -21,7 +21,7 @@ int g_iFriendsListInitialized;
 
 
 class
-VGUIFNMOTD:vguiWindow
+VGUIFNMOTD:vguiPanel
 {
 	void VGUIFNMOTD(void);
 
@@ -150,28 +150,23 @@ VGUIChatWindow::ChatWindowResized(void)
 	sendButton.SetPos([GetWidth() - 72, GetHeight() - 32]);
 }
 
+
 void
 VGUIChatWindow::Spawned(void)
 {
-	static void VGUIChatWindow_Send(void) {
-		vguiWidget winSelf = (vguiWidget)self;
-		VGUIChatWindow ourConsole = (VGUIChatWindow)winSelf.m_parent;
-		ourConsole.SendMessage();
-	}
-
 	super::Spawned();
 	SetSize([320,240]);
 
 	if (!textBox) {
 		textBox = spawn(vguiTextBox);
-		textBox.CallOnEnter(VGUIChatWindow_Send);
+		textBox.CallOnEnterWithDelegate(SendMessage, this);
 		textBox.SetSize([240,24]);
 		Add(textBox);
 
 		sendButton = spawn(vguiButton);
 		sendButton.SetSize([64,24]);
 		sendButton.SetTitle("Send");
-		sendButton.SetFunc(VGUIChatWindow_Send);
+		sendButton.SetFuncWithDelegate(SendMessage, this);
 		Add(sendButton);
 
 		messageBuffer = spawn(vguiTextView);
@@ -188,7 +183,7 @@ VGUIChatWindow::Spawned(void)
 
 
 class
-VGUIFriendsList:vguiWindow
+VGUIFriendsList:vguiPanel
 {
 	void VGUIFriendsList(void);
 
@@ -312,7 +307,7 @@ VGUIFriendsList::Spawned(void)
 		friendsTable.SetSize( [230-16, 390 - 70] );
 		friendsTable.SetPos( [8, 32] );
 		friendsTable.SetItemCount( 32 );
-		friendsTable.CallOnDoubleClick( MessageFriend );
+		friendsTable.CallOnDoubleClickWithDelegate( MessageFriend, this );
 
 		for (int i = 0i; i < tokenize_console(cvar_string("ui_friends")); i++) {
 			friendsTable.AddItem(argv(i));
@@ -361,7 +356,6 @@ ChatCallback_MessageReceived(string fromUser, string messageString)
 void
 ChatCallback_GroupMessageReceived(string groupName, string fromUser, string messageString)
 {
-
 	for (VGUIChatWindow chat = __NULL__; (chat = (VGUIChatWindow)find(chat, ::classname, "Chat"));) {
 		if (groupName == chat.userNick) {
 			chat.MessageReceived(messageString);
@@ -378,4 +372,5 @@ OnlineCallback_ConnectionEstablished(void)
 {
 	VGUIFNMOTD motd = spawn(VGUIFNMOTD);
 	g_uiDesktop.Add(motd);
+    vguiTheme::PlaySound("service-login");
 }

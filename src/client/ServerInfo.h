@@ -49,10 +49,10 @@ private:
 	string m_hostName;
 	string m_hostAddress;
 	string m_mapName;
-	int m_maxClients;
-	int m_maxPlayers;
-	int m_maxSpectators;
 	string m_maxClientsString;
 	string m_maxPlayersString;
 	string m_maxSpectatorsString;
+	int m_maxClients;
+	int m_maxPlayers;
+	int m_maxSpectators;
 };

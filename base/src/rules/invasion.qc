@@ -16,6 +16,9 @@
 
 
 var string autocvar_invasion_monsterClass = "monster_enforcer";
+var string autocvar_invasion_spawnPoint = "info_player_deathmatch";
+var string autocvar_invasion_playerClass = "player_mp";
+
 var int autocvar_invasion_monsterCount = 12;
 
 void
@@ -25,7 +28,9 @@ WaveTimer_Tick(void)
 
 	/* spawn a new monster */
 	if (monsterCount < autocvar_invasion_monsterCount) {
-		entity zombie = ents.Create(autocvar_invasion_monsterClass, [0,0,0]);
+        float r = tokenize(autocvar_invasion_monsterClass);
+        string monsterClass = argv(floor(random(0, r+1)));
+		entity zombie = ents.Create(monsterClass, [0,0,0]);
 		ents.Input(zombie, "SetTeam", "1", self);
 		game.TeleportToSpawn(zombie);
 		ents.Input(zombie, "ChangeMindset", "search", self);
@@ -43,8 +48,11 @@ AllowFlashlight(void)
 void
 CodeCallback_Precaches(void)
 {
-	precache.Entity(autocvar_invasion_monsterClass);
 	Util_SharedPrecaches();
+
+	precache.Entity(autocvar_invasion_playerClass);
+	precache.Entity(autocvar_invasion_spawnPoint);
+	precache.Entity(autocvar_invasion_monsterClass);
 }
 
 void
@@ -52,12 +60,12 @@ CodeCallback_StartGameType(void)
 {
 	precache.Entity(autocvar_invasion_monsterClass);
 	motd.LoadDefault();
-	game.SetSpawnPoint("info_player_deathmatch");
+	game.SetSpawnPoint(autocvar_invasion_spawnPoint);
 
 	teams.SetUp(1, "Enemies", [255, 0, 0], false);
 	teams.SetUp(2, "Players", [255, 255, 255], false);
-	teams.SetSpawnPoint(1, "info_player_deathmatch");
-	teams.SetSpawnPoint(2, "info_player_deathmatch");
+	teams.SetSpawnPoint(1, autocvar_invasion_spawnPoint);
+	teams.SetSpawnPoint(2, autocvar_invasion_spawnPoint);
 
 	entity tick = spawn();
 	tick.think = WaveTimer_Tick;
@@ -67,7 +75,7 @@ CodeCallback_StartGameType(void)
 void
 CodeCallback_PlayerSpawn(entity playerEntity)
 {
-	ents.ChangeToClass(playerEntity, "player_mp");
+	ents.ChangeToClass(playerEntity, autocvar_invasion_playerClass);
 	ents.Input(playerEntity, "SetTeam", "2", world);
 	game.TeleportToSpawn(playerEntity);
 }
@@ -136,23 +144,24 @@ CodeCallback_NPCKilled(entity npcEntity, entity inflictor, entity attacker, stri
 		} else {
 			attackerName = attacker.netname;
 		}
+
+        /* update score-counter */
+        if (is.Player(attacker)) {
+            if (npcEntity == attacker) {
+                attacker.frags--;
+            } else {
+                attacker.frags++;
+            }
+        }
 	} else {
-		npcName = "Unknown";
+		attackerName = "Unknown";
 	}
 
 	if (npcEntity == attacker)
-		combat.Obituary(npcEntity.netname, attacker.netname, weapon, "self");
+		combat.Obituary(npcName, attackerName, weapon, "self");
 	else
-		combat.Obituary(npcEntity.netname, attacker.netname, weapon, "");
+		combat.Obituary(npcName, attackerName, weapon, "");
 
-	/* update score-counter */
-	if (is.Player(attacker)) {
-		if (npcEntity == attacker) {
-			attacker.frags--;
-		} else {
-			attacker.frags++;
-		}
-	}
 }
 
 bool

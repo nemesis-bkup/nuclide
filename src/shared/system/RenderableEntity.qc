@@ -38,7 +38,7 @@ ncRenderableEntity::ncRenderableEntity(void)
 	m_modelEventTime = 0.0f;
 
 #ifdef CLIENT
-	drawmask = MASK_ENGINE;
+	drawmask = MASK_CLIENTENTITY;
 #endif
 }
 
@@ -161,7 +161,10 @@ ncRenderableEntity::EvaluateEntity(void)
 	EVALUATE_VECTOR(maxs, 1, RDENT_CHANGED_SIZE)
 	EVALUATE_VECTOR(maxs, 2, RDENT_CHANGED_SIZE)
 	EVALUATE_FIELD(frame, RDENT_CHANGED_FRAME)
-	EVALUATE_FIELD(frame1time, RDENT_CHANGED_FRAME)
+
+    if (frame)
+        EVALUATE_FIELD(frame1time, RDENT_CHANGED_FRAMETIME)
+
 	EVALUATE_FIELD(skin, RDENT_CHANGED_SKIN)
 	EVALUATE_FIELD(effects, RDENT_CHANGED_EFFECTS)
 	EVALUATE_FIELD(m_geomsetField, RDENT_CHANGED_BODY)
@@ -245,7 +248,7 @@ ncRenderableEntity::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_COORD(maxs[1], RDENT_CHANGED_SIZE)
 	SENDENTITY_COORD(maxs[2], RDENT_CHANGED_SIZE)
 	SENDENTITY_FLOAT(frame, RDENT_CHANGED_FRAME)
-	SENDENTITY_FLOAT(frame1time, RDENT_CHANGED_FRAME)
+	SENDENTITY_FLOAT(frame1time, RDENT_CHANGED_FRAMETIME)
 	SENDENTITY_FLOAT(skin, RDENT_CHANGED_SKIN)
 	SENDENTITY_FLOAT(effects, RDENT_CHANGED_EFFECTS)
 	SENDENTITY_SHORT(m_geomsetField, RDENT_CHANGED_BODY)
@@ -305,7 +308,7 @@ ncRenderableEntity::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_COORD(maxs[1], RDENT_CHANGED_SIZE)
 	READENTITY_COORD(maxs[2], RDENT_CHANGED_SIZE)
 	READENTITY_FLOAT(frame, RDENT_CHANGED_FRAME)
-	READENTITY_FLOAT(frame1time, RDENT_CHANGED_FRAME)
+	READENTITY_FLOAT(frame1time, RDENT_CHANGED_FRAMETIME)
 	READENTITY_FLOAT(skin, RDENT_CHANGED_SKIN)
 	READENTITY_FLOAT(m_netEffects, RDENT_CHANGED_EFFECTS)
 	READENTITY_SHORT(m_geomsetField, RDENT_CHANGED_BODY)
@@ -373,46 +376,6 @@ ncRenderableEntity::RenderFXPass(void)
 	drawflags = 0;
 	abslight = 0;
 
-	{
-		if (m_studioBoneController1Spin != 0.0) {
-			m_studioBoneController1 += frametime * m_studioBoneController1Spin;
-		}
-		if (m_studioBoneController2Spin != 0.0) {
-			m_studioBoneController2 += frametime * m_studioBoneController2Spin;
-		}
-		if (m_studioBoneController3Spin != 0.0) {
-			m_studioBoneController3 += frametime * m_studioBoneController3Spin;
-		}
-		if (m_studioBoneController4Spin != 0.0) {
-			m_studioBoneController4 += frametime * m_studioBoneController4Spin;
-		}
-		if (m_studioBoneController5Spin != 0.0) {
-			m_studioBoneController5 += frametime * m_studioBoneController5Spin;
-		}
-
-		if (m_studioBoneController1Spin > 0.0f)
-			m_studioBoneController1Spin = max(0.0, m_studioBoneController1Spin - (frametime * 10.0f));
-		if (m_studioBoneController2Spin > 0.0f)
-			m_studioBoneController2Spin = max(0.0, m_studioBoneController2Spin - (frametime * 10.0f));
-		if (m_studioBoneController3Spin > 0.0f)
-			m_studioBoneController3Spin = max(0.0, m_studioBoneController3Spin - (frametime * 10.0f));
-		if (m_studioBoneController4Spin > 0.0f)
-			m_studioBoneController4Spin = max(0.0, m_studioBoneController4Spin - (frametime * 10.0f));
-		if (m_studioBoneController5Spin > 0.0f)
-			m_studioBoneController5Spin = max(0.0, m_studioBoneController5Spin - (frametime * 10.0f));
-
-		if (m_studioBoneController1Spin < 0.0f)
-			m_studioBoneController1Spin = bound(m_studioBoneController1Spin, m_studioBoneController1Spin + (frametime * 10.0f), 0.0);
-		if (m_studioBoneController2Spin < 0.0f)
-			m_studioBoneController2Spin = bound(m_studioBoneController2Spin, m_studioBoneController2Spin + (frametime * 10.0f), 0.0);
-		if (m_studioBoneController3Spin < 0.0f)
-			m_studioBoneController3Spin = bound(m_studioBoneController3Spin, m_studioBoneController3Spin + (frametime * 10.0f), 0.0);
-		if (m_studioBoneController4Spin < 0.0f)
-			m_studioBoneController4Spin = bound(m_studioBoneController4Spin, m_studioBoneController4Spin + (frametime * 10.0f), 0.0);
-		if (m_studioBoneController5Spin < 0.0f)
-			m_studioBoneController5Spin = bound(m_studioBoneController5Spin, m_studioBoneController5Spin + (frametime * 10.0f), 0.0);
-	}
-
 	switch (m_renderMode) {
 	case RM_NORMAL:
 		colormod = [1,1,1];
@@ -429,6 +392,7 @@ ncRenderableEntity::RenderFXPass(void)
 			abslight = 128;
 		}
 
+		alpha = m_renderAmount / 255;
 		break;
 	case RM_GLOW:
 		colormod = m_renderColor / 255;
@@ -687,6 +651,34 @@ var float autocvar_basesubblendfrac = 0.0f;
 var float autocvar_basesubblend2frac = 0.0f;
 var float autocvar_baseframe = 0.0f;
 
+void
+ncRenderableEntity::RenderModelindeces(void)
+{
+    float oldModelindex;
+    addentity(this);
+
+    if (modelindex2) {
+        oldModelindex = modelindex;
+        modelindex = modelindex2;
+        addentity(this);
+        modelindex = oldModelindex;
+    }
+
+    if (modelindex3) {
+        oldModelindex = modelindex;
+        modelindex = modelindex3;
+        addentity(this);
+        modelindex = oldModelindex;
+    }
+
+    if (modelindex4) {
+        oldModelindex = modelindex;
+        modelindex = modelindex4;
+        addentity(this);
+        modelindex = oldModelindex;
+    }
+}
+
 float
 ncRenderableEntity::predraw(void)
 {
@@ -732,13 +724,7 @@ ncRenderableEntity::predraw(void)
 		angles[0] = g_modelSpinPitch;
 	}
 
-	processmodelevents(modelindex, frame, m_modelEventTime,
-		frame1time, HandleAnimEvent);
-	m_modelEventTime = frame1time;
-
 	RenderAxialScale();
-
-	vector oldOrg = origin;
 
 	/* TODO: make this a separate field */
 	if (modelflags & MF_ROTATE) {
@@ -752,16 +738,15 @@ ncRenderableEntity::predraw(void)
 			dim += 1.0f;
 			addentity_lighting(this, [0,0,0], [dim, dim, dim], [0,0,0], 0, 0);
 		} else if (m_renderMode != RM_DONTRENDER) {
+            RenderModelindeces();
 			addentity(this);
 		}
 	}
-	origin = oldOrg;
 
 	if (traileffectnum) {
 		if (oldorigin != g_vec_null)
 			trailparticles(traileffectnum, this, oldorigin, origin);
 	}
-	oldorigin = origin;
 
 	RenderGLQuakeShadow();
 
@@ -771,6 +756,52 @@ ncRenderableEntity::predraw(void)
 void
 ncRenderableEntity::postdraw(void)
 {
+	oldorigin = origin;
+
+	processmodelevents(modelindex, frame, m_modelEventTime,
+		frame1time, HandleAnimEvent);
+	m_modelEventTime = frame1time;
+
+	{
+		if (m_studioBoneController1Spin != 0.0) {
+			m_studioBoneController1 += frametime * m_studioBoneController1Spin;
+		}
+		if (m_studioBoneController2Spin != 0.0) {
+			m_studioBoneController2 += frametime * m_studioBoneController2Spin;
+		}
+		if (m_studioBoneController3Spin != 0.0) {
+			m_studioBoneController3 += frametime * m_studioBoneController3Spin;
+		}
+		if (m_studioBoneController4Spin != 0.0) {
+			m_studioBoneController4 += frametime * m_studioBoneController4Spin;
+		}
+		if (m_studioBoneController5Spin != 0.0) {
+			m_studioBoneController5 += frametime * m_studioBoneController5Spin;
+		}
+
+		if (m_studioBoneController1Spin > 0.0f)
+			m_studioBoneController1Spin = max(0.0, m_studioBoneController1Spin - (frametime * 10.0f));
+		if (m_studioBoneController2Spin > 0.0f)
+			m_studioBoneController2Spin = max(0.0, m_studioBoneController2Spin - (frametime * 10.0f));
+		if (m_studioBoneController3Spin > 0.0f)
+			m_studioBoneController3Spin = max(0.0, m_studioBoneController3Spin - (frametime * 10.0f));
+		if (m_studioBoneController4Spin > 0.0f)
+			m_studioBoneController4Spin = max(0.0, m_studioBoneController4Spin - (frametime * 10.0f));
+		if (m_studioBoneController5Spin > 0.0f)
+			m_studioBoneController5Spin = max(0.0, m_studioBoneController5Spin - (frametime * 10.0f));
+
+		if (m_studioBoneController1Spin < 0.0f)
+			m_studioBoneController1Spin = bound(m_studioBoneController1Spin, m_studioBoneController1Spin + (frametime * 10.0f), 0.0);
+		if (m_studioBoneController2Spin < 0.0f)
+			m_studioBoneController2Spin = bound(m_studioBoneController2Spin, m_studioBoneController2Spin + (frametime * 10.0f), 0.0);
+		if (m_studioBoneController3Spin < 0.0f)
+			m_studioBoneController3Spin = bound(m_studioBoneController3Spin, m_studioBoneController3Spin + (frametime * 10.0f), 0.0);
+		if (m_studioBoneController4Spin < 0.0f)
+			m_studioBoneController4Spin = bound(m_studioBoneController4Spin, m_studioBoneController4Spin + (frametime * 10.0f), 0.0);
+		if (m_studioBoneController5Spin < 0.0f)
+			m_studioBoneController5Spin = bound(m_studioBoneController5Spin, m_studioBoneController5Spin + (frametime * 10.0f), 0.0);
+	}
+
 	if not (autocvar(r_showRenderInfo, 0))
 		return;
 
@@ -1067,7 +1098,7 @@ void
 ncRenderableEntity::HandleAnimEvent(float flTimeStamp, int iCode, string strData)
 {
 	if (!modelindex || iCode == 0i) {
-		return;	
+		return;
 	}
 
 	switch(iCode) {
@@ -1129,7 +1160,7 @@ ncRenderableEntity::HandleAnimEvent(float flTimeStamp, int iCode, string strData
 		} else {
 			StartSound(strData, CHAN_AUTO, 0, true);
 		}
-		
+
 		//StartSound(strData, CHAN_AUTO, 0, true);
 		break;
 	/* GS events */

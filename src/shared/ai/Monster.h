@@ -460,6 +460,7 @@ private:
 	vector base_mins;
 	vector base_maxs;
 	float base_health;
+    float m_turnRate;
 
 	/* I/O */
 	string m_outputOnDamaged;
@@ -510,6 +511,10 @@ private:
 
 	NETWORKED_VECTOR_N(view_ofs)
 
+	/* save these please */
+	float _m_flReloadTracker;
+	bool m_bWeaponDrawn;
+
 	/* caching variables, don't save these */
 	float m_actIdle;
 	bool m_bTurning;
@@ -521,11 +526,7 @@ private:
 	bool _m_bStartDead;
 	float _m_flFrame;
 
-	/* save these please */
-	float _m_flReloadTracker;
-	bool m_bWeaponDrawn;
-
-	/* entityDef related */
+	/* entityDef related, no save */
 	float m_flEyeHeight;
 	string m_sndSight;
 	string m_sndIdle;
@@ -535,11 +536,9 @@ private:
 	string m_sndChatter;
 	string m_sndChatterCombat;
 	string m_sndPain;
-
 	string m_sndMeleeAttack;
 	string m_sndMeleeAttackHit;
 	string m_sndMeleeAttackMiss;
-
 	string m_sndDeath;
 	string m_sndThud;
 
@@ -571,15 +570,11 @@ private:
 	float m_flReloadDelay;
 	string m_sndReload;
 	float m_flReserveAmmo;
-
 	string m_sndRangedAttack2;
-
 	bool m_bWeaponStartsDrawn;
 	string m_strBodyOnDraw;
-
 	float m_flWalkSpeed;
 	float m_flRunSpeed;
-
 	float m_flLeapDamage;
 	bool m_bLeapAttacked;
 	float m_flForceSequence;

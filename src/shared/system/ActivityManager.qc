@@ -86,7 +86,7 @@ Activities_GetSequenceForEntity(ncEntity targetEntity, string activityName)
 		} else {
 			float randomValue = floor(pseudorandom() * actCount);
 			string commandString = argv(randomValue);
-			return stof(Constants_LookUp(commandString,commandString));
+			return stof(ncConstantManager::LookUp(commandString,commandString));
 		}
 	}
 

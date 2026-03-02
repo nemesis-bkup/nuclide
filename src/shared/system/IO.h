@@ -79,7 +79,7 @@ class ncIO
 public:
 	void ncIO(void);
 
-	/** Called when the entity is fulled initialized.
+	/** Called when the entity is fully initialized.
 		Any spawn key/value info pairs have already been
 		dealt with. So now we can make full decisions on the entity.
 		Always make sure to call `super::Spawned();` inside your method when overriding. */

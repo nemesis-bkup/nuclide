@@ -78,6 +78,7 @@ public:
 	virtual void Touch(entity);
 	virtual void Death(entity, entity, int, vector, vector, int);
 	virtual void OnPlayerUse(void);
+	virtual void Trigger(entity, triggermode_t);
 	
 	nonvirtual void ArrivedClosed(void);
 	nonvirtual void ArrivedOpened(void);
@@ -196,6 +197,21 @@ func_rot_button::Respawn(void)
 	}
 
 	m_rotatingButtonDestination = movementDir * m_rotatingButtonDistance;
+}
+
+void
+func_rot_button::Trigger(entity act, triggermode_t state)
+{
+	switch (state) {
+	case TRIG_OFF:
+        ArrivedClosed();
+		break;
+	case TRIG_ON:
+        ArrivedOpened();
+		break;
+	default:
+        TurnToggle();
+	}
 }
 
 void

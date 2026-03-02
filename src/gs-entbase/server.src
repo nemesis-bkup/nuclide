@@ -107,6 +107,7 @@ server/phys_keepupright.qc
 server/phys_slideconstraint.qc
 server/player_loadsaved.qc
 server/player_weaponstrip.qc
+server/point_devshot_camera.qc
 server/point_camera.qc
 server/point_servercommand.qc
 server/point_trigger.qc
@@ -114,7 +115,7 @@ server/prop_door_rotating.qc
 server/prop_dynamic.qc
 server/prop_physics.qc
 server/prop_portal.qc
-//server/prop_static.qc
+server/prop_static.qc
 server/random_speaker.qc
 server/random_trigger.qc
 server/reserved_spot.qc

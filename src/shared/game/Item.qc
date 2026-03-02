@@ -77,6 +77,10 @@ ncItem::Respawn(void)
 {
 	super::Respawn();
 	_m_itemTouchPickup = false;
+
+	if (CreatedByMap() == false) {
+		OnMapFinishedLoading();
+	}
 }
 
 void
@@ -779,8 +783,6 @@ ncItem::ReceiveEntity(float flNew, float flChanged)
 	if (movetype == MOVETYPE_PHYSICS) {
 		movetype = MOVETYPE_NONE;
 	}
-
-	drawmask = (modelindex != 0) ? MASK_ENGINE : 0;
 
 	if (flChanged & ITEMFL_CHANGED_FRAME) {
 		frame1time = 0.0f;

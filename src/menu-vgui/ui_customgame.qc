@@ -18,7 +18,7 @@ int g_iCustomGameInitialized;
 
 void UI_CustomGame_Show ( void )
 {
-	static vguiWindow winCustomGame;
+	static vguiPanel winCustomGame;
 	static vguiList lsbGames;
 	static vguiScrollBar scrlGames;
 	static vguiButton btnLoad;
@@ -43,7 +43,7 @@ void UI_CustomGame_Show ( void )
 
 		GameLibrary_InitCustom();
 
-		winCustomGame = spawn( vguiWindow );
+		winCustomGame = spawn( vguiPanel );
 		winCustomGame.SetTitle( "Custom Game" );
 		winCustomGame.SetSize( [256,180] );
 		winCustomGame.SetIcon( "gfx/icon16/rainbow" );

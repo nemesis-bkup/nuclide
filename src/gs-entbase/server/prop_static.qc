@@ -43,7 +43,7 @@ This entity was introduced in Half-Life 2 (2004).
 @ingroup pointentity
 */
 class
-prop_static:ncPhysicsEntity
+prop_static:ncRenderableEntity
 {
 public:
 	void prop_static(void);
@@ -60,13 +60,9 @@ prop_static::prop_static(void)
 void
 prop_static::Respawn(void)
 {
-	SetModel(GetSpawnModel());
-	SetOrigin(GetSpawnOrigin());
-	SetMovetype(MOVETYPE_PHYSICS);
-	SetSolid(SOLID_PHYSICS_BOX);
-	geomtype = GEOMTYPE_TRIMESH;
-
-	Sleep();
-	MakeInvulnerable();
-	touch = __NULL__;
+	super::Respawn();
+	SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
+    SetSize([-999999,-999999,-999999], [999999,999999,999999]);
+    pvsflags = PVSF_NOTRACECHECK | PVSF_NOREMOVE;
 }

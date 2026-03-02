@@ -66,7 +66,8 @@ It can take damage and can handle variously different types of impact.
 
 @ingroup baseclass
 */
-class ncSurfacePropEntity:ncRenderableEntity
+class
+ncSurfacePropEntity:ncRenderableEntity
 {
 public:
 	void ncSurfacePropEntity(void);

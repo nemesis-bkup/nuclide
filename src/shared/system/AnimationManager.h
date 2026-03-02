@@ -1,0 +1,104 @@
+/*
+ * Copyright (c) 2026 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+class
+ncAnimationManager:ncEntity
+{
+    void ncAnimationManager(void);
+
+    nonvirtual ncAnimationManager ManagerForEntity(entity playerEntity);
+
+	nonvirtual void UpdatePlayerAnimation_Skeletal(float timelength);
+	nonvirtual void UpdatePlayerAnimation_Valve(float timelength);
+	nonvirtual void UpdatePlayerAnimation_Goose(float timelength);
+	nonvirtual void SetAnimationPrefix(string animPrefix);
+	nonvirtual void AdvanceAnimation(float timelength);
+	nonvirtual void TransferAnimationData(entity targetE);
+	nonvirtual void PlayGesture(float gestureAnim, float overrideTime);
+	virtual void PredictPreFrame(void);
+	virtual void PredictPostFrame(void);
+
+#ifdef SERVER
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
+#endif
+
+#ifdef CLIENT
+    virtual void ReceiveEntity(float flNew, float flChanged);
+#endif
+
+private:
+
+	nonvirtual float __ActForPrefix(string actName, string animPrefix, string emotionString);
+
+	/* animation */
+	NETWORKED_FLOAT(anim_top)
+	NETWORKED_FLOAT(anim_top_time)
+	NETWORKED_FLOAT(anim_top_delay)
+	NETWORKED_FLOAT(anim_bottom)
+	NETWORKED_FLOAT(anim_bottom_time)
+
+	NETWORKED_ENTITY(m_targetEntity)
+	NETWORKED_FLOAT(m_animBackend)
+	NETWORKED_FLOAT(m_actIdle)
+	NETWORKED_FLOAT(m_actIdleCrouch)
+	NETWORKED_FLOAT(m_actIdleProne)
+	NETWORKED_FLOAT(m_actWalk)
+	NETWORKED_FLOAT(m_actWalkCrouch)
+	NETWORKED_FLOAT(m_actWalkProne)
+	NETWORKED_FLOAT(m_actRun)
+	NETWORKED_FLOAT(m_actJump)
+	NETWORKED_FLOAT(m_actAim)
+	NETWORKED_FLOAT(m_actDraw)
+	NETWORKED_FLOAT(m_actAttack)
+	NETWORKED_FLOAT(m_actReloadStart)
+	NETWORKED_FLOAT(m_actReload)
+	NETWORKED_FLOAT(m_actReloadEnd)
+	NETWORKED_FLOAT(m_actHolster)
+	NETWORKED_FLOAT(m_boneSpine)
+	NETWORKED_FLOAT(m_torsoFirst)
+	NETWORKED_FLOAT(m_torsoLast)
+	NETWORKED_FLOAT(m_torsoTwistYaw)
+
+#ifdef CLIENT
+    float m_targetEntityEntityNum;
+#endif
+};
+
+void
+ncAnimationManager::ncAnimationManager(void)
+{
+    m_targetEntity = __NULL__;
+}
+
+typedef enumflags
+{
+	ANTMENT_CHANGED_NOTHING,
+    ANIMENT_CHANGED_ACTS_TOP,
+    ANIMENT_CHANGED_ACTS_BOTTOM,
+    ANIMENT_CHANGED_BONESETUP,
+    ANIMENT_CHANGED_ANIMATION,
+    ANIMENT_CHANGED_SET,
+    ANIMENT_CHANGED_TIMERS,
+};
+
+
+enum
+{
+	ANIMATIONMODEL_SKELETAL,
+	ANIMATIONMODEL_HLMDL_VALVE,
+	ANIMATIONMODEL_HLMDL_GOOSE,
+};

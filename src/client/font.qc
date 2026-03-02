@@ -66,7 +66,7 @@ Font_Load(string strFile, font_s &fntNew)
 			case "size_ttf":
 				if (autocvar(font_ttfOnly, 0) == 1) {
 					segments = tokenize(argv(1));
-					
+
 					if (segments == 2) {
 						fntNew.iScaleX = (int)stof(argv(0));
 						fntNew.iScaleY = (int)stof(argv(1));
@@ -78,7 +78,7 @@ Font_Load(string strFile, font_s &fntNew)
 			case "size_bitmap":
 				if (autocvar(font_bitmapOnly, 0) == 1) {
 					segments = tokenize(argv(1));
-					
+
 					if (segments == 2) {
 						fntNew.iScaleX = (int)stof(argv(0));
 						fntNew.iScaleY = (int)stof(argv(1));
@@ -136,7 +136,7 @@ Font_Load(string strFile, font_s &fntNew)
 
 #if 0
 	/* this is the console font, so make sure we use it */
-	if (strFile == "fonts/console.font") {
+	if (strFile == "fonts/consoleFont.font") {
 		string r = ftos(fntNew.vecColor[0]);
 		string g = ftos(fntNew.vecColor[1]);
 		string b = ftos(fntNew.vecColor[2]);
@@ -157,6 +157,47 @@ Font_DrawText(vector vecOrigin, string strText, font_s fnt)
 	drawfont = (float)fnt.iID;
 	drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], fnt.vecColor, fnt.flAlpha, (float)fnt.iFlags);
 	drawfont = 0;
+}
+
+void
+Font_DrawTextScroll(vector vecOrigin, string strText, vector canvasSize, font_s fnt)
+{
+	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], 1.0f, fnt);
+}
+
+void
+Font_DrawTextScroll_A(vector vecOrigin, string strText, vector canvasSize, float a, font_s fnt)
+{
+	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], a, fnt);
+}
+
+void
+Font_DrawTextScroll_RGB(vector vecOrigin, string strText, vector canvasSize, vector rgb, font_s fnt)
+{
+	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, rgb, 1.0f, fnt);
+}
+
+void
+Font_DrawTextScroll_RGBA(vector vecOrigin, string strText, vector canvasSize, vector rgb, float a, font_s fnt)
+{
+	float width = Font_StringWidth(strText, true, fnt);
+	static float offset = 0;
+
+	if (width > canvasSize[0]) {
+		offset -= frametime * 30;
+		if (offset < -width)
+			offset = width;
+	}
+
+	drawsetcliparea(vecOrigin[0], vecOrigin[1], canvasSize[0], canvasSize[1]);
+	Font_DrawText(vecOrigin + [offset, 0], strText, fnt);
+
+	if (offset < 0)
+		Font_DrawText(vecOrigin + [width + offset, 0], strText, fnt);
+	else if (offset > 0)
+		Font_DrawText(vecOrigin + [offset - width, 0], strText, fnt);
+
+	drawresetcliparea();
 }
 
 void

@@ -1,0 +1,10 @@
+{
+"origin" "-149.718 -257.389 330.396"
+"angles" "10 0 0"
+"ui_scale" "0.2"
+"ui_res" "640 480"
+"light" "255 255 255"
+"classname" "ncMediaSurface"
+"accepts"   "video app picture"
+"ui_menu" "ui/lqdm1.menu"
+}

@@ -17,6 +17,7 @@
 void EFX_UpdateListener(ncView);
 
 const string g_rtEnvSphereMaterial = "rtenvsphere";
+static bool g_hideScores;
 
 void
 init(float prevprogs)
@@ -72,9 +73,9 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 
 	Cmd_Init();
 
-	Constants_Init();
+	ncConstantManager::Init();
 	SoundDef_Init();
-	SurfData_Init();
+	ncSurfDataManager::Init();
 	PropData_Init();
 	DecalGroups_Init();
 
@@ -91,21 +92,24 @@ CSQC_Init(float apilevel, string enginename, float engineversion)
 	Materials_Init();
 	Commandmenu_Init();
 	Activities_Init();
+	ncUserInventory::IndexInventory();
 
 	/* let the menu know we're a multi or a singleplayer game */
 	if (serverinfo.GetInteger("sv_playerslots") == 1i) {
-		ncLog("Running a singleplayer game.");
+		ncLogAlways("Running a singleplayer game.");
 		cvars.SetBool("_menu_singleplayer", true);
 	} else {
-		ncLog("Running a multiplayer game.");
+		ncLogAlways("Running a multiplayer game.");
 		cvars.SetBool("_menu_singleplayer", false);
 	}
 
 	g_cheats = (serverkey("*cheats") == "ON") ? true : false;
+	g_hideScores = (serverkey("mode") == "shutterbug") ? true : false;
 
 	EntityDef_Init();
 	Ammo_Init();
 	WorldSpawn_Init();
+	MapLibrary_Init();
 
 	g_overview = ncRadar::InitForCurrentMap();
 
@@ -147,16 +151,13 @@ CSQC_RendererRestarted(string rstr)
 	/* Fonts */
 	Font_Load("fonts/font16.font", FONT_16);
 	Font_Load("fonts/font20.font", FONT_20);
-	Font_Load("fonts/console.font", FONT_CON);
+	Font_Load("fonts/consoleFont.font", FONT_CON);
 	Font_Load("fonts/centerprint.font", FONT_CENTERPRINT);
 
 	/* Particles */
 	PART_DUSTMOTE = particleeffectnum("volume.dustmote");
 	PART_BURNING = particleeffectnum("burn.burning");
-
-	/* 2D Pics */
-	precache_pic("gfx/vgui/icntlk_sv");
-	precache_pic("gfx/vgui/icntlk_pl");
+    particleeffectnum("test.zap");
 
 	/* View */
 	Chat_Reload();
@@ -165,7 +166,7 @@ CSQC_RendererRestarted(string rstr)
 	ClientGame_RendererRestart(rstr);
 	HUD_ReloadVideoResources();
 	Locale_Reload();
-	
+
 	WadIndexer::IndexDecals();
 
 	/* GS-Entbase */
@@ -216,6 +217,7 @@ CSQC_RenderRTEnvSphere(vector cameraOrigin, vector cameraAngle)
 	setviewprop(VF_SIZE, [autocvar_r_glsl_rtenvsphere_size,autocvar_r_glsl_rtenvsphere_size]);
 	setviewprop(VF_DRAWENGINESBAR, (float)0);
 	setviewprop(VF_ORIGIN, cameraOrigin);
+	setproperty(VF_VIEWENTITY, player_localentnum);
 
 	setviewprop(VF_ANGLES, vectoangles(anglesToForward(cameraAngle) * -1));
 	setviewprop(VF_AFOV, 90.0f);
@@ -223,6 +225,30 @@ CSQC_RenderRTEnvSphere(vector cameraOrigin, vector cameraAngle)
 	/* expensive as hell */
 	if (autocvar(r_skipRTEnvSphereEntities, 1))
 		addentities(MASK_ENGINE);
+
+	CSQC_RenderScene();
+
+	/* reset */
+	setviewprop(VF_RT_DESTCOLOUR, "");
+	cvar_set("r_projection", "0");
+}
+
+void
+CSQC_RenderSecurityCamera(vector cameraOrigin, vector cameraAngle, string outputMaterial, vector outputResolution)
+{
+	clearscene();
+
+	cvar_set("r_projection", "2");
+	setviewprop(VF_RT_DESTCOLOUR, outputMaterial, (float)1,outputResolution);
+	setviewprop(VF_SIZE, outputResolution);
+	setviewprop(VF_DRAWENGINESBAR, (float)0);
+	setviewprop(VF_ORIGIN, cameraOrigin);
+	setproperty(VF_VIEWENTITY, 0);
+
+	setviewprop(VF_ANGLES, cameraAngle);
+	setviewprop(VF_AFOV, 90.0f);
+
+	addentities(MASK_ENGINE);
 
 	CSQC_RenderScene();
 
@@ -245,7 +271,9 @@ CSQC_Update2D(float w, float h, bool focus)
 	if (Util_GetMaxPlayers() > 1 && !VGUI_Active() && (Client_InIntermission() || (!cl.IsFakeSpectator() && cl.IsDead()))) {
 		HUD_DrawIntermission();
 		Textmenu_Draw();
-		Scores_Draw();
+		if (g_hideScores == false) {
+			Scores_Draw();
+		}
 		Chat_Draw();
 		Print_Draw();
 	} else if (Util_IsFocused() == true) {
@@ -273,14 +301,15 @@ CSQC_Update2D(float w, float h, bool focus)
 
 		/* no prints overlapping scoreboards */
 		if (Client_InIntermission() || pSeat->m_iScoresVisible == TRUE) {
-			Scores_Draw();
+			if (g_hideScores == false) {
+				Scores_Draw();
+			}
 		} else {
 			VGUI_Draw();
 			Print_DrawCenterprint();
 		}
 	}
 }
-
 
 var bool autocvar_overview_generate = false;
 var bool autocvar_overview_test = false;
@@ -313,7 +342,7 @@ CSQC_UpdateView(float w, float h, float focus)
 			g_vidsize[1] = h;
 			ClientGame_InitDone();
 			MOTD_Init();
-			VGUI_ShowMOTD();
+			VGUI_ShowMOTD(g_uiDesktop, true);
 			Sky_Update(true);
 		}
 	}
@@ -395,8 +424,9 @@ CSQC_UpdateView(float w, float h, float focus)
 
 			pSeat->m_ePlayer = findfloat(world, ::entnum, player_localentnum);
 
-            if (pSeat->m_ePlayer == world)
-                continue;
+			if (pSeat->m_ePlayer == world) {
+				continue;
+			}
 
 			cl = (ncPlayer)pSeat->m_ePlayer;
 			setproperty(VF_ACTIVESEAT, (float)s);
@@ -437,6 +467,15 @@ CSQC_UpdateView(float w, float h, float focus)
 		}
 	}
 
+	/* all 2D operations happen after this point */
+	for (entity b = world; (b = findfloat(b, ::isCSQC, 1));) {
+		ncEntity pf = (ncEntity) b;
+
+		if (pf.postframe)
+			pf.postframe();
+	}
+
+
 	/* make sure we're not running these on invalid seats post frame */
 	pSeat = __NULL__;
 	pSeatLocal = __NULL__;
@@ -476,40 +515,45 @@ CSQC_InputEvent(float fEventType, float fKey, float fCharacter, float fDeviceID)
 		return (true);
 	}
 
+	if (pSeat->m_inputFocus) {
+        vguiWidget focusedWidget = (vguiWidget)pSeat->m_inputFocus;
+        view_angles = pSeat->m_ePlayer.v_angle;
+
+        /* escape it! */
+        if (fEventType == IE_KEYUP && fKey == K_ESCAPE) {
+            pSeat->m_inputFocus = __NULL__;
+        } else {
+            focusedWidget.Input(fEventType, fKey, fCharacter, fDeviceID);
+        }
+        return 1;
+    }
+
 	pSeat->m_bInterfaceFocused = false;
-
-	for (entity e = world; (e = find(e, ::classname, "ncInteractiveSurface"));) {
-		vector vecPos = pSeat->m_ePlayer.origin + pSeat->m_ePlayer.view_ofs;
-		ncInteractiveSurface surf = (ncInteractiveSurface) e;
-
-		if (surf.FocusCheck(vecPos, view_angles)) {
-			pSeat->m_bInterfaceFocused = true;
-			surf.Input(fEventType, fKey, fCharacter, fDeviceID);
-			break;
-		}
-	}
-
-	for (entity e = world; (e = find(e, ::classname, "ncVideoDisplay"));) {
-		vector vecPos = pSeat->m_ePlayer.origin + pSeat->m_ePlayer.view_ofs;
-		ncVideoDisplay surf = (ncVideoDisplay) e;
-
-		if (surf.FocusCheck(vecPos, view_angles)) {
-			pSeat->m_bInterfaceFocused = true;
-			surf.Input(fEventType, fKey, fCharacter, fDeviceID);
-			break;
-		}
-	}
-
+	bool vgui_pressed = false;
 	//g_vecMousePos = getmousepos();
 
-	bool vgui_pressed;
-	vgui_pressed = Commandmenu_Input(fEventType, fKey, fCharacter, fDeviceID);
+	if (!vgui_pressed) {
+		vgui_pressed = Commandmenu_Input(fEventType, fKey, fCharacter, fDeviceID);
+	}
 
 	if (!vgui_pressed) {
 		vgui_pressed = VGUI_Input(fEventType, fKey, fCharacter, fDeviceID);
 	}
 
-	if (g_vguiWidgetCount) {
+	if (pSeat->m_showInterface == false)
+	if (!vgui_pressed)
+	for (entity e = world; (e = find(e, ::classname, "ncMediaSurface"));) {
+		vector vecPos = pSeat->m_ePlayer.origin + pSeat->m_ePlayer.view_ofs;
+		ncMediaSurface surf = (ncMediaSurface) e;
+
+		if (surf.FocusCheck(vecPos, view_angles)) {
+			pSeat->m_bInterfaceFocused = true;
+			surf.Input(fEventType, fKey, fCharacter, fDeviceID);
+			break;
+		}
+	}
+
+	if (VGUI_MouseActive()) {
 		setcursormode(TRUE, "gfx/cursor", [0,0,0], 1.0f);
 	} else {
 		setcursormode(FALSE, "gfx/cursor", [0,0,0], 1.0f);
@@ -533,6 +577,17 @@ CSQC_Input_Frame(void)
 
 	CSQC_UpdateSeat();
 	me = pSeat->m_ePlayer;
+
+    if (pSeat->m_showInterface) {
+        input_buttons = 0;
+    }
+
+    if (pSeat->m_inputFocus) {
+        input_buttons = 0;
+        input_movevalues = 0;
+        input_angles = pSeat->m_ePlayer.v_angle;
+        view_angles = pSeat->m_ePlayer.v_angle;
+    }
 
 	if (is.Player(me)) {
 		ncPlayer pl = (ncPlayer)me;
@@ -580,6 +635,7 @@ CSQC_Parse_Event(void)
 	float fHeader = readbyte();
 
 	int ret = ClientGame_EventParse(fHeader);
+
 	if (ret == 1) {
 		return;
 	}
@@ -602,7 +658,7 @@ CSQC_ConsoleCommand(string sCMD)
 	tokenize(sCMD);
 
 	/* give us a chance to override commands */
-	return (ClientGame_ConsoleCommand()) ? true : Cmd_Parse(sCMD);
+	return (ClientGame_ConsoleCommand()) ? (true) : Cmd_Parse(sCMD);
 }
 
 
@@ -743,12 +799,14 @@ CSQC_Ent_Remove(void)
 
 		/* we don't want to call Destroy, as that's delayed by a frame...
 		   so we need to call this ourselves */
-		if (me.OnRemoveEntity)
+		if (me.OnRemoveEntity) {
 			me.OnRemoveEntity();
+		}
 
 		/* frees one slot the engine won't free for us */
-		if (me.skeletonindex)
+		if (me.skeletonindex) {
 			skel_delete(me.skeletonindex);
+		}
 
 		/* we're done, remove it once and for all */
 		remove(self);
@@ -771,7 +829,8 @@ CSQC_Shutdown(void)
 	Titles_Shutdown();
 	SoundDef_Shutdown();
 	PropData_Shutdown();
-	ncLog("Client game shutdown.");
+	ncConstantManager::Shutdown();
+	ncLogAlways("Client game shutdown.");
 
 	/* ENGINE, PLS FIX */
 	input_cursor_entitynumber = 0;

@@ -68,6 +68,7 @@ public:
 	virtual void Precache(void);
 	virtual void Respawn(void);
 	virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity entityActivator, string inputName, string dataField);
 
 private:
 	int m_usesLeft;
@@ -105,6 +106,19 @@ env_beverage::Restore(string strKey, string setValue)
 }
 
 void
+env_beverage::Input(entity entityActivator, string inputName, string dataField)
+{
+	switch (inputName) {
+	case "SetSkin":
+        EntLog("Will now produce beverage type %d", m_sodaSkin);
+		m_sodaSkin = stof(dataField);
+		break;
+	default:
+		super::Input(entityActivator, inputName, dataField);
+	}
+}
+
+void
 env_beverage::Precache(void)
 {
 	precache.Model("models/can.mdl");
@@ -118,6 +132,10 @@ env_beverage::Respawn(void)
 	m_usesLeft = GetSpawnInt("health");
 	m_sodaSkin = GetSpawnInt("skin");
 
+	if (m_usesLeft <= 0) {
+		m_usesLeft = 15;
+	}
+
 	if (m_sodaSkin == SKIN_RANDOM) {
 		m_sodaSkin = rint(random(SKIN_COCACOLA, SKIN_MOXIE));
 	}
@@ -126,15 +144,24 @@ env_beverage::Respawn(void)
 void
 env_beverage::Trigger(entity act, triggermode_t unused)
 {
-	if (GetValue(this) == false || m_usesLeft <= 0) {
+	if (GetValue(this) == false) {
+        EntLog("Blocked beverage dispense (Disabled).");
 		return;
 	}
 
+	if (m_usesLeft <= 0) {
+        EntLog("Blocked beverage dispense (No uses left).");
+		return;
+	}
+
+	EntLog("Dispensing beverage type", m_sodaSkin);
 	ncEntity eCan = ents.Create("item_sodacan", GetOrigin());
 	eCan.SetAngles(GetAngles());
 	eCan.SetOwner(this);
 	eCan.SetSkin((float)m_sodaSkin);
+    eCan.SetModel("models/can.mdl");
+    eCan.owner = this;
 
 	m_usesLeft--;
-	SetValue(0i);
+	SetValue(0i); /* disable until the can unlocks its owner */
 }

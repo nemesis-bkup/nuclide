@@ -266,8 +266,6 @@ ncEntity::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_COORD(avelocity[1], BASEFL_CHANGED_ANGULARVELOCITY)
 	READENTITY_COORD(avelocity[2], BASEFL_CHANGED_ANGULARVELOCITY)
 
-	drawmask = (modelindex != 0) ? MASK_ENGINE : 0;
-
 	if (scale == 0.0f) {
 		scale = 1.0f;
 	}
@@ -287,6 +285,16 @@ ncEntity::ReceiveEvent(float eventType)
 	default:
 		EntError("Unknown event %d", eventType);
 	}
+}
+
+void
+ncEntity::preframe(void)
+{
+}
+
+void
+ncEntity::postframe(void)
+{
 }
 
 void
@@ -403,11 +411,19 @@ ncEntity::ParentUpdate(void)
 	if (tag_entity) {
 		ncEntity parentEntity = (ncEntity)GetParent();
 
-		origin = parentEntity.WorldSpaceCenter() + anglesToForward(parentEntity.angles) * m_parentPosOffs[0];
-		origin += anglesToRight(tag_entity.angles) * m_parentPosOffs[1];
-		origin += anglesToUp(tag_entity.angles) * m_parentPosOffs[2];
+		if (IsBrush() == false && parentEntity.IsBrush()) {
+			origin = parentEntity.WorldSpaceCenter() + anglesToForward(angles) * m_parentPosOffs[0];
+			origin += anglesToRight(angles) * m_parentPosOffs[1];
+			origin += anglesToUp(angles) * m_parentPosOffs[2];
+		} else {
+			origin = parentEntity.WorldSpaceCenter() + anglesToForward(parentEntity.angles) * m_parentPosOffs[0];
+			origin += anglesToRight(tag_entity.angles) * m_parentPosOffs[1];
+			origin += anglesToUp(tag_entity.angles) * m_parentPosOffs[2];
+		}
 
-		if (IsBrush() == false) {
+		setorigin(this, origin);
+
+		if (IsBrush() == false && parentEntity.classname != "func_door") {
 			angles = anglesToForward(tag_entity.angles) * m_parentAngOffs[0];
 			angles += anglesToRight(tag_entity.angles) * m_parentAngOffs[1];
 			angles += anglesToUp(tag_entity.angles) * m_parentAngOffs[2];
@@ -459,6 +475,7 @@ ncEntity::SetParent(string name)
 	vector parentOffset, angleOffset;
 	vector ourAbsPos, parentAbsPos;
 	ncEntity parentEntity;
+	vector parentAngles;
 
 	tag_entity = find(world, ::targetname, name);
 	parentEntity = (ncEntity)tag_entity;
@@ -474,16 +491,28 @@ ncEntity::SetParent(string name)
 		return;
 	}
 
-	parentOffset = ourAbsPos - parentAbsPos;
-	angleOffset = anglesToForward(angles) - anglesToForward(tag_entity.angles);
+	/* use brush' their center as a point of reference */
+	if (!IsBrush() && parentEntity.IsBrush()) {
+		parentAbsPos = parentEntity.WorldSpaceCenter();
+	}
 
-	makevectors(tag_entity.angles);
-	m_parentPosOffs[0] = dotproduct(parentOffset, anglesToForward(tag_entity.angles));
-	m_parentPosOffs[1] = dotproduct(parentOffset, anglesToRight(tag_entity.angles));
-	m_parentPosOffs[2] = dotproduct(parentOffset, anglesToUp(tag_entity.angles));
-	m_parentAngOffs[0] = dotproduct(angleOffset, anglesToForward(tag_entity.angles));
-	m_parentAngOffs[1] = dotproduct(angleOffset, anglesToRight(tag_entity.angles));
-	m_parentAngOffs[2] = dotproduct(angleOffset, anglesToUp(tag_entity.angles));
+	/* brushes use angles for movement direction, making our delta utter nonsense */
+	if (parentEntity.IsBrush()) {
+		parentAngles = angles;
+	} else {
+		parentAngles = tag_entity.angles;
+	}
+
+	parentOffset = ourAbsPos - parentAbsPos;
+	angleOffset = anglesToForward(angles) - anglesToForward(parentAngles);
+
+	makevectors(parentAngles);
+	m_parentPosOffs[0] = dotproduct(parentOffset, anglesToForward(parentAngles));
+	m_parentPosOffs[1] = dotproduct(parentOffset, anglesToRight(parentAngles));
+	m_parentPosOffs[2] = dotproduct(parentOffset, anglesToUp(parentAngles));
+	m_parentAngOffs[0] = dotproduct(angleOffset, anglesToForward(parentAngles));
+	m_parentAngOffs[1] = dotproduct(angleOffset, anglesToRight(parentAngles));
+	m_parentAngOffs[2] = dotproduct(angleOffset, anglesToUp(parentAngles));
 
 	EntLog("Parented to (%d) %s (offs: %v) (%v - %v)", num_for_edict(tag_entity), tag_entity.classname, m_parentPosOffs, ourAbsPos, parentAbsPos);
 }

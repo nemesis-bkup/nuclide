@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop metal
+	diffusemap detail_pbr/gunmetal.tga
+	normalmap detail_pbr/gunmetal_local.tga
+	specularmap detail_pbr/gunmetal_mra.tga
+
+	{
+		program defaultwall
+	}
+}

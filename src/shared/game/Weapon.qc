@@ -235,6 +235,9 @@ ncWeapon::SpawnKey(string keyName, string setValue)
 	case "continuousSmoke":
 		m_fiFXSmokeContinous = ReadBool(setValue);
 		break;
+    case "gui":
+        m_interfaceFile = ReadString(setValue);
+        break;
 	default:
 		super::SpawnKey(keyName, setValue);
 		break;
@@ -426,6 +429,7 @@ ncWeapon::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_BYTE(m_weaponIsFiring, WEAPONFL_CHANGED_STATE)
 	SENDENTITY_FLOAT(m_weaponOverheating, WEAPONFL_CHANGED_STATE)
 	SENDENTITY_BYTE(m_burstCount, WEAPONFL_CHANGED_STATE)
+    SENDENTITY_STRING(m_interfaceFile, WEAPONFL_CHANGED_MODELINDEX)
 	return (true);
 }
 
@@ -565,6 +569,7 @@ ncWeapon::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_BYTE(m_weaponIsFiring, WEAPONFL_CHANGED_STATE)
 	READENTITY_FLOAT(m_weaponOverheating, WEAPONFL_CHANGED_STATE)
 	READENTITY_BYTE(m_burstCount, WEAPONFL_CHANGED_STATE)
+    READENTITY_STRING(m_interfaceFile, WEAPONFL_CHANGED_MODELINDEX)
 
 	if (flChanged & WEAPONFL_CHANGED_BODY) {
 		_UpdateGeomset();
@@ -581,9 +586,15 @@ ncWeapon::ReceiveEntity(float flNew, float flChanged)
 	/* expensive & this has to be done first, any code below may query decl */
 	if (flChanged & WEAPONFL_CHANGED_MODELINDEX) {
 		EntityDef_SetFromEntNum(this, entityDefID);
-	}
 
-	drawmask = (modelindex != 0) ? MASK_ENGINE : 0;
+        if (!m_uiRootWindow && STRING_SET(m_interfaceFile)) {
+            vguiRootWindow rootWindow;
+            m_uiRootWindow = spawn(vguiRootWindow);
+            m_uiInteractive = vguiScriptedView::CreateFromMenuFile(m_uiInteractive, m_interfaceFile);
+            rootWindow = (vguiRootWindow)m_uiRootWindow;
+            rootWindow.Add(m_uiInteractive);
+        }
+    }
 }
 
 void
@@ -1345,7 +1356,7 @@ ncWeapon::Attack(string fireInfo)
 	}
 
 	/* "fireUnderwater" check */
-	if (m_fiFireUnderwater == false && owner.waterlevel >= WATERLEVEL_SUBMERGED) {
+	if ((m_fiFireUnderwater == false) && (owner.waterlevel >= WATERLEVEL_SUBMERGED)) {
 		EmptySound();
 		return;
 	}
@@ -1401,7 +1412,7 @@ ncWeapon::Attack(string fireInfo)
 	ncSoundDict fireSound = m_fiSndFire;
 	v_angle = input_angles;
 
-	if (m_weaponClipSize > 0 && m_weaponClip == 0) {
+	if ((m_weaponClipSize > 0) && (m_weaponClip == 0)) {
 		if (m_fiSndFireLast) {
 			fireSound = m_fiSndFireLast;
 		}
@@ -1945,32 +1956,29 @@ ncWeapon::Reload(void)
 	int ammoTypeID;
 	float reloadStartAct = -1;
 
-	/* already in a reload? */
-	if (m_weaponState >= WEAPONSTATE_RELOAD_START && m_weaponState <= WEAPONSTATE_RELOAD_END) {
-		return;
-	}
-	reloadStartAct = GetSubDefAct(m_weaponLastFireInfo, "reloadStart");
-
-	/* we cannot reload this weapon by principle. */
-	if (!m_weaponClipSize) {
-		return;
-	}
-
 	if (CanReload() == false) {
-		Idle();
+		Release();
 		return;
 	}
+
+	if ((m_weaponState >= WEAPONSTATE_RELOAD_START && m_weaponState <= WEAPONSTATE_RELOAD_END)) {
+		Release();
+		return;
+	}
+
+	reloadStartAct = GetSubDefAct(m_weaponLastFireInfo, "reloadStart");
 
 	/* NOTE: this affects our clip, so primary fireInfo only */
 	ammoTypeID = m_primaryAmmoType;
 
 	if (m_weaponClip == m_weaponClipSize) {
-		Idle();
+		Release();
 		return;
 	}
 
 	/* no leftover ammo at all. */
 	if (ourOwner.HasAmmo(ammoTypeID, 1) == false) {
+		Release();
 		return;
 	}
 
@@ -2240,7 +2248,27 @@ void
 ncWeapon::UpdateGUI(void)
 {
 #ifdef CLIENT
+    vguiRootWindow rootWindow = (vguiRootWindow)m_uiRootWindow;
 
+    if (!rootWindow) {
+        return;
+    }
+
+    clearscene();
+	setviewprop(VF_RT_DESTCOLOUR, "weapongui", (float)1, [512,512]);
+    drawfill([0,0], [512,512], [0,0,0], 0.0f, 0);
+	setviewprop(VF_SIZE, [512,512]);
+	setviewprop(VF_DRAWENGINESBAR, (float)0);
+	setviewprop(VF_ORIGIN, [0,0,0]);
+	setviewprop(VF_ANGLES, [0,0,0]);
+	setviewprop(VF_AFOV, 90.0f);
+
+    if (rootWindow) {
+        rootWindow.Draw();
+    }
+
+	/* reset */
+	setviewprop(VF_RT_DESTCOLOUR, "");
 #endif
 }
 
@@ -2376,11 +2404,16 @@ ncWeapon::CanReload(void)
 {
 	ncPlayer ourOwner = (ncPlayer)GetOwner();
 
+	/* we cannot reload this weapon by principle. */
+	if (!m_weaponClipSize) {
+		return (false);
+	}
+
 	if (ourOwner.m_timeUntilReloaded > 0.0f) {
 		return (false);
 	}
 
-	return (true);
+	return HasReserveAmmo();
 }
 
 ncWeapon

@@ -40,10 +40,19 @@ vguiLoadingPanel::vguiLoadingPanel(void)
 void
 vguiLoadingPanel::UpdateProgress(void)
 {
+#ifdef MENU
+	float minLoadingStage = (float)Platform_GetLoadingStage();
+	float maxLoadingStage = 4;
+	float min = (float)Platform_GetCurrentLoadingSize();
+	float max = (float)Platform_GetTotalLoadingSize();
+	timePassed = (minLoadingStage + (min / max)) / maxLoadingStage;
+	//printf("%f %f %f %f\n", minLoadingStage, maxLoadingStage, min, max);
+#else
 	timePassed += frametime;
 
 	if (timePassed > 1.0f)
 		timePassed = 0.0f;
+#endif
 
 	m_progressBar.SetProgress(timePassed);
 }

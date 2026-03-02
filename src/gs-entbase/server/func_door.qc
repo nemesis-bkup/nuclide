@@ -373,11 +373,6 @@ func_door::Respawn(void)
 		return;
 	}
 
-	/* this is a terrible hack */
-	if (m_flWait == 0) {
-		m_flWait = 0.01f;
-	}
-
 	if (HasSpawnFlags(SF_MOV_PASSABLE)) {
 		SetSolid(SOLID_NOT);
 	} else {

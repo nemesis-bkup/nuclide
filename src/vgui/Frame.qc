@@ -34,7 +34,7 @@ void
 vguiFrame::vguiFrame(void)
 {
 	m_frameColor = spawn(vguiColor);
-	m_frameColor. SetColorWithAlpha(UI_MAINCOLOR, 0.0f);
+	m_frameColor.SetColorWithAlpha([0,0,0], 0.0f);
 }
 
 void vguiFrame::Draw(void)

@@ -1,11 +1,5 @@
 entityDef weapon_axe
 {
-	"editor_color"		".3 .3 1"
-	"editor_mins"		"-16 -16 -16"
-	"editor_maxs"		"16 16 16"
-	"editor_usage"		"Axe"
-	"editor_rotatable"	"1"
-
 	"spawnclass"		"ncWeapon"
 	"model_view"		"progs/v_axe.mdl"
 	"snd_acquire"		"weapon.pickup"

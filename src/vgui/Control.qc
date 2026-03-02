@@ -30,6 +30,11 @@ public:
 	/** Returns the control tag. Used for identification purposes. */
 	nonvirtual int GetTag(void);
 
+	/** Sets the key to be pressed to order to simulate a click event. */
+	nonvirtual void SetKeyEquivalent(string);
+	/** Returns the key to be pressed in order to simulate a click event. */
+	nonvirtual string GetKeyEquivalent(void);
+
 	/* overridable */
 	/** Called when the mouse starts hovering over this element. */
 	virtual void OnMouseEntered(void);
@@ -42,12 +47,14 @@ public:
 
 private:
 	int m_iTag;
+	float m_keyEquivalent;
 };
 
 void
 vguiControl::vguiControl(void)
 {
 	m_iTag = 0i;
+	m_keyEquivalent = -1;
 }
 
 void
@@ -60,6 +67,18 @@ int
 vguiControl::GetTag(void)
 {
 	return m_iTag;
+}
+
+void
+vguiControl::SetKeyEquivalent(string keyValue)
+{
+	m_keyEquivalent = stringtokeynum(keyValue);
+}
+
+string
+vguiControl::GetKeyEquivalent(void)
+{
+	return keynumtostring(m_keyEquivalent);
 }
 
 void

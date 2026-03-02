@@ -89,15 +89,15 @@ public:
 #endif
 
 private:
-	PREDICTED_VECTOR(m_vecEndPos)
-	PREDICTED_INT(m_iActive)
-	PREDICTED_INT(m_iBeamFlags)
-	PREDICTED_FLOAT(m_flBeamWidth)
-	PREDICTED_FLOAT(m_flAmplitude)
+	NETWORKED_VECTOR(m_vecEndPos)
+	NETWORKED_INT(m_iActive)
+	NETWORKED_INT(m_iBeamFlags)
+	NETWORKED_FLOAT(m_flBeamWidth)
+	NETWORKED_FLOAT(m_flAmplitude)
 
 	/* visual fluff */
 	string m_strTexture;
-	PREDICTED_INT(m_iSpriteID)
+	NETWORKED_INT(m_iSpriteID)
 
 #ifdef SERVER
 	string m_strEndEnt;

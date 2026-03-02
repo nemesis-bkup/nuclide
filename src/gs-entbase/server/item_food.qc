@@ -100,6 +100,7 @@ item_food::Respawn(void)
 void
 item_food::Setup(void)
 {
+    EntLog("Dispensed");
 	SetSolid(SOLID_TRIGGER);
 	SetSize([-16,-16,-16], [16,16,16]);
 
@@ -111,22 +112,24 @@ item_food::Setup(void)
 void
 item_food::Touch(entity eToucher)
 {
-	if (is.Player(eToucher)) {
+	if (!is.Player(eToucher)) {
 		return;
 	}
-	
-	if (owner != __NULL__) {
-		env_beverage bevOwner = (env_beverage)owner;
-		bevOwner.SetValue(1i);
+
+	if (owner) {
+        if (owner.classname == "env_beverage") {
+            env_beverage bevOwner = (env_beverage)owner;
+            bevOwner.SetValue(1i);
+        }
 	}
 
 	eToucher.health = bound(0, eToucher.health + 1, eToucher.max_health);
-	SetSolid(SOLID_NOT);
+	Disappear();
 	Destroy();
 }
 
 class
-item_sodacan:info_null
+item_sodacan:item_food
 {
 	void item_sodacan(void);
 };

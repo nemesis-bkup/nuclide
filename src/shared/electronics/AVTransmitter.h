@@ -31,7 +31,7 @@ Transmits a video, audio signal (with metadata) and more over the game network.
 - "bottom_text" : Bottom video text, styled inside the ui_menu file.
 
 # INPUTS
-- "SwitchContainer" : Switches the video/audio track to a named set in `videos/*.{roq,ogg}`
+- "SwitchContainer" : Switches the video/audio track to a named set in `videos/filename.{roq,ogg}`
 - "SwitchVideoTrack" : Switches the video track to a different .roq file.
 - "SwitchAudioTrack" : Switches the audio track to a different .ogg file.
 - "LoadVideo" : Loads video information from a named decl from `decls/videos/`
@@ -47,7 +47,7 @@ None yet
 This entity was introduced in Nuclide (2025).
 */
 class
-ncAVTransmitter:ncActor
+ncAVTransmitter:ncMediaSource
 {
 public:
 	void ncAVTransmitter(void);
@@ -66,6 +66,9 @@ public:
 	virtual void ReceiveEntity(float,float);
 	virtual void ReloadVideoResources(void);
 	virtual void UpdateReceivers(void);
+	virtual void Draw(void);
+
+	/** Called by the client once per frame... REMOVE */
 	nonvirtual void FlipImages(void);
 #endif
 
@@ -78,12 +81,15 @@ private:
 	NETWORKED_STRING(m_tvChannelTopText)
 	NETWORKED_STRING(m_tvChannelBottomText)
 	NETWORKED_VECTOR(m_tvChannelLight)
+	NETWORKED_STRING(m_tvChannelUI)
 	NETWORKED_FLOAT(m_tvChannelLightStyle)
 
 #ifdef CLIENT
 	bool m_bCached;
 	string m_tvChannelMat;
 	string m_tvChannelVideoMat;
+	entity m_tvChannelUIRootWindow;
+	entity m_tvChannelUIMenu;
 #endif
 };
 
@@ -91,6 +97,7 @@ typedef enumflags
 {
 	TVCHANNELFL_ORIGIN,
 	TVCHANNELFL_CHAN,
+	TVCHANNELFL_UI,
 	TVCHANNELFL_VIDEO,
 	TVCHANNELFL_AUDIO,
 	TVCHANNELFL_DOG,

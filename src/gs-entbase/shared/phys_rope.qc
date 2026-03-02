@@ -60,11 +60,11 @@ public:
 
 private:
 	string m_strShader;
-	PREDICTED_FLOAT(m_flSag)
-	PREDICTED_FLOAT(m_flSwingFactor)
-	PREDICTED_INT(m_iSegments)
-	PREDICTED_VECTOR(m_vecTarget)
-	PREDICTED_FLOAT(m_flWidth)
+	NETWORKED_FLOAT(m_flSag)
+	NETWORKED_FLOAT(m_flSwingFactor)
+	NETWORKED_INT(m_iSegments)
+	NETWORKED_VECTOR(m_vecTarget)
+	NETWORKED_FLOAT(m_flWidth)
 	ncPhysicsConstraint m_ropeConstraint;
 };
 

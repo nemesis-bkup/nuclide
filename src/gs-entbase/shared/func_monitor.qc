@@ -98,14 +98,14 @@ public:
 
 private:
 	/* these mirror the fields of a point_camera */
-	PREDICTED_VECTOR(m_vecCamOrigin)
-	PREDICTED_VECTOR(m_vecCamAngles)
-	PREDICTED_FLOAT(m_flFOV)
-	PREDICTED_INT(m_iUseSAR)
-	PREDICTED_VECTOR(m_vecFogColor)
-	PREDICTED_FLOAT(m_flFogStart)
-	PREDICTED_FLOAT(m_flFogEnd)
-	PREDICTED_BOOL(m_bState)
+	NETWORKED_VECTOR(m_vecCamOrigin)
+	NETWORKED_VECTOR(m_vecCamAngles)
+	NETWORKED_FLOAT(m_flFOV)
+	NETWORKED_INT(m_iUseSAR)
+	NETWORKED_VECTOR(m_vecFogColor)
+	NETWORKED_FLOAT(m_flFogStart)
+	NETWORKED_FLOAT(m_flFogEnd)
+	NETWORKED_BOOL(m_bState)
 	int m_iCamValue;
 	int m_iUseFog;
 };

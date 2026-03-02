@@ -45,7 +45,7 @@ entityDef fireInfo_superNailgun
 {
 	"def_onFire"		"projectile_supernail"
 	"fireRate"			"0.1"
-	"punchSpring"		"-2 0 0"
+	"punchSpring"		"-0.25 0 0"
 }
 
 entityDef projectile_supernail
@@ -55,7 +55,7 @@ entityDef projectile_supernail
 	"offset"				"24 0 -8"
 	"mins"					"0 0 0"
 	"maxs"					"0 0 0"
-	"velocity"				"1000"
+	"velocity"				"6000"
 	"fuse"					"10"
 	"detonate_on_fuse"		"0"
 	"detonate_on_death"		"0"
@@ -68,8 +68,8 @@ entityDef projectile_supernail
 	"debris_stick"			"1"
 	"debris_offset"			"-2 0 0"
 //	"range"					"6000"
-	"fx_path"			"weapon_nailgun.muzzleflash"
-	"smoke_fly"				"weapon_nailgun.trail"
+	"fx_path"				"weapon_nailgun.muzzleflash"
+	"smoke_fly"				"weapon_shotgun.trail"
 
 	"def_damage"			"damage_supernailDirect"
 }

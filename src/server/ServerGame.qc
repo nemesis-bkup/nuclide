@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2016-2026 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
 var bool g_mapEntitiesLoaded = false;
 var bool g_menuBackgroundMapMode = false;
 var int g_mapSpawnEntityCount;
@@ -14,7 +30,7 @@ ncServerGame::Init(void)
 	_shared_main();
 
 	Skill_Init();
-	Constants_Init();
+	ncConstantManager::Init();
 	MapTweaks_Init();
 	MapC_Init();
 	RuleC_Init();
@@ -34,10 +50,16 @@ void
 ncServerGame::Shutdown(void)
 {
 	InitStart();
+
 	if (g_grMode) {
 		g_grMode.Shutdown();
 	}
 
+	if (g_grMap) {
+		g_grMap.Shutdown();
+	}
+
+	ncZoneManager::Shutdown();
 	ncStats::Shutdown();
 	BotLib_Shutdown();
 	InitEnd();
@@ -75,7 +97,7 @@ ncServerGame::InitEnts(void)
 	Ammo_Init();
 	SoundDef_Init();
 	PropData_Init();
-	SurfData_Init();
+	ncSurfDataManager::Init();
 	DecalGroups_Init();
 	Materials_Init();
 	MOTD_Init();
@@ -91,6 +113,7 @@ ncServerGame::InitEnts(void)
 	ncAddonManager::LoadDefaultAddons();
 
 	Game_Worldspawn();
+	ncZoneManager::Init();
 	Decals_Init();
 	Sentences_Init();
 	Activities_Init();
@@ -155,6 +178,10 @@ ncServerGame::InitPostEnts(void)
 		g_grMode.InitPostEnts();
 	}
 
+	if (g_grMap) {
+		g_grMap.InitPostEnts();
+	}
+
 	/* of all the map entities that we wanted to spawn, how many are left? */
 	for (entity a = world; (a = findfloat(a, ::_mapspawned, true));) {
 		ncEntity ent = (ncEntity)a;
@@ -189,9 +216,17 @@ ncServerGame::StartFrame(void)
 		externset(g_mapCProgs, time, "time");
 	}
 
-	if (g_grMode)
-		if (g_grMode.FrameStart && time > 1)
+	if (g_grMode) {
+		if (g_grMode.FrameStart && time > 1) {
 			g_grMode.FrameStart();
+		}
+	}
+
+	if (g_grMap) {
+		if (g_grMap.FrameStart && time > 1) {
+			g_grMap.FrameStart();
+		}
+	}
 
 	Vote_Frame();
 }
@@ -231,7 +266,14 @@ ncServerGame::ClientConnect(ncClient connectingClient)
 
 	ncStats::Connect(pl);
 
-	g_grMode.PlayerConnect((ncPlayer)self);
+	if (g_grMode) {
+		g_grMode.PlayerConnect((ncPlayer)self);
+	}
+
+	if (g_grMap) {
+		g_grMap.PlayerConnect((ncPlayer)self);
+	}
+
 	ncAddonManager::PlayerConnect((ncPlayer)self);
 
 	if (physics_supported() == TRUE) {
@@ -246,6 +288,10 @@ ncServerGame::ClientDisconnect(ncClient disconnectingClient)
 {
 	if (g_grMode) {
 		g_grMode.PlayerDisconnect((ncPlayer)self);
+	}
+
+	if (g_grMap) {
+		g_grMap.PlayerDisconnect((ncPlayer)self);
 	}
 
 	ncAddonManager::PlayerDisconnect((ncPlayer)self);
@@ -331,6 +377,10 @@ ncServerGame::PutClientInServer(ncPlayer ourPlayer)
 		g_grMode.PlayerSpawn(ourPlayer);
 	}
 
+	if (g_grMap) {
+		g_grMap.PlayerSpawn(ourPlayer);
+	}
+
 	/* handle transitions */
 	ncSessionManager::HandleLevelTransition();
 
@@ -386,10 +436,22 @@ ncServerGame::PlayerPreThink(ncPlayer ourPlayer)
 
 		if (ourPlayer.ruleSendInventory == true) {
 			g_grMode.PlayerInventoryChanged(ourPlayer);
-			ourPlayer.ruleSendInventory = false;
 		}
 
 		g_grMode.PlayerPreFrame((ncPlayer) ourPlayer);
+	}
+
+#if 0
+	if (g_grMap) {
+		if (ourPlayer.ruleSendInventory == true) {
+			g_grMap.PlayerInventoryChanged(ourPlayer);
+		}
+		g_grMap.PlayerPreFrame(ourPlayer);
+	}
+#endif
+
+	if (ourPlayer.ruleSendInventory == true) {
+		ourPlayer.ruleSendInventory = false;
 	}
 }
 
@@ -419,6 +481,12 @@ ncServerGame::PlayerPostThink(ncPlayer ourPlayer)
 	if (is.Bot(ourPlayer)) {
 		((ncBot)ourPlayer).BotPostFrame();
 	}
+
+#if 0
+	if (g_grMap) {
+		g_grMap.PlayerPostFrame(ourPlayer);
+	}
+#endif
 
 	if (g_grMode) {
 		g_grMode.PlayerPostFrame(ourPlayer);

@@ -194,10 +194,11 @@ ncSpectator::ClientInputFrame(void)
 	vector movementDir = vectorNormalize(input_movevalues);
 
 	/* normalize movement values */
-	if (movementDir[0] > 0)
+	if (movementDir[0] > 0) {
 		input_movevalues[0] = movementDir[0] * GetForwardSpeed();
-	else
+	} else {
 		input_movevalues[0] = movementDir[0] * GetBackSpeed();
+	}
 
 	input_movevalues[1] = movementDir[1] * GetSideSpeed();
 }
@@ -264,19 +265,21 @@ ncSpectator::predraw(void)
 void
 ncSpectator::InputNext(void)
 {
-	if (m_flDeathCam > time)
+	if (m_flDeathCam > time) {
 		return;
+	}
 
 	if (m_spectatingFlags & SPECFLAG_BUTTON_RELEASED) {
 		return;
 	}
 
 	/* don't allow switching players in free mode, as we're not tracking anything */
-	if (m_spectatingMode == SPECMODE_FREE || m_spectatingMode == SPECMODE_FREEOVERVIEW) {
+	if ((m_spectatingMode == SPECMODE_FREE) || (m_spectatingMode == SPECMODE_FREEOVERVIEW)) {
 		return;
 	}
 
-	if (m_spectatingMode == SPECMODE_DEATHCAM && m_flDeathCam < time) {
+	/* move out of deathcam mode once its lifetime has passed */
+	if ((m_spectatingMode == SPECMODE_DEATHCAM) && (m_flDeathCam < time)) {
 		m_spectatingMode = SPECMODE_THIRDPERSON;
 		InputNext();
 		return;
@@ -331,23 +334,26 @@ ncSpectator::InputNext(void)
 		}
 	}
 
-	if (best == 0)
+	if (best == 0) {
 		return;
+	}
 
 	m_spectatingEntity = best;
 #endif
 
 	WarpToTarget();
 
-	if (m_spectatingMode == SPECMODE_CHASEOVERVIEW)
+	if (m_spectatingMode == SPECMODE_CHASEOVERVIEW) {
 		m_spectatingMode = SPECMODE_CHASEOVERVIEW;
+	}
 }
 
 void
 ncSpectator::InputPrevious(void)
 {
-	if (m_flDeathCam > time)
+	if (m_flDeathCam > time) {
 		return;
+	}
 
 	if (m_spectatingFlags & SPECFLAG_BUTTON_RELEASED) {
 		return;
@@ -392,8 +398,9 @@ ncSpectator::InputPrevious(void)
 			if (f && f._isPlayer) {
 				cl = (ncClient)f;
 
-				if (!cl.IsFakeSpectator())
+				if (!cl.IsFakeSpectator()) {
 					best = i;
+				}
 			}
 		}
 
@@ -410,8 +417,9 @@ ncSpectator::InputPrevious(void)
 		}
 	}
 
-	if (best == 0)
+	if (best == 0) {
 		return;
+	}
 
 	m_spectatingEntity = best;
 #endif
@@ -419,14 +427,15 @@ ncSpectator::InputPrevious(void)
 
 	WarpToTarget();
 
-	if (m_spectatingMode == SPECMODE_LOCKEDCHASE)
+	if (m_spectatingMode == SPECMODE_LOCKEDCHASE) {
 		m_spectatingMode = SPECMODE_CHASEOVERVIEW;
+	}
 }
 
 void
 ncSpectator::InputMode(void)
 {
-	if (m_spectatingMode == SPECMODE_DEATHCAM && m_flDeathCam < time) {
+	if ((m_spectatingMode == SPECMODE_DEATHCAM) && (m_flDeathCam < time)) {
 		m_spectatingMode = SPECMODE_THIRDPERSON;
 		InputNext();
 		return;
@@ -446,15 +455,17 @@ ncSpectator::InputMode(void)
 #endif
 
 	if (f == this || !(f._isPlayer)) {
-		if (m_spectatingMode != SPECMODE_FREE)
+		if (m_spectatingMode != SPECMODE_FREE) {
 			m_spectatingMode = SPECMODE_FREE;
-		else
+		} else {
 			m_spectatingMode = SPECMODE_FREEOVERVIEW;
+		}
 	} else {
 		m_spectatingMode++;
 
-		if (m_spectatingMode > SPECMODE_CHASEOVERVIEW)
+		if (m_spectatingMode > SPECMODE_CHASEOVERVIEW) {
 			m_spectatingMode = SPECMODE_LOCKEDCHASE;
+		}
 	}
 }
 
@@ -472,8 +483,8 @@ ncSpectator::PreFrame(void)
 	/* run physics code for all the input frames which we've not heard back
 	 * from yet. This continues on in Player_ReceiveEntity! */
 	for (int i = sequence + 1; i <= clientcommandframe; i++) {
-		float flSuccess = getinputstate(i);
-		if (flSuccess == FALSE) {
+		bool flSuccess = getinputstate(i);
+		if (flSuccess == false) {
 			continue;
 		}
 
@@ -514,15 +525,16 @@ ncSpectator::SpectatorTrackPlayer(void)
 		b = (ncClient)edict_num(m_spectatingEntity);
 	#endif
 
-		if (b && is.Player(b))
-		if (b.IsFakeSpectator()) {
-			b = 0;
-			m_spectatingMode = SPECMODE_FREE;
-			InputNext();
+		if (b && is.Player(b)) {
+			if (b.IsFakeSpectator()) {
+				b = 0;
+				m_spectatingMode = SPECMODE_FREE;
+				InputNext();
+			}
 		}
 
 		/* if the ent is dead... or not available in this current frame
-		   just warp to the last 'good' one */
+		   just warp to the last 'good' position */
 		if (b) {
 			setorigin(this, b.origin);
 			spec_org = b.origin;
@@ -574,11 +586,10 @@ Spectator_ReadEntity(float new)
 {
 	ncSpectator spec = (ncSpectator)self;
 
-	if (new || self.classname != "spectator") {
+	if (new == true || self.classname != "spectator") {
 		spawnfunc_ncSpectator();
 		spec.classname = "spectator";
 		spec.solid = SOLID_NOT;
-		spec.drawmask = MASK_ENGINE;
 		spec.customphysics = Empty;
 		setsize(spec, [0,0,0], [0,0,0]);
 	}

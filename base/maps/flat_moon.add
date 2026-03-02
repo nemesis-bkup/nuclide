@@ -1,0 +1,6 @@
+{
+	"classname" "ncZone"
+	"mins"		"-4096 -4096 -4096"
+	"maxs"		"4096 4096 4096"
+	"message"	"#LOCATION_MOON"
+}

@@ -1,0 +1,5 @@
+{
+    program defaultskin
+    diffusemap models/keyb_black.tga
+    normalmap models/keyb_normal.tga
+}

@@ -84,11 +84,11 @@ public:
 #endif
 
 private:
-	PREDICTED_FLOAT(m_flSize)
-	PREDICTED_BOOL(m_bState)
-	PREDICTED_FLOAT m_flMaxSize)
-	PREDICTED_FLOATm_flGrowTime)
-	PREDICTED_BOOL(m_bType)
+	NETWORKED_FLOAT(m_flSize)
+	NETWORKED_BOOL(m_bState)
+	NETWORKED_FLOAT m_flMaxSize)
+	NETWORKED_FLOATm_flGrowTime)
+	NETWORKED_BOOL(m_bType)
 	float m_flIgnitionPoint;
 	float m_flDamageScale;
 	float m_flDuration;

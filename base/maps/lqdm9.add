@@ -1,0 +1,20 @@
+{
+"origin" "1150 600 350"
+"angles" "30.14 -129.86 0"
+"ui_scale" "0.35"
+"ui_res" "640 480"
+"light" "255 255 255"
+"classname" "ncMediaSurface"
+"accepts"   "video app picture"
+"ui_menu" "ui/lqdm1.menu"
+}
+{
+"origin" "-160 360 450"
+"angles" "25 -45 0"
+"ui_scale" "0.25"
+"ui_res" "640 480"
+"light" "255 255 255"
+"classname" "ncMediaSurface"
+"accepts"   "video app picture"
+"ui_menu" "ui/lqdm1.menu"
+}

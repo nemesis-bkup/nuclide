@@ -27,6 +27,26 @@ m_init(void)
 	registercommand("menu_quit");
 	registercommand("menu_music");
 	registercommand("map_background");
+
+	draw.Rect = linkToMenuProgs("UIPF_draw_Rect");
+	draw.RectOutline = linkToMenuProgs("UIPF_draw_RectOutline");
+	draw.RoundedRectOutline = linkToMenuProgs("UIPF_draw_RoundedRectOutline");
+	draw.RoundedBox = linkToMenuProgs("UIPF_draw_RoundedBox");
+	draw.Line = linkToMenuProgs("UIPF_draw_Line");
+	draw.Pic = linkToMenuProgs("UIPF_draw_Pic");
+	draw.SubPic = linkToMenuProgs("UIPF_draw_SubPic");
+
+	draw.TextField = linkToMenuProgs("Font_DrawField");
+	draw.TextFieldAtHeight = linkToMenuProgs("Font_DrawFieldAtHeight");
+	draw.RText = linkToMenuProgs("Font_DrawRText");
+	draw.RText_A = linkToMenuProgs("Font_DrawRText_A");
+	draw.RText_RGB = linkToMenuProgs("Font_DrawRText_RGB");
+	draw.RText_RGBA = linkToMenuProgs("Font_DrawRText_RGBA");
+	draw.Text = linkToMenuProgs("Font_DrawText");
+	draw.Text_A= linkToMenuProgs("Font_DrawText_A");
+	draw.Text_RGB= linkToMenuProgs("Font_DrawText_RGB");
+	draw.Text_RGBA = linkToMenuProgs("Font_DrawText_RGBA");
+	draw.RadarRect = linkToMenuProgs("UIPF_draw_RadarRect");
 }
 
 void
@@ -75,8 +95,8 @@ m_drawloading(vector screensize, float opaque)
 
 	pos = (screensize / 2) - [32,32];
 
-	if (opaque || (clientstate() != 2)) {
-		Background_Draw([0,0], screensize, opaque);
+	if (opaque) {
+		Platform_DrawLoading(screensize);
 	}
 
 	Loading_Draw(screensize);
@@ -151,14 +171,6 @@ m_consolecommand(string cmd)
 	int c = (int)tokenize(cmd);
 
 	switch (argv(0)) {
-	case "console":
-		static VGUIConsole consoleWindow;
-
-		if (!consoleWindow)
-			consoleWindow = spawn(VGUIConsole);
-
-		g_uiDesktop.Add( consoleWindow );
-		break;
 	case "menu_quit":
 		UI_QuitGame_Show();
 		break;

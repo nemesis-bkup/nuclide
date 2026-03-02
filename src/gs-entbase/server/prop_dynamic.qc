@@ -61,20 +61,6 @@ prop_dynamic::SpawnKey(string strKey, string setValue)
 	case "sequence":
 		frame = stof(setValue);
 		break;
-	case "solid":
-		float s = stof(setValue);
-
-		switch (s) {
-		case 2:
-			SetSolid(SOLID_BBOX);
-			break;
-		case 6:
-			SetSolid(SOLID_BSP);
-			break;
-		default:
-			SetSolid(SOLID_NOT);
-		}
-		break;
 	default:
 		super::SpawnKey(strKey, setValue);
 		break;
@@ -88,7 +74,18 @@ prop_dynamic::Respawn(void)
 
 	if (HasSpawnFlags(PRPDYN_NONSOLID)) {
 		SetSolid(SOLID_NOT);
-	}
+	} else {
+        switch (GetSpawnFloat("solid")) {
+		case 2:
+			SetSolid(SOLID_BBOX);
+			break;
+		case 6:
+			SetSolid(SOLID_BSP);
+			break;
+		default:
+			SetSolid(SOLID_NOT);
+		}
+    }
 }
 
 CLASSEXPORT(prop_dynamic_override, prop_dynamic)

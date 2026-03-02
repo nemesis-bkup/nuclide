@@ -1,0 +1,11 @@
+// Vera Visions Material
+{
+	surfaceprop foliage
+	diffusemap detail_pbr/foliage.tga
+	normalmap detail_pbr/foliage_local.tga
+	specularmap detail_pbr/foliage_mra.tga
+	
+	{
+		program defaultwall
+	}
+}

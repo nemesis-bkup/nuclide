@@ -1,6 +1,54 @@
+/*
+ * Copyright (c) 2025 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+
+/** VGUI: Root Window
+
+@ingroup vgui
+*/
+class vguiRootWindow:vguiWidget
+{
+public:
+	void vguiRootWindow(void);
+
+	nonvirtual void SetFocus(vguiWidget);
+	nonvirtual vguiWidget GetFocusedWidget(void);
+	nonvirtual bool MouseActive(void);
+	nonvirtual vector GetMousePos(void);
+	nonvirtual void SetFocusToNextWindow(void);
+
+	/* overrides */
+	virtual void Add(vguiWidget);
+	virtual void Reposition(void);
+	virtual void Draw(void);
+	virtual bool Input(float, float, float, float);
+
+private:
+	vguiWidget m_focusedWidget;
+	int m_activeWidgetCount;
+	vector m_vecMousePos;
+};
+
+
+
+
 void
 vguiWidget::vguiWidget(void)
 {
+
 	m_vecOrigin = [0.0f, 0.0f];
 	m_vecSize = [0.0f, 0.0f];
 	m_vecMinSize = [0.0f, 0.0f];
@@ -11,8 +59,22 @@ vguiWidget::vguiWidget(void)
 	m_bVisible = true;
 	m_bEnabled = true;
 	isVGUI = true;
+	m_theme = __NULL__;
+
+
+	m_children = __NULL__;
+	m_windowNext = __NULL__;
+	m_windowPrev = __NULL__;
+	m_rootNext = __NULL__;
+	m_rootPrev = __NULL__;
 
 	Spawned();
+}
+
+void
+vguiWidget::ReloadVideoResources(void)
+{
+
 }
 
 void
@@ -31,6 +93,73 @@ void
 vguiWidget::Enable(void)
 {
 	m_bEnabled = true;
+}
+
+vguiWidget
+vguiWidget::GetParent(void)
+{
+	return (m_parent);
+}
+
+void
+vguiWidget::OnRemove(void)
+{
+   for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
+        if (widgets.GetParent() == this) {
+			widgets.Remove();
+        }
+    }
+
+	m_bVisible = false;
+	m_bEnabled = false;
+	m_next = __NULL__;
+	m_parent = __NULL__;
+	isVGUI = false;
+	m_vecOrigin = [0.0f, 0.0f];
+	m_vecSize = [0.0f, 0.0f];
+	m_vecMinSize = [0.0f, 0.0f];
+}
+
+bool
+vguiWidget::MouseAbove(void)
+{
+	vguiRootWindow rootWin = (vguiRootWindow)GetRootWindow();
+	return Util_MouseAbove(rootWin.GetMousePos(), GetAbsPos(), GetSize());
+}
+
+vector
+vguiWidget::GetMousePos(void)
+{
+	vguiRootWindow rootWin = (vguiRootWindow)GetRootWindow();
+	return rootWin.GetMousePos();
+}
+
+
+void
+vguiWidget::Remove(void)
+{
+	OnRemove();
+
+    if (wasfreed(this) == false)
+        remove(this);
+}
+
+bool
+vguiWidget::HasFocus(void)
+{
+	vguiRootWindow rootWin = (vguiRootWindow)GetRootWindow();
+
+	return (rootWin.GetFocusedWidget() == this) ? (true) : (false);
+}
+
+vguiWidget
+vguiWidget::GetRootWindow(void)
+{
+	if (m_parent) {
+		return m_parent.GetRootWindow();
+	}
+
+	return (this);
 }
 
 void
@@ -119,6 +248,16 @@ vguiWidget::SetPos(vector vecNewPos)
 }
 
 vector
+vguiWidget::GetAbsPos(void)
+{
+	if (m_parent) {
+		return m_parent.m_vecOrigin + GetPos();
+	}
+
+	return GetPos();
+}
+
+vector
 vguiWidget::GetPos(void)
 {
 	return (m_vecOrigin);
@@ -176,7 +315,7 @@ vguiWidget::GetMinSize(void)
 }
 
 void
-vguiWidget::SetMaxSize (vector vecNewSize)
+vguiWidget::SetMaxSize(vector vecNewSize)
 {
 	m_vecMaxSize = vecNewSize;
 }
@@ -208,95 +347,24 @@ vguiWidget::HasFlag(int flag)
 void
 vguiWidget::Reposition(void)
 {
-	vguiWidget wNext = this;
 
-	do {
-		wNext = wNext.m_next;
-
-		if (wNext) {
-			wNext.Reposition();
-		}
-	} while (wNext);
 }
 
 void
 vguiWidget::Add(vguiWidget wNew)
 {
-	vguiWidget wNext = this;
-	vguiWidget wParent;
 
-	do {
-		wParent = wNext;
-		wNext = wNext.m_next;
-	} while (wNext);
-
-	wParent.m_next = wNew;
-	wNew.m_parent = this;
 }
 
 void
 vguiWidget::Draw(void)
 {
-	vguiWidget wNext = this;
-	g_vguiWidgetCount = 0;
 
-	do {
-		wNext = wNext.m_next;
-		if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
-			g_vguiWidgetCount++;
-			wNext.Draw();
-		}
-	} while (wNext);
 }
 
 bool
 vguiWidget::Input(float flEVType, float flKey, float flChar, float flDevID)
 {
-	vguiWidget wNext = this;
-	vguiWidget wLast = __NULL__;
-	vguiWidget wLastBefore = __NULL__;
-
-	/* figure out the last window in the chain... */
-	do {
-		wLastBefore = wNext;
-		wNext = wNext.m_next;
-
-		if (wNext) {
-			wLast = wNext;
-		}
-	} while (wNext);
-
-	//print(sprintf("Last widget: %S\n", wLast.classname)); 
-
-	/* we've found a window, let's test inputs backwards. */
-	while (wLast.classname) {
-		bool test = false;
-
-		if (wLast.Visible())
-			test = wLast.Input(flEVType, flKey, flChar, flDevID);
-
-		//print(sprintf("Testing input for... widget: %S %d\n", wLast.classname, test));
-
-		/* input successful */
-		if (test == true) {
-			return (true);
-		}
-
-		/* select the former input */
-		for (vguiWidget a = this; a != __NULL__; a = a.m_next) {
-			/* we've reached the end, take one from before */
-			if (a == wLast) {
-				wLast = wLastBefore;
-				break;
-			}
-			wLastBefore = a;
-		}
-
-		/* the end of the world. */
-		if (wLast == this)
-			return (false);
-	}
-
 	return (false);
 }
 

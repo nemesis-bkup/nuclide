@@ -151,6 +151,9 @@ public:
 	/** Returns the first entity named after the target field. */
 	nonvirtual entity GetTargetEntity(void);
 
+	/** Returns the name of the entity. */
+	nonvirtual string Name(void);
+
 	/** Returns TRUE if the entity has a legacy trigger target. */
 	nonvirtual bool HasTriggerTarget(void);
 
