@@ -9,6 +9,18 @@ glassgibs
 	specularmap detail_pbr/glass_mra.tga
 
 	{
-		program defaultwall
+		program defaultskin
+	}
+}
+
+woodgibs
+{
+	surfaceprop wood
+	diffusemap detail_pbr/wood.tga
+	normalmap detail_pbr/wood_local.tga
+	specularmap detail_pbr/wood_mra.tga
+
+	{
+		program defaultskin
 	}
 }
