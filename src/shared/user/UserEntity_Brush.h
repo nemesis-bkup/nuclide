@@ -19,6 +19,7 @@
 An in-world brush that has been placed down by
 a player.
 
+@ingroup userobjects
 */
 class
 ncUserEntity_Brush:ncUserEntity

@@ -122,6 +122,7 @@ void UI_CreateServer_Show ( void )
 		lsbModes.SetSize( '128 24' );
 		lsbModes.SetPos( '20 234' );
 		lsbModes.SetFeederType(FEEDER_GAMETYPES);
+		lsbModes.SetText(cvar_string( "g_gametype" ));
 
 		lblEntities = spawn( vguiLabel );
 		lblEntities.SetPos(lsbModes.GetPos() + [0, lsbModes.GetHeight() + 16] );

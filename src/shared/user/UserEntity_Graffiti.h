@@ -23,7 +23,7 @@ Sprays use the infoblob functionality to retrieve an image over the network.
 Unlike other ncUserEntity objects, it's not an interactive surface.
 Therefore it's not a true ncUserEntity.
 
-@ingroup baseclass
+@ingroup userobjects
 */
 class ncUserEntity_Graffiti:ncEntity
 {

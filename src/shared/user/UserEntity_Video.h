@@ -22,6 +22,7 @@ a player.
 For remote video sources, it currently relies on the `ffmpeg` plugin for FTEQW to be installed.
 Local videos work fine, as long as they're in the RoQ format.
 
+@ingroup userobjects
 */
 class
 ncUserEntity_Video:ncUserEntity

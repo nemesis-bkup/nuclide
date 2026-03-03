@@ -36,3 +36,27 @@ metalgibs
 		program defaultskin
 	}
 }
+
+rockgibs
+{
+	surfaceprop dirt
+	diffusemap detail_pbr/dirt.tga
+	normalmap detail_pbr/dirt_local.tga
+	specularmap detail_pbr/dirt_mra.tga
+
+	{
+		program defaultskin
+	}
+}
+
+cindergibs
+{
+	surfaceprop dirt
+	diffusemap detail_pbr/concrete.tga
+	normalmap detail_pbr/concrete_local.tga
+	specularmap detail_pbr/concrete_mra.tga
+
+	{
+		program defaultskin
+	}
+}

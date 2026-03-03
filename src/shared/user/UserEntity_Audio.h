@@ -21,6 +21,7 @@ a player.
 
 It currently relies on the `cef` plugin for FTEQW to be installed.
 
+@ingroup userobjects
 */
 class
 ncUserEntity_Audio:ncUserEntity

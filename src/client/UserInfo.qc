@@ -45,6 +45,12 @@ ncUserInfo::Avatar(void)
 }
 
 string
+ncUserInfo::Location(void)
+{
+	return (m_area);
+}
+
+string
 ncUserInfo::Banner(void)
 {
 	return (m_userBanner);
@@ -126,6 +132,7 @@ ncUserInfo::Update(void)
 	m_userBanner = getplayerkeyvalue(m_slot, "bg");
 	m_userContact = getplayerkeyvalue(m_slot, "fedi");
 	m_userFlag = getplayerkeyvalue(m_slot, "flag");
+	m_area = localize(getplayerkeyvalue(m_slot, "*areadef"));
 
 	m_userKills = (int)getplayerkeyfloat(m_slot, "frags");
 	m_userDeaths = (int)getplayerkeyfloat(m_slot, "*deaths");

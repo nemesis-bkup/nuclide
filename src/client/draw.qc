@@ -64,7 +64,8 @@ ClientGame_OwnerDrawValueForType(ncPlayer clientSlot, int ownerDraw, int typeVal
 		return teams.Name(2);
     case CG_PLAYER_LOCATION:
     	if (serverkeyfloat("areadefs") == 1) {
-            return (getplayerkeyvalue(player_localnum, "*areadef"));
+			ncUserInfo playerInfo = g_userInfo.LocalPlayerInfo();
+            return (playerInfo.Location());
         }
 		break;
 	case CG_GAME_STATUS: /* in teamplay, says which team leads or if they're tied. otherwise player ranking */

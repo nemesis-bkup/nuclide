@@ -11,6 +11,8 @@
     </tab>
     <tab type="concepts" visible="yes" title="">
     </tab>
+    <tab type="modules" visible="yes" title="">
+    </tab>
     <tab type="interfaces" visible="yes" title="">
       <tab type="interfacelist" visible="yes" title="" intro=""/>
       <tab type="interfaceindex" visible="$ALPHABETICAL_INDEX" title=""/> 

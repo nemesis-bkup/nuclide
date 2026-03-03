@@ -102,15 +102,15 @@
 	{
 		"GlassChunks"
 		{
-			"progs/spike.mdl#rendermode=5" "5.0"
+			"models/gibs/glassgibs.vvm#submodels=8#rendermode=2#renderamt=96" "5.0"
 		}
 		"WoodChunks"
 		{
-			"progs/spike.mdl" "5.0"
+			"models/gibs/woodgibs.vvm#submodels=3" "5.0"
 		}
 		"MetalChunks"
 		{
-			"progs/spike.mdl" "5.0"
+			"models/gibs/metalgibs.vvm#submodels=13" "5.0"
 		}
 		"FleshGibs"
 		{
@@ -124,11 +124,11 @@
 		}
 		"ComputerGibs"
 		{
-			"progs/spike.mdl" "5.0"
+			"models/gibs/metalgibs.vvm#submodels=13" "5.0"
 		}
 		"RockGibs"
 		{
-			"progs/spike.mdl" "5.0"
+			"models/gibs/rockgibs.vvm#submodels=3" "5.0"
 		}
 		"WebGibs"
 		{
@@ -136,7 +136,7 @@
 		}
 		"CinderBlocks"
 		{
-			"progs/spike.mdl" "5.0"
+			"models/gibs/cindergibs.vvm#submodels=9" "5.0"
 		}
 
 		"ArmyGibs"

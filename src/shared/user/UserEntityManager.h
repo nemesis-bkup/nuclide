@@ -20,6 +20,7 @@ Every user placed object is derived from this.
 ncUserEntity objects will be subject to whitelisting, blacklisting,
 muting, permissions and other such rules.
 
+@ingroup userobjects
 */
 class
 ncUserEntityManager:ncIO

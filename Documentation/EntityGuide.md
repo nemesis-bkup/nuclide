@@ -296,6 +296,8 @@
 
 [point_camera](@ref point_camera)
 
+[point_devshot_camera](@ref point_devshot_camera)
+
 [point_message](@ref point_message)
 
 [point_servercommand](@ref point_servercommand)
@@ -367,6 +369,8 @@
 [trigger_gravity](@ref trigger_gravity)
 
 [trigger_hurt](@ref trigger_hurt)
+
+[trigger_jump](@ref trigger_jump)
 
 [trigger_look](@ref trigger_look)
 

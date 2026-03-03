@@ -23,6 +23,7 @@ It becomes active when a player initiates their respective game.
 It becomes in-active when all players have left the game (aka gone
 into editing mode.)
 
+@ingroup userobjects
 */
 class
 ncUserEntity_GameEntity:ncUserEntity

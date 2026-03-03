@@ -14,12 +14,24 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/** @defgroup userobjects User Objects
+@ingroup entities
+
+These objects will be subject to whitelisting, blacklisting,
+muting, permissions and other such rules.
+
+As they are user managed they are under constant scrutiny
+by the server game and are only allowed to perform some tasks and interpret
+some inputs. That is the idea behind such objects.
+
+*/
+
+
 /** Shared: User Placed/Controlled Object Superclass
 
 Every user placed object is derived from this.
-ncUserEntity objects will be subject to whitelisting, blacklisting,
-muting, permissions and other such rules.
 
+@ingroup userobjects
 */
 class
 ncUserEntity:ncMediaSurface

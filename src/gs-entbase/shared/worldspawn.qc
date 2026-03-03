@@ -80,6 +80,7 @@ private:
 	float m_flHDRIrisFadeDown;
 	bool m_bHDREnabled;
 	bool m_bLitWater;
+	float m_flGravity;
 };
 
 void
@@ -92,6 +93,7 @@ ncWorldSpawn::ncWorldSpawn(void)
 	m_flHDRIrisFadeDown = 0.2;
 	m_bHDREnabled = false;
 	m_bLitWater = false;
+	m_flGravity = 800.0f;
 
 	if (serverkeyfloat("*bspversion") == BSPVER_HL) {
 		m_strSkyName = "desert";
@@ -162,6 +164,8 @@ ncWorldSpawn::Spawned(void)
 	serverinfo.SetBool("startdark", m_bStartDark);
 	serverinfo.SetBool("litwater", m_bLitWater);
 
+	cvars.SetFloat("sv_gravity", m_flGravity);
+
 
 #if 0
 	env_cascade_light sunLight = spawn(env_cascade_light);
@@ -191,6 +195,9 @@ ncWorldSpawn::SpawnKey(string strKey, string setValue)
 		break;
 	case "gametitle":
 		m_bGameTitle = ReadBool(setValue);
+		break;
+	case "gravity":
+		m_flGravity = ReadFloat(setValue);
 		break;
 	/* Household Death */
 	case "_bgm":

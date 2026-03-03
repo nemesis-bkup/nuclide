@@ -21,6 +21,7 @@ a player.
 
 Can be a local or remote image source.
 
+@ingroup userobjects
 */
 class
 ncUserEntity_Picture:ncUserEntity

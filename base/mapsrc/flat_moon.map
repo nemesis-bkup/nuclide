@@ -8,6 +8,7 @@
 "hdr_iris_fade_down" "1"
 "skyname" "black"
 "chaptertitle" "Big Flat Moon"
+"gravity" "133"
 // brush 0
 {
 ( -256 256 2688 ) ( 256 -256 2688 ) ( -256 -256 2688 ) common/skyportal 0 0 0 0.500000 0.500000 0 0 0

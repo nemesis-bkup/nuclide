@@ -19,6 +19,7 @@
 An in-world shape that has been placed down by
 a player.
 
+@ingroup userobjects
 */
 class
 ncUserEntity_Object:ncUserEntity
