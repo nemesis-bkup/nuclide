@@ -14,7 +14,7 @@
 	}
 	"flesh"
 	{
-		"breakable_model" "PlayerGibs"
+		"breakable_model" "FleshGibs"
 	}
 	"cinderblock"
 	{

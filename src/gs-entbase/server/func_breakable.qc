@@ -53,6 +53,7 @@ Brush volume that can break into lots of little pieces.
 - "material" : Material it's made of (See material-list below).
 - "delay" : Delay in seconds of when it breaks under pressure.
 - "explodemagnitude" : Strength of the explosion.
+- "gibmodel" : When set, will override the gib model being used.
 
 # SPAWNFLAGS
 - SF_TRIGGER (1) : Breakable is invincible and has to be triggered in order to break.
@@ -112,6 +113,7 @@ private:
 	vector m_explodeDir;
 
 	int m_breakablePropData;
+	string m_breakableGibModel;
 
 	/*entity m_pressAttacker;
 	int m_pressType;
@@ -127,6 +129,7 @@ func_breakable::func_breakable(void)
 	m_strBreakSpawn = __NULL__;
 	m_bCanTouch = false;
 	_m_iExplosionParticle = 0i;
+	m_breakableGibModel = __NULL__;
 
 	/* func_breakable defaults to glass */
 	if (classname == "func_breakable") {
@@ -195,6 +198,9 @@ func_breakable::SpawnKey(string strKey, string setValue)
 		break;
 	case "spawnonbreak":
 		m_strBreakSpawn = ReadString(setValue);
+		break;
+	case "gibmodel":
+		m_breakableGibModel = ReadString(setValue);
 		break;
 	default:
 		super::SpawnKey(strKey, setValue);
@@ -345,7 +351,10 @@ func_breakable::Death(entity inflictor, entity attacker, int damage, vector dir,
 
 	//breakModel = g_func_breakable_surfaces.GetString(itos(material));
 
-	if (STRING_SET(breakModel)) {
+	if (STRING_SET(m_breakableGibModel)) {
+		EntLog("Custom Gib Model: %S", m_breakableGibModel);
+		BreakModel_SpawnModelindex(absmin, absmax, dir, damage * 2.5, gibCount, getmodelindex(m_breakableGibModel));
+	} else if (STRING_SET(breakModel)) {
 		BreakModel_Spawn(absmin, absmax, dir, damage * 2.5, gibCount, breakModel);
 	} else {
 		EntError("No BreakModel set for \"material\" \"%d\"", material);

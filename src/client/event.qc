@@ -333,6 +333,9 @@ Event_Parse(float type)
 	case EV_BREAKMODEL:
 		BreakModel_Receive();
 		break;
+	case EV_BREAKMODELINDEX:
+		BreakModel_ReceiveIndex();
+		break;
 	case EV_BEAMCYLINDER:
 		EV_BeamCylinder_Parse();
 		break;

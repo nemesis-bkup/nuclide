@@ -279,9 +279,11 @@ var hashtable g_hashbreakmodel;
 #ifdef CLIENT
 void BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int count, int index);
 void BreakModel_Receive(void);
+void BreakModel_ReceiveIndex(void);
 void BreakModel_ReceiveClientData(void);
 #else
 void BreakModel_Spawn(vector pos, vector dir, vector spread, float speed, int count, string type);
+void BreakModel_SpawnModelindex(vector pos, vector dir, vector spread, float speed, int count, float type);
 void BreakModel_Entity(ncSurfacePropEntity target, vector dir, float speed);
 void BreakModel_SendClientData(entity);
 #endif

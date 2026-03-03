@@ -958,6 +958,8 @@ BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int coun
 	/* sanity check */
 	if (serverinfo.GetBool("physics") == false) {
 		usePhysics = false;
+	} else {
+		usePhysics = true;
 	}
 
 	if (speed < 200) {
@@ -1090,6 +1092,89 @@ BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int coun
 	}
 }
 
+
+void
+BreakModel_SpawnIndex(vector smins, vector smaxs, vector dir, float speed, int count, float index)
+{
+	bool usePhysics = false;
+
+	/* sanity check */
+	if (serverinfo.GetBool("physics") == false) {
+		usePhysics = false;
+	} else {
+		usePhysics = true;
+	}
+
+	if (speed < 200) {
+		speed = 200;
+	}
+
+	//print(sprintf("breaking into %i models\n", modelcount));
+
+	for (int i = 0; i < count; i++) {
+		vector endpos;
+		string fullline;
+		float fadetime;
+		ncDebris gib;
+		int p;
+		int bodygroup = 0;
+		vector rendercolor = [255,255,255];
+		float renderamt = 255.0f;
+		float rendermode = RM_NORMAL;
+		float renderfx = RFX_NORMAL;
+		string impactDecal = __NULL__;
+
+		endpos[0] = smins[0] + ( random() * ( smaxs[0] - smins[0] ) );
+		endpos[1] = smins[1] + ( random() * ( smaxs[1] - smins[1] ) );
+		endpos[2] = smins[2] + ( random() * ( smaxs[2] - smins[2] ) );
+
+		gib = BreakModel_Next();
+		gib.SetModel(modelnameforindex(index));
+		gib.SetBody(bodygroup);
+		gib.SetRenderColor(rendercolor);
+		gib.SetRenderAmt(renderamt);
+		gib.SetRenderMode(rendermode);
+		gib.SetRenderFX(renderfx);
+		gib.SetOrigin(endpos);
+		gib.SetScale(1.0f);
+		fadetime = 4.0 + random(0, 2);
+
+		if (usePhysics == false) {
+			gib.SetSize([-2,-2,-2],[2,2,2]);
+			gib.velocity = (dir * (speed * 0.75));
+			gib.velocity[0] += (random() - 0.5) * (speed * 0.5);
+			gib.velocity[1] += (random() - 0.5) * (speed * 0.5);
+			gib.velocity[2] += (random() - 0.5) * (speed * 0.5);
+			gib.velocity[2] += (speed * 0.25f);
+			gib.SetAngularVelocity([300,300,300]);
+			gib.SetMovetype(MOVETYPE_BOUNCE);
+			gib.SetSolid(SOLID_NOT);
+		} else {
+			gib.SetMovetype(MOVETYPE_PHYSICS);
+			gib.SetSolid(SOLID_CORPSE);
+			gib.mass = 1.0f;
+			gib.friction = 1.0f;
+
+			float sizeLength = length(gib.GetSize());
+
+			//printf("Gib Size: %f\n", sizeLength);
+
+			/* smaller/thinner models benefit from not being an expensive trimesh. */
+			if (sizeLength < 32) {
+				gib.m_desiredGeomtype = GEOMTYPE_BOX;
+			} else {
+				gib.m_desiredGeomtype = autocvar_phys_lowspec == false ? GEOMTYPE_TRIMESH : GEOMTYPE_BOX;
+			}
+
+			gib.ApplyForceOffset(dir * speed, endpos);
+		}
+
+		gib.ScheduleThink(ncEntity::Disappear, fadetime);
+		gib.SetImpactDecal(impactDecal);
+		//print(sprintf("%S\n", mname));
+	}
+}
+
 void
 BreakModel_Receive(void)
 {
@@ -1123,6 +1208,35 @@ BreakModel_Receive(void)
 	BreakModel_SpawnID(smins, smaxs, dir, speed, count, index);
 }
 
+
+void
+BreakModel_ReceiveIndex(void)
+{
+	vector smins, smaxs, dir;
+	float speed;
+	int count;
+	float index;
+
+	index = readfloat();
+	smins[0] = readcoord();
+	smins[1] = readcoord();
+	smins[2] = readcoord();
+
+	smaxs[0] = readcoord();
+	smaxs[1] = readcoord();
+	smaxs[2] = readcoord();
+
+	dir[0] = readfloat();
+	dir[1] = readfloat();
+	dir[2] = readfloat();
+
+	speed = readfloat();
+	count = readbyte();
+
+	BreakModel_SpawnIndex(smins, smaxs, dir, speed, count, index);
+}
+
+
 void
 BreakModel_ReceiveClientData(void)
 {
@@ -1154,6 +1268,37 @@ BreakModel_SendClientData(entity targetEnt)
 	msg_entity = targetEnt;
 	multicast(g_vec_null, MULTICAST_ONE_R);
 }
+
+void
+BreakModel_SpawnModelindex(vector smins, vector smaxs, vector dir, float speed, int count, float modelIndex)
+{
+	vector pvsPosition;
+
+	if (modelIndex <= 0) {
+		return;
+	}
+
+	pvsPosition = (smins + ( 0.5 * ( smaxs - smins )));
+
+	ncLog("Spawning %i %d gibs @ %v and %d up/s", count, modelIndex, pvsPosition, speed);
+
+	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+	WriteByte(MSG_MULTICAST, EV_BREAKMODELINDEX);
+	WriteFloat(MSG_MULTICAST, modelIndex);
+	WriteCoord(MSG_MULTICAST, smins[0]);
+	WriteCoord(MSG_MULTICAST, smins[1]);
+	WriteCoord(MSG_MULTICAST, smins[2]);
+	WriteCoord(MSG_MULTICAST, smaxs[0]);
+	WriteCoord(MSG_MULTICAST, smaxs[1]);
+	WriteCoord(MSG_MULTICAST, smaxs[2]);
+	WriteFloat(MSG_MULTICAST, dir[0]);
+	WriteFloat(MSG_MULTICAST, dir[1]);
+	WriteFloat(MSG_MULTICAST, dir[2]);
+	WriteFloat(MSG_MULTICAST, speed);
+	WriteByte(MSG_MULTICAST, count);
+	multicast(pvsPosition, MULTICAST_PVS);
+}
+
 
 void
 BreakModel_Spawn(vector smins, vector smaxs, vector dir, float speed, int count, string type)
