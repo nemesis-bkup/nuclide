@@ -24,3 +24,15 @@ woodgibs
 		program defaultskin
 	}
 }
+
+metalgibs
+{
+	surfaceprop metal
+	diffusemap detail_pbr/metal.tga
+	normalmap detail_pbr/metal_local.tga
+	specularmap detail_pbr/metal_mra.tga
+
+	{
+		program defaultskin
+	}
+}
