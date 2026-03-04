@@ -145,7 +145,6 @@ var bool g_clientInitialized = false;
 var bool g_dlight_cached = false;
 var bool g_client_world_loaded = false;
 
-const float MASK_GLOWS = 16;
 var bool g_focus;
 bool Util_IsFocused(void);
 
@@ -210,7 +209,8 @@ void View_DisableViewmodel(void);
 void View_SetViewmodelSkin(float);
 
 /** Draws a non-filled rectangle with a specified outline. */
-void drawrect(vector pos, vector sz, float thickness, vector rgb, float al, optional float dfl)
+void
+drawrect(vector pos, vector sz, float thickness, vector rgb, float al, optional float dfl)
 {
 	/* top */
 	drawfill(pos, [sz[0], thickness], rgb, al, dfl);
@@ -438,8 +438,12 @@ struct
 .float modelindex3;
 .float modelindex4;
 
-#define MASK_CLIENTENTITY 10
-#define MASK_MEDIASURFACE 11
+
+const float MASK_ENGINE = 1;
+const float MASK_VIEWMODEL = 2;
+const float MASK_GLOWS = 16;
+const float MASK_CLIENTENTITY = 32;
+const float MASK_MEDIASURFACE = 64;
 
 var vector g_vecMousePos;
 var vector g_hudmins;

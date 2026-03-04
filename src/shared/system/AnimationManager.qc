@@ -520,5 +520,7 @@ ncAnimationManager::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(anim_top_delay, ANIMENT_CHANGED_TIMERS)
 	READENTITY_BYTE(anim_bottom, ANIMENT_CHANGED_SET)
 	READENTITY_FLOAT(anim_bottom_time, ANIMENT_CHANGED_TIMERS)
+
+	PredictPreFrame();
 }
 #endif

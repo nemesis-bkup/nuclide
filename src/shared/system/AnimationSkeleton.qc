@@ -14,11 +14,20 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+void
+ncAnimationSkeleton::OnRemoveEntity(void)
+{
+	if (m_skeletonObject) {
+		skel_delete(m_skeletonObject);
+		m_skeletonObject = 0;
+	}
+}
+
 ncAnimationSkeleton
 ncAnimationSkeleton::SkeletonForFile(string skeletonFile)
 {
     for (ncAnimationSkeleton vars = __NULL__;(vars = (ncAnimationSkeleton)find(vars, ::classname, "ncAnimationSkeleton"));) {
-		if (vars.m_inputFile == skeletonFile) {
+		if (vars.m_inputFile == skeletonFile && vars.m_targetEntity == __NULL__) {
             return (vars);
         }
 	}
@@ -27,6 +36,10 @@ ncAnimationSkeleton::SkeletonForFile(string skeletonFile)
     newVars.m_inputFile = skeletonFile;
     newVars.m_modelIndex = getmodelindex(skeletonFile, false);
     newVars.m_skeletonObject = skel_create(newVars.m_modelIndex, false);
+	newVars.m_targetEntity = __NULL__;
+#ifdef CLIENT
+	newVars.drawmask = 0;
+#endif
 	ncError("Creating skeletonindex %d for %S", newVars.m_skeletonObject, skeletonFile);
     return (newVars);
 }
@@ -70,10 +83,14 @@ ncAnimationSkeleton::SkeletonindexForEntity(entity targetEntity)
     newVars.m_modelIndex = targetEntity.modelindex;
     newVars.m_skeletonObject = skel_create(newVars.m_modelIndex, false);
 	newVars.m_targetEntity = targetEntity;
+
 #ifdef CLIENT
+	newVars.drawmask = 0;
 	newVars.m_targetEntityNum = targetEntity.entnum;
-#endif
+	ncError("Creating skeletonindex %d for %d", newVars.m_skeletonObject, targetEntity.entnum);
+#else
 	ncError("Creating skeletonindex %d for %d", newVars.m_skeletonObject, num_for_edict(targetEntity));
+#endif
     return (newVars.m_skeletonObject);
 }
 

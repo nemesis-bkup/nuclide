@@ -82,6 +82,36 @@ void
 ncAnimationManager::ncAnimationManager(void)
 {
     m_targetEntity = __NULL__;
+
+#ifdef CLIENT
+	m_targetEntityEntityNum = 0;
+#endif
+
+	anim_top = 0.0;
+	anim_top_time = 0.0;
+	anim_top_delay = 0.0;
+	anim_bottom = 0.0;
+	anim_bottom_time = 0.0;
+	m_animBackend = 0.0;
+	m_actIdle = 0.0;
+	m_actIdleCrouch = 0.0;
+	m_actIdleProne = 0.0;
+	m_actWalk = 0.0;
+	m_actWalkCrouch = 0.0;
+	m_actWalkProne = 0.0;
+	m_actRun = 0.0;
+	m_actJump = 0.0;
+	m_actAim = 0.0;
+	m_actDraw = 0.0;
+	m_actAttack = 0.0;
+	m_actReloadStart = 0.0;
+	m_actReload = 0.0;
+	m_actReloadEnd = 0.0;
+	m_actHolster = 0.0;
+	m_boneSpine = 0.0;
+	m_torsoFirst = 0.0;
+	m_torsoLast = 0.0;
+	m_torsoTwistYaw = 0.0;
 }
 
 typedef enumflags
@@ -94,7 +124,6 @@ typedef enumflags
     ANIMENT_CHANGED_SET,
     ANIMENT_CHANGED_TIMERS,
 };
-
 
 enum
 {

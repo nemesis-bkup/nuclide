@@ -22,11 +22,12 @@ ncAnimationSkeleton:ncEntity
     nonvirtual ncAnimationSkeleton SkeletonForFile(string fileName);
     nonvirtual float SkeletonindexForModelindex(float modelIndex);
     nonvirtual float SkeletonindexForEntity(entity);
+	virtual void OnRemoveEntity(void);
 
 private:
     string m_inputFile;
     float m_skeletonObject;
-    float m_modelIndex = 0;
+    float m_modelIndex;
 	entity m_targetEntity;
 	float m_targetEntityNum;
 };
@@ -38,4 +39,5 @@ ncAnimationSkeleton::ncAnimationSkeleton(void)
     m_modelIndex = 0;
     m_skeletonObject = 0;
 	m_targetEntity = __NULL__;
+	m_targetEntityNum = 0;
 }

@@ -1,7 +1,7 @@
 output metalgibs.vvm
 rotate 0 90 0
 
-scale 0.3
+scale 0.25
 geomset 0 0
 scene metal01.smd
 geomset 0 1
