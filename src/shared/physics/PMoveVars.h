@@ -48,6 +48,7 @@ public:
 	void ncPMoveVars(void);
 
 	nonvirtual ncPMoveVars ManagerForEntity(entity actorEntity);
+	nonvirtual ncPMoveVars DefaultVars(void);
 
 	NETWORKED_FLOAT(g_gravity)
 	NETWORKED_FLOAT(pm_accelerate)

@@ -201,6 +201,12 @@ typedef enumflags
 };
 
 ncPMoveVars
+ncPMoveVars::DefaultVars(void)
+{
+    return (g_pmoveVars);
+}
+
+ncPMoveVars
 ncPMoveVars::ManagerForEntity(entity actorEntity)
 {
 	ncPlayer targetPlayer = (ncPlayer)actorEntity;
@@ -643,7 +649,12 @@ ncPMoveVars::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(pm_waterjumpheight, PMOVEVARS_UPDATE)
 	READENTITY_BYTE(pm_stepdown, PMOVEVARS_UPDATE)
 
-	m_defLink = EntityDef_NameFromNetID(m_defID);
+	if (!m_defID) {
+		g_pmoveVars = this;
+	} else {
+		m_defLink = EntityDef_NameFromNetID(m_defID);
+	}
+
 	UpdateBoundingBoxes();
 	ncError("EntityDef %i update live %S", m_defID, m_defLink);
 

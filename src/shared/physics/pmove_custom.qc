@@ -15,6 +15,9 @@
 */
 
 #ifdef CUSTOMPLAYERPHYSICS
+
+ncPMoveVars g_physframeVars;
+
 void
 PMoveCustom_Init(void)
 {
@@ -40,9 +43,9 @@ float
 PMoveCustom_Gravity(entity ent)
 {
 	if (ent.gravity) {
-		return g_pmoveVars.g_gravity * ent.gravity;
+		return g_physframeVars.g_gravity * ent.gravity;
 	} else {
-		return g_pmoveVars.g_gravity;
+		return g_physframeVars.g_gravity;
 	}
 }
 
@@ -179,7 +182,7 @@ PMoveCustom_AccelWater(float move_time, float premove)
 
 	wish_speed = vlen(vecWishVel);
 
-	if (g_pmoveVars.pm_nospeedcap == 0 && wish_speed > self.maxspeed) {
+	if (g_physframeVars.pm_nospeedcap == 0 && wish_speed > self.maxspeed) {
 		wish_speed = self.maxspeed;
 	}
 
@@ -187,7 +190,7 @@ PMoveCustom_AccelWater(float move_time, float premove)
 
 	// water friction
 	if (self.velocity != [0,0,0]) {
-		flFriction = vlen(self.velocity) * (1 - move_time * g_pmoveVars.pm_friction);
+		flFriction = vlen(self.velocity) * (1 - move_time * g_physframeVars.pm_friction);
 		if (flFriction > 0) {
 			self.velocity = normalize(self.velocity) * flFriction;
 		} else {
@@ -202,7 +205,7 @@ PMoveCustom_AccelWater(float move_time, float premove)
 		return;
 	}
 
-	flFriction = min(wish_speed - flFriction, g_pmoveVars.pm_wateraccelerate * wish_speed * move_time);
+	flFriction = min(wish_speed - flFriction, g_physframeVars.pm_wateraccelerate * wish_speed * move_time);
 	self.velocity = self.velocity + normalize(vecWishVel) * flFriction;
 }
 
@@ -267,7 +270,7 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	}
 #endif
 
-	frictionMultiplier = g_pmoveVars.pm_friction;
+	frictionMultiplier = g_physframeVars.pm_friction;
 
 	/* per frame basis friction modifier */
 	if (self.friction != 0.0f) {
@@ -287,14 +290,14 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 
 		// apply friction
 		if (trace_fraction == 1.0) {
-			if (retainSpeed < g_pmoveVars.pm_stopspeed) {
-				retainSpeed = 1 - move_time * (g_pmoveVars.pm_stopspeed / retainSpeed) * frictionMultiplier * g_pmoveVars.pm_edgefriction;
+			if (retainSpeed < g_physframeVars.pm_stopspeed) {
+				retainSpeed = 1 - move_time * (g_physframeVars.pm_stopspeed / retainSpeed) * frictionMultiplier * g_physframeVars.pm_edgefriction;
 			} else {
-				retainSpeed = 1 - move_time * frictionMultiplier * g_pmoveVars.pm_edgefriction;
+				retainSpeed = 1 - move_time * frictionMultiplier * g_physframeVars.pm_edgefriction;
 			}
 		} else {
-			if (retainSpeed < g_pmoveVars.pm_stopspeed) {
-				retainSpeed = 1 - move_time * (g_pmoveVars.pm_stopspeed / retainSpeed) * frictionMultiplier;
+			if (retainSpeed < g_physframeVars.pm_stopspeed) {
+				retainSpeed = 1 - move_time * (g_physframeVars.pm_stopspeed / retainSpeed) * frictionMultiplier;
 			} else {
 				
 				retainSpeed = 1 - move_time * frictionMultiplier;
@@ -317,7 +320,7 @@ PMoveCustom_AccelFriction(float move_time, float premove, vector wish_dir, float
 	retainSpeed = wish_speed - (self.velocity * wish_dir);
 
 	if (retainSpeed > 0) {
-		self.velocity += wish_dir * min(retainSpeed, (g_pmoveVars.pm_accelerate * wish_speed) * move_time);
+		self.velocity += wish_dir * min(retainSpeed, (g_physframeVars.pm_accelerate * wish_speed) * move_time);
 	}
 }
 
@@ -328,7 +331,7 @@ PMoveCustom_AccelNoclip(float move_time, float premove, vector wish_dir, float w
 	float retainSpeed;
 	vector vecTemp;
 
-	flApplyFriction = g_pmoveVars.pm_friction;
+	flApplyFriction = g_physframeVars.pm_friction;
 
 	/* per frame basis friction modifier */
 	if (self.friction != 0.0f) {
@@ -341,8 +344,8 @@ PMoveCustom_AccelNoclip(float move_time, float premove, vector wish_dir, float w
 		vecTemp = self.velocity;
 		retainSpeed = vlen(vecTemp);
 
-		if (retainSpeed < g_pmoveVars.pm_stopspeed) {
-			retainSpeed = 1 - move_time * (g_pmoveVars.pm_stopspeed / retainSpeed) * flApplyFriction;
+		if (retainSpeed < g_physframeVars.pm_stopspeed) {
+			retainSpeed = 1 - move_time * (g_physframeVars.pm_stopspeed / retainSpeed) * flApplyFriction;
 		} else {
 			retainSpeed = 1 - move_time * flApplyFriction;
 		}
@@ -357,7 +360,7 @@ PMoveCustom_AccelNoclip(float move_time, float premove, vector wish_dir, float w
 	// acceleration
 	retainSpeed = wish_speed - (self.velocity * wish_dir);
 	if (retainSpeed > 0) {
-		self.velocity += wish_dir * min(retainSpeed, (g_pmoveVars.pm_noclipaccelerate * wish_speed) * move_time);
+		self.velocity += wish_dir * min(retainSpeed, (g_physframeVars.pm_noclipaccelerate * wish_speed) * move_time);
 	}
 }
 
@@ -377,7 +380,7 @@ PMoveCustom_AccelGravity(float move_time, float premove, vector wish_dir, float 
 
 	if (retainSpeed > 0) {
 		float fric;
-		fric = min(retainSpeed, (g_pmoveVars.pm_airaccelerate * wish_speed) * move_time);
+		fric = min(retainSpeed, (g_physframeVars.pm_airaccelerate * wish_speed) * move_time);
 		self.velocity += wish_dir * fric;
 	}
 }
@@ -415,7 +418,7 @@ PMoveCustom_Acceleration(float move_time, float premove)
 		vecWishVel += v_right * input_movevalues[1];
 		vecWishVel += v_up * input_movevalues[2];
 		wish_dir = normalize(vecWishVel);
-		wish_speed = g_pmoveVars.pm_noclipspeed;
+		wish_speed = g_physframeVars.pm_noclipspeed;
 		PMoveCustom_AccelNoclip(move_time, premove, wish_dir, wish_speed);
 		return;
 	}
@@ -439,7 +442,7 @@ PMoveCustom_Acceleration(float move_time, float premove)
 	wish_dir = normalize(vecWishVel);
 	wish_speed = vlen(vecWishVel);
 
-	if (g_pmoveVars.pm_nospeedcap == 0 && wish_speed > pl.maxspeed) {
+	if (g_physframeVars.pm_nospeedcap == 0 && wish_speed > pl.maxspeed) {
 		wish_speed = pl.maxspeed;
 	}
 
@@ -594,9 +597,9 @@ PMoveCustom_Move(void)
 			trace_endpos = self.origin;
 
 			if (self.flags & FL_ONGROUND) {
-				trace_endpos[2] += g_pmoveVars.pm_stepsize;
+				trace_endpos[2] += g_physframeVars.pm_stepsize;
 			} else {
-				trace_endpos[2] += g_pmoveVars.pm_airstepsize;
+				trace_endpos[2] += g_physframeVars.pm_airstepsize;
 			}
 
 			tracebox(self.origin, self.mins, self.maxs, trace_endpos, MOVE_NORMAL, self);
@@ -657,7 +660,7 @@ PMoveCustom_Move(void)
 	/* touch whatever is below */
 	if (self.flags & FL_ONGROUND) {
 		dest = self.origin;
-		dest[2] -= g_pmoveVars.pm_stepsize;
+		dest[2] -= g_physframeVars.pm_stepsize;
 		tracebox(self.origin, self.mins, self.maxs, dest, MOVE_NORMAL, self);
 
 		if (trace_fraction == 1.0) {
@@ -694,6 +697,13 @@ PMoveCustom_RunPlayerPhysics(entity target)
 
 	entity oldself = self;
 	self = target;
+
+	if (is.Player(target)) {
+		ncPlayer targetPlayer = (ncPlayer)target;
+		g_physframeVars = targetPlayer.m_pmoveVars;
+	} else {
+		g_physframeVars = ncPMoveVars::DefaultVars();
+	}
 
 	bool flying = ((target.movetype == MOVETYPE_NOCLIP) || (target.movetype == MOVETYPE_FLY));
 
@@ -741,7 +751,7 @@ PMoveCustom_RunCrouchPhysics(entity target)
 	} else {	
 		// If we aren't holding down duck anymore and 'attempt' to stand up, prevent it
 		if (target.m_nuclideFlags & VFL_CROUCHING) {
-			if (PMove_IsStuck(target, [0,0,36], g_pmoveVars.GetStandingMins(),  g_pmoveVars.GetStandingMaxs()) == false) {
+			if (PMove_IsStuck(target, [0,0,36], g_physframeVars.GetStandingMins(),  g_physframeVars.GetStandingMaxs()) == false) {
 				target.m_nuclideFlags &= ~VFL_CROUCHING;
 				iFixCrouch = TRUE;
 			}
