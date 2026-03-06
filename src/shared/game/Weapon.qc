@@ -900,13 +900,13 @@ ncWeapon::_SwitchedToCallback(void)
 	SetAttackNext(0.0f);
 	SetIdleNext(0.0f);
 
+#ifdef SERVER
 	if (STRING_SET(m_animPrefix)) {
 		ourOwner.SetAnimationPrefix(m_animPrefix);
 	} else {
 		ourOwner.SetAnimationPrefix("");
 	}
 
-#ifdef SERVER
 	ourOwner.vw_index = getmodelindex(GetSpawnString("model_player"), true);
 #endif
 

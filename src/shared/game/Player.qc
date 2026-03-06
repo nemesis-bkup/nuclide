@@ -211,6 +211,7 @@ void
 ncPlayer::_UpdatePMoveVars(void)
 {
 	m_pmoveVars = ncPMoveVars::ManagerForEntity(this);
+	m_animationManager = ncAnimationManager::ManagerForEntity(this);
 }
 
 void
@@ -327,7 +328,6 @@ ncPlayer::ProcessInput(void)
 	if (Util_IsPaused())
 		return;
 
-    m_animationManager = ncAnimationManager::ManagerForEntity(this);
 	m_pmoveVars = ncPMoveVars::ManagerForEntity(this);
 
 	ncXRManager::InputFrame(this);
@@ -436,13 +436,13 @@ ncPlayer::ProcessInput(void)
 	}
 }
 
-/* this is where it gets mod specific really fast,
-   as some models may not even support skeletal animation */
 void
 ncPlayer::UpdatePlayerAnimation(float timelength)
 {
+	m_animationManager = ncAnimationManager::ManagerForEntity(this);
+
 	if (m_animationManager)
-    m_animationManager.AdvanceAnimation(timelength);
+    m_animationManager.AdvanceAnimation(this, timelength);
 }
 
 void
@@ -512,8 +512,11 @@ ncPlayer::predraw(void)
 
 	ncPlayer cl = (ncPlayer)pSeat->m_ePlayer;
 
-	if (m_animationManager)
+	m_animationManager = ncAnimationManager::ManagerForEntity(this);
+
+	if (m_animationManager) {
 		m_animationManager.TransferAnimationData(this);
+	}
 
 	/* figure out if this is the local player. it's either us or us spectating */
 	if (Client_IsSpectator(cl)) {
@@ -548,12 +551,9 @@ ncPlayer::predraw(void)
 			input_impulse = 0;
 			input_timelength = frametime;
 			Physics_Run();
-		}
-
-		/* we don't run physics/input/prediction on these, so advance timers here for external players */
-		if (m_animationManager) {
-			m_animationManager = ncAnimationManager::ManagerForEntity(this);
-			UpdatePlayerAnimation(frametime);
+		} else {
+			/* player animation code */
+			UpdatePlayerAnimation(clframetime);
 		}
 	}
 
@@ -649,12 +649,16 @@ ncPlayer::predraw(void)
 void
 ncPlayer::postdraw(void)
 {
-	UpdatePlayerAnimation(frametime);
 }
 
 void
 ncPlayer::OnRemoveEntity(void)
 {
+	if (m_animationManager) {
+		/* if we're using animationmanager, unset skeletonindex so it doesn't get deleted in the super function. */
+		skeletonindex = 0;
+	}
+
 	if (p_model)
 		p_model.Destroy();
 
@@ -876,12 +880,12 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 	READENTITY_COORD(origin[0], PLAYER_ORIGIN)
 	READENTITY_COORD(origin[1], PLAYER_ORIGIN)
 	READENTITY_COORD(origin[2], PLAYER_ORIGIN)
-	READENTITY_ANGLE(v_angle[0], PLAYER_ANGLES)
-	READENTITY_ANGLE(v_angle[1], PLAYER_ANGLES)
-	READENTITY_ANGLE(v_angle[2], PLAYER_ANGLES)
-	READENTITY_ANGLE(angles[0], PLAYER_ANGLES)
-	READENTITY_ANGLE(angles[1], PLAYER_ANGLES)
-	READENTITY_ANGLE(angles[2], PLAYER_ANGLES)
+	READENTITY_COORD(v_angle[0], PLAYER_ANGLES)
+	READENTITY_COORD(v_angle[1], PLAYER_ANGLES)
+	READENTITY_COORD(v_angle[2], PLAYER_ANGLES)
+	READENTITY_COORD(angles[0], PLAYER_ANGLES)
+	READENTITY_COORD(angles[1], PLAYER_ANGLES)
+	READENTITY_COORD(angles[2], PLAYER_ANGLES)
 	READENTITY_COORD(velocity[0], PLAYER_VELOCITY)
 	READENTITY_COORD(velocity[1], PLAYER_VELOCITY)
 	READENTITY_COORD(velocity[2], PLAYER_VELOCITY)
@@ -952,14 +956,6 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
 
 	if (flChanged & PLAYER_SIZE) {
 		setsize(this, mins, maxs);
-	}
-
-	if (flChanged & PLAYER_WEAPON || flChanged & PLAYER_MODELINDEX) {
-		if (m_activeWeapon) {
-			SetAnimationPrefix(m_activeWeapon.classname);
-		} else {
-			SetAnimationPrefix("");
-		}
 	}
 
 	PredictPreFrame();
@@ -1522,6 +1518,19 @@ ncPlayer::EvaluateEntity(void)
 	EVALUATE_VECTOR(m_renderColor, 1, PLAYER_MODELINDEX)
 	EVALUATE_VECTOR(m_renderColor, 2, PLAYER_MODELINDEX)
 	EVALUATE_FIELD(m_renderAmount, PLAYER_MODELINDEX)
+
+	if (SendFlags & PLAYER_MODELINDEX) {
+		if (m_activeWeapon) {
+			if (STRING_SET(m_activeWeapon.m_animPrefix)) {
+				SetAnimationPrefix(m_activeWeapon.m_animPrefix);
+			} else {
+				SetAnimationPrefix("");
+			}
+		} else {
+			SetAnimationPrefix("");
+		}
+	}
+
 	EVALUATE_FIELD(m_itemList, PLAYER_ITEMS)
 	EVALUATE_FIELD(m_activeWeapon, PLAYER_WEAPON)
 	EVALUATE_VECTOR(origin, 0, PLAYER_ORIGIN)
@@ -1637,12 +1646,12 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 	SENDENTITY_COORD(origin[0], PLAYER_ORIGIN)
 	SENDENTITY_COORD(origin[1], PLAYER_ORIGIN)
 	SENDENTITY_COORD(origin[2], PLAYER_ORIGIN)
-	SENDENTITY_ANGLE(v_angle[0], PLAYER_ANGLES)
-	SENDENTITY_ANGLE(v_angle[1], PLAYER_ANGLES)
-	SENDENTITY_ANGLE(v_angle[2], PLAYER_ANGLES)
-	SENDENTITY_ANGLE(angles[0], PLAYER_ANGLES)
-	SENDENTITY_ANGLE(angles[1], PLAYER_ANGLES)
-	SENDENTITY_ANGLE(angles[2], PLAYER_ANGLES)
+	SENDENTITY_COORD(v_angle[0], PLAYER_ANGLES)
+	SENDENTITY_COORD(v_angle[1], PLAYER_ANGLES)
+	SENDENTITY_COORD(v_angle[2], PLAYER_ANGLES)
+	SENDENTITY_COORD(angles[0], PLAYER_ANGLES)
+	SENDENTITY_COORD(angles[1], PLAYER_ANGLES)
+	SENDENTITY_COORD(angles[2], PLAYER_ANGLES)
 	SENDENTITY_COORD(velocity[0], PLAYER_VELOCITY)
 	SENDENTITY_COORD(velocity[1], PLAYER_VELOCITY)
 	SENDENTITY_COORD(velocity[2], PLAYER_VELOCITY)

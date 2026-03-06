@@ -14,26 +14,26 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+.float frame1time;	/* The absolute time into the animation/framegroup specified by .frame. */
+.float frame2;	/* The alternative frame. Visible only when lerpfrac is set to 1. */
+.float frame2time;	/* The absolute time into the animation/framegroup specified by .frame2. */
+.float lerpfrac;	/* If 0, use frame1 only. If 1, use frame2 only. Mix them together for values between. */
+
 ncAnimationManager
 ncAnimationManager::ManagerForEntity(entity actorEntity)
 {
+#ifdef CLIENT
+	float targetNum = actorEntity.entnum;
+#else
+	float targetNum = num_for_edict(actorEntity);
+#endif
+
     /* find an existing linked dict */
     for (ncAnimationManager vars = __NULL__;(vars = (ncAnimationManager)find(vars, ::classname, "ncAnimationManager"));) {
-#ifdef CLIENT
-		ncPlayer targetPlayer = (ncItem)findentity(world, ::entnum, vars.m_targetEntityEntityNum);
-
-		/* we have a match */
-		if (targetPlayer == actorEntity) {
+		if (vars.m_targetEntityEntityNum == targetNum) {
 			vars.m_targetEntity = actorEntity;
             return (vars);
         }
-#endif
-
-#ifdef SERVER
-		if (vars.m_targetEntity == actorEntity) {
-            return (vars);
-        }
-#endif
 	}
 
 	ncAnimationManager newVars = __NULL__;
@@ -43,17 +43,63 @@ ncAnimationManager::ManagerForEntity(entity actorEntity)
 	newVars = spawn(ncAnimationManager);
 	newVars.Spawn();
     newVars.m_targetEntity = actorEntity;
-	newVars.SetAnimationPrefix("");
-	newVars.SendFlags = -1;
+	newVars.m_targetEntityEntityNum = targetNum;
+	ncError("Creating animation manager %d for (%d) %S", num_for_edict(newVars), targetNum, actorEntity.declclass);
 #endif
 
     return (newVars);
 }
 
 void
-ncAnimationManager::AdvanceAnimation(float timelength)
+ncAnimationManager::AdvanceAnimation(entity sourceVelocity, float timelength)
 {
-	ncPlayer targetActor = (ncPlayer)m_targetEntity;
+	ncPlayer targetActor = (ncPlayer)sourceVelocity;
+	ncPMoveVars targetPhys = ncPMoveVars::ManagerForEntity(sourceVelocity);
+	float maxTopTime;
+	float maxBottomTime;
+	float countCrouchspeed = targetPhys.pm_crouchspeed;
+
+	float countWalkSpeed = targetPhys.pm_runspeed ? (targetPhys.pm_walkspeed) : (targetPhys.pm_walkspeed * 0.5);
+	float countRunSpeed = targetPhys.pm_runspeed ? (targetPhys.pm_runspeed) : (targetPhys.pm_walkspeed);
+
+	if (anim_top_delay <= 0.0f) {
+		anim_top = m_actAim;
+	}
+
+	if (vlen(targetActor.velocity) == 0) {
+		if (targetActor.IsCrouching()) {
+			anim_bottom = m_actIdleCrouch;
+		} else if (targetActor.IsProne()) {
+			anim_bottom = m_actIdleProne;
+		} else {
+			anim_bottom = m_actIdle;
+		}
+	} else if (vlen(targetActor.velocity) < countWalkSpeed) {
+		if (targetActor.IsCrouching()) {
+			anim_bottom = m_actWalkCrouch;
+		} else if (targetActor.IsProne()) {
+			anim_bottom = m_actWalkProne;
+		} else {
+			anim_bottom = m_actWalk;
+		}
+	} else if (vlen(targetActor.velocity) >= countWalkSpeed) {
+		if (targetActor.IsCrouching()) {
+			anim_bottom = m_actWalkCrouch;
+		} else if (targetActor.IsProne()) {
+			anim_bottom = m_actWalkProne;
+		} else {
+			anim_bottom = m_actRun;
+		}
+	}
+
+	if (anim_top == ACTIVITY_NOTFOUND) {
+		if (m_actAim == ACTIVITY_NOTFOUND) {
+			anim_top = anim_bottom;
+		}
+	}
+
+	UpdateLerpAnimations(targetActor, targetPhys);
+
 	/* timer update last */
 	/* top animation is always just being incremented */
 	anim_top_time += timelength;
@@ -65,6 +111,27 @@ ncAnimationManager::AdvanceAnimation(float timelength)
 	} else {
 		anim_bottom_time += timelength;
 	}
+
+	maxTopTime = frameduration(targetActor.modelindex, anim_top);
+	maxBottomTime = frameduration(targetActor.modelindex, anim_bottom);
+
+	if (anim_bottom_time > maxBottomTime) {
+		anim_bottom_time = (anim_bottom_time - maxBottomTime);
+	} else if (anim_bottom_time < 0.0f) {
+		anim_bottom_time = (maxBottomTime - anim_bottom_time);
+	}
+
+	if (anim_top_time > maxTopTime) {
+		anim_top_time = (anim_top_time - maxTopTime);
+	} else if (anim_bottom_time < 0.0f) {
+		anim_top_time = (maxTopTime - anim_top_time);
+	}
+
+#ifdef CLIENT
+	//ncError("%d by %d: %f %f", sourceVelocity.entnum, entnum, anim_top_time, anim_bottom_time);
+#else
+	//ncError("%d by %d: %f %f", num_for_edict(sourceVelocity),  num_for_edict(this), anim_top_time, anim_bottom_time);
+#endif
 }
 
 
@@ -100,6 +167,8 @@ ncAnimationManager::SetAnimationPrefix(string animPrefix)
 	m_torsoFirst = gettagindex(m_targetEntity, EntityDef_GetKeyValue(m_targetEntity.declclass, "torsoStart"));
 	m_torsoLast = gettagindex(m_targetEntity, EntityDef_GetKeyValue(m_targetEntity.declclass, "torsoEnd"));
 	m_torsoTwistYaw = gettagindex(m_targetEntity, EntityDef_GetKeyValue(m_targetEntity.declclass, "twistYaw"));
+	m_twistVec = stov(EntityDef_GetKeyValue(m_targetEntity.declclass, "twistVec"));
+	m_pitchVec = stov(EntityDef_GetKeyValue(m_targetEntity.declclass, "pitchVec"));
 
 	m_actIdle = __ActForPrefix("idle", animPrefix, emotionString);
 	m_actIdleCrouch = __ActForPrefix("idle_crouch", animPrefix, emotionString);
@@ -123,7 +192,7 @@ ncAnimationManager::SetAnimationPrefix(string animPrefix)
 	}
 
 #ifdef SERVER
-	EntLog("%s activity set for prefix %S:", m_targetEntity.netname, animPrefix);
+	EntLog("%s (%s) activity set for prefix %S:", m_targetEntity.netname, m_targetEntity.declclass, animPrefix);
 	EntLog("\tm_boneSpine: %d", m_boneSpine);
 	EntLog("\tm_torsoFirst: %d", m_torsoFirst);
 	EntLog("\tm_torsoLast: %d", m_torsoLast);
@@ -145,9 +214,6 @@ ncAnimationManager::SetAnimationPrefix(string animPrefix)
 void
 ncAnimationManager::TransferAnimationData(entity targetE)
 {
-	float maxTopTime;
-	float maxBottomTime;
-
 	ncPlayer targetActor = (ncPlayer)targetE;
 
 	/* no valid transfer target */
@@ -158,46 +224,6 @@ ncAnimationManager::TransferAnimationData(entity targetE)
 	/* no valid model on target */
 	if (!targetE.modelindex) {
 		return;
-	}
-
-	if (!m_targetEntity) {
-		return;
-	}
-
-	if (anim_top_delay <= 0.0f) {
-		anim_top = m_actAim;
-	}
-
-	if (vlen(targetActor.velocity) < 1) {
-		if (targetActor.IsCrouching()) {
-			anim_bottom = m_actIdleCrouch;
-		} else if (targetActor.IsProne()) {
-			anim_bottom = m_actIdleProne;
-		} else {
-			anim_bottom = m_actIdle;
-		}
-	} else if (vlen(targetActor.velocity) < 150) {
-		if (targetActor.IsCrouching()) {
-			anim_bottom = m_actWalkCrouch;
-		} else if (targetActor.IsProne()) {
-			anim_bottom = m_actWalkProne;
-		} else {
-			anim_bottom = m_actWalk;
-		}
-	} else if (vlen(targetActor.velocity) > 200) {
-		if (targetActor.IsCrouching()) {
-			anim_bottom = m_actWalkCrouch;
-		} else if (targetActor.IsProne()) {
-			anim_bottom = m_actWalkProne;
-		} else {
-			anim_bottom = m_actRun;
-		}
-	}
-
-	if (anim_top == ACTIVITY_NOTFOUND) {
-		if (m_actAim == ACTIVITY_NOTFOUND) {
-			anim_top = anim_bottom;
-		}
 	}
 
 	if (targetActor.HasVFlags(VFL_INVEHICLE) && targetActor.vehicle._isVehicle) {
@@ -219,82 +245,153 @@ ncAnimationManager::TransferAnimationData(entity targetE)
 		}
 	}
 
-	maxTopTime = frameduration(targetActor.modelindex, anim_top);
-	maxBottomTime = frameduration(targetActor.modelindex, anim_bottom);
-
-	if (anim_bottom_time > maxBottomTime) {
-		anim_bottom_time = (anim_bottom_time - maxBottomTime);
-	} else if (anim_bottom_time < 0.0f) {
-		anim_bottom_time = (maxBottomTime - anim_bottom_time);
-	}
-
-	if (anim_top_time > maxTopTime) {
-		anim_top_time = (anim_top_time - maxTopTime);
-	} else if (anim_bottom_time < 0.0f) {
-		anim_top_time = (maxTopTime - anim_top_time);
-	}
 
 	switch (m_animBackend) {
+	case ANIMATIONMODEL_BASIC:
+		UpdatePlayerAnimation_Basic(targetActor);
+		break;
 	case ANIMATIONMODEL_HLMDL_VALVE:
-		UpdatePlayerAnimation_Valve(0);
+		UpdatePlayerAnimation_Valve(targetActor);
 		break;
 	case ANIMATIONMODEL_HLMDL_GOOSE:
-		UpdatePlayerAnimation_Goose(0);
+		UpdatePlayerAnimation_Goose(targetActor);
 		break;
 	case ANIMATIONMODEL_SKELETAL:
-		UpdatePlayerAnimation_Skeletal(0);
+		UpdatePlayerAnimation_Skeletal(targetActor);
 		break;
 	}
 
 }
 
-
 void
-ncAnimationManager::UpdatePlayerAnimation_Skeletal(float timelength)
+ncAnimationManager::UpdatePlayerAnimation_Basic(entity targetE)
 {
-	ncPlayer targetActor = (ncPlayer)m_targetEntity;
-
-	float skeletonIndex = ncAnimationSkeleton::SkeletonindexForEntity(targetActor);
-	m_targetEntity.skeletonindex = skeletonIndex;
-
+	ncPlayer targetActor = (ncPlayer)targetE;
 	targetActor.angles[0] = 0.0f;
 	targetActor.angles[1] = targetActor.v_angle[1];
 	targetActor.angles[2] = 0.0f;
 
 	float fCorrect = dotproduct(targetActor.velocity, anglesToRight([0, targetActor.v_angle[1], 0])) * 0.25f;
 
-	/* Correct the legs */
 	targetActor.angles[1] -= fCorrect;
-
-
-	/* TODO: Needs interpolation */
-	/* lower body */
-	targetActor.frame = anim_bottom;
-	targetActor.frame1time = anim_bottom_time;
-	skel_build(skeletonIndex, targetActor, targetActor.modelindex, 0, 0, 0, 1);
-
-	// Build the top body
 	targetActor.frame = anim_top;
 	targetActor.frame1time = anim_top_time;
-//  	lerpfrac = 1.0f;
-	skel_build(skeletonIndex, targetActor, targetActor.modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
-
-	skel_postmul_bone( skeletonIndex, m_torsoTwistYaw, [0,0,0], anglesToForward([ 0, fCorrect, 0 ]) );
 
 }
 
 void
-ncAnimationManager::UpdatePlayerAnimation_Valve(float timelength)
+ncAnimationManager::UpdateLerpAnimations(entity targetE, entity targetVars)
 {
-	ncPlayer targetActor = (ncPlayer)m_targetEntity;
+	ncPlayer targetActor = (ncPlayer)targetE;
+	ncPMoveVars targetPhys = (ncPMoveVars)targetVars;
+	m_playerSpeed = vlen(targetActor.velocity);
+
+	float countWalkSpeed = targetPhys.pm_runspeed ? (targetPhys.pm_walkspeed) : (targetPhys.pm_walkspeed * 0.5);
+	float countRunSpeed = targetPhys.pm_runspeed ? (targetPhys.pm_runspeed) : (targetPhys.pm_walkspeed);
+
+	if (targetActor.IsCrouching()) {
+		m_slowAnim = m_actIdleCrouch;
+		m_fastAnim = m_actWalkCrouch;
+		m_lerpFrac = (m_playerSpeed / targetPhys.pm_pronespeed);
+	} else if (targetActor.IsProne()) {
+		m_slowAnim = m_actIdleProne;
+		m_fastAnim = m_actWalkProne;
+		m_lerpFrac = (m_playerSpeed / targetPhys.pm_crouchspeed);
+	} else {
+		if (vlen(targetActor.velocity) <= countWalkSpeed) {
+			m_slowAnim = m_actIdle;
+			m_fastAnim = m_actWalk;
+			m_lerpFrac = (m_playerSpeed / countWalkSpeed);
+		} else {
+			m_slowAnim = m_actWalk;
+			m_fastAnim = m_actRun;
+			m_lerpFrac = ((m_playerSpeed-countWalkSpeed) / (countRunSpeed-countWalkSpeed));
+		}
+	}
+
+	if (m_lerpFrac > 1.0) {
+		m_lerpFrac = 1.0;
+	}
+
+}
+
+void
+ncAnimationManager::UpdatePlayerAnimation_Skeletal(entity targetE)
+{
+	ncPlayer targetActor = (ncPlayer)targetE;
+	targetActor.skeletonindex = ncAnimationSkeleton::SkeletonindexForEntity(targetActor);
+	targetActor.angles[0] = 0.0f;
+	targetActor.angles[1] = targetActor.v_angle[1];
+	targetActor.angles[2] = 0.0f;
+
+	float fCorrect = dotproduct(targetActor.velocity, anglesToRight([0, targetActor.v_angle[1], 0])) * 0.25f;
+	float fCorrect2 = targetActor.v_angle[0];
+
+	/* Correct the legs */
+	targetActor.angles[1] -= fCorrect;
+
+	/* TODO: Needs interpolation */
+	/* lower body */
+	targetActor.basebone = 0;
+	targetActor.baseframe = 0;
+	targetActor.frame = m_slowAnim;
+	targetActor.frame1time = anim_bottom_time;
+	targetActor.frame2 = m_fastAnim;
+	targetActor.frame2time = anim_bottom_time;
+	targetActor.lerpfrac = m_lerpFrac;
+
+	// workaround because FTE + HLMDL + Lerp = No
+#if 1
+	if (targetActor.lerpfrac >= 0.5) {
+		targetActor.frame = targetActor.frame2;
+	}
+#endif
+
+
+#ifdef CLIENT
+	//ncError("%d by %d: skel: %d %d %d %f %f %f", targetE.entnum, entnum, targetActor.skeletonindex, targetActor.frame, anim_top, m_lerpFrac, targetActor.frame1time, targetActor.frame2time);
+#endif
+
+	skel_build(targetActor.skeletonindex, targetActor, targetActor.modelindex, 0, 0, 0, 1);
+
+	// Build the top body
+	targetActor.frame = anim_top;
+	targetActor.frame1time = anim_top_time;
+	targetActor.frame2 = anim_top;
+	targetActor.frame2time = anim_top_time;
+	targetActor.lerpfrac = 1.0;
+	skel_build(targetActor.skeletonindex, targetActor, targetActor.modelindex, 0.001, m_torsoFirst, m_torsoLast ); // The 0.0001 comes from a stupid bug?
+
+
+	vector twistVector = (m_twistVec * fCorrect) + (m_pitchVec * fCorrect2);
+
+	skel_postmul_bone( targetActor.skeletonindex, m_torsoTwistYaw, [0,0,0], anglesToForward(twistVector) );
+
+}
+
+
+void
+ncAnimationManager::UpdatePlayerAnimation_Valve(entity targetE)
+{
+	ncPlayer targetActor = (ncPlayer)targetE;
 	targetActor.basebone = m_boneSpine;
 	targetActor.frame = anim_top;
 	targetActor.frame1time = anim_top_time;
-	targetActor.baseframe = anim_bottom;
+	targetActor.baseframe = m_slowAnim;
 	targetActor.baseframe1time = anim_bottom_time;
+	targetActor.baseframe2 = m_fastAnim;
+	targetActor.baseframe2time = anim_bottom_time;
+	targetActor.baselerpfrac = m_lerpFrac;
+
+	// workaround because FTE + HLMDL + Lerp = No
+#if 1
+	if (targetActor.baselerpfrac >= 0.5) {
+		targetActor.baseframe = targetActor.baseframe2;
+	}
+#endif
 
 	float fCorrect = dotproduct(targetActor.velocity, anglesToRight([0, targetActor.v_angle[1], 0])) * 0.25f;
-	targetActor.bonecontrol1 = -fCorrect;
+	targetActor.bonecontrol1 = fCorrect;
 	targetActor.bonecontrol2 = targetActor.bonecontrol1 * 0.5f;
 	targetActor.bonecontrol3 = targetActor.bonecontrol2 * 0.5f;
 	targetActor.bonecontrol4 = targetActor.bonecontrol3 * 0.5f;
@@ -307,14 +404,50 @@ ncAnimationManager::UpdatePlayerAnimation_Valve(float timelength)
 }
 
 void
+ncAnimationManager::UpdatePlayerAnimation_Goose(entity targetE)
+{
+	ncPlayer targetActor = (ncPlayer)targetE;
+	targetActor.basebone = m_boneSpine;
+	targetActor.frame = anim_top;
+	targetActor.frame1time = anim_top_time;
+	targetActor.baseframe = m_slowAnim;
+	targetActor.baseframe1time = anim_bottom_time;
+	targetActor.baseframe2 = m_fastAnim;
+	targetActor.baseframe2time = anim_bottom_time;
+	targetActor.baselerpfrac = m_lerpFrac;
+
+	// workaround because FTE + HLMDL + Lerp = No
+#if 1
+	if (targetActor.baselerpfrac >= 0.5) {
+		targetActor.baseframe = targetActor.baseframe2;
+	}
+#endif
+
+	float fCorrect = dotproduct(targetActor.velocity, anglesToRight([0, targetActor.v_angle[1], 0])) * 0.25f;
+	targetActor.bonecontrol1 = -fCorrect;
+	targetActor.bonecontrol2 = targetActor.bonecontrol1 * 0.5f;
+	targetActor.bonecontrol3 = targetActor.bonecontrol2 * 0.5f;
+	targetActor.bonecontrol4 = targetActor.bonecontrol3 * 0.5f;
+
+	targetActor.angles[1] = targetActor.v_angle[1] - fCorrect;
+	targetActor.angles[0] = targetActor.angles[2] = 0;
+
+	targetActor.subblendfrac = -(fCorrect / 90);
+	targetActor.subblend2frac = targetActor.v_angle[0] / 90;
+}
+
+void
 ncAnimationManager::PredictPreFrame(void)
 {
 	SAVE_STATE(m_targetEntity)
+	SAVE_STATE(m_targetEntityEntityNum)
 	SAVE_STATE(m_animBackend)
 	SAVE_STATE(m_boneSpine)
 	SAVE_STATE(m_torsoFirst)
 	SAVE_STATE(m_torsoLast)
 	SAVE_STATE(m_torsoTwistYaw)
+	SAVE_STATE(m_twistVec)
+	SAVE_STATE(m_pitchVec)
 
 	SAVE_STATE(m_actIdle)
 	SAVE_STATE(m_actIdleCrouch)
@@ -343,11 +476,14 @@ void
 ncAnimationManager::PredictPostFrame(void)
 {
 	ROLL_BACK(m_targetEntity)
+	ROLL_BACK(m_targetEntityEntityNum)
 	ROLL_BACK(m_animBackend)
 	ROLL_BACK(m_boneSpine)
 	ROLL_BACK(m_torsoFirst)
 	ROLL_BACK(m_torsoLast)
 	ROLL_BACK(m_torsoTwistYaw)
+	ROLL_BACK(m_twistVec)
+	ROLL_BACK(m_pitchVec)
 
 	ROLL_BACK(m_actIdle)
 	ROLL_BACK(m_actIdleCrouch)
@@ -370,24 +506,6 @@ ncAnimationManager::PredictPostFrame(void)
 	ROLL_BACK(anim_bottom)
 	ROLL_BACK(anim_top_time)
 	ROLL_BACK(anim_bottom_time)
-}
-
-void
-ncAnimationManager::UpdatePlayerAnimation_Goose(float timelength)
-{
-	ncPlayer targetActor = (ncPlayer)m_targetEntity;
-	targetActor.basebone = m_boneSpine;
-	targetActor.baseframe = anim_top;
-	targetActor.baseframe1time = anim_top_time;
-	targetActor.frame = anim_bottom;
-	targetActor.frame1time = anim_bottom_time;
-
-	float fCorrect = dotproduct(targetActor.velocity, anglesToRight([0, targetActor.v_angle[1], 0])) * 0.25f;
-
-	targetActor.subblendfrac = -fCorrect * 0.05f;
-	targetActor.angles[1] = targetActor.v_angle[1] - fCorrect;
-	targetActor.subblend2frac = targetActor.v_angle[0] / 90;
-	targetActor.angles[0] = targetActor.angles[2] = 0;
 }
 
 void
@@ -415,7 +533,7 @@ ncAnimationManager::EvaluateEntity(void)
 {
     pvsflags = PVSF_NOREMOVE | PVSF_IGNOREPVS;
 
-	EVALUATE_FIELD(m_targetEntity, ANIMENT_CHANGED_BONESETUP)
+	EVALUATE_FIELD(m_targetEntityEntityNum, ANIMENT_CHANGED_BONESETUP)
 	EVALUATE_FIELD(m_animBackend, ANIMENT_CHANGED_BONESETUP)
 	EVALUATE_FIELD(m_boneSpine, ANIMENT_CHANGED_BONESETUP)
 	EVALUATE_FIELD(m_torsoFirst, ANIMENT_CHANGED_BONESETUP)
@@ -455,12 +573,18 @@ ncAnimationManager::SendEntity(entity ePEnt, float flChanged)
 	WriteByte(MSG_ENTITY, ENT_ANIMATIONMANAGER);
 	WriteFloat(MSG_ENTITY, flChanged);
 
-	SENDENTITY_ENTITY(m_targetEntity, ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_targetEntityEntityNum, ANIMENT_CHANGED_BONESETUP)
 	SENDENTITY_FLOAT(m_animBackend, ANIMENT_CHANGED_BONESETUP)
 	SENDENTITY_FLOAT(m_boneSpine, ANIMENT_CHANGED_BONESETUP)
 	SENDENTITY_FLOAT(m_torsoFirst, ANIMENT_CHANGED_BONESETUP)
 	SENDENTITY_FLOAT(m_torsoLast, ANIMENT_CHANGED_BONESETUP)
 	SENDENTITY_FLOAT(m_torsoTwistYaw, ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_twistVec[0], ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_twistVec[1], ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_twistVec[2], ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_pitchVec[0], ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_pitchVec[1], ANIMENT_CHANGED_BONESETUP)
+	SENDENTITY_FLOAT(m_pitchVec[2], ANIMENT_CHANGED_BONESETUP)
 
 	SENDENTITY_FLOAT(m_actIdle, ANIMENT_CHANGED_ACTS_BOTTOM)
 	SENDENTITY_FLOAT(m_actIdleCrouch, ANIMENT_CHANGED_ACTS_BOTTOM)
@@ -492,12 +616,18 @@ ncAnimationManager::SendEntity(entity ePEnt, float flChanged)
 void
 ncAnimationManager::ReceiveEntity(float flNew, float flChanged)
 {
-	READENTITY_ENTNUM(m_targetEntityEntityNum, ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_targetEntityEntityNum, ANIMENT_CHANGED_BONESETUP)
 	READENTITY_FLOAT(m_animBackend, ANIMENT_CHANGED_BONESETUP)
 	READENTITY_FLOAT(m_boneSpine, ANIMENT_CHANGED_BONESETUP)
 	READENTITY_FLOAT(m_torsoFirst, ANIMENT_CHANGED_BONESETUP)
 	READENTITY_FLOAT(m_torsoLast, ANIMENT_CHANGED_BONESETUP)
 	READENTITY_FLOAT(m_torsoTwistYaw, ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_twistVec[0], ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_twistVec[1], ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_twistVec[2], ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_pitchVec[0], ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_pitchVec[1], ANIMENT_CHANGED_BONESETUP)
+	READENTITY_FLOAT(m_pitchVec[2], ANIMENT_CHANGED_BONESETUP)
 
 	READENTITY_FLOAT(m_actIdle, ANIMENT_CHANGED_ACTS_BOTTOM)
 	READENTITY_FLOAT(m_actIdleCrouch, ANIMENT_CHANGED_ACTS_BOTTOM)
@@ -520,6 +650,9 @@ ncAnimationManager::ReceiveEntity(float flNew, float flChanged)
 	READENTITY_FLOAT(anim_top_delay, ANIMENT_CHANGED_TIMERS)
 	READENTITY_BYTE(anim_bottom, ANIMENT_CHANGED_SET)
 	READENTITY_FLOAT(anim_bottom_time, ANIMENT_CHANGED_TIMERS)
+
+	if (flChanged & ANIMENT_CHANGED_BONESETUP)
+	ncError("Received %d for %d", entnum, m_targetEntityEntityNum);
 
 	PredictPreFrame();
 }

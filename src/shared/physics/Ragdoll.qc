@@ -50,20 +50,21 @@ ncRagdoll::CreateRagdoll(void)
 	/* ensure we're wiping the previous state */
 	if (skeletonindex) {
 		skel_ragupdate(this, "cleardoll", 0);
-		skel_delete(skeletonindex);
 		skeletonindex = 0;
 	}
 
-	skeletonindex = skel_create(modelindex);
-	skel_build(skeletonindex, this, modelindex, 0, 0, 0, 1);
+	skeletonindex = ncAnimationSkeleton::SkeletonindexForEntity(this);
+	m_animationSkeletonIndex = ncAnimationSkeleton::SkeletonindexForModelindex(modelindex);
 
-	/* used for lerping to the animation */
-	if (m_animationSkeletonIndex) {
-		skel_delete(m_animationSkeletonIndex);
-		m_animationSkeletonIndex = 0;
+	if (!m_animationSkeletonIndex) {
+		return;
 	}
 
-	m_animationSkeletonIndex = skel_create(modelindex);
+	if (!skeletonindex) {
+		return;
+	}
+
+	skel_build(skeletonindex, this, modelindex, 0, 0, 0, 1);
 	skel_build(m_animationSkeletonIndex, this, modelindex, 0, 0, 0, 1);
 
 #if 0

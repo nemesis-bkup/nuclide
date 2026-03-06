@@ -21,12 +21,15 @@ ncAnimationManager:ncEntity
 
     nonvirtual ncAnimationManager ManagerForEntity(entity playerEntity);
 
-	nonvirtual void UpdatePlayerAnimation_Skeletal(float timelength);
-	nonvirtual void UpdatePlayerAnimation_Valve(float timelength);
-	nonvirtual void UpdatePlayerAnimation_Goose(float timelength);
-	nonvirtual void SetAnimationPrefix(string animPrefix);
-	nonvirtual void AdvanceAnimation(float timelength);
+	nonvirtual void UpdateLerpAnimations(entity targetE, entity physVars);
+	nonvirtual void UpdatePlayerAnimation_Basic(entity targetE);
+	nonvirtual void UpdatePlayerAnimation_Skeletal(entity targetE);
+	nonvirtual void UpdatePlayerAnimation_Valve(entity targetE);
+	nonvirtual void UpdatePlayerAnimation_Goose(entity targetE);
 	nonvirtual void TransferAnimationData(entity targetE);
+
+	nonvirtual void SetAnimationPrefix(string animPrefix);
+	nonvirtual void AdvanceAnimation(entity sourceVelocity, float timelength);
 	nonvirtual void PlayGesture(float gestureAnim, float overrideTime);
 	virtual void PredictPreFrame(void);
 	virtual void PredictPostFrame(void);
@@ -72,20 +75,23 @@ private:
 	NETWORKED_FLOAT(m_torsoFirst)
 	NETWORKED_FLOAT(m_torsoLast)
 	NETWORKED_FLOAT(m_torsoTwistYaw)
+	NETWORKED_FLOAT(m_targetEntityEntityNum)
+	NETWORKED_VECTOR(m_twistVec)
+	NETWORKED_VECTOR(m_pitchVec)
 
-#ifdef CLIENT
-    float m_targetEntityEntityNum;
-#endif
+	// generated for lerping purposes
+	float m_slowAnim;
+	float m_fastAnim;
+	float m_playerSpeed;
+	float m_lerpFrac;
+
 };
 
 void
 ncAnimationManager::ncAnimationManager(void)
 {
     m_targetEntity = __NULL__;
-
-#ifdef CLIENT
 	m_targetEntityEntityNum = 0;
-#endif
 
 	anim_top = 0.0;
 	anim_top_time = 0.0;
@@ -127,6 +133,7 @@ typedef enumflags
 
 enum
 {
+	ANIMATIONMODEL_BASIC,
 	ANIMATIONMODEL_SKELETAL,
 	ANIMATIONMODEL_HLMDL_VALVE,
 	ANIMATIONMODEL_HLMDL_GOOSE,

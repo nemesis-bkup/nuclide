@@ -53,7 +53,7 @@ void
 ncActor::SetAnimationPrefix(string animPrefix)
 {
 	if (!m_animationManager) {
-			m_animationManager = ncAnimationManager::ManagerForEntity(this);
+		m_animationManager = ncAnimationManager::ManagerForEntity(this);
 	}
 
 	if (m_animationManager) {

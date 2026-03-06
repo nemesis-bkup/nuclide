@@ -26,21 +26,6 @@ droptofloorwrapper(entity foo)
 }
 
 void
-ncEntity::ncEntity(void)
-{
-	_loading = false;
-	m_spawnTime = time;
-	m_editorColor = [1,1,1];
-	m_holdingPlayer = __NULL__;
-	tag_entity = 0;
-
-#ifdef SERVER
-	m_gameModeFilter = __NULL__;
-	m_outputOnRespawn = __NULL__;
-#endif
-}
-
-void
 ncEntity::Spawn(void)
 {
 	Spawned();

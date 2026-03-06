@@ -1002,7 +1002,7 @@ ncMonster::GetYawSpeed(void)
 void
 ncMonster::_LerpTurnToYaw(float turnYaw)
 {
-#if 1
+#if 0
 	input_angles[1] = v_angle[1] = angles[1] = turnYaw;
 #else
 	vector oldAngle = angles;
