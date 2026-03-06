@@ -78,13 +78,13 @@ void UI_CreateServer_Show ( void )
 	if ( !g_iCreateServerInitialized ) {
 		g_iCreateServerInitialized = TRUE;
 		winCreate = spawn( vguiPanel );
-		winCreate.SetTitle( "Create World" );
+		winCreate.SetTitle( "#BTN_CREATESV" );
 		winCreate.SetSize( '338 385' );
 		winCreate.SetIcon( "gfx/icon16/world_add" );
 
 		lblMaps = spawn( vguiLabel );
 		lblMaps.SetPos( [175,32] );
-		lblMaps.SetTitle( "Maps" );
+		lblMaps.SetTitle( "#CREATESERVER_MAP" );
         winCreate.Add(lblMaps);
 
         picMapPreview = spawn( vguiPic );
@@ -101,7 +101,7 @@ void UI_CreateServer_Show ( void )
         lsbMaps.CallOnSelectionChanged(MapSelection_Changed);
 
 		chkLAN = spawn( vguiCheckbox );
-		chkLAN.SetTitle( "LAN only" );
+		chkLAN.SetTitle( "#BTN_LAN" );
 		chkLAN.SetValue( TRUE );
 		chkLAN.SetSize( '124 24' );
 		chkLAN.SetPos( '20 186' );
@@ -116,7 +116,7 @@ void UI_CreateServer_Show ( void )
 
 		lblModes = spawn( vguiLabel );
 		lblModes.SetPos( '20 218' );
-		lblModes.SetTitle( "Gametype" );
+		lblModes.SetTitle( "#SERVER_GAME" );
 
 		lsbModes = spawn( vguiFeederListBox );
 		lsbModes.SetSize( '128 24' );
@@ -134,20 +134,20 @@ void UI_CreateServer_Show ( void )
 		//lsbEntities.SetFeederType(FEEDER_MAPENTITIES);
 
 		btnStart = spawn( vguiButton );
-		btnStart.SetTitle( "Start" );
+		btnStart.SetTitle( "#BTN_START" );
 		btnStart.SetSize( '64 24' );
 		btnStart.SetPos( winCreate.GetSize() - '152 32' );
 		btnStart.SetFunc( CreateServer_Start );
 
 		btnCancel = spawn( vguiButton );
-		btnCancel.SetTitle( "Cancel" );
+		btnCancel.SetTitle( "#BTN_CANCEL" );
 		btnCancel.SetSize( '64 24' );
 		btnCancel.SetPos( winCreate.GetSize() - '80 32' );
 		btnCancel.SetFunc( CreateServer_Cancel );
 
 		lblHostname = spawn( vguiLabel );
 		lblHostname.SetPos( '20 32' );
-		lblHostname.SetTitle( "Server name" );
+		lblHostname.SetTitle( "#CREATESERVER_NAME" );
 
 		txbHostname = spawn( vguiTextBox );
 		txbHostname.SetPos( [ 20, 50 ] );
@@ -156,7 +156,7 @@ void UI_CreateServer_Show ( void )
 
 		lblMaxplayers = spawn( vguiLabel );
 		lblMaxplayers.SetPos( '20 84' );
-		lblMaxplayers.SetTitle( "Max players" );
+		lblMaxplayers.SetTitle( "#CREATESERVER_MAXPLAYERS" );
 
 		txbMaxplayers = spawn( vguiTextBox );
 		txbMaxplayers.SetPos( [ 20, 102 ] );
@@ -165,7 +165,7 @@ void UI_CreateServer_Show ( void )
 
 		lblPassword = spawn( vguiLabel );
 		lblPassword.SetPos( '20 136' );
-		lblPassword.SetTitle( "Password" );
+		lblPassword.SetTitle( "#NEWPROFILE_PASSWORD" );
 
 		txbPassword = spawn( vguiTextBox );
 		txbPassword.SetPos( [ 20, 154 ] );

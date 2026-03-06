@@ -44,7 +44,7 @@ void UI_CustomGame_Show ( void )
 		GameLibrary_InitCustom();
 
 		winCustomGame = spawn( vguiPanel );
-		winCustomGame.SetTitle( "Custom Game" );
+		winCustomGame.SetTitle( "#BTN_CUSTOMGAME" );
 		winCustomGame.SetSize( [256,180] );
 		winCustomGame.SetIcon( "gfx/icon16/rainbow" );
 
@@ -67,14 +67,14 @@ void UI_CustomGame_Show ( void )
 		scrlGames.CallOnChange( CustomGame_ListUpdate );
 
 		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "Load" );
+		btnLoad.SetTitle( "#BTN_LOAD" );
 		btnLoad.SetIcon( "gfx/icon16/control_play" );
 		btnLoad.SetPos( [8,132] );
 		btnLoad.SetSize([64,24]);
 		btnLoad.SetFunc( CustomGame_Play );
 
 		btnDisable = spawn( vguiButton );
-		btnDisable.SetTitle( "Disable" );
+		btnDisable.SetTitle( "#BTN_DISABLE" );
 		btnDisable.SetIcon( "gfx/icon16/control_stop" );
 		btnDisable.SetPos( [8 + 80,132] );
 		btnDisable.SetSize([64,24]);

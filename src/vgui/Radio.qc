@@ -99,7 +99,7 @@ vguiRadio::Spawned(void)
 
 void vguiRadio::SetTitle (string strName)
 {
-	m_strTitle = strName;
+	m_strTitle = localize(strName);
 }
 int vguiRadio::GetValue(void)
 {

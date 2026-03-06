@@ -57,7 +57,7 @@ vguiCheckbox::Spawned(void)
 
 void vguiCheckbox::SetTitle (string strName)
 {
-	m_strTitle = strName;
+	m_strTitle = localize(strName);
 }
 int vguiCheckbox::GetValue(void)
 {

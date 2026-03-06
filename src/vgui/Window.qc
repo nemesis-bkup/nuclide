@@ -323,7 +323,7 @@ vguiWindow::Close(void)
 
 void vguiWindow::SetTitle (string strName)
 {
-	m_strTitle = strName;
+	m_strTitle = localize(strName);
 }
 string vguiWindow::GetTitle(void)
 {

@@ -76,7 +76,7 @@ vguiConsole::Spawned(void)
 
 	super::Spawned();
 
-	SetTitle("Console");
+	SetTitle("#BTN_CONSOLE");
 	SetSize([560, 400]);
 	SetMaxSize([9999,9999]);
 	SetPos([40, 40]);
@@ -92,7 +92,7 @@ vguiConsole::Spawned(void)
 	m_submitButton = spawn(vguiButton);
 	m_submitButton.SetSize([64,24]);
 	m_submitButton.SetPos([488,368]);
-	m_submitButton.SetTitle("Submit");
+	m_submitButton.SetTitle("#BTN_SUBMIT");
 	m_submitButton.SetFunc(vguiConsole_Submit);
 
 	SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
