@@ -48,21 +48,31 @@ VGUI_Draw(void)
 	} else {
 		g_uiDesktop.Draw();
 	}
+
 	return (1);
 }
 
 bool
 VGUI_Input(float flEvType, float flScanX, float flCharY, float flDevID)
 {
+	bool returnValue = false;
+
 	if (pSeat->m_showInterface) {
 		if (!g_uiInterface) {
 			UI_DesktopInit();
 		}
 
-		return g_uiInterface.Input(flEvType, flScanX, flCharY, flDevID);
+		returnValue = g_uiInterface.Input(flEvType, flScanX, flCharY, flDevID);
 	} else {
-		return g_uiDesktop.Input(flEvType, flScanX, flCharY, flDevID);
+		returnValue = g_uiDesktop.Input(flEvType, flScanX, flCharY, flDevID);
 	}
+
+	if (returnValue == true) {
+		pSeat->m_flInputBlockTime = time + 0.1;
+		return (true);
+	}
+
+	return (false);
 }
 
 void
@@ -82,12 +92,14 @@ VGUI_MouseActive(void)
 {
 	if (g_uiInterface) {
 		if (pSeat->m_showInterface) {
+			pSeat->m_flInputBlockTime = time + 0.1;
 			return (true);
 		}
 	}
 
 	if (g_uiDesktop) {
 		if (g_uiDesktop.m_activeWidgetCount > 0i) {
+			pSeat->m_flInputBlockTime = time + 0.1;
 			return (true);
 		}
 	}
