@@ -1,7 +1,7 @@
 output glassgibs.vvm
-rotate 0 90 0
+rotate 90 45 0
 
-scale 0.35
+scale 0.25
 geomset 0 0
 scene glass01.smd
 geomset 0 1
@@ -14,8 +14,6 @@ geomset 0 4
 scene glass05.smd
 geomset 0 5
 scene glass06.smd
-
-scale 0.25
 geomset 0 6
 scene glass07.smd
 scale 0.1

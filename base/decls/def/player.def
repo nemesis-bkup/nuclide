@@ -132,7 +132,7 @@ entityDef player_home_hl
 
 	"model"				"models/player.mdl"
 
-	"animBackend"			"1"
+	"animBackend"			"2"
 
 	"spine"				"Bip01 Spine"
 	"torsoStart"			"Bip01 Spine"
