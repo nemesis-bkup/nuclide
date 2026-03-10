@@ -139,6 +139,9 @@ Entity_EntityUpdate(float type, float new)
 	case ENT_DECAL:
 		Decal_Parse();
 		break;
+    case ENT_AMBIENTMUSIC:
+        NSENTITY_READENTITY(ambient_music, new)
+        break;
 	case ENT_AMBIENTSOUND:
 		NSENTITY_READENTITY(ambient_generic, new)
 		break;

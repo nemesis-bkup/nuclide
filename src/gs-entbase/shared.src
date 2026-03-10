@@ -4,6 +4,7 @@
 
 #includelist
 shared/ambient_generic.qc
+shared/ambient_music.qc
 shared/func_friction.qc
 shared/env_beam.qc
 shared/env_sprite.qc
