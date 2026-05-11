@@ -64,6 +64,7 @@ ncPlayer::ncPlayer(void)
 	m_pmoveVars = 0;
 	m_holdingEntity = 0;
 	m_pmoveLadderNormal = g_vec_null;
+	m_flStuckTime = 0.0f;
 }
 
 ncWeapon

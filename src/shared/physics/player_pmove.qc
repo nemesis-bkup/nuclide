@@ -301,9 +301,8 @@ ncPlayer::Physics_CheckJump(float premove)
 			return;
 
 	if (input_buttons & INPUT_JUMP && premove) {
-		if (velocity[2] < 0) {
+		/* always zero out gravity to prevent elevators / jump boost in corners */
 			velocity[2] = 0;
-		}
 
 		Physics_Jump();
 		RemoveFlags(FL_ONGROUND);
@@ -610,6 +609,7 @@ ncPlayer::Physics_Run(void)
 {
 	float flFallVel = (flags & FL_ONGROUND) ? 0 : -velocity[2];
 	float flBaseVel =  m_pmoveBaseVelocity[2];
+	float maxFall = 1024.0f;
 	bool wasOnGround = (flags & FL_ONGROUND) ? true : false;
 	bool sprintFail = false;
 
@@ -661,12 +661,18 @@ ncPlayer::Physics_Run(void)
 		PMoveCustom_RunPlayerPhysics(this);
 	}
 
+	 /* prevents gravity from building up to lethal damage when stuck in corner */
+	if (!(flags & FL_ONGROUND) && velocity[2] < -maxFall)
+		velocity[2] = -maxFall;
+
 	Physics_CheckJump(FALSE);
 
 	if (wasOnGround == false && (flags & FL_ONGROUND)) {
 		if (waterlevel != 0) {
 			flFallVel = 0;
 		}
+		/* cap velocity for current landing */
+		flFallVel = min(flFallVel, maxFall);
 		Physics_Fall(flFallVel - flBaseVel);
 	}
 

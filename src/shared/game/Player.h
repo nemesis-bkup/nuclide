@@ -12,9 +12,9 @@
  * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
+ */
 
-noref .vector v_angle;
+noref.vector v_angle;
 
 /** This entity class represents every player client.
 
@@ -138,17 +138,17 @@ With the above definitions, the crowbar will select the activities for `act_aim_
 @ingroup baseclass
 */
 class
-ncPlayer:ncSpectator
+		ncPlayer : ncSpectator
 {
 public:
 	void ncPlayer(void);
 
 	virtual void PlayGesture(float gestureAnim, float overrideTime);
-	
+
 	virtual void ProcessInput(void);
 	virtual void PreFrame(void);
 	virtual void PostFrame(void);
-	
+
 	virtual void Physics_Fall(float);
 	virtual void Physics_Crouch(void);
 	virtual void Physics_Prone(void);
@@ -162,7 +162,7 @@ public:
 	virtual void Physics_InputPostMove(void);
 	virtual void Physics_Run(void);
 	virtual void Physics_InputSprint(void);
-	
+
 	virtual bool IsFakeSpectator(void);
 	virtual bool IsRealSpectator(void);
 	virtual bool IsDead(void);
@@ -177,7 +177,7 @@ public:
 	virtual bool CanCrouch(void);
 	/** Overridable: Returns whether the client can lean, with the commands +leanleft and +leanright */
 	virtual bool CanLean(void);
-	
+
 	/** Empty & shared between Client and Server. This is run on every player, every frame, to update their animation cycle. */
 	virtual void UpdatePlayerAnimation(float);
 
@@ -186,7 +186,7 @@ public:
 
 #ifdef CLIENT
 	virtual void OnRemoveEntity(void);
-	virtual void ReceiveEntity(float,float);
+	virtual void ReceiveEntity(float, float);
 	virtual void _ReceiveComplete(float, float);
 	virtual void PredictPreFrame(void);
 	virtual void PredictPostFrame(void);
@@ -211,16 +211,16 @@ public:
 #ifdef SERVER
 	/* overrides */
 	virtual void Save(float);
-	virtual void Restore(string,string);
+	virtual void Restore(string, string);
 	virtual void Respawn(void);
 	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+	virtual float SendEntity(entity, float);
 	virtual void Death(entity, entity, int, vector, vector, int);
 	virtual void ServerInputFrame(void);
 	virtual void Input(entity, string, string);
 
 	/** Helper function that will optimise the changed-flags of your player entity. */
-	virtual float OptimiseChangedFlags(entity,float);
+	virtual float OptimiseChangedFlags(entity, float);
 
 	/** When called, will turn the client into a proper player. */
 	virtual void MakePlayer(void);
@@ -235,7 +235,7 @@ public:
 	virtual void InputUse_Up(void);
 
 	/* Returns whether we're able to pick up an entity in the game with +use. If `true` you can then use PickupEntity() to attach it to the player. */
-	virtual bool  CanPickupEntity(ncEntity, float, float);
+	virtual bool CanPickupEntity(ncEntity, float, float);
 	/* Will attach an entity to the player. It's position will continously update in front of the player camera, but in XR modes it may be attached to one of the hands instead.*/
 	nonvirtual void PickupEntity(ncEntity);
 
@@ -287,7 +287,7 @@ private:
 	NETWORKED_FLOAT(m_weaponAnimTime)
 
 	/* We can't use the default .items field, because FTE will assume
-	 * effects of some bits. Such as invisibility, quad, etc. 
+	 * effects of some bits. Such as invisibility, quad, etc.
 	 * also, modders probably want 32 bits for items. */
 	NETWORKED_FLOAT_N(activeweapon)
 	ncItem m_itemList_net;
@@ -327,8 +327,7 @@ private:
 #endif
 
 	entity m_holdingEntity;
-
-
+	float m_flStuckTime;
 
 	virtual void Event_DrawWeapon(void);
 	virtual void Event_FireWeapon(void);
@@ -339,28 +338,27 @@ private:
 };
 
 /* all potential SendFlags bits we can possibly send */
-enumflags
-{
-	PLAYER_MODELINDEX,
-	PLAYER_ORIGIN,
-	PLAYER_ANGLES,
-	PLAYER_VELOCITY,
-	PLAYER_FLAGS,
-	PLAYER_WEAPON,
-	PLAYER_ITEMS,
-	PLAYER_HEALTH,
-	PLAYER_SIZE,
-	PLAYER_MOVETYPE,
-	PLAYER_PUNCHANGLE,
-	PLAYER_VIEWZOOM,
-	PLAYER_TIMINGS,
-	PLAYER_VEHICLE,
-	PLAYER_SPECTATE,
-	PLAYER_AMMOTYPES,
-	PLAYER_WEAPONFRAME,
-	PLAYER_TOPFRAME,
-	PLAYER_BOTTOMFRAME,
-	PLAYER_CUSTOMFIELDSTART,
+enumflags{
+		PLAYER_MODELINDEX,
+		PLAYER_ORIGIN,
+		PLAYER_ANGLES,
+		PLAYER_VELOCITY,
+		PLAYER_FLAGS,
+		PLAYER_WEAPON,
+		PLAYER_ITEMS,
+		PLAYER_HEALTH,
+		PLAYER_SIZE,
+		PLAYER_MOVETYPE,
+		PLAYER_PUNCHANGLE,
+		PLAYER_VIEWZOOM,
+		PLAYER_TIMINGS,
+		PLAYER_VEHICLE,
+		PLAYER_SPECTATE,
+		PLAYER_AMMOTYPES,
+		PLAYER_WEAPONFRAME,
+		PLAYER_TOPFRAME,
+		PLAYER_BOTTOMFRAME,
+		PLAYER_CUSTOMFIELDSTART,
 };
 
 .bool _isPlayer;
