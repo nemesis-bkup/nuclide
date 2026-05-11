@@ -1,4 +1,4 @@
-app modelviewer2
+app mapviewer
 {
 	"name"			"Map Viewer"
     "icon"          "gfx/icon16/map"
