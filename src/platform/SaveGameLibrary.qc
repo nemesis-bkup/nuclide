@@ -1,50 +1,66 @@
+/*
+ * Copyright (c) 2026 Vera Visions LLC.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
+ * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+ * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
 void
 Saves_Init(void)
 {
-	searchhandle searchy;
-	searchy = search_begin("saves/*/info.fsv", SEARCH_NAMESORT, TRUE);
+    searchhandle searchy;
+    searchy = search_begin("saves/*/info.fsv", SEARCH_NAMESORT, TRUE);
 
-	if (g_savegame_count > 0i) {
-		memfree(g_savegames);
-	}
+    if (g_savegame_count > 0i) {
+        memfree(g_savegames);
+    }
 
-	g_savegame_count = search_getsize(searchy);
-	g_savegames = memalloc(sizeof(savegame_t) * g_savegame_count);
+    g_savegame_count = search_getsize(searchy);
+    g_savegames = memalloc(sizeof(savegame_t) * g_savegame_count);
 
-	for (int i = 0; i < g_savegame_count; i++) {
-		string fullpath = search_getfilename(searchy, i);
-		g_savegames[i].m_strName = substring(fullpath, 6, strlen(fullpath) - 15);
-		g_savegames[i].m_strPic = sprintf("saves/%s/screeny.tga", g_savegames[i].m_strName );
-		precache_pic(g_savegames[i].m_strPic);
-	}
+    for (int i = 0; i < g_savegame_count; i++) {
+        string fullpath = search_getfilename(searchy, i);
+        g_savegames[i].m_strName = substring(fullpath, 6, strlen(fullpath) - 15);
+        g_savegames[i].m_strPic = sprintf("saves/%s/screeny.tga", g_savegames[i].m_strName );
+        precache_pic(g_savegames[i].m_strPic);
+    }
 
-	search_end(searchy);
+    search_end(searchy);
 }
 
 int
 Saves_GetSaveCount(void)
 {
-	return (g_savegame_count);
+    return (g_savegame_count);
 }
 
 __variant
 Saves_GetInfo(int saveID, saveInfo_t saveInfo)
 {
-	if (saveID >= g_savegame_count || saveID < 0i) {
-		ncError("Invalid save id %i", saveID);
-		return __NULL__;
-	}
+    if (saveID >= g_savegame_count || saveID < 0i) {
+        ncError("Invalid save id %i", saveID);
+        return __NULL__;
+    }
 
-	switch (saveInfo) {
-	case SAVEINFO_NAME:
-		return g_savegames[saveID].m_strName;
-		break;
-	case SAVEINFO_PREVIEW:
-		return g_savegames[saveID].m_strPic;
-		break;
-	default:
-		return __NULL__;
-	}
+    switch (saveInfo) {
+    case SAVEINFO_NAME:
+        return g_savegames[saveID].m_strName;
+        break;
+    case SAVEINFO_PREVIEW:
+        return g_savegames[saveID].m_strPic;
+        break;
+    default:
+        return __NULL__;
+    }
 }
 
 /* to be implemented by your custom menu/platform progs */

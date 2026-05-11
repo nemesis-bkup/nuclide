@@ -25,73 +25,73 @@ string cg_serverinfoFields = "hostname,ip,mode,sv_playerslots,maxclients,maxspec
 static void
 VGUI_ShowServerInfo_ScrollUpdate (void)
 {
-	scrlServerInfo.SetValue(lsbServerInfo.GetOffset());
+    scrlServerInfo.SetValue(lsbServerInfo.GetOffset());
 }
 
 static void
 VGUI_ShowServerInfo_ListUpdate (void)
 {
-	lsbServerInfo.SetOffset(scrlServerInfo.GetValue(), FALSE);
+    lsbServerInfo.SetOffset(scrlServerInfo.GetValue(), FALSE);
 }
 
 
 void
 VGUI_ShowServerInfo_RefreshEntries(void)
 {
-	int serverInfoCount = tokenizebyseparator(cg_serverinfoFields, ",");
-	lsbServerInfo.RemoveAllItems();
-	lsbServerInfo.SetItemCount(serverInfoCount);
-	lsbServerInfo.CallOnScroll(VGUI_ShowServerInfo_ScrollUpdate);
+    int serverInfoCount = tokenizebyseparator(cg_serverinfoFields, ",");
+    lsbServerInfo.RemoveAllItems();
+    lsbServerInfo.SetItemCount(serverInfoCount);
+    lsbServerInfo.CallOnScroll(VGUI_ShowServerInfo_ScrollUpdate);
 
-	for (int i = 0; i < tokenizebyseparator(cg_serverinfoFields, ","); i++) {
-		string keyName = argv(i);
-		string keyValue = serverkey(keyName);
-		lsbServerInfo.AddItem(strcat("^8",keyName, ": ^7", keyValue));
-	}
+    for (int i = 0; i < tokenizebyseparator(cg_serverinfoFields, ","); i++) {
+        string keyName = argv(i);
+        string keyValue = serverkey(keyName);
+        lsbServerInfo.AddItem(strcat("^8",keyName, ": ^7", keyValue));
+    }
 
-	scrlServerInfo.SetMax(lsbServerInfo.GetMaxVisibleItems());
+    scrlServerInfo.SetMax(lsbServerInfo.GetMaxVisibleItems());
 }
 
 void
 VGUI_ShowServerInfo(vguiWidget parentDesktop)
 {
-	static vguiPanel winServerInfo;
-	static vguiButton btnRefresh;
+    static vguiPanel winServerInfo;
+    static vguiButton btnRefresh;
 
-	if (!g_iServerInfoInitialized) {
-		g_iServerInfoInitialized = true;
-		winServerInfo = spawn(vguiPanel);
-		winServerInfo.SetTitle("Server Info");
-		winServerInfo.SetSize([256,180]);
-		winServerInfo.SetIcon("gfx/icon16/server");
+    if (!g_iServerInfoInitialized) {
+        g_iServerInfoInitialized = true;
+        winServerInfo = spawn(vguiPanel);
+        winServerInfo.SetTitle("Server Info");
+        winServerInfo.SetSize([256,180]);
+        winServerInfo.SetIcon("gfx/icon16/server");
 
-		lsbServerInfo = spawn(vguiList);
-		lsbServerInfo.SetSize([192, 96]);
-		lsbServerInfo.SetPos([8, 32]);
-		lsbServerInfo.CallOnScroll(VGUI_ShowServerInfo_ScrollUpdate);
+        lsbServerInfo = spawn(vguiList);
+        lsbServerInfo.SetSize([192, 96]);
+        lsbServerInfo.SetPos([8, 32]);
+        lsbServerInfo.CallOnScroll(VGUI_ShowServerInfo_ScrollUpdate);
 
-		scrlServerInfo = spawn(vguiScrollBar);
-		scrlServerInfo.SetLength(96);
-		scrlServerInfo.SetPos([201,32]);
-		scrlServerInfo.SetMin(0);
-		scrlServerInfo.SetStep(1);
-		scrlServerInfo.CallOnChange(VGUI_ShowServerInfo_ListUpdate);
+        scrlServerInfo = spawn(vguiScrollBar);
+        scrlServerInfo.SetLength(96);
+        scrlServerInfo.SetPos([201,32]);
+        scrlServerInfo.SetMin(0);
+        scrlServerInfo.SetStep(1);
+        scrlServerInfo.CallOnChange(VGUI_ShowServerInfo_ListUpdate);
 
-		btnRefresh = spawn(vguiButton);
-		btnRefresh.SetTitle("Refresh");
-		btnRefresh.SetIcon("gfx/icon16/refresh");
-		btnRefresh.SetPos([8,132]);
-		btnRefresh.SetSize([64,24]);
-		btnRefresh.SetFunc(VGUI_ShowServerInfo_RefreshEntries);
+        btnRefresh = spawn(vguiButton);
+        btnRefresh.SetTitle("Refresh");
+        btnRefresh.SetIcon("gfx/icon16/refresh");
+        btnRefresh.SetPos([8,132]);
+        btnRefresh.SetSize([64,24]);
+        btnRefresh.SetFunc(VGUI_ShowServerInfo_RefreshEntries);
 
-		parentDesktop.Add(winServerInfo);
-		winServerInfo.Add(lsbServerInfo);
-		winServerInfo.Add(scrlServerInfo);
-		winServerInfo.Add(btnRefresh);
+        parentDesktop.Add(winServerInfo);
+        winServerInfo.Add(lsbServerInfo);
+        winServerInfo.Add(scrlServerInfo);
+        winServerInfo.Add(btnRefresh);
 
-		VGUI_ShowServerInfo_RefreshEntries();
-	}
+        VGUI_ShowServerInfo_RefreshEntries();
+    }
 
-	winServerInfo.Show();
-	winServerInfo.SetPos((g_vidsize / 2) - (winServerInfo.GetSize() / 2));
+    winServerInfo.Show();
+    winServerInfo.SetPos((g_vidsize / 2) - (winServerInfo.GetSize() / 2));
 }

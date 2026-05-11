@@ -28,31 +28,31 @@ class
 ncUserEntity_Video:ncUserEntity
 {
 public:
-	void ncUserEntity_Video(void);
+    void ncUserEntity_Video(void);
 
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void Spawned(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
 
-	nonvirtual void Stop(void);
+    nonvirtual void Stop(void);
 
-	nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoTitle, string videoPreview, string videoURL, string audioURL);
+    nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoTitle, string videoPreview, string videoURL, string audioURL);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual void ReceiveEntity(float flNew, float flChanged);
 #endif
 
 private:
-	string m_userVideoTitle;
-	string m_userVideoName;
-	string m_userVideoPreview;
-	string m_userVideoURL;
-	string m_userVideoAudio;
+    string m_userVideoTitle;
+    string m_userVideoName;
+    string m_userVideoPreview;
+    string m_userVideoURL;
+    string m_userVideoAudio;
 
 #ifdef CLIENT
-	entity m_videoPic;
-	entity m_videoLabel;
+    entity m_videoPic;
+    entity m_videoLabel;
 #endif
 };

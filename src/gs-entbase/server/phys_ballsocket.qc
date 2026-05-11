@@ -46,10 +46,10 @@ class
 phys_ballsocket:ncPhysicsConstraint
 {
 public:
-	void phys_ballsocket(void);
+    void phys_ballsocket(void);
 
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
 };
 
 void
@@ -61,25 +61,25 @@ phys_ballsocket::phys_ballsocket(void)
 void
 phys_ballsocket::Respawn(void)
 {
-	ScheduleThink(AfterSpawn, 0.0f);
+    ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
 phys_ballsocket::AfterSpawn(void)
 {
-	vector centerPos;
-	SetConstraintType(CONSTRAINT_POINT);
-	SetOrigin(GetSpawnVector("origin"));
+    vector centerPos;
+    SetConstraintType(CONSTRAINT_POINT);
+    SetOrigin(GetSpawnVector("origin"));
 
-	SetEntity1(find(world, ::targetname, m_strEnt1));
+    SetEntity1(find(world, ::targetname, m_strEnt1));
 
-	if (m_strEnt2)
-		SetEntity2(find(world, ::targetname, m_strEnt2));
-	else
-		SetEntity2(this);
+    if (m_strEnt2)
+        SetEntity2(find(world, ::targetname, m_strEnt2));
+    else
+        SetEntity2(this);
 
-	centerPos = (enemy.origin + aiment.origin) / 2;
-	origin = velocity = centerPos;
+    centerPos = (enemy.origin + aiment.origin) / 2;
+    origin = velocity = centerPos;
 
-	WakeTargets();
+    WakeTargets();
 }

@@ -39,9 +39,9 @@ class
 game_player_team:ncPointTrigger
 {
 public:
-	void game_player_team(void);
+    void game_player_team(void);
 
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -52,39 +52,39 @@ game_player_team::game_player_team(void)
 void
 game_player_team::Trigger(entity entityActivator, triggermode_t state)
 {
-	ncPlayer targetPlayer = __NULL__;
-	game_team_master toRead = __NULL__;
-	ncDict damageDecl;
+    ncPlayer targetPlayer = __NULL__;
+    game_team_master toRead = __NULL__;
+    ncDict damageDecl;
 
-	if (GetMaster(entityActivator) == FALSE) {
-		return;
-	}
+    if (GetMaster(entityActivator) == FALSE) {
+        return;
+    }
 
-	toRead = (game_team_master)GetTargetEntity();
+    toRead = (game_team_master)GetTargetEntity();
 
-	if (!toRead) {
-		EntWarning("Unable to find game_team_master named %S", GetTriggerTarget());
-		return;
-	}
+    if (!toRead) {
+        EntWarning("Unable to find game_team_master named %S", GetTriggerTarget());
+        return;
+    }
 
-	targetPlayer = (ncPlayer)entityActivator;
-	targetPlayer.SetTeam((float)toRead.GetTeamIndex());
+    targetPlayer = (ncPlayer)entityActivator;
+    targetPlayer.SetTeam((float)toRead.GetTeamIndex());
 
-	if (HasSpawnFlags(4) == true) {
-		damageDecl = spawn(ncDict);
-		damageDecl.AddKey("damage", ftos(targetPlayer.health + 100));
-		damageDecl.AddKey("skip_armor", "1");
-		targetPlayer.Damage(this, targetPlayer, damageDecl, 1.0f, g_vec_null, targetPlayer.origin);
-		remove(damageDecl);
-	} else if (HasSpawnFlags(2) == true) {
-		damageDecl = spawn(ncDict);
-		damageDecl.AddKey("damage", ftos(targetPlayer.health));
-		damageDecl.AddKey("skip_armor", "1");
-		targetPlayer.Damage(this, targetPlayer, damageDecl, 1.0f, g_vec_null, targetPlayer.origin);
-		remove(damageDecl);
-	}
+    if (HasSpawnFlags(4) == true) {
+        damageDecl = spawn(ncDict);
+        damageDecl.AddKey("damage", ftos(targetPlayer.health + 100));
+        damageDecl.AddKey("skip_armor", "1");
+        targetPlayer.Damage(this, targetPlayer, damageDecl, 1.0f, g_vec_null, targetPlayer.origin);
+        remove(damageDecl);
+    } else if (HasSpawnFlags(2) == true) {
+        damageDecl = spawn(ncDict);
+        damageDecl.AddKey("damage", ftos(targetPlayer.health));
+        damageDecl.AddKey("skip_armor", "1");
+        targetPlayer.Damage(this, targetPlayer, damageDecl, 1.0f, g_vec_null, targetPlayer.origin);
+        remove(damageDecl);
+    }
 
-	if (HasSpawnFlags(1)) {
-		Destroy();
-	}
+    if (HasSpawnFlags(1)) {
+        Destroy();
+    }
 }

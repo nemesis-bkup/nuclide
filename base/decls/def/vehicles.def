@@ -1,0 +1,263 @@
+entityDef car_shared
+{
+	"mins"	"-16 -16 16"
+	"maxs" "16 16 64"
+	"spawnclass" "prop_vehicle_driveable"
+	"seatOffset" "10 -20 -4"
+	"wheelFrontLeft"	"64 -48 0"
+	"wheelFrontRight"	"64 48 0"
+	"wheelRearLeft"		"-64 -48 0"
+	"wheelRearRight"	"-64 48 0"
+	"firstPersonOffset"	"42 0 32"
+
+	"wheelSize"	"8"
+	"accelerationSpeed"	"100"
+	"skidSpeed"		"300"
+	"breakFactor"		"4"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"bounceFactor"		"1"
+	"suspensionScale"	"1"
+	"tractionScale"		"4.5"
+	"gravityDir"		"0 0 -0.6"
+
+	"seatOffset" "0 -0 32"
+	"vehicleNoFlip"	"1"
+}
+
+entityDef prop_vehicle_car1
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/simivalley/vehicle/car1.mdl"
+	"steerFactor"		"7"
+	"straightenFactor"	"6"
+	"wheelFrontLeft"	"64 -32 0"
+	"wheelFrontRight"	"64 32 0"
+	"wheelRearLeft"		"-64 -32 0"
+	"wheelRearRight"	"-64 32 0"
+	"wheelSize"	"4"
+}
+
+entityDef prop_vehicle_forklift
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/fiskcity/vehicle/forklift.mdl"
+	"steerFactor"		"7"
+	"straightenFactor"	"6"
+	"wheelFrontLeft"	"64 -32 0"
+	"wheelFrontRight"	"64 32 0"
+	"wheelRearLeft"		"-64 -32 0"
+	"wheelRearRight"	"-64 32 0"
+	"wheelSize"	"4"
+}
+
+entityDef prop_vehicle_rustycar
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/fiskcity/vehicle/qk_rustycar2.mdl"
+	"steerFactor"		"7"
+	"straightenFactor"	"6"
+	"wheelFrontLeft"	"64 -32 0"
+	"wheelFrontRight"	"64 32 0"
+	"wheelRearLeft"		"-64 -32 0"
+	"wheelRearRight"	"-64 32 0"
+	"wheelSize"	"4"
+	"accelerationSpeed"	"50"
+}
+
+entityDef prop_vehicle_car
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/dirty_car.glb"
+	"accelerationSpeed"	"300"
+	"scale" "0.05"
+	"skidSpeed"		"600"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 0"
+	"wheelFrontRight"	"64 40 0"
+	"wheelRearLeft"		"-64 -40 0"
+	"wheelRearRight"	"-64 40 0"
+}
+
+entityDef prop_vehicle_lambo
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/2021_lamborghini_countach_lpi_800-4.glb"
+	"accelerationSpeed"	"300"
+	"skidSpeed"		"600"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+	"wheelSize"	"32"
+}
+
+
+entityDef prop_vehicle_car3
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/simivalley/vehicle/car3.mdl"
+	"accelerationSpeed"	"300"
+	"skidSpeed"		"600"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 0"
+	"wheelFrontRight"	"64 40 0"
+	"wheelRearLeft"		"-64 -40 0"
+	"wheelRearRight"	"-64 40 0"
+}
+
+entityDef prop_vehicle_sil80
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/player/car_sil80/car_sil80.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_viper1
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/iburg/cars/car_viper.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_corvette
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/iburg/cars/car_corvette.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_corolla
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/iburg/cars/car_corolla.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_viper2
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/player/car_viper2/car_viper2.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_ferrari_enzo
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/player/car_ferrari_enzo/car_ferrari_enzo.mdl"
+	"accelerationSpeed"	"200"
+	"skidSpeed"		"400"
+	"breakFactor"		"3"
+	"steerFactor"		"5"
+	"straightenFactor"	"4"
+	"wheelFrontLeft"	"64 -40 -36"
+	"wheelFrontRight"	"64 40 -36"
+	"wheelRearLeft"		"-64 -40 -36"
+	"wheelRearRight"	"-64 40 -36"
+}
+
+entityDef prop_vehicle_van1
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 0"
+	"inherit"	"car_shared"
+	"model"	"models/simivalley/vehicle/van1.mdl"
+	"accelerationSpeed"	"100"
+	"skidSpeed"		"500"
+	"breakFactor"		"5"
+	"steerFactor"		"10"
+	"straightenFactor"	"10"
+	"gravityDir"		"0 0 -1"
+}
+
+entityDef prop_vehicle_skateboard
+{
+	"editor_color"	"1 1 1"
+	"editor_mins" "0 0 -48"
+	"spawnclass" "prop_vehicle_driveable"
+	"model"	"models/vehicleSkateboard.glb"
+	"seatOffset" "0 -0 32"
+	"wheelSize"	"2"
+	"suspensionScale"	"1"
+	"wheelFrontLeft"	"16 -8 -2"
+	"wheelFrontRight"	"16 8 -2"
+	"wheelRearLeft"		"-16 -8 -2"
+	"wheelRearRight"	"-16 8 -2"
+	"firstPersonOffset"	"0 0 64"
+	"gravityDir"		"0 0 -0.6"
+	"vehicleNoFlip"		"1"
+	"airSteer"		"1"
+	"spacePush"		"1000"
+	"pushOnGround"		"1"
+}

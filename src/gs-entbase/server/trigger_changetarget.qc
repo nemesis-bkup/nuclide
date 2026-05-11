@@ -34,66 +34,66 @@ This entity was introduced in Half-Life (1998).
 class
 trigger_changetarget:ncPointTrigger
 {
-	string m_strNewTarget;
+    string m_strNewTarget;
 
 public:
-	void trigger_changetarget(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Trigger(entity, triggermode_t);
+    void trigger_changetarget(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Trigger(entity, triggermode_t);
 
 };
 
 void
 trigger_changetarget::trigger_changetarget(void)
 {
-	m_strNewTarget = __NULL__;
+    m_strNewTarget = __NULL__;
 }
 
 void
 trigger_changetarget::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strNewTarget", m_strNewTarget);
+    super::Save(handle);
+    SaveString(handle, "m_strNewTarget", m_strNewTarget);
 }
 
 void
 trigger_changetarget::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strNewTarget":
-		m_strNewTarget = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strNewTarget":
+        m_strNewTarget = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_changetarget::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iszNewTarget":
-		m_strNewTarget = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iszNewTarget":
+        m_strNewTarget = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_changetarget::Trigger(entity act, triggermode_t state)
 {
-	ncEntity f;
+    ncEntity f;
 
-	for (f = __NULL__; (f = (ncEntity)find(f, ::targetname, target));) {
+    for (f = __NULL__; (f = (ncEntity)find(f, ::targetname, target));) {
 
-		EntLog("Changing %s (%s) target from '%s' to '%s'\n", \
-		       target, f.classname, f.target, m_strNewTarget);
+        EntLog("Changing %s (%s) target from '%s' to '%s'\n", \
+               target, f.classname, f.target, m_strNewTarget);
 
-		/* now change the target */
-		f.target = m_strNewTarget;
-	}
+        /* now change the target */
+        f.target = m_strNewTarget;
+    }
 }

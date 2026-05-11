@@ -29,32 +29,32 @@ class
 ncUserEntity_GameEntity:ncUserEntity
 {
 public:
-	void ncUserEntity_GameEntity(void);
+    void ncUserEntity_GameEntity(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
-	virtual void Respawn(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void Respawn(void);
 
-	nonvirtual void Place(ncPlayer entityCreator, string className, string modelPath, vector atPos, vector withAngle);
-	nonvirtual void InstatiateEntitiesByPlayer(ncPlayer entityCreator);
-	nonvirtual void DeinstatiateEntitiesByPlayer(ncPlayer entityCreator);
+    nonvirtual void Place(ncPlayer entityCreator, string className, string modelPath, vector atPos, vector withAngle);
+    nonvirtual void InstatiateEntitiesByPlayer(ncPlayer entityCreator);
+    nonvirtual void DeinstatiateEntitiesByPlayer(ncPlayer entityCreator);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
-	virtual float predraw(void);
+    virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual float predraw(void);
 #endif
 
 #ifdef SERVER
-	virtual void Instantiate(void);
-	virtual void Deinstantiate(void);
+    virtual void Instantiate(void);
+    virtual void Deinstantiate(void);
 #endif
 
 private:
-	NETWORKED_STRING(m_gameEntClass)
+    NETWORKED_STRING(m_gameEntClass)
 
 #ifdef SERVER
-	ncEntity m_spawnedEntity;
+    ncEntity m_spawnedEntity;
 #endif
 };

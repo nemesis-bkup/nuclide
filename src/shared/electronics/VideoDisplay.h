@@ -36,6 +36,6 @@ class
 ncVideoDisplay:ncMediaSurface
 {
 public:
-	void ncVideoDisplay(void);
+    void ncVideoDisplay(void);
 
 };

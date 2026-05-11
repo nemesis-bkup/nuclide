@@ -21,31 +21,31 @@
 class vguiProgressBar:vguiWidget
 {
 public:
-	void vguiProgressBar(void);
+    void vguiProgressBar(void);
 
-	/* overrides */
-	virtual void Draw(void);
+    /* overrides */
+    virtual void Draw(void);
 
-	nonvirtual void SetProgress(float);
+    nonvirtual void SetProgress(float);
 
 private:
-	float m_flProgress;
+    float m_flProgress;
 };
 
 void
 vguiProgressBar::vguiProgressBar(void)
 {
-	m_flProgress = 1.0f;
+    m_flProgress = 1.0f;
 }
 
 void
 vguiProgressBar::SetProgress(float newProgress)
 {
-	m_flProgress = newProgress;
+    m_flProgress = newProgress;
 }
 
 void vguiProgressBar::Draw(void)
 {
-	vguiTheme theme = GetTheme();
-	theme.DrawProgressIndicator(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, m_flProgress, VGUI_STATE_NORMAL);
+    vguiTheme theme = GetTheme();
+    theme.DrawProgressIndicator(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, m_flProgress, VGUI_STATE_NORMAL);
 }

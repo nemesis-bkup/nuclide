@@ -18,85 +18,85 @@
 void
 ncUserEntity_Graffiti::ReloadVideoResources(void)
 {
-	m_bInitialized = false;
+    m_bInitialized = false;
 }
 
 float
 ncUserEntity_Graffiti::predraw(void)
 {
-	int iSize;
+    int iSize;
 
-	/* TODO: Don't query this & width/height every frame */
-	iSize = getplayerkeyblob(m_iOwnerID, "spray", __NULL__, 0);
+    /* TODO: Don't query this & width/height every frame */
+    iSize = getplayerkeyblob(m_iOwnerID, "spray", __NULL__, 0);
 
-	if (iSize <= 0) {
-		return (PREDRAW_NEXT);
-	}
+    if (iSize <= 0) {
+        return (PREDRAW_NEXT);
+    }
 
-	if (m_bInitialized == false) {
-		void *image;
-		m_bInitialized = true;
+    if (m_bInitialized == false) {
+        void *image;
+        m_bInitialized = true;
 
-		/* load the blob */
-		image = memalloc(iSize + 1);
-		getplayerkeyblob(m_iOwnerID, "spray", image, iSize);
-		r_uploadimage(m_m_strPath, 64, 64, image, iSize, 0);
-		memfree(image);
+        /* load the blob */
+        image = memalloc(iSize + 1);
+        getplayerkeyblob(m_iOwnerID, "spray", image, iSize);
+        r_uploadimage(m_m_strPath, 64, 64, image, iSize, 0);
+        memfree(image);
 
-		/* push the material into memory */
-		if (m_bMonochrome == true)
-			shaderforname(m_strName, sprintf(g_spray_mat_1, m_m_strPath));
-		else
-			shaderforname(m_strName, sprintf(g_spray_mat_0, m_m_strPath));
-	} else {
-		vector width;
-		vector height;
-		vector light;
-		vector color;
-		vector combined;
-		color = stov(getplayerkeyvalue(m_iOwnerID, "spraycolor"));
-		light = (getlight(m_vecPosition) / 255);
+        /* push the material into memory */
+        if (m_bMonochrome == true)
+            shaderforname(m_strName, sprintf(g_spray_mat_1, m_m_strPath));
+        else
+            shaderforname(m_strName, sprintf(g_spray_mat_0, m_m_strPath));
+    } else {
+        vector width;
+        vector height;
+        vector light;
+        vector color;
+        vector combined;
+        color = stov(getplayerkeyvalue(m_iOwnerID, "spraycolor"));
+        light = (getlight(m_vecPosition) / 255);
 
-		/* unrolling this because the compiler spat out garbage */
-		combined[0] = m_vecColor[0] * light[0];
-		combined[1] = m_vecColor[1] * light[1];
-		combined[2] = m_vecColor[2] * light[2];
+        /* unrolling this because the compiler spat out garbage */
+        combined[0] = m_vecColor[0] * light[0];
+        combined[1] = m_vecColor[1] * light[1];
+        combined[2] = m_vecColor[2] * light[2];
 
-		/* TODO: handle spray dimensions independently */
-		makevectors(m_vecAngles);
-		width = v_up / 64;
-		height = v_forward / 64;
-		adddecal(m_strName, m_vecPosition, width, height, combined, 1.0f);
-	}
-	return (PREDRAW_NEXT);
+        /* TODO: handle spray dimensions independently */
+        makevectors(m_vecAngles);
+        width = v_up / 64;
+        height = v_forward / 64;
+        adddecal(m_strName, m_vecPosition, width, height, combined, 1.0f);
+    }
+    return (PREDRAW_NEXT);
 }
 
 void
 ncUserEntity_Graffiti::ncUserEntity_Graffiti(void)
 {
-	// boo
-	m_vecColor = [1,1,1];
-	m_bMonochrome = false;
-	isCSQC = true;
-	m_bInitialized = false;
+    // boo
+    m_vecColor = [1,1,1];
+    m_bMonochrome = false;
+    isCSQC = true;
+    m_bInitialized = false;
 }
 
 void
 Spray_Parse(void)
 {
-	spawnfunc_ncUserEntity_Graffiti();
-	ncUserEntity_Graffiti spSelf =(ncUserEntity_Graffiti)self;
-	spSelf.m_vecPosition[0] = readcoord();
-	spSelf.m_vecPosition[1] = readcoord();
-	spSelf.m_vecPosition[2] = readcoord();
-	spSelf.m_vecAngles[0] = readcoord();
-	spSelf.m_vecAngles[1] = readcoord();
-	spSelf.m_vecAngles[2] = readcoord();
-	spSelf.m_iOwnerID = readentitynum() - 1;
-	spSelf.m_bMonochrome = getplayerkeyfloat(spSelf.m_iOwnerID, "spraytype");
-	spSelf.m_strName = sprintf("spray_%i_%d", spSelf.m_iOwnerID, spSelf.m_bMonochrome);
-	spSelf.m_m_strPath = sprintf("simg_%i_%d", spSelf.m_iOwnerID, spSelf.m_bMonochrome);
-	spSelf.m_vecColor = stov(getplayerkeyvalue(spSelf.m_iOwnerID, "spraycolor"));
+    spawnfunc_ncUserEntity_Graffiti();
+    ncUserEntity_Graffiti spSelf =(ncUserEntity_Graffiti)self;
+    spSelf.m_vecPosition[0] = readcoord();
+    spSelf.m_vecPosition[1] = readcoord();
+    spSelf.m_vecPosition[2] = readcoord();
+    spSelf.m_vecAngles[0] = readcoord();
+    spSelf.m_vecAngles[1] = readcoord();
+    spSelf.m_vecAngles[2] = readcoord();
+    spSelf.m_iOwnerID = readentitynum() - 1;
+    spSelf.m_bMonochrome = getplayerkeyfloat(spSelf.m_iOwnerID, "spraytype");
+    spSelf.m_strName = sprintf("spray_%i_%d", spSelf.m_iOwnerID, spSelf.m_bMonochrome);
+    spSelf.m_m_strPath = sprintf("simg_%i_%d", spSelf.m_iOwnerID, spSelf.m_bMonochrome);
+    spSelf.m_vecColor = stov(getplayerkeyvalue(spSelf.m_iOwnerID, "spraycolor"));
 }
 
 #else
@@ -104,71 +104,71 @@ Spray_Parse(void)
 void
 Spray_RemoveAll(entity entOwner)
 {
-	for (entity eFind = world;(eFind = find(eFind, classname, "Spray"));) {
-		if (eFind.real_owner == entOwner) {
-			remove(eFind);
-		}
-	}
+    for (entity eFind = world;(eFind = find(eFind, classname, "Spray"));) {
+        if (eFind.real_owner == entOwner) {
+            remove(eFind);
+        }
+    }
 }
 
 float
 Spray_SendEntity(entity ePEnt, float fChanged)
 {
-	if (clienttype(ePEnt) != CLIENTTYPE_REAL)
-		return (0);
+    if (clienttype(ePEnt) != CLIENTTYPE_REAL)
+        return (0);
 
-	WriteByte(MSG_ENTITY, ENT_SPRAY);
-	WriteCoord(MSG_ENTITY, self.origin[0]);
-	WriteCoord(MSG_ENTITY, self.origin[1]);
-	WriteCoord(MSG_ENTITY, self.origin[2]);
-	WriteCoord(MSG_ENTITY, self.angles[0]);
-	WriteCoord(MSG_ENTITY, self.angles[1]);
-	WriteCoord(MSG_ENTITY, self.angles[2]);
-	WriteEntity(MSG_ENTITY, self.real_owner);
-	return (1);
+    WriteByte(MSG_ENTITY, ENT_SPRAY);
+    WriteCoord(MSG_ENTITY, self.origin[0]);
+    WriteCoord(MSG_ENTITY, self.origin[1]);
+    WriteCoord(MSG_ENTITY, self.origin[2]);
+    WriteCoord(MSG_ENTITY, self.angles[0]);
+    WriteCoord(MSG_ENTITY, self.angles[1]);
+    WriteCoord(MSG_ENTITY, self.angles[2]);
+    WriteEntity(MSG_ENTITY, self.real_owner);
+    return (1);
 }
 
 void
 CSEv_Spraylogo(void)
 {
-	entity spray;
-	vector src;
-	vector co;
+    entity spray;
+    vector src;
+    vector co;
 
-	src = self.origin + self.view_ofs;
+    src = self.origin + self.view_ofs;
 
-	makevectors(self.v_angle);
-	traceline(src, src + v_forward * 128, FALSE, self);
+    makevectors(self.v_angle);
+    traceline(src, src + v_forward * 128, FALSE, self);
 
-	if (trace_fraction >= 1.0f) {
-		return;
-	}
+    if (trace_fraction >= 1.0f) {
+        return;
+    }
 
-	/* we only allow one active spray */
-	Spray_RemoveAll(self);
+    /* we only allow one active spray */
+    Spray_RemoveAll(self);
 
-	/* spawn the new one */
-	spray = spawn();
-	spray.classname = "Spray";
-	spray.real_owner = self;
-	spray.solid = SOLID_NOT;
-	setorigin(spray, trace_endpos);
+    /* spawn the new one */
+    spray = spawn();
+    spray.classname = "Spray";
+    spray.real_owner = self;
+    spray.solid = SOLID_NOT;
+    setorigin(spray, trace_endpos);
 
-	/* calculate the rotation by taking our current view and mapping it
-	 * against the surface we're looking at */
-	makevectors([self.v_angle[0] * -1, self.v_angle[1], self.v_angle[2]]);
-	co = v_forward -(v_forward * trace_plane_normal) * trace_plane_normal;
+    /* calculate the rotation by taking our current view and mapping it
+     * against the surface we're looking at */
+    makevectors([self.v_angle[0] * -1, self.v_angle[1], self.v_angle[2]]);
+    co = v_forward -(v_forward * trace_plane_normal) * trace_plane_normal;
 
-	/* quick fix */
-	if (trace_plane_normal[2] == 0) {
-		co = '0 0 1';
-	}
+    /* quick fix */
+    if (trace_plane_normal[2] == 0) {
+        co = '0 0 1';
+    }
 
-	/* apply the angles and apply networking */
-	spray.angles = vectoangles(co, trace_plane_normal);
-	spray.SendEntity = Spray_SendEntity;
-	spray.SendFlags = 1;
+    /* apply the angles and apply networking */
+    spray.angles = vectoangles(co, trace_plane_normal);
+    spray.SendEntity = Spray_SendEntity;
+    spray.SendFlags = 1;
 
-	SoundDef_Play(self, CHAN_VOICE, "SprayCan.Paint");
+    SoundDef_Play(self, CHAN_VOICE, "SprayCan.Paint");
 }
 #endif

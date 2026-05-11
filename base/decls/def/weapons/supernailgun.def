@@ -6,11 +6,9 @@ entityDef weapon_supernailgun
 	"editor_usage"		"Super Nailgun"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model"				"progs/g_nail2.mdl"
 	"model_view"		"progs/v_nail2.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 	"animPrefix"		"nailgun"

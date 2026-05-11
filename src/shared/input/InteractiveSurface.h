@@ -37,6 +37,6 @@ class
 ncInteractiveSurface:ncMediaSurface
 {
 public:
-	void ncInteractiveSurface(void);
+    void ncInteractiveSurface(void);
 
 };

@@ -25,30 +25,30 @@ class
 ncUserEntity_Object:ncUserEntity
 {
 public:
-	void ncUserEntity_Object(void);
+    void ncUserEntity_Object(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
-	virtual void Save(float handle);
-	virtual void Restore(string keyName, string setValue);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void Save(float handle);
+    virtual void Restore(string keyName, string setValue);
 
-	nonvirtual ncUserEntity_Object Place(ncPlayer videoSharer, string videoName, string videoURL, vector colorMod, float forceScale, vector newMins, vector newMaxs, string gui64, vector a, vector b, float c, vector guiRes);
+    nonvirtual ncUserEntity_Object Place(ncPlayer videoSharer, string videoName, string videoURL, vector colorMod, float forceScale, vector newMins, vector newMaxs, string gui64, vector a, vector b, float c, vector guiRes);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
-	virtual float predraw(void);
-	virtual void RenderScene(void);
+    virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual float predraw(void);
+    virtual void RenderScene(void);
 #endif
 
 private:
-	string m_userPictureURL;
-	string m_userPosterName;
+    string m_userPictureURL;
+    string m_userPosterName;
 
 #ifdef CLIENT
-	entity m_uiPic;
-	entity m_uiLabel;
-	ncMediaSurface m_guiSurface;
+    entity m_uiPic;
+    entity m_uiLabel;
+    ncMediaSurface m_guiSurface;
 #endif
 };

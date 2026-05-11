@@ -28,78 +28,78 @@ class
 vguiAudioStream:vguiPic
 {
 public:
-	void vguiAudioStream(void);
+    void vguiAudioStream(void);
 
-	virtual bool Input(float, float, float, float);
-	virtual void SizeChanged(vector, vector);
-	virtual void OnRemove(void);
+    virtual bool Input(float, float, float, float);
+    virtual void SizeChanged(vector, vector);
+    virtual void OnRemove(void);
 
-	nonvirtual void LoadRequest(string requestString);
+    nonvirtual void LoadRequest(string requestString);
 
-	nonvirtual void PlayStream(void);
-	nonvirtual void PauseStream(void);
-	nonvirtual void RestartStream(void);
-	nonvirtual void StopStream(void);
-	nonvirtual void SeekBackward(void);
-	nonvirtual void SeekForward(void);
-	nonvirtual void VolumeUp(void);
-	nonvirtual void VolumeDown(void);
-	nonvirtual void VolumeMute(void);
-	nonvirtual void Seek(float normalizedTime);
+    nonvirtual void PlayStream(void);
+    nonvirtual void PauseStream(void);
+    nonvirtual void RestartStream(void);
+    nonvirtual void StopStream(void);
+    nonvirtual void SeekBackward(void);
+    nonvirtual void SeekForward(void);
+    nonvirtual void VolumeUp(void);
+    nonvirtual void VolumeDown(void);
+    nonvirtual void VolumeMute(void);
+    nonvirtual void Seek(float normalizedTime);
 
-	nonvirtual string GetURL(void);
+    nonvirtual string GetURL(void);
 
 private:
-	string m_webViewURL;
-	string m_webViewName;
-	float m_webViewRef;
+    string m_webViewURL;
+    string m_webViewName;
+    float m_webViewRef;
 
-	/* status cache */
-	string m_pageTitle;
-	string m_pageURL;
-	string m_pageStatus;
+    /* status cache */
+    string m_pageTitle;
+    string m_pageURL;
+    string m_pageStatus;
 
-	/* our options */
-	bool m_focusLocked;
+    /* our options */
+    bool m_focusLocked;
 
-	nonvirtual void _InitializeWebContext(void);
+    nonvirtual void _InitializeWebContext(void);
 };
 
 void
 vguiAudioStream::vguiAudioStream(void)
 {
-	m_webViewURL = "about:blank";
-	m_webViewRef = 0;
-	m_webViewName = __NULL__;
+    m_webViewURL = "about:blank";
+    m_webViewRef = 0;
+    m_webViewName = __NULL__;
 }
 
 string
 vguiAudioStream::GetURL(void)
 {
-	return (m_pageURL);
+    return (m_pageURL);
 }
 
 void
 vguiAudioStream::LoadRequest(string requestString)
 {
-	if (checkcommand("cef") == 0) {
-		SetImage("");
-		return;
-	}
+    if (checkcommand("cef") == 0) {
+        SetImage("");
+        return;
+    }
 
-	if (!STRING_SET(m_webViewName)) {
-		_InitializeWebContext();
-	}
+    if (!STRING_SET(m_webViewName)) {
+        _InitializeWebContext();
+    }
 
-	m_webViewURL = requestString;
-	gecko_navigate(m_webViewName, m_webViewURL);
-	ncLog("loading request for %S", m_webViewURL);
+    m_webViewURL = requestString;
+    gecko_navigate(m_webViewName, m_webViewURL);
+    ncLog("loading request for %S", m_webViewURL);
 }
 
 void
 vguiAudioStream::OnRemove(void)
 {
-	gecko_destroy(m_webViewName);
+    gecko_destroy(m_webViewName);
 }
 
 void
@@ -110,93 +110,93 @@ vguiAudioStream::SizeChanged(vector vecOld, vector vecNew)
 bool
 vguiAudioStream::Input(float flEVType, float flKey, float flChar, float flDevID)
 {
-	return (false);
+    return (false);
 }
 
 void
 vguiAudioStream::PlayStream(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_SPACE, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_SPACE, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::PauseStream(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, 'k', IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, 'k', IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::RestartStream(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, '0', IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, '0', IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::StopStream(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_END, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_END, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::SeekBackward(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_LEFTARROW, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_LEFTARROW, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::SeekForward(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_RIGHTARROW, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_RIGHTARROW, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::VolumeUp(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_UPARROW, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_UPARROW, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::VolumeDown(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, K_DOWNARROW, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, K_DOWNARROW, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::Seek(float normalizedTime)
 {
-	float volumeKey = rint(normalizedTime * 9);
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, '0' + volumeKey, IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    float volumeKey = rint(normalizedTime * 9);
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, '0' + volumeKey, IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::VolumeMute(void)
 {
-	gecko_navigate(m_webViewName, "cmd:focus");
-	gecko_keyevent(m_webViewName, 'm', IE_KEYDOWN, 0);
-	gecko_navigate(m_webViewName, "cmd:unfocus");
+    gecko_navigate(m_webViewName, "cmd:focus");
+    gecko_keyevent(m_webViewName, 'm', IE_KEYDOWN, 0);
+    gecko_navigate(m_webViewName, "cmd:unfocus");
 }
 
 void
 vguiAudioStream::_InitializeWebContext(void)
 {
-	m_webViewName = sprintf("vguiAudioStream%d", num_for_edict(this));
-	m_webViewRef = gecko_create(m_webViewName, "http:");
+    m_webViewName = sprintf("vguiAudioStream%d", num_for_edict(this));
+    m_webViewRef = gecko_create(m_webViewName, "http:");
 }

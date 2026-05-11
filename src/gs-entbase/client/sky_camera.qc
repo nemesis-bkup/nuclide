@@ -41,57 +41,57 @@ class
 sky_camera:ncEntity
 {
 public:
-	void sky_camera(void);
+    void sky_camera(void);
 
-	virtual void SpawnKey(string, string);
-	virtual bool CanSpawn(bool);
+    virtual void SpawnKey(string, string);
+    virtual bool CanSpawn(bool);
 };
 
 void
 sky_camera::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "scale":
-		g_skyscale = stoi(strKey);
-		break;
-	case "origin":
-		origin = stov(strKey);
-		setorigin(this, origin);
-		g_skypos = origin;
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "scale":
+        g_skyscale = stoi(strKey);
+        break;
+    case "origin":
+        origin = stov(strKey);
+        setorigin(this, origin);
+        g_skypos = origin;
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 bool
 sky_camera::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 sky_camera::sky_camera(void)
 {
-	g_skyscale = 16;
-	isCSQC = true;
+    g_skyscale = 16;
+    isCSQC = true;
 }
 
 void
 SkyCamera_Setup(vector org)
 {
-	if (g_skyscale != 0 && g_skypos) {
-		vector realpos;
-			
-		if (autocvar_dev_skyscale) {
-			realpos[0] = org[0] / autocvar_dev_skyscale;
-			realpos[1] = org[1] / autocvar_dev_skyscale;
-			realpos[2] = org[2] / autocvar_dev_skyscale;
-		} else {
-			realpos[0] = org[0] / g_skyscale;
-			realpos[1] = org[1] / g_skyscale;
-			realpos[2] = org[2] / g_skyscale;
-		}
-		setproperty(VF_SKYROOM_CAMERA, g_skypos + realpos);
-	}
+    if (g_skyscale != 0 && g_skypos) {
+        vector realpos;
+            
+        if (autocvar_dev_skyscale) {
+            realpos[0] = org[0] / autocvar_dev_skyscale;
+            realpos[1] = org[1] / autocvar_dev_skyscale;
+            realpos[2] = org[2] / autocvar_dev_skyscale;
+        } else {
+            realpos[0] = org[0] / g_skyscale;
+            realpos[1] = org[1] / g_skyscale;
+            realpos[2] = org[2] / g_skyscale;
+        }
+        setproperty(VF_SKYROOM_CAMERA, g_skypos + realpos);
+    }
 }

@@ -17,61 +17,61 @@
 void
 NSXRSpace::NSXRSpace(void)
 {
-	m_vecForward =
-	m_vecRight =
-	m_vecUp =
-	m_vecOrigin = [0.0f, 0.0f, 0.0f];
-	touch = 0;
+    m_vecForward =
+    m_vecRight =
+    m_vecUp =
+    m_vecOrigin = [0.0f, 0.0f, 0.0f];
+    touch = 0;
 }
 
 vector
 NSXRSpace::GetForward(void)
 {
-	return m_vecForward;
+    return m_vecForward;
 }
 
 vector
 NSXRSpace::GetRight(void)
 {
-	return m_vecRight;
+    return m_vecRight;
 }
 
 vector
 NSXRSpace::GetUp(void)
 {
-	return m_vecUp;
+    return m_vecUp;
 }
 
 vector
 NSXRSpace::RoomToWorldOrigin(vector vecRoomOrg)
 {
-	vector vecOut;
-	vecOut = m_vecOrigin;
-	vecOut += (m_vecForward * vecRoomOrg[0]);
-	vecOut -= (m_vecRight * vecRoomOrg[1]);
-	vecOut += (m_vecUp * vecRoomOrg[2]);
-	return vecOut;
+    vector vecOut;
+    vecOut = m_vecOrigin;
+    vecOut += (m_vecForward * vecRoomOrg[0]);
+    vecOut -= (m_vecRight * vecRoomOrg[1]);
+    vecOut += (m_vecUp * vecRoomOrg[2]);
+    return vecOut;
 }
 
 vector
 NSXRSpace::RoomToWorldAngles(vector vecRoomAng)
 {
-	makevectors(vecRoomAng);
-	rotatevectorsbyvectors(m_vecForward, m_vecRight, m_vecUp);
-	return vectoangles(v_forward, v_up);
+    makevectors(vecRoomAng);
+    rotatevectorsbyvectors(m_vecForward, m_vecRight, m_vecUp);
+    return vectoangles(v_forward, v_up);
 }
 
 void
 NSXRSpace::SetOrigin(vector vecOrigin)
 {
-	m_vecOrigin = vecOrigin;
+    m_vecOrigin = vecOrigin;
 }
 
 void
 NSXRSpace::SetAngles(vector vecAngles)
 {
-	makevectors(vecAngles);
-	m_vecForward = v_forward;
-	m_vecRight = v_right;
-	m_vecUp = v_up;
+    makevectors(vecAngles);
+    m_vecForward = v_forward;
+    m_vecRight = v_right;
+    m_vecUp = v_up;
 }

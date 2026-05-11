@@ -35,42 +35,42 @@ Use Updates_GetInfo() to retrieve metadata about individual packages.
 /** Different options you can pass to Updates_GetInfo() to retrieve details about a given Update entry. */
 typedef enum
 {
-	UPDATE_NAME,			/**< (string) name of the package, for use with the pkg command. */
-	UPDATE_CATEGORY,		/**< (string) category text */
-	UPDATE_TITLE,			/**< (string) name of the package, for showing the user. */
-	UPDATE_VERSION,			/**< (string) version info (may have multiple with the same name but different versions) */
-	UPDATE_DESCRIPTION,		/**< (string) some blurb */
-	UPDATE_LICENSE,			/**< (string) what license its distributed under */
-	UPDATE_AUTHOR,			/**< (string) name of the person(s) who created it */
-	UPDATE_WEBSITE,			/**< (string) where to contribute/find out more info/etc */
-	UPDATE_STATE,			/**< (updateState_t) The current state of the update. */
-	UPDATE_ACTION,			/**< (updateAction_t) Pending action of the update. */
-	UPDATE_FILESIZE,		/**< (int) size to download in bytes. */
-	UPDATE_PREVIEWIMAGE,	/**< (string) Path to a preview image in 4:3 aspect ratio. */
-	UPDATE_STATUSSTRING,	/**< (string) Localizable string that gives you the update status. */
-	UPDATE_DLPERCENTAGE,	/**< (float) Download progress in percent (0-100). */
+    UPDATE_NAME,            /**< (string) name of the package, for use with the pkg command. */
+    UPDATE_CATEGORY,        /**< (string) category text */
+    UPDATE_TITLE,           /**< (string) name of the package, for showing the user. */
+    UPDATE_VERSION,         /**< (string) version info (may have multiple with the same name but different versions) */
+    UPDATE_DESCRIPTION,     /**< (string) some blurb */
+    UPDATE_LICENSE,         /**< (string) what license its distributed under */
+    UPDATE_AUTHOR,          /**< (string) name of the person(s) who created it */
+    UPDATE_WEBSITE,         /**< (string) where to contribute/find out more info/etc */
+    UPDATE_STATE,           /**< (updateState_t) The current state of the update. */
+    UPDATE_ACTION,          /**< (updateAction_t) Pending action of the update. */
+    UPDATE_FILESIZE,        /**< (int) size to download in bytes. */
+    UPDATE_PREVIEWIMAGE,    /**< (string) Path to a preview image in 4:3 aspect ratio. */
+    UPDATE_STATUSSTRING,    /**< (string) Localizable string that gives you the update status. */
+    UPDATE_DLPERCENTAGE,    /**< (float) Download progress in percent (0-100). */
 } updateType_t;
 
 /** Return values from passing UPDATE_STATE to Updates_GetInfo() */
 typedef enum
 {
-	UPDATESTATE_NONE,		/**< Update is not installed, or unavailable. */
-	UPDATESTATE_DISABLED,	/**< Update is installed, but disabled. */
-	UPDATESTATE_ENABLED,	/**< Update is installed and enabled. */
-	UPDATESTATE_CORRUPT,	/**< Update on disk is corrupted. */
-	UPDATESTATE_PENDING		/**< Update is pending a change. Usually when we're downloading it. */
+    UPDATESTATE_NONE,       /**< Update is not installed, or unavailable. */
+    UPDATESTATE_DISABLED,   /**< Update is installed, but disabled. */
+    UPDATESTATE_ENABLED,    /**< Update is installed and enabled. */
+    UPDATESTATE_CORRUPT,    /**< Update on disk is corrupted. */
+    UPDATESTATE_PENDING     /**< Update is pending a change. Usually when we're downloading it. */
 } updateState_t;
 
 /** Return values from passing UPDATE_ACTION to Updates_GetInfo() */
 typedef enum
 {
-	UPDATEACTION_NONE,			/**< Update is not marked for any change. */
-	UPDATEACTION_INSTALL,		/**< Update marked for installation. */
-	UPDATEACTION_REINSTALL,		/**< Update marked as needing re-installation. */
-	UPDATEACTION_UNINSTALL,		/**< Update marked for removal. */
-	UPDATEACTION_AUTOINSTALL,	/**< Update marked as needing to be installed, due to a dependency. */
-	UPDATEACTION_DISABLE,		/**< Update has been marked for disabling. */
-	UPDATEACTION_RETAIN			/**< Update has been marked as being retained. */
+    UPDATEACTION_NONE,          /**< Update is not marked for any change. */
+    UPDATEACTION_INSTALL,       /**< Update marked for installation. */
+    UPDATEACTION_REINSTALL,     /**< Update marked as needing re-installation. */
+    UPDATEACTION_UNINSTALL,     /**< Update marked for removal. */
+    UPDATEACTION_AUTOINSTALL,   /**< Update marked as needing to be installed, due to a dependency. */
+    UPDATEACTION_DISABLE,       /**< Update has been marked for disabling. */
+    UPDATEACTION_RETAIN         /**< Update has been marked as being retained. */
 } updateAction_t;
 
 /** These are the possible return values from Updates_GetUpdaterStatus().
@@ -78,30 +78,30 @@ That way you can put up a loading screen for when the updater is still initiliaz
 or be notified of when an updater is not available at all. */
 typedef enum
 {
-	UPDATER_NONE,			/**< Nuclide's updater has not been initialized. You need to call Updates_Init(). */
-	UPDATER_UNAVAILABLE,	/**< Nuclide's updater is unavailable. This may be due to the update server being offline. */
-	UPDATER_PENDING,		/**< Nuclide's updater is pending. May change to UNAVAILABLE or INITIALIZED. */
-	UPDATER_INITIALIZED		/**< Nuclide's updater is initialized and may have entries. Use Updates_GetPackageCount() to query how many. */
+    UPDATER_NONE,           /**< Nuclide's updater has not been initialized. You need to call Updates_Init(). */
+    UPDATER_UNAVAILABLE,    /**< Nuclide's updater is unavailable. This may be due to the update server being offline. */
+    UPDATER_PENDING,        /**< Nuclide's updater is pending. May change to UNAVAILABLE or INITIALIZED. */
+    UPDATER_INITIALIZED     /**< Nuclide's updater is initialized and may have entries. Use Updates_GetPackageCount() to query how many. */
 } updaterStatus_t;
 
 /** Data holding Updater Package entries. */
 typedef struct
 {
-	string name;
-	string category;
-	string title;
-	string version;
-	string description;
-	string license;
-	string author;
-	string website;
-	string installed;
-	updateState_t state;
-	updateAction_t pending_action;
-	int size;
-	int uid;
-	string preview_image;
-	float dlpercentage;
+    string name;
+    string category;
+    string title;
+    string version;
+    string description;
+    string license;
+    string author;
+    string website;
+    string installed;
+    updateState_t state;
+    updateAction_t pending_action;
+    int size;
+    int uid;
+    string preview_image;
+    float dlpercentage;
 } updaterPackage_t;
 
 /** Call this in order to contact the update server and fill the list of updates. */

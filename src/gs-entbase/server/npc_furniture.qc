@@ -22,7 +22,7 @@ class
 npc_furniture:ncActor
 {
 public:
-	void npc_furniture(void);
+    void npc_furniture(void);
 };
 
 void

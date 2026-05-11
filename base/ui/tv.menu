@@ -4,13 +4,14 @@
 		font fonts/font16 16
 	}
 
-	menuDef 
+	menuDef
 	{
 		name "DefaultTV"
 		rect 0 0 320 240
 		backcolor 0 0 1 1
+        visible 1
 
-		itemDef 
+		itemDef
 		{
 			name channel
 			background "tvStatic"
@@ -18,9 +19,10 @@
 			forecolor 1 1 1 1
 			decoration
 			visible 1
+			type 34
 		}
 
-		itemDef 
+		itemDef
 		{
 			name dog
 			background "vtvDOG"
@@ -30,7 +32,7 @@
 			visible 1
 		}
 
-		itemDef 
+		itemDef
 		{
 			name toptext
 			text ""
@@ -40,7 +42,7 @@
 			visible 1
 		}
 
-		itemDef 
+		itemDef
 		{
 			name bottomtext
 			text ""

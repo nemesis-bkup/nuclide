@@ -21,61 +21,61 @@ CMainButton ac_btnCancel;
 void
 ac_btndone_start(void)
 {
-	static void ac_btndone_end(void) {
-		g_menupage = PAGE_CUSTOMIZE;
-	}
-	localsound("../media/launch_dnmenu1.wav");
-	header.SetStartEndPos(45,45,50,172);
-	header.SetStartEndSize(460,80,156,26);
-	header.m_lerp = 0.0f;
-	header.m_visible = TRUE;
-	header.SetHeader(HEAD_ADVANCED);
-	header.SetExecute(ac_btndone_end);
+    static void ac_btndone_end(void) {
+        g_menupage = PAGE_CUSTOMIZE;
+    }
+    localsound("../media/launch_dnmenu1.wav");
+    header.SetStartEndPos(45,45,50,172);
+    header.SetStartEndSize(460,80,156,26);
+    header.m_lerp = 0.0f;
+    header.m_visible = TRUE;
+    header.SetHeader(HEAD_ADVANCED);
+    header.SetExecute(ac_btndone_end);
 }
 
 void
 ac_btncancel_start(void)
 {
-	static void ac_btncancel_end(void) {
-		g_menupage = PAGE_CUSTOMIZE;
-	}
-	localsound("../media/launch_dnmenu1.wav");
-	header.SetStartEndPos(45,45,50,172);
-	header.SetStartEndSize(460,80,156,26);
-	header.m_lerp = 0.0f;
-	header.m_visible = TRUE;
-	header.SetHeader(HEAD_ADVANCED);
-	header.SetExecute(ac_btncancel_end);
+    static void ac_btncancel_end(void) {
+        g_menupage = PAGE_CUSTOMIZE;
+    }
+    localsound("../media/launch_dnmenu1.wav");
+    header.SetStartEndPos(45,45,50,172);
+    header.SetStartEndSize(460,80,156,26);
+    header.m_lerp = 0.0f;
+    header.m_visible = TRUE;
+    header.SetHeader(HEAD_ADVANCED);
+    header.SetExecute(ac_btncancel_end);
 }
 
 void
 menu_advancedcustomize_init(void)
 {
-	fn_advcustomize = spawn(CWidget);
-	ac_btnDone = spawn(CMainButton);
-	ac_btnDone.SetImage(BTN_DONE);
-	ac_btnDone.SetExecute(ac_btndone_start);
-	ac_btnDone.SetPos(50,140);
-	Widget_Add(fn_advcustomize, ac_btnDone);
+    fn_advcustomize = spawn(CWidget);
+    ac_btnDone = spawn(CMainButton);
+    ac_btnDone.SetImage(BTN_DONE);
+    ac_btnDone.SetExecute(ac_btndone_start);
+    ac_btnDone.SetPos(50,140);
+    Widget_Add(fn_advcustomize, ac_btnDone);
 
-	ac_btnCancel = spawn(CMainButton);
-	ac_btnCancel.SetImage(BTN_CANCEL);
-	ac_btnCancel.SetExecute(ac_btncancel_start);
-	ac_btnCancel.SetPos(50,172);
-	Widget_Add(fn_advcustomize, ac_btnCancel);
+    ac_btnCancel = spawn(CMainButton);
+    ac_btnCancel.SetImage(BTN_CANCEL);
+    ac_btnCancel.SetExecute(ac_btncancel_start);
+    ac_btnCancel.SetPos(50,172);
+    Widget_Add(fn_advcustomize, ac_btnCancel);
 
-	Layout_FromFile("user.scr", fn_advcustomize);
+    Layout_FromFile("user.scr", fn_advcustomize);
 }
 
 void
 menu_advancedcustomize_draw(void)
 {
-	Widget_Draw(fn_advcustomize);
-	Header_Draw(HEAD_ADVOPTIONS);
+    Widget_Draw(fn_advcustomize);
+    Header_Draw(HEAD_ADVOPTIONS);
 }
 
 void
 menu_advancedcustomize_input(float evtype, float scanx, float chary, float devid)
 {
-	Widget_Input(fn_advcustomize, evtype, scanx, chary, devid);
+    Widget_Input(fn_advcustomize, evtype, scanx, chary, devid);
 }

@@ -17,65 +17,65 @@
 class CFrame:CWidget
 {
 private:
-	int m_background;
-	int m_bsize[2];
-	int m_size[2];
+    int m_background;
+    int m_bsize[2];
+    int m_size[2];
 
 public:
-	void CFrame(void);
+    void CFrame(void);
 
-	virtual void Draw(void);
-	virtual void Input(float,float,float,float);
-	virtual void SetSize(int,int);
-	virtual void SetBorder(int);
+    virtual void Draw(void);
+    virtual void Input(float,float,float,float);
+    virtual void SetSize(int,int);
+    virtual void SetBorder(int);
 };
 
 void
 CFrame::CFrame(void)
 {
-	m_background = 0;
-	m_bsize[0] = m_bsize[1] = 3;
-	m_size[0] = m_size[1] = 0;
+    m_background = 0;
+    m_bsize[0] = m_bsize[1] = 3;
+    m_size[0] = m_size[1] = 0;
 }
 
 void
 CFrame::Draw(void)
 {
-	if (g_focuswidget == this) {
-		drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], 
-			 [m_size[0],m_size[1]], [0.5,0.5,0.5], 1.0f);
-	} else {
-		drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], 
-			 [m_size[0],m_size[1]], [0.25,0.25,0.25], 1.0f);
-	}
+    if (g_focuswidget == this) {
+        drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], 
+             [m_size[0],m_size[1]], [0.5,0.5,0.5], 1.0f);
+    } else {
+        drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], 
+             [m_size[0],m_size[1]], [0.25,0.25,0.25], 1.0f);
+    }
 
-	if (m_bsize[0] > 0)
-	drawfill([g_menuofs[0] + m_x + m_bsize[0], g_menuofs[1] + m_y + m_bsize[1]], 
-			 [m_size[0] - (m_bsize[0] * 2),m_size[1]-(m_bsize[1] * 2)],
-			 [0,0,0], 1.0f);
+    if (m_bsize[0] > 0)
+    drawfill([g_menuofs[0] + m_x + m_bsize[0], g_menuofs[1] + m_y + m_bsize[1]], 
+             [m_size[0] - (m_bsize[0] * 2),m_size[1]-(m_bsize[1] * 2)],
+             [0,0,0], 1.0f);
 }
 
 void
 CFrame::Input(float type, float x, float y, float devid)
 {
-	if (Util_CheckMouse(m_x, m_y, m_size[0], m_size[1])) {
-		if (type == IE_KEYDOWN) {
-			if (x == K_MOUSE1) {
-				g_focuswidget = this;
-			}
-		}
-	}
+    if (Util_CheckMouse(m_x, m_y, m_size[0], m_size[1])) {
+        if (type == IE_KEYDOWN) {
+            if (x == K_MOUSE1) {
+                g_focuswidget = this;
+            }
+        }
+    }
 }
 
 void
 CFrame::SetSize(int x, int y)
 {
-	m_size[0] = x;
-	m_size[1] = y;
+    m_size[0] = x;
+    m_size[1] = y;
 }
 
 void
 CFrame::SetBorder(int x)
 {
-	m_bsize[0] = m_bsize[1] = x;
+    m_bsize[0] = m_bsize[1] = x;
 }

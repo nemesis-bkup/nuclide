@@ -28,272 +28,272 @@
 class vguiList:vguiWidget
 {
 public:
-	void vguiList(void);
+    void vguiList(void);
 
-	nonvirtual void SetOffset(int,int);
+    nonvirtual void SetOffset(int,int);
 
-	nonvirtual void SetSelected(int);
-	nonvirtual int GetSelected(void);
+    nonvirtual void SetSelected(int);
+    nonvirtual int GetSelected(void);
 
-	nonvirtual int GetMaxVisibleItems(void);
+    nonvirtual int GetMaxVisibleItems(void);
 
-	nonvirtual void AddItem(string);
-	nonvirtual string GetItem(int);
+    nonvirtual void AddItem(string);
+    nonvirtual string GetItem(int);
 
-	nonvirtual void SetItemCount(int);
-	nonvirtual int MaxItems(void);
-	nonvirtual int GetItemCount(void);
+    nonvirtual void SetItemCount(int);
+    nonvirtual int MaxItems(void);
+    nonvirtual int GetItemCount(void);
 
-	nonvirtual void RemoveAllItems(void);
+    nonvirtual void RemoveAllItems(void);
 
-	nonvirtual int GetOffset(void);
+    nonvirtual int GetOffset(void);
 
-	nonvirtual void CallOnScroll(void(vguiWidget sender));
-	nonvirtual void CallOnDoubleClick(void(vguiWidget sender));
-	nonvirtual void CallOnDoubleClickWithDelegate(void(vguiWidget sender), vguiWidget theDelegate);
-	nonvirtual void CallOnSelectionChanged(void(vguiWidget sender));
-	nonvirtual void CallOnSelectionChangedWithDelegate(void(vguiWidget sender), vguiWidget theDelegate);
+    nonvirtual void CallOnScroll(void(vguiWidget sender));
+    nonvirtual void CallOnDoubleClick(void(vguiWidget sender));
+    nonvirtual void CallOnDoubleClickWithDelegate(void(vguiWidget sender), vguiWidget theDelegate);
+    nonvirtual void CallOnSelectionChanged(void(vguiWidget sender));
+    nonvirtual void CallOnSelectionChangedWithDelegate(void(vguiWidget sender), vguiWidget theDelegate);
 
-	nonvirtual void CallOnScrollWithDelegate(void(vguiWidget sender) a, vguiWidget theDelegate);
-	nonvirtual void CallOnSelectionChangedWithDelegate(void(vguiWidget sender) a, vguiWidget theDelegate);
+    nonvirtual void CallOnScrollWithDelegate(void(vguiWidget sender) a, vguiWidget theDelegate);
+    nonvirtual void CallOnSelectionChangedWithDelegate(void(vguiWidget sender) a, vguiWidget theDelegate);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
 
 private:
-	string m_strTitle;
-	string *m_strItems;
-	int m_iItemCount;
-	int m_iSelected;
-	int m_iDrawOffset;
-	float m_flClickTimer;
+    string m_strTitle;
+    string *m_strItems;
+    int m_iItemCount;
+    int m_iSelected;
+    int m_iDrawOffset;
+    float m_flClickTimer;
 };
 
 static void
 vguiList_CallFunctionWithDelegate(void(vguiWidget sender) targetFunc, vguiWidget delegateWidget, vguiWidget sender)
 {
-	entity oldSelf = self;
+    entity oldSelf = self;
 
-	if (delegateWidget) {
-		self = delegateWidget;
-	}
+    if (delegateWidget) {
+        self = delegateWidget;
+    }
 
-	if (targetFunc) {
-		targetFunc(sender);
-	}
+    if (targetFunc) {
+        targetFunc(sender);
+    }
 
-	self = oldSelf;
+    self = oldSelf;
 }
 
 void vguiList::vguiList(void)
 {
-	m_iSelected = -1;
-	m_iDrawOffset = 0;
-	tmpvguiList1 = __NULL__;
-	tmpvguiList2 = __NULL__;
-	tmpvguiList3 = __NULL__;
+    m_iSelected = -1;
+    m_iDrawOffset = 0;
+    tmpvguiList1 = __NULL__;
+    tmpvguiList2 = __NULL__;
+    tmpvguiList3 = __NULL__;
 }
 
 void vguiList::Spawned(void)
 {
-	SetSize([96,16]);
+    SetSize([96,16]);
 }
 
 void vguiList::Draw(void)
 {
-	vguiTheme theme = GetTheme();
-	int iMaxDisplay;
-	if (!m_iItemCount) {
-		return;
-	}
+    vguiTheme theme = GetTheme();
+    int iMaxDisplay;
+    if (!m_iItemCount) {
+        return;
+    }
 
-	theme.DrawTextBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
+    theme.DrawTextBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
 
-	vector vecOffset = [8,8];
+    vector vecOffset = [8,8];
 
-	iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
+    iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
 
-	drawsetcliparea(m_parent.m_vecOrigin[0] + m_vecOrigin[0],m_parent.m_vecOrigin[1] + m_vecOrigin[1], m_vecSize[0] - 1, m_vecSize[1]);
-	for (int i = m_iDrawOffset; i < iMaxDisplay + m_iDrawOffset; i++) {
-		if (!m_strItems[i]) {
-			break;
-		}
+    drawsetcliparea(m_parent.m_vecOrigin[0] + m_vecOrigin[0],m_parent.m_vecOrigin[1] + m_vecOrigin[1], m_vecSize[0] - 1, m_vecSize[1]);
+    for (int i = m_iDrawOffset; i < iMaxDisplay + m_iDrawOffset; i++) {
+        if (!m_strItems[i]) {
+            break;
+        }
 
-		if (m_iSelected == i) {
-			theme.DrawHighlight(m_parent.m_vecOrigin + m_vecOrigin + vecOffset + [-7,-3], [m_vecSize[0] - 2, 18], VGUI_STATE_NORMAL);
-		} else if (i & 1) {
-			drawfill(m_parent.m_vecOrigin + m_vecOrigin + vecOffset + [-7,-3], [m_vecSize[0] - 2, 18], [1,1,1], 0.1f);
-		}
+        if (m_iSelected == i) {
+            theme.DrawHighlight(m_parent.m_vecOrigin + m_vecOrigin + vecOffset + [-7,-3], [m_vecSize[0] - 2, 18], VGUI_STATE_NORMAL);
+        } else if (i & 1) {
+            drawfill(m_parent.m_vecOrigin + m_vecOrigin + vecOffset + [-7,-3], [m_vecSize[0] - 2, 18], [1,1,1], 0.1f);
+        }
 
-		if (m_iSelected == i) {
-			theme.DrawHighlightText(m_parent.m_vecOrigin + m_vecOrigin + vecOffset, m_strItems[i], m_vecSize, g_fntDefault);
-		} else {
-			theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + vecOffset, m_strItems[i], m_vecSize, g_fntDefault);
-		}
+        if (m_iSelected == i) {
+            theme.DrawHighlightText(m_parent.m_vecOrigin + m_vecOrigin + vecOffset, m_strItems[i], m_vecSize, g_fntDefault);
+        } else {
+            theme.DrawText(m_parent.m_vecOrigin + m_vecOrigin + vecOffset, m_strItems[i], m_vecSize, g_fntDefault);
+        }
 
-		vecOffset[1] += 20;
-	}
-	drawresetcliparea();
+        vecOffset[1] += 20;
+    }
+    drawresetcliparea();
 }
 
 bool vguiList::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	bool ret = false;
-	int iMaxDisplay;
-	int iMouseOver = Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize);
-	iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
+    bool ret = false;
+    int iMaxDisplay;
+    int iMouseOver = Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize);
+    iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
 
-	if (!m_iItemCount) {
-		return (false);
-	}
+    if (!m_iItemCount) {
+        return (false);
+    }
 
-	vector vecOffset = [8,8];
-	if (flEVType == IE_KEYDOWN) {
-		if (flKey == K_MOUSE1) {
-			for (int i = m_iDrawOffset; i < iMaxDisplay + m_iDrawOffset; i++) {
-				if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin + vecOffset, [m_vecSize[0] - 16, 20])) {
-					/* last item as last time */
-					if (m_iSelected == i) {
-						/* double click timer */
-						if (m_flClickTimer > time) {
-							if (tmpvguiList2)
-								vguiList_CallFunctionWithDelegate(tmpvguiList2, tmpvguiList2Delegate, this);
-						}
-					}
-					m_iSelected = i;
+    vector vecOffset = [8,8];
+    if (flEVType == IE_KEYDOWN) {
+        if (flKey == K_MOUSE1) {
+            for (int i = m_iDrawOffset; i < iMaxDisplay + m_iDrawOffset; i++) {
+                if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin + vecOffset, [m_vecSize[0] - 16, 20])) {
+                    /* last item as last time */
+                    if (m_iSelected == i) {
+                        /* double click timer */
+                        if (m_flClickTimer > time) {
+                            if (tmpvguiList2)
+                                vguiList_CallFunctionWithDelegate(tmpvguiList2, tmpvguiList2Delegate, this);
+                        }
+                    }
+                    m_iSelected = i;
 
-					vguiList_CallFunctionWithDelegate(tmpvguiList3, tmpvguiList3Delegate, this);
+                    vguiList_CallFunctionWithDelegate(tmpvguiList3, tmpvguiList3Delegate, this);
 
-					m_flClickTimer = time + 0.5f;
-					ret = true;
-				}
-				vecOffset[1] += 20;
-			}
-		} else if (flKey == K_MWHEELUP && iMouseOver) {
-			SetOffset(m_iDrawOffset - (iMaxDisplay / 4), TRUE);
-			ret = true;
-		} else if (flKey == K_MWHEELDOWN && iMouseOver) {
-			SetOffset(m_iDrawOffset + (iMaxDisplay / 4), TRUE);
-			ret = true;
-		}
-	}
-	return (ret);
+                    m_flClickTimer = time + 0.5f;
+                    ret = true;
+                }
+                vecOffset[1] += 20;
+            }
+        } else if (flKey == K_MWHEELUP && iMouseOver) {
+            SetOffset(m_iDrawOffset - (iMaxDisplay / 4), TRUE);
+            ret = true;
+        } else if (flKey == K_MWHEELDOWN && iMouseOver) {
+            SetOffset(m_iDrawOffset + (iMaxDisplay / 4), TRUE);
+            ret = true;
+        }
+    }
+    return (ret);
 }
 
 int vguiList::GetMaxVisibleItems(void)
 {
-	int iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
-	return m_iItemCount - iMaxDisplay;
+    int iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
+    return m_iItemCount - iMaxDisplay;
 }
 
 void vguiList::SetOffset (int iOffset, int iCallBack)
 {
-	int iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
-	m_iDrawOffset = bound(0, iOffset, m_iItemCount - iMaxDisplay);
+    int iMaxDisplay = bound(0, m_iItemCount, floor(m_vecSize[1] / 20));
+    m_iDrawOffset = bound(0, iOffset, m_iItemCount - iMaxDisplay);
 
-	if (tmpvguiList1 && iCallBack) {
-		vguiList_CallFunctionWithDelegate(tmpvguiList1, tmpvguiList1Delegate, this);
-	}
+    if (tmpvguiList1 && iCallBack) {
+        vguiList_CallFunctionWithDelegate(tmpvguiList1, tmpvguiList1Delegate, this);
+    }
 }
 int vguiList::GetOffset(void)
 {
-	return m_iDrawOffset;
+    return m_iDrawOffset;
 }
 
 void vguiList::SetItemCount (int iCount)
 {
-	if (!m_iItemCount) {
-		ncLog("vguiList: Initialized with a maximum of %i entries", iCount);
-		m_iItemCount = iCount;
-		m_strItems = memalloc(iCount * sizeof(string));
-	}
+    if (!m_iItemCount) {
+        ncLog("vguiList: Initialized with a maximum of %i entries", iCount);
+        m_iItemCount = iCount;
+        m_strItems = memalloc(iCount * sizeof(string));
+    }
 }
 int vguiList::MaxItems(void)
 {
-	return m_iItemCount;
+    return m_iItemCount;
 }
 int vguiList::GetItemCount(void)
 {
-	int itemCounter = 0i;
+    int itemCounter = 0i;
 
-	for (int i = 0; i < m_iItemCount; i++) {
-		if (STRING_SET(m_strItems[i])) {
-			itemCounter++;
-		}
-	}
+    for (int i = 0; i < m_iItemCount; i++) {
+        if (STRING_SET(m_strItems[i])) {
+            itemCounter++;
+        }
+    }
 
-	return (itemCounter);
+    return (itemCounter);
 }
 void vguiList::RemoveAllItems(void)
 {
-	memfree(m_strItems);
-	m_iItemCount = 0;
+    memfree(m_strItems);
+    m_iItemCount = 0;
 }
 
 string vguiList::GetItem (int iIndex)
 {
-	if (iIndex < 0i || m_iItemCount <= 0i) {
-		ncError("vguiList: GetItem on empty/unselected list! %i/%i", iIndex, m_iItemCount);
-		return "ERROR";
-	}
-	return m_strItems[iIndex];
+    if (iIndex < 0i || m_iItemCount <= 0i) {
+        ncError("vguiList: GetItem on empty/unselected list! %i/%i", iIndex, m_iItemCount);
+        return "ERROR";
+    }
+    return m_strItems[iIndex];
 }
 
 void vguiList::SetSelected (int iVal)
 {
-	m_iSelected = iVal;
+    m_iSelected = iVal;
 }
 int vguiList::GetSelected(void)
 {
-	return m_iSelected;
+    return m_iSelected;
 }
 
 void vguiList::AddItem (string strItem)
 {
-	if (!m_iItemCount) {
-		ncError("vguiList: Can't add item to empty list!");
-		return;
-	}
+    if (!m_iItemCount) {
+        ncError("vguiList: Can't add item to empty list!");
+        return;
+    }
 
-	for (int i = 0; i < m_iItemCount; i++) {
-		if not (m_strItems[i]) {
-			m_strItems[i] = strItem;
-			//ncError("vguiList: Item %S added", strItem);
-			break;
-		}
-	}
+    for (int i = 0; i < m_iItemCount; i++) {
+        if not (m_strItems[i]) {
+            m_strItems[i] = strItem;
+            //ncError("vguiList: Item %S added", strItem);
+            break;
+        }
+    }
 }
 
 void vguiList::CallOnScroll (void(vguiWidget sender) vFunc)
 {
-	tmpvguiList1 = vFunc;
+    tmpvguiList1 = vFunc;
 }
 
 void vguiList::CallOnSelectionChanged (void(vguiWidget sender) vFunc)
 {
-	tmpvguiList3 = vFunc;
+    tmpvguiList3 = vFunc;
 }
 
 void vguiList::CallOnScrollWithDelegate(void(vguiWidget sender) vFunc, vguiWidget delegateWidget)
 {
-	tmpvguiList1 = vFunc;
-	tmpvguiList1Delegate = delegateWidget;
+    tmpvguiList1 = vFunc;
+    tmpvguiList1Delegate = delegateWidget;
 }
 
 void vguiList::CallOnSelectionChangedWithDelegate(void(vguiWidget sender) vFunc, vguiWidget delegateWidget)
 {
-	tmpvguiList3 = vFunc;
-	tmpvguiList3Delegate = delegateWidget;
+    tmpvguiList3 = vFunc;
+    tmpvguiList3Delegate = delegateWidget;
 }
 
 void vguiList::CallOnDoubleClick (void(vguiWidget sender) vFunc)
 {
-	tmpvguiList2 = vFunc;
+    tmpvguiList2 = vFunc;
 }
 
 void vguiList::CallOnDoubleClickWithDelegate(void(vguiWidget sender) vFunc, vguiWidget delegateWidget)
 {
-	tmpvguiList2 = vFunc;
-	tmpvguiList2Delegate = delegateWidget;
+    tmpvguiList2 = vFunc;
+    tmpvguiList2Delegate = delegateWidget;
 }

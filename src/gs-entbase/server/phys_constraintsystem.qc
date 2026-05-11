@@ -40,24 +40,24 @@ class
 phys_constraintsystem:ncPhysicsConstraint
 {
 public:
-	void phys_constraintsystem(void);
+    void phys_constraintsystem(void);
 
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
-	nonvirtual float GetSystemID(void);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
+    nonvirtual float GetSystemID(void);
 };
 
 void
 phys_constraintsystem::phys_constraintsystem(void)
 {
-	g_phys_constraintsystems += 1;
-	jointgroup = (float)g_phys_constraintsystems;
+    g_phys_constraintsystems += 1;
+    jointgroup = (float)g_phys_constraintsystems;
 }
 
 void
 phys_constraintsystem::Respawn(void)
 {
-	ScheduleThink(AfterSpawn, 0.0f);
+    ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
@@ -69,5 +69,5 @@ phys_constraintsystem::AfterSpawn(void)
 float
 phys_constraintsystem::GetSystemID(void)
 {
-	return jointgroup;
+    return jointgroup;
 }

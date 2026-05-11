@@ -36,31 +36,31 @@ ncZoneManager::LoadZonesFromLocFile(string fileName)
 void
 ncZoneManager::LoadZonesFromHLLocFile(string fileName)
 {
-	filestream locFile;
-	string line;
-	int zonesCount = 0i;
+    filestream locFile;
+    string line;
+    int zonesCount = 0i;
 
-	locFile = fopen(fileName, FILE_READ);
+    locFile = fopen(fileName, FILE_READ);
 
-	if (locFile < 0) {
-		ncError("failed to load %S for reading!", fileName);
-		return;
-	}
+    if (locFile < 0) {
+        ncError("failed to load %S for reading!", fileName);
+        return;
+    }
 
-	/* count surfaceproperty definitions */
-	while ((line = fgets(locFile))) {
+    /* count surfaceproperty definitions */
+    while ((line = fgets(locFile))) {
         ncZone lineResult = __NULL__;
         vector positionCoord = g_vec_null;
-		string zoneDescription = g_string_null;
-		int segments = tokenize(line);
+        string zoneDescription = g_string_null;
+        int segments = tokenize(line);
         positionCoord[0] = stof(argv(0));
         positionCoord[1] = stof(argv(1));
         positionCoord[2] = stof(argv(2));
 
-		if (segments == 4) { /* X Y Z "Description" */
+        if (segments == 4) { /* X Y Z "Description" */
             zoneDescription = argv(3);
             lineResult = ncZone::CreateZoneWithDescription(positionCoord, zoneDescription);
-		} else { /* X Y Z Description That's Only Terminated By Newline */
+        } else { /* X Y Z Description That's Only Terminated By Newline */
             int thirdSpace = -1;
             int stringLength = strlen(line);
             int counter;
@@ -79,38 +79,38 @@ ncZoneManager::LoadZonesFromHLLocFile(string fileName)
 
             zoneDescription = substring(line, thirdSpace, -1);
             lineResult = ncZone::CreateZoneWithDescription(positionCoord, zoneDescription);
-		}
+        }
 
-		if (lineResult) {
+        if (lineResult) {
             zonesCount++;
-		}
-	}
+        }
+    }
 
-	ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
-	fclose(locFile);
+    ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
+    fclose(locFile);
 }
 
 
 void
 ncZoneManager::LoadZonesFromQWLocFile(string fileName)
 {
-	filestream locFile;
-	string line;
-	int zonesCount = 0i;
+    filestream locFile;
+    string line;
+    int zonesCount = 0i;
 
-	locFile = fopen(fileName, FILE_READ);
+    locFile = fopen(fileName, FILE_READ);
 
-	if (locFile < 0) {
-		ncError("failed to load %S for reading!", fileName);
-		return;
-	}
+    if (locFile < 0) {
+        ncError("failed to load %S for reading!", fileName);
+        return;
+    }
 
-	/* count surfaceproperty definitions */
-	while ((line = fgets(locFile))) {
+    /* count surfaceproperty definitions */
+    while ((line = fgets(locFile))) {
         ncZone lineResult = __NULL__;
         vector positionCoord = g_vec_null;
-		string zoneDescription = g_string_null;
-		int segments = tokenize(line);
+        string zoneDescription = g_string_null;
+        int segments = tokenize(line);
         positionCoord[0] = stof(argv(0)) / 8.0;
         positionCoord[1] = stof(argv(1)) / 8.0;
         positionCoord[2] = stof(argv(2)) / 8.0;
@@ -134,37 +134,37 @@ ncZoneManager::LoadZonesFromQWLocFile(string fileName)
         zoneDescription = substring(line, thirdSpace + 1, -1);
         lineResult = ncZone::CreateZoneWithDescription(positionCoord, zoneDescription);
 
-		if (lineResult) {
+        if (lineResult) {
             zonesCount++;
-		}
-	}
+        }
+    }
 
-	ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
-	fclose(locFile);
+    ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
+    fclose(locFile);
 }
 
 
 void
 ncZoneManager::LoadZonesFromPQLocFile(string fileName)
 {
-	filestream locFile;
-	string line;
-	int zonesCount = 0i;
+    filestream locFile;
+    string line;
+    int zonesCount = 0i;
 
-	locFile = fopen(fileName, FILE_READ);
+    locFile = fopen(fileName, FILE_READ);
 
-	if (locFile < 0) {
-		ncError("failed to load %S for reading!", fileName);
-		return;
-	}
+    if (locFile < 0) {
+        ncError("failed to load %S for reading!", fileName);
+        return;
+    }
 
-	/* count surfaceproperty definitions */
-	while ((line = fgets(locFile))) {
+    /* count surfaceproperty definitions */
+    while ((line = fgets(locFile))) {
         ncZone lineResult = __NULL__;
         vector minBox = g_vec_null;
         vector maxBox = g_vec_null;
-		string zoneDescription = g_string_null;
-		int segments = tokenizebyseparator(line, ",");
+        string zoneDescription = g_string_null;
+        int segments = tokenizebyseparator(line, ",");
         minBox[0] = stof(argv(0));
         minBox[1] = stof(argv(1));
         minBox[2] = stof(argv(2));
@@ -176,37 +176,37 @@ ncZoneManager::LoadZonesFromPQLocFile(string fileName)
 
         lineResult = ncZone::CreateZoneBoundsWithDescription(minBox, maxBox, zoneDescription);
 
-		if (lineResult) {
+        if (lineResult) {
             zonesCount++;
-		}
-	}
+        }
+    }
 
-	ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
-	fclose(locFile);
+    ncLogAlways("... %i zones read from loc file %S", zonesCount, fileName);
+    fclose(locFile);
 }
 
 void
 ncZoneManager::SaveZonesToFile(string fileName)
 {
-	filestream locFile;
-	string line;
-	int zonesCount = 0i;
+    filestream locFile;
+    string line;
+    int zonesCount = 0i;
 
-	locFile = fopen(fileName, FILE_WRITE);
+    locFile = fopen(fileName, FILE_WRITE);
 
-	if (locFile < 0) {
-		ncError("failed to load %S for writing!", fileName);
-		return;
-	}
+    if (locFile < 0) {
+        ncError("failed to load %S for writing!", fileName);
+        return;
+    }
 
     for (ncZone vars = __NULL__;(vars = (ncZone)find(vars, ::classname, "ncZone"));) {
         line = sprintf("%d %d %d %S\n", vars.origin[0], vars.origin[1], vars.origin[2], vars.m_strDescription);
-		fputs(locFile, line);
-		zonesCount++;
-	}
+        fputs(locFile, line);
+        zonesCount++;
+    }
 
-	ncLogAlways("... %i zones written to loc file %S", zonesCount, fileName);
-	fclose(locFile);
+    ncLogAlways("... %i zones written to loc file %S", zonesCount, fileName);
+    fclose(locFile);
 }
 
 void
@@ -222,9 +222,9 @@ ncZoneManager::DeleteNearPoint(vector pointLocation)
             closestDist = zoneDist;
             closestZone = vars;
         }
-	}
+    }
 
-	if (closestZone) {
+    if (closestZone) {
         closestZone.Destroy();
     }
 }
@@ -232,14 +232,14 @@ ncZoneManager::DeleteNearPoint(vector pointLocation)
 void
 ncZoneManager::PrintZones(void)
 {
-	int zonesCount = 0i;
+    int zonesCount = 0i;
 
     for (ncZone vars = __NULL__;(vars = (ncZone)find(vars, ::classname, "ncZone"));) {
         ncLogAlways("%i: (%d %d %d) %S (%v) (%v)", zonesCount + 1i, vars.origin[0], vars.origin[1], vars.origin[2], vars.m_strDescription, vars.mins, vars.maxs);
-		zonesCount++;
-	}
+        zonesCount++;
+    }
 
-	ncLogAlways("... %i zones in total", zonesCount);
+    ncLogAlways("... %i zones in total", zonesCount);
 }
 
 
@@ -247,15 +247,15 @@ void
 ncZoneManager::DrawDebugInfo(void)
 {
     for (ncZone vars = __NULL__;(vars = (ncZone)find(vars, ::classname, "ncZone"));) {
-      	makevectors(self.v_angle);
-      	vector v1 = vars.WorldSpaceCenter();
-		R_BeginPolygon("textures/dev/model_bone", 0, 0);
-		R_PolygonVertex(v1 + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
-		R_PolygonVertex(v1 - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
-		R_PolygonVertex(v1 - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
-		R_PolygonVertex(v1 + v_right * 16 + v_up * 16, [1,0], [1,1,1],1.0f);
-		R_EndPolygon();
-	}
+        makevectors(self.v_angle);
+        vector v1 = vars.WorldSpaceCenter();
+        R_BeginPolygon("textures/dev/model_bone", 0, 0);
+        R_PolygonVertex(v1 + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
+        R_PolygonVertex(v1 - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
+        R_PolygonVertex(v1 - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
+        R_PolygonVertex(v1 + v_right * 16 + v_up * 16, [1,0], [1,1,1],1.0f);
+        R_EndPolygon();
+    }
 
 
 }

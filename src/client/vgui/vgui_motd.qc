@@ -17,66 +17,66 @@
 void
 VGUI_ShowMOTD(vguiWidget parentDesktop, bool fullScreen)
 {
-	static vguiButton winMotdClose;
-	static vguiPanel winMotd;
-	static vguiLabel winMotdHostname;
-	static vguiLabel winMotdBody;
+    static vguiButton winMotdClose;
+    static vguiPanel winMotd;
+    static vguiLabel winMotdHostname;
+    static vguiLabel winMotdBody;
 
-	static void VGUI_ShowMOTD_Close(void)
-	{
-		int playerTeam = player.GetTeam();
-		bool teamSelect = ((playerTeam == TEAM_UNASSIGNED) || (playerTeam == TEAM_SPECTATOR)) ? (true) : (false);
+    static void VGUI_ShowMOTD_Close(void)
+    {
+        int playerTeam = player.GetTeam();
+        bool teamSelect = ((playerTeam == TEAM_UNASSIGNED) || (playerTeam == TEAM_SPECTATOR)) ? (true) : (false);
 
-		if (playerTeam == 0) {
-			teamSelect = true;
-		}
+        if (playerTeam == 0) {
+            teamSelect = true;
+        }
 
-		if ((teams.OpenTeamCount() > 0i) && (teamSelect == true)) {
-			printf("Opening Team Selection\n");
-			localcmd("showTeamSelectionMenu\n");
-		}
+        if ((teams.OpenTeamCount() > 0i) && (teamSelect == true)) {
+            printf("Opening Team Selection\n");
+            ncCommand("showTeamSelectionMenu");
+        }
 
-		if (winMotd) {
-			winMotd.Hide();
-		}
-	}
+        if (winMotd) {
+            winMotd.Hide();
+        }
+    }
 
-	if (MOTD_GetLineCount() < 1i) {
-		VGUI_ShowMOTD_Close();
-		return;
-	}
+    if (MOTD_GetLineCount() < 1i) {
+        VGUI_ShowMOTD_Close();
+        return;
+    }
 
-	winMotd = spawn(vguiPanel);
-	winMotd.SetTitle("Message Of The Day");
-	winMotd.SetSize('424 312');
+    winMotd = spawn(vguiPanel);
+    winMotd.SetTitle("Message Of The Day");
+    winMotd.SetSize('424 312');
 
     if (fullScreen) {
         winMotd.SetStyleMask(vguiWindowBorderless | vguiWindowFullscreen);
         winMotd.SetStyleMask(0);
     }
 
-	winMotdClose = spawn(vguiButton);
-	winMotdClose.SetTitle("OK");
-	winMotdClose.SetPos([16, 266]);
-	winMotdClose.SetSize([160, 30]);
-	winMotdClose.SetFunc(VGUI_ShowMOTD_Close);
+    winMotdClose = spawn(vguiButton);
+    winMotdClose.SetTitle("OK");
+    winMotdClose.SetPos([16, 266]);
+    winMotdClose.SetSize([160, 30]);
+    winMotdClose.SetFunc(VGUI_ShowMOTD_Close);
 
-	winMotdHostname = spawn(vguiLabel);
-	winMotdHostname.SetTitle(serverkey("hostname"));
-	winMotdHostname.SetTextSize(19);
-	winMotdHostname.SetPos([16, 20]);
+    winMotdHostname = spawn(vguiLabel);
+    winMotdHostname.SetTitle(serverkey("hostname"));
+    winMotdHostname.SetTextSize(19);
+    winMotdHostname.SetPos([16, 20]);
     winMotdHostname.SetSize([424, 48]);
 
-	winMotdBody = spawn(vguiLabel);
-	winMotdBody.SetTitle(MOTD_GetTextBody());
-	winMotdBody.SetPos([16, 48]);
-	winMotdBody.SetSize([392, 210]);
+    winMotdBody = spawn(vguiLabel);
+    winMotdBody.SetTitle(MOTD_GetTextBody());
+    winMotdBody.SetPos([16, 48]);
+    winMotdBody.SetSize([392, 210]);
 
-	parentDesktop.Add(winMotd);
-	winMotd.Add(winMotdClose);
-	winMotd.Add(winMotdHostname);
-	winMotd.Add(winMotdBody);
+    parentDesktop.Add(winMotd);
+    winMotd.Add(winMotdClose);
+    winMotd.Add(winMotdHostname);
+    winMotd.Add(winMotdBody);
 
-	winMotd.Show();
-	winMotd.SetPos((g_vidsize / 2) - (winMotd.GetSize() / 2));
+    winMotd.Show();
+    winMotd.SetPos((g_vidsize / 2) - (winMotd.GetSize() / 2));
 }

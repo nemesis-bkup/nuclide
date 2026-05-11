@@ -16,9 +16,9 @@
 
 enumflags
 {
-	CHECKBOX_HOVER,
-	CHECKBOX_DOWN,
-	CHECKBOX_CHECKED
+    CHECKBOX_HOVER,
+    CHECKBOX_DOWN,
+    CHECKBOX_CHECKED
 };
 
 /** VGUI Widget: Checkbox
@@ -28,87 +28,87 @@ enumflags
 class vguiCheckbox:vguiWidget
 {
 public:
-	void vguiCheckbox(void);
+    void vguiCheckbox(void);
 
-	nonvirtual void SetTitle(string);
-	nonvirtual int GetValue(void);
-	nonvirtual void SetValue(int);
+    nonvirtual void SetTitle(string);
+    nonvirtual int GetValue(void);
+    nonvirtual void SetValue(int);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
 
 private:
-	vector m_vecColor;
-	float m_flAlpha;
-	string m_strTitle;
+    vector m_vecColor;
+    float m_flAlpha;
+    string m_strTitle;
 };
 
 void vguiCheckbox::vguiCheckbox(void)
 {
-	m_flAlpha = 1.0f;
+    m_flAlpha = 1.0f;
 }
 
 void
 vguiCheckbox::Spawned(void)
 {
-	SetSize([96,18]);
+    SetSize([96,18]);
 }
 
 void vguiCheckbox::SetTitle (string strName)
 {
-	m_strTitle = localize(strName);
+    m_strTitle = localize(strName);
 }
 int vguiCheckbox::GetValue(void)
 {
-	if (m_iFlags & CHECKBOX_CHECKED) {
-		return (1);
-	} else {
-		return (0);
-	}
+    if (m_iFlags & CHECKBOX_CHECKED) {
+        return (1);
+    } else {
+        return (0);
+    }
 }
 void vguiCheckbox::SetValue (int iValue)
 {
-	if (iValue == TRUE) {
-		m_iFlags |= CHECKBOX_CHECKED;
-	} else {
-		m_iFlags -= (m_iFlags & CHECKBOX_CHECKED);
-	}
+    if (iValue == TRUE) {
+        m_iFlags |= CHECKBOX_CHECKED;
+    } else {
+        m_iFlags -= (m_iFlags & CHECKBOX_CHECKED);
+    }
 }
 
 void vguiCheckbox::Draw(void)
 {
-	vguiTheme theme = GetTheme();
+    vguiTheme theme = GetTheme();
 
-	if (m_iFlags & RADIO_DOWN) {
-		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
-	} else if (m_iFlags & RADIO_ACTIVE) {
-		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
-	} else {
-		theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
-	}
+    if (m_iFlags & RADIO_DOWN) {
+        theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
+    } else if (m_iFlags & RADIO_ACTIVE) {
+        theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
+    } else {
+        theme.DrawCheckBox(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
+    }
 }
 
 bool vguiCheckbox::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	bool ret = false;
+    bool ret = false;
 
-	if (flEVType == IE_KEYDOWN) {
-		if (flKey == K_MOUSE1) {
-			if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				m_iFlags |= CHECKBOX_DOWN;
-				ret = true;
-			}
-		}
-	} else if (flEVType == IE_KEYUP) {
-		if (flKey == K_MOUSE1) {
-			if (m_iFlags & CHECKBOX_DOWN && Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				SetValue(!GetValue());
-				ret = true;
-			}
-			m_iFlags -= (m_iFlags & CHECKBOX_DOWN);
-		}
-	}
+    if (flEVType == IE_KEYDOWN) {
+        if (flKey == K_MOUSE1) {
+            if (MouseAbove()) {
+                m_iFlags |= CHECKBOX_DOWN;
+                ret = true;
+            }
+        }
+    } else if (flEVType == IE_KEYUP) {
+        if (flKey == K_MOUSE1) {
+            if (m_iFlags & CHECKBOX_DOWN && MouseAbove()) {
+                SetValue(!GetValue());
+                ret = true;
+            }
+            m_iFlags -= (m_iFlags & CHECKBOX_DOWN);
+        }
+    }
 
-	return (ret);
+    return (ret);
 }

@@ -42,89 +42,89 @@ class
 phys_keepupright:ncPhysicsConstraint
 {
 public:
-	void phys_keepupright(void);
+    void phys_keepupright(void);
 
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string, string);
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
-	virtual void Input(entity, string, string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
+    virtual void Input(entity, string, string);
 
 private:
-	float m_flAngularLimit;
+    float m_flAngularLimit;
 };
 
 void
 phys_keepupright::phys_keepupright(void)
 {
-	m_flAngularLimit = -1.0f;
+    m_flAngularLimit = -1.0f;
 }
 
 void
 phys_keepupright::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flAngularLimit", m_flAngularLimit);
+    super::Save(handle);
+    SaveFloat(handle, "m_flAngularLimit", m_flAngularLimit);
 }
 
 void
 phys_keepupright::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flAngularLimit":
-		m_flAngularLimit = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flAngularLimit":
+        m_flAngularLimit = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 phys_keepupright::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "angularlimit":
-		m_flAngularLimit = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "angularlimit":
+        m_flAngularLimit = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 phys_keepupright::Respawn(void)
 {
-	if (HasSpawnFlags(1) == false)
-		ScheduleThink(AfterSpawn, 0.0f);
+    if (HasSpawnFlags(1) == false)
+        ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
 phys_keepupright::AfterSpawn(void)
 {
-	SetOrigin(GetSpawnVector("origin"));
-	SetEntity1(find(world, ::targetname, m_strEnt1));
-	ncEntity targetEnt = (ncEntity)GetEntity1();
-	KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), m_flAngularLimit);
+    SetOrigin(GetSpawnVector("origin"));
+    SetEntity1(find(world, ::targetname, m_strEnt1));
+    ncEntity targetEnt = (ncEntity)GetEntity1();
+    KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), m_flAngularLimit);
 }
 
 void
 phys_keepupright::Input(entity activatorEnt, string inputName, string dataString)
 {
-	ncEntity targetEnt;
+    ncEntity targetEnt;
 
-	switch (inputName) {
-	case "TurnOn":
-		targetEnt = (ncEntity)GetEntity1();
-		KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), m_flAngularLimit);
-		break;
-	case "TurnOff":
-		targetEnt = (ncEntity)GetEntity1();
-		KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), -1);
-		break;
-	default:
-		super::Input(activatorEnt, inputName, dataString);
-		break;
-	}
+    switch (inputName) {
+    case "turnon":
+        targetEnt = (ncEntity)GetEntity1();
+        KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), m_flAngularLimit);
+        break;
+    case "turnoff":
+        targetEnt = (ncEntity)GetEntity1();
+        KeepUpright(targetEnt, targetEnt.GetSpawnVector("angles"), -1);
+        break;
+    default:
+        super::Input(activatorEnt, inputName, dataString);
+        break;
+    }
 }

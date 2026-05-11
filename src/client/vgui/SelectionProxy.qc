@@ -14,40 +14,80 @@
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+
 class
 ncSelectionProxy:ncRenderableEntity
 {
-	virtual float predraw(void);
-	nonvirtual void MoveToMouseCoordinates(vector mousePos);
-	nonvirtual void ClearSelection(void);
-	nonvirtual void SelectNearPointer(void);
+    virtual float predraw(void);
+    nonvirtual void MoveToMouseCoordinates(vector mousePos);
+    nonvirtual void ClearSelection(void);
+    nonvirtual void SelectNearPointer(void);
+    nonvirtual void SetHeightOffset(float);
+    nonvirtual void SetBrushSize(vector,vector);
+    nonvirtual void SetSpawnMode(selectionSpawnMode_t);
+    nonvirtual void SetDict(ncDict targetDict);
     nonvirtual ncEntity NearestMediaEntity(float searchRadius);
     nonvirtual void SetSelectionURLItem(string itemName, string itemType, string groupName);
     nonvirtual void SetSelectionProfileItem(string itemName, profileItem_t itemType);
+    nonvirtual void SetSelectionDict(ncDict targetDict, string iconPath, selectionSpawnMode_t spawnMode);
 
 private:
     string m_itemName;
     string m_imagePath;
-    bool m_isFlat;
-    bool m_isIcon;
     string m_itemDataFormat;
     vector m_aspect;
     ncEntity m_mediaSelection;
     string m_itemDataGroup;
+    float m_heightOffset;
+    selectionSpawnMode_t m_spawnMode;
+    ncDict m_targetDict;
+    vector m_previewSize;
+    string m_iconPath;
+    vector m_brushMins;
+    vector m_brushMaxs;
+    string m_brushMaterial;
 };
 
 void
 ncSelectionProxy::ncSelectionProxy(void)
 {
     m_itemName = __NULL__;
-    m_isFlat = false;
     m_imagePath = __NULL__;
+    m_iconPath = __NULL__;
+    m_brushMins = [-30,-30,-30];
+    m_brushMaxs = [30,30,30];
+    m_brushMaterial = "detail_pbr/default";
 }
 
 void
 ncSelectionProxy::ClearSelection(void)
 {
     m_itemName = __NULL__;
+}
+
+void
+ncSelectionProxy::SetSpawnMode(selectionSpawnMode_t spawnMode)
+{
+    m_spawnMode = spawnMode;
+}
+
+void
+ncSelectionProxy::SetDict(ncDict spawnMode)
+{
+    m_targetDict = spawnMode;
+}
+
+void
+ncSelectionProxy::SetHeightOffset(float heightOffset)
+{
+    m_heightOffset = heightOffset;
+}
+
+void
+ncSelectionProxy::SetBrushSize(vector newMins, vector newMaxs)
+{
+    m_brushMins = newMins;
+    m_brushMaxs = newMaxs;
 }
 
 void
@@ -60,9 +100,8 @@ ncSelectionProxy::SelectNearPointer(void)
         return;
     }
 
-    m_isIcon = true;
-    m_imagePath = "gfx/icon16/transmit";
-    precache_pic(m_imagePath);
+    m_iconPath = "gfx/icon16/transmit";
+    precache_pic(m_iconPath);
     m_aspect[0] = 1.0f;
     m_aspect[1] = 1.0f;
 }
@@ -70,34 +109,35 @@ ncSelectionProxy::SelectNearPointer(void)
 float
 ncSelectionProxy::predraw(void)
 {
-	bool drawEntity = true;
+    bool drawEntity = true;
+    vector fakeOrigin = GetOrigin() + [0, 0, m_heightOffset];
 
-	/* only show it when in editor mode... */
-	if (pSeat->m_ePlayer.movetype != MOVETYPE_NOCLIP) {
-		//drawEntity = false;
-	}
-	if (pSeat->m_showInterface == false) {
-		drawEntity = false;
-	}
+    /* only show it when in editor mode... */
+    if (pSeat->m_ePlayer.movetype != MOVETYPE_NOCLIP) {
+        //drawEntity = false;
+    }
+    if (pSeat->m_showInterface == false) {
+        drawEntity = false;
+    }
 
-	if (!m_mediaSelection)
-	if (!drawEntity || !STRING_SET(m_itemName)) {
-		return (PREDRAW_NEXT);
-	}
+    if (!m_mediaSelection)
+    if (!drawEntity || !STRING_SET(m_itemName)) {
+        return (PREDRAW_NEXT);
+    }
 
-	if (m_isIcon) {
+    if (m_mediaSelection || m_spawnMode == INPUT_DATA) {
         vector fsize = [4 * m_aspect[0],4 * m_aspect[1]];
         vector vertexLight = [1,1,1];
-        vector newAngle = vectoangles(g_view.GetCameraOrigin() - GetOrigin());
+        vector newAngle = vectoangles(g_view.GetCameraOrigin() - fakeOrigin);
         vector rightVector = anglesToRight(newAngle);
         vector upVector = anglesToUp(newAngle);
-        vector newOrg = GetOrigin() + (anglesToForward(newAngle) * 16);
+        vector newOrg = fakeOrigin + (anglesToForward(newAngle) * 16);
 
         newAngle = vectoangles(g_view.GetCameraOrigin() - newOrg);
         rightVector = anglesToRight(newAngle);
         upVector = anglesToUp(newAngle);
 
-        R_BeginPolygon(m_imagePath, 0, 0);
+        R_BeginPolygon(m_iconPath, 0, 0);
         R_PolygonVertex(newOrg - rightVector * fsize[0] - upVector * fsize[1],
             [1,1], vertexLight, 1.0f);
         R_PolygonVertex(newOrg + rightVector * fsize[0] - upVector * fsize[1],
@@ -108,41 +148,71 @@ ncSelectionProxy::predraw(void)
             [1,0], vertexLight, 1.0f);
         R_EndPolygon();
         return (PREDRAW_NEXT);
-	} else if (m_isFlat) {
-        vector fsize = GetSize() / 2;
-        vector vertexLight = getlight(GetOrigin()) * (1/255);
+    } else if (STRING_SET(m_imagePath)) {
+        vector fsize = m_previewSize / 2;
+        vector vertexLight = getlight(fakeOrigin) * (1/255);
         vector rightVector = anglesToRight(GetAngles());
         vector upVector = anglesToUp(GetAngles());
 
         drawcone(WorldSpaceCenter(), GetAngles(), 16, 48, 15, [1,1,1], 0.25f);
         R_BeginPolygon(m_imagePath, 0, 0);
-        R_PolygonVertex(origin - rightVector * fsize[0] - upVector * fsize[1],
+        R_PolygonVertex(fakeOrigin - rightVector * fsize[0] - upVector * fsize[1],
             [1,1], vertexLight, 1.0f);
-        R_PolygonVertex(origin + rightVector * fsize[0] - upVector * fsize[1],
+        R_PolygonVertex(fakeOrigin + rightVector * fsize[0] - upVector * fsize[1],
             [0,1], vertexLight, 1.0f);
-        R_PolygonVertex(origin + rightVector * fsize[0] + upVector * fsize[1],
+        R_PolygonVertex(fakeOrigin + rightVector * fsize[0] + upVector * fsize[1],
             [0,0], vertexLight, 1.0f);
-        R_PolygonVertex(origin - rightVector * fsize[0] + upVector * fsize[1],
+        R_PolygonVertex(fakeOrigin - rightVector * fsize[0] + upVector * fsize[1],
             [1,0], vertexLight, 1.0f);
         R_EndPolygon();
         return (PREDRAW_NEXT);
-	}
+    }
+
+    if (m_itemDataFormat == "createbrush") {
+        DebugBox(fakeOrigin, m_brushMins, m_brushMaxs, [1.0,0.5,0.5], 0.5f);
+        return (PREDRAW_NEXT);
+    }
+
+    if (m_itemDataFormat == "carvebrush") {
+        DebugBox(fakeOrigin, m_brushMins, m_brushMaxs, [1.0,0.5,0.5], 0.5f);
+        return (PREDRAW_NEXT);
+    }
 
     drawcone(WorldSpaceCenter(), GetAngles(), 16, 48, 15, [1,1,1], 0.25f);
-	addentity(this);
 
-	return (PREDRAW_NEXT);
+    vector oldOrigin = origin;
+    origin = fakeOrigin;
+    addentity(this);
+    origin = oldOrigin;
+    return (PREDRAW_NEXT);
+}
+
+vector snapVector(vector aVal, float aInterval, float aOffset)
+{
+    vector output;
+    output[0] = rint((aVal[0] - aOffset)/aInterval) * aInterval + aOffset;
+    output[1] = rint((aVal[1] - aOffset)/aInterval) * aInterval + aOffset;
+    output[2] = rint((aVal[2] - aOffset)/aInterval) * aInterval + aOffset;
+    return (output);
 }
 
 void
 ncSelectionProxy::MoveToMouseCoordinates(vector mousePos)
 {
-	g_view.SetupView();
-	vector traceStart = unproject([mousePos[0], mousePos[1], 0]);
-	vector traceEnd = unproject([mousePos[0], mousePos[1], 1024]);
-	other = world;
-	traceline(traceStart, traceEnd, MOVE_OTHERONLY, g_view.m_viewTarget);
-	SetOrigin(trace_endpos - [0,0,mins[2]]);
+    g_view.SetupView();
+    makevectors(g_view.GetCameraAngle());
+    vector traceStart = unproject([mousePos[0], mousePos[1], 0]);
+    vector traceEnd = unproject([mousePos[0], mousePos[1], 1024]);
+    other = world;
+    traceline(traceStart, traceEnd, MOVE_OTHERONLY, g_view.m_viewTarget);
+
+    trace_endpos = snapVector(trace_endpos, autocvar(snap_interval, 1), autocvar(snap_offset, 0));
+
+    if (m_itemName == "brush") {
+        SetOrigin(trace_endpos);
+    } else {
+        SetOrigin(trace_endpos - [0,0,mins[2]]);
+    }
 }
 
 ncEntity
@@ -193,122 +263,211 @@ void
 ncSelectionProxy::SpawnSelection(void)
 {
     ncEntity closestSurface = 0;
-    vector newAngle = vectoangles(g_view.GetCameraOrigin() - GetOrigin());
-    vector newOrg = GetOrigin() + (anglesToForward(newAngle) * 16);
+    vector fakeOrigin = GetOrigin() + [0, 0, m_heightOffset];
+    vector newAngle = vectoangles(g_view.GetCameraOrigin() - fakeOrigin);
+    vector newOrg = fakeOrigin + (anglesToForward(newAngle) * 16);
 
-	if (m_mediaSelection) {
+    if (m_mediaSelection) {
         closestSurface = NearestMediaEntity(1024);
 
         if (closestSurface) {
             trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
-            localcmd(sprintf("cmd input %d SetSourceID %d\n", closestSurface.entnum, m_mediaSelection.entnum));
+            ncCommand("cmd input %d setsourceid %d", closestSurface.entnum, m_mediaSelection.entnum);
             m_mediaSelection = __NULL__;
         }
         return;
-	}
+    }
 
-	if (!STRING_SET(m_itemName)) {
-		return (PREDRAW_NEXT);
-	}
-
-    if (m_itemDataFormat == "video") {
-        closestSurface = NearestMediaEntity(1024);
-
-        if (closestSurface) {
-            trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
-
-            if (STRING_SET(m_itemDataGroup)) {
-                localcmd(sprintf("cmd input %d openurl \"video_%s %s\"\n", closestSurface.entnum, m_itemDataGroup, m_itemName));
-            } else {
-                localcmd(sprintf("cmd input %d openurl \"video %s\"\n", closestSurface.entnum, m_itemName));
-            }
-
-            m_itemName = __NULL__;
-        }
+    if (m_itemDataFormat == "createbrush") {
+        vector fakeMins = fakeOrigin + m_brushMins;
+        vector fakeMaxs = fakeOrigin + m_brushMaxs;
+        ncCommand("cmd createBrush \"%v\" \"%v\" %S", fakeMins, fakeMaxs, m_brushMaterial);
+        m_itemName = __NULL__;
         return;
     }
 
-    if (m_itemDataFormat == "audio") {
-        closestSurface = NearestMediaEntity(1024);
-
-        if (closestSurface) {
-            trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
-            localcmd(sprintf("cmd input %d openurl \"audio %s\"\n", closestSurface.entnum, m_itemName));
-            m_itemName = __NULL__;
-        }
+    if (m_itemDataFormat == "carvebrush") {
+        vector fakeMins = fakeOrigin + m_brushMins;
+        vector fakeMaxs = fakeOrigin + m_brushMaxs;
+        ncCommand("cmd carveBrush \"%v\" \"%v\" %S", fakeMins, fakeMaxs, m_brushMaterial);
+        m_itemName = __NULL__;
         return;
     }
 
-    if (m_itemDataFormat == "app") {
+    if (m_spawnMode == INPUT_DATA) {
         closestSurface = NearestMediaEntity(1024);
+        trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
 
-        if (closestSurface) {
-            trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
-
-            if (STRING_SET(m_itemDataGroup)) {
-                localcmd(sprintf("cmd input %d openurl \"app_%s %s\"\n", closestSurface.entnum, m_itemDataGroup, m_itemName));
-            } else {
-                localcmd(sprintf("cmd input %d openurl \"app %s\"\n", closestSurface.entnum, m_itemName));
-            }
-
-            m_itemName = __NULL__;
+        if (m_targetDict) {
+            m_targetDict.TransmitToEntity(closestSurface.entnum);
+        } else {
+            m_targetDict = spawn(ncDict);
+            m_targetDict.m_dictType = m_itemDataFormat;
+            m_targetDict.AddKey(m_itemDataFormat, m_itemName);
+            m_targetDict.TransmitToEntity(closestSurface.entnum);
+            remove(m_targetDict);
         }
+
+        m_itemName = __NULL__;
+        m_targetDict = __NULL__;
         return;
     }
-
-    if (m_itemDataFormat == "picture") {
-        closestSurface = NearestMediaEntity(1024);
-
-        if (closestSurface) {
-            trailparticles(particleeffectnum("test.zap"), this, newOrg, closestSurface.WorldSpaceCenter());
-            localcmd(sprintf("cmd input %d openurl \"picture %s\"\n", closestSurface.entnum, m_itemName));
-            m_itemName = __NULL__;
-        }
-        return;
-    }
-
 
     if (m_itemDataFormat == "object") {
-        localcmd(sprintf("objectSpawn %S \"%v\" \"%v\"\n", m_itemName, origin, angles));
+        ncCommand("objectSpawn %S \"%v\" \"%v\"", m_itemName, fakeOrigin, GetAngles());
+        m_itemName = __NULL__;
+        return;
+    }
+    if (STRING_SET(m_imagePath)) {
+        ncCommand("cmd spawnPicture %S %S \"%v\" \"%v\" \"%v\"", m_itemName, m_imagePath, fakeOrigin, GetAngles(), m_previewSize);
         m_itemName = __NULL__;
         return;
     }
 
+
     if (m_itemDataFormat == "entityDef") {
-        localcmd(sprintf("cmd shareEntity %S %S \"%v\" \"%v\"\n", m_itemName, model, origin, angles));
+        ncCommand("cmd shareEntity %S %S \"%v\" \"%v\"", m_itemName, GetModel(), fakeOrigin, GetAngles());
         m_itemName = __NULL__;
-        return;
-	}
+    } else {
+        if (m_spawnMode == SPAWN_OBJECT) {
+
+        } else if (m_spawnMode == INPUT_DATA) {
+
+        }
+    }
+}
+
+void
+ncSelectionProxy::SetSelectionBrush(string brushTexture, bool willCarve)
+{
+    SetSpawnMode(SPAWN_OBJECT);
+    SetModel("models/prims/cube.glb");
+    m_itemName = "brush";
+    m_itemDataGroup = "";
+    m_itemDataFormat = willCarve ? "carvebrush" : "createbrush";
+    m_brushMaterial = brushTexture;
 }
 
 void
 ncSelectionProxy::SetSelectionEntity(string entityClass)
 {
-	string entModel = EntityDef_GetKeyValue(entityClass, "editor_model");
-	string entColor = EntityDef_GetKeyValue(entityClass, "editor_color");
-	string entMins = EntityDef_GetKeyValue(entityClass, "editor_mins");
-	string entMaxs = EntityDef_GetKeyValue(entityClass, "editor_maxs");
+    string entModel = EntityDef_GetKeyValue(entityClass, "editor_model");
+    string entColor = EntityDef_GetKeyValue(entityClass, "editor_color");
+    string entMins = EntityDef_GetKeyValue(entityClass, "editor_mins");
+    string entMaxs = EntityDef_GetKeyValue(entityClass, "editor_maxs");
 
-	/* various fallbacks */
-	if (!STRING_SET(entModel)) {
-		entModel = EntityDef_GetKeyValue(entityClass, "model");
-	}
+    /* various fallbacks */
+    if (!STRING_SET(entModel)) {
+        entModel = EntityDef_GetKeyValue(entityClass, "model");
+    }
 
-	if (!STRING_SET(entMins)) {
-		entMins = EntityDef_GetKeyValue(entityClass, "mins");
-	}
+    if (!STRING_SET(entMins)) {
+        entMins = EntityDef_GetKeyValue(entityClass, "mins");
+    }
 
-	if (!STRING_SET(entMaxs)) {
-		entMaxs = EntityDef_GetKeyValue(entityClass, "maxs");
-	}
+    if (!STRING_SET(entMaxs)) {
+        entMaxs = EntityDef_GetKeyValue(entityClass, "maxs");
+    }
 
-
-	SetModel(entModel);
-	SetSize(stov(entMins), stov(entMaxs));
-	m_itemName = entityClass;
-    m_isFlat = false;
+    SetSpawnMode(SPAWN_OBJECT);
+    SetModel(entModel);
+    SetSize(stov(entMins), stov(entMaxs));
+    m_itemName = entityClass;
     m_itemDataGroup = "";
-	m_itemDataFormat = "entityDef";
+    m_itemDataFormat = "entityDef";
+}
+
+void
+ncSelectionProxy::SetSelectionDict(ncDict targetDict, string iconPath, selectionSpawnMode_t spawnMode)
+{
+    m_itemName = targetDict.Name();
+    m_targetDict = targetDict;
+    m_aspect[0] = 1.0f;
+    m_aspect[1] = 1.0f;
+    m_itemDataFormat = m_targetDict.Type();
+
+    /* to avoid truncation crash */
+    m_imagePath = substring(m_targetDict.GetString("picture"), 0, 122);
+
+    switch (m_itemDataFormat) {
+        case "object":
+            m_iconPath = "gfx/icon16/brick";
+            break;
+        case "web":
+            m_iconPath = "gfx/icon16/html";
+            break;
+        case "text":
+            m_iconPath = "gfx/icon16/page";
+            break;
+        case "video":
+            m_iconPath = "gfx/icon16/film";
+            break;
+        case "audio":
+            m_iconPath = "gfx/icon16/music";
+            break;
+        case "app":
+            m_iconPath = "gfx/icon16/application_view_gallery";
+            break;
+        case "picture":
+            m_iconPath = "gfx/icon16/picture";
+            break;
+    }
+
+    string modelPath = m_targetDict.GetString("model");
+
+    if (STRING_SET(modelPath)) {
+        SetModel(m_targetDict.GetString("model"));
+        string entScale = m_targetDict.GetString("scale");
+
+        if (STRING_SET(entScale)) {
+            SetScale(stof(entScale));
+        } else {
+            SetScale(1.0);
+        }
+    } else {
+        SetScale(1.0);
+        model = "";
+        modelindex = 0;
+    }
+
+    if (STRING_SET(model)) {
+        float entSkin = m_targetDict.GetFloat("skin");
+        SetSkin(entSkin);
+        string entMins = m_targetDict.GetString("mins");
+        string entMaxs = m_targetDict.GetString("maxs");
+
+        if (STRING_SET(entMins) && STRING_SET(entMaxs)) {
+            SetSize(stov(entMins), stov(entMaxs));
+        }
+        printf("Definitely a model\n");
+    }
+
+    if (STRING_SET(m_imagePath)) {
+        precache_pic(m_imagePath);
+        vector imageAspect = drawgetimagesize(m_imagePath);
+
+        /* 2d normalize */
+        if (imageAspect[0] > imageAspect[1]) {
+            imageAspect[1] = imageAspect[1] / imageAspect[0];
+         imageAspect[0] = 1.0f;
+        } else if (imageAspect[0] < imageAspect[1]) {
+            imageAspect[0] = imageAspect[0] / imageAspect[1];
+            imageAspect[1] = 1.0f;
+        } else {
+            imageAspect[0] = 1.0f;
+            imageAspect[1] = 1.0f;
+        }
+
+        float standardLength = 118.9f;
+
+        /* length * aspect = decent approximation for our image turned poster */
+        m_previewSize = [standardLength * imageAspect[0], standardLength * imageAspect[1]];
+
+        /* to game units */
+        m_previewSize[0] *= (1/2.54);
+        m_previewSize[1] *= (1/2.54);
+        printf("Definitely an image\n");
+    }
 }
 
 void
@@ -321,120 +480,21 @@ ncSelectionProxy::SetSelectionProfileItem(string itemName, profileItem_t itemTyp
         return;
     }
 
+    m_itemDataFormat = itemDict.Type();
 
-	m_itemName = itemName;
-	m_itemDataFormat = g_profileItems[itemType];
-    m_aspect[0] = 1.0f;
-    m_aspect[1] = 1.0f;
-
-	string entModel = itemDict.GetString("model");
-	string entColor = itemDict.GetString("color");
-
-	if (!STRING_SET(entModel)) {
-        m_isFlat = true;
-        m_imagePath = itemDict.GetString("preview");
-        precache_pic(m_imagePath);
-
-        vector imageAspect = itemDict.GetVector("resolution");
-
-        /* 2d normalize */
-        if (imageAspect[0] > imageAspect[1]) {
-            imageAspect[1] = imageAspect[1] / imageAspect[0];
-            imageAspect[0] = 1.0f;
-        } else if (imageAspect[0] < imageAspect[1]) {
-            imageAspect[0] = imageAspect[0] / imageAspect[1];
-            imageAspect[1] = 1.0f;
-        } else {
-            imageAspect[0] = 1.0f;
-            imageAspect[1] = 1.0f;
-        }
-
-        float standardLength = 118.9f;
-
-        /* length * aspect = decent approximation for our image turned poster */
-        vector realSize = [standardLength * imageAspect[0], standardLength * imageAspect[1]];
-
-        /* to game units */
-        realSize[0] *= (1/2.54);
-        realSize[1] *= (1/2.54);
-
-        SetScale(1.0f);
-        SetSize(realSize * -0.5, realSize * 0.5);
-    } else {
-        m_isFlat = false;
-        SetModel(entModel);
-        string entMins = itemDict.GetString("mins");
-        string entMaxs = itemDict.GetString("maxs");
-        string entScale = itemDict.GetString("scale");
-        float entSkin = itemDict.GetFloat("skin");
-        SetScale(stof(entScale));
-        SetSize(stov(entMins), stov(entMaxs));
-        SetSkin(entSkin);
-    }
-
-    if (m_itemDataFormat == "video") {
-        m_isIcon = true;
-        m_imagePath = "gfx/icon16/film";
-    } else if (m_itemDataFormat == "app") {
-        m_isIcon = true;
-        m_imagePath = itemDict.GetString("preview");
-
-        if (!STRING_SET(m_imagePath)) {
-            m_imagePath = "gfx/icon16/application_view_gallery";
-            SetSize([-4,-4,-4], [-4,-4,-4]);
-        } else {
-            precache_pic(m_imagePath);
-            vector imageAspect = drawgetimagesize(m_imagePath);
-
-            /* 2d normalize */
-            if (imageAspect[0] > imageAspect[1]) {
-                m_aspect[1] = imageAspect[1] / imageAspect[0];
-                m_aspect[0] = 1.0f;
-            } else if (imageAspect[0] < imageAspect[1]) {
-                m_aspect[0] = imageAspect[0] / imageAspect[1];
-                m_aspect[1] = 1.0f;
-            } else {
-                m_aspect[0] = 1.0f;
-                m_aspect[1] = 1.0f;
-            }
-        }
-    } else if (m_itemDataFormat == "audio") {
-        m_isIcon = true;
-        m_imagePath = "gfx/icon16/music";
-    } else {
-        m_isIcon = false;
-    }
+    SetSelectionDict(itemDict, m_imagePath, m_spawnMode);
 }
 
 void
 ncSelectionProxy::SetSelectionURLItem(string itemName, string itemType, string groupName)
 {
-	m_itemName = itemName;
-	m_itemDataFormat = itemType;
+    m_itemName = itemName;
+    m_itemDataFormat = itemType;
     m_itemDataGroup = groupName;
-    m_isIcon = true;
+    SetSpawnMode(INPUT_DATA);
+    m_targetDict = __NULL__;
 
     m_aspect[0] = 1.0f;
     m_aspect[1] = 1.0f;
 
-    switch (m_itemDataFormat) {
-    case "web":
-        m_imagePath = "gfx/icon16/html";
-        break;
-    case "text":
-        m_imagePath = "gfx/icon16/page";
-        break;
-    case "video":
-        m_imagePath = "gfx/icon16/film";
-        break;
-    case "audio":
-        m_imagePath = "gfx/icon16/music";
-        break;
-    case "app":
-        m_imagePath = "gfx/icon16/application_view_gallery";
-        break;
-    case "picture":
-        m_imagePath = "gfx/icon16/picture";
-        break;
-    }
 }

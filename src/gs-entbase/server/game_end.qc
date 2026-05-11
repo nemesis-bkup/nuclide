@@ -33,9 +33,9 @@ class
 game_end:ncPointTrigger
 {
 public:
-	void game_end(void);
+    void game_end(void);
 
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -46,9 +46,9 @@ game_end::game_end(void)
 void
 game_end::Trigger(entity activatingEntity, triggermode_t triggerMode)
 {
-	if (GetMaster(activatingEntity) == FALSE) {
-		return;
-	}
+    if (GetMaster(activatingEntity) == FALSE) {
+        return;
+    }
 
-	g_grMode.IntermissionStart();
+    g_grMode.IntermissionStart();
 }

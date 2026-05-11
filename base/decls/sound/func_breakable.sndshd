@@ -1,6 +1,7 @@
 func_breakable.break_glass
 {
-	sample weapons/lock4.wav
+	sample debris/bustglass1.wav
+	sample debris/bustglass2.wav
 }
 
 func_breakable.break_wood

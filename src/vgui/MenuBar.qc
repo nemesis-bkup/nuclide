@@ -21,68 +21,70 @@
 class vguiMenuBar:vguiWidget
 {
 public:
-	void vguiMenuBar(void);
+    void vguiMenuBar(void);
 
-	/* overrides */
-	virtual void Add(vguiWidget);
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
+    /* overrides */
+    virtual void Add(vguiWidget);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
 
 private:
-	vector m_panelColor;
+    vector m_panelColor;
 };
 
 void
 vguiMenuBar::vguiMenuBar(void)
 {
-	m_panelColor = [0.5,0.5,0.5];
+    m_panelColor = [0.5,0.5,0.5];
 }
 
 void
 vguiMenuBar::Add(vguiWidget wNew)
 {
-	vguiWidget wNext = this;
-	vguiWidget wParent;
-	do {
-		wParent = wNext;
-		wNext = wNext.m_children;
-	} while (wNext);
-	wParent.m_children = wNew;
-	wNew.m_parent = this;
+    vguiWidget wNext = this;
+    vguiWidget wParent;
+
+    do {
+        wParent = wNext;
+        wNext = wNext.m_children;
+    } while (wNext);
+
+    wParent.m_children = wNew;
+    wNew.m_parent = this;
 }
 
 void vguiMenuBar::Draw(void)
 {
-	vguiWidget wNext = this;
-	g_vguiWidgetCount = 0;
+    vguiWidget wNext = this;
+    g_vguiWidgetCount = 0;
     vguiTheme theme = GetTheme();
 
-	theme.DrawMenuBar(m_vecOrigin, m_vecSize, VGUI_STATE_ACTIVE);
+    theme.DrawMenuBar(GetAbsPos(), GetSize(), VGUI_STATE_ACTIVE);
 
-	do {
-		wNext = wNext.m_children;
-		if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
-			g_vguiWidgetCount++;
-			wNext.Draw();
-		}
-	} while (wNext);
+    do {
+        wNext = wNext.m_children;
+        if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
+            g_vguiWidgetCount++;
+            wNext.Draw();
+        }
+    } while (wNext);
 }
 
 bool vguiMenuBar::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	float ret = false;
+    float ret = false;
 
-	vguiWidget wNext = this;
-	do {
-		wNext = wNext.m_children;
-		if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
-			ret = wNext.Input(flEVType, flKey, flChar, flDevID);
-		}
+    vguiWidget wNext = this;
+    do {
+        wNext = wNext.m_children;
+        if (wNext && wNext.Visible() && wNext.m_parent.Visible()) {
+            ret = wNext.Input(flEVType, flKey, flChar, flDevID);
+        }
 
-		if (ret == true)
-			return true;
+        if (ret == true)
+            return true;
 
-	} while (wNext);
+    } while (wNext);
 
-	return (ret);
+    return (ret);
 }

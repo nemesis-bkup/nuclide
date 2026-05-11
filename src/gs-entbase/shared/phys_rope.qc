@@ -16,14 +16,14 @@
 
 enumflags
 {
-	PHYSROPE_CHANGED_MAT,
-	PHYSROPE_CHANGED_SAG,
-	PHYSROPE_CHANGED_SWING,
-	PHYSROPE_CHANGED_SEGMENTS,
-	PHYSROPE_CHANGED_ORIGIN,
-	PHYSROPE_CHANGED_TARGET,
-	PHYSROPE_CHANGED_FLAGS,
-	PHYSROPE_CHANGED_WIDTH
+    PHYSROPE_CHANGED_MAT,
+    PHYSROPE_CHANGED_SAG,
+    PHYSROPE_CHANGED_SWING,
+    PHYSROPE_CHANGED_SEGMENTS,
+    PHYSROPE_CHANGED_ORIGIN,
+    PHYSROPE_CHANGED_TARGET,
+    PHYSROPE_CHANGED_FLAGS,
+    PHYSROPE_CHANGED_WIDTH
 };
 
 /*! \brief Shared-Entity: Physics Rope */
@@ -40,32 +40,32 @@ This entity was introduced in Half-Life 2 (2004).
 class phys_rope:ncPointTrigger
 {
 public:
-	void phys_rope(void);
+    void phys_rope(void);
 
 #ifdef CLIENT
-	virtual float predraw(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void DrawSegment(vector, vector, vector);
-	virtual void ReloadVideoResources(void);
+    virtual float predraw(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void DrawSegment(vector, vector, vector);
+    virtual void ReloadVideoResources(void);
 #endif
 
 #ifdef SERVER
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 private:
-	string m_strShader;
-	NETWORKED_FLOAT(m_flSag)
-	NETWORKED_FLOAT(m_flSwingFactor)
-	NETWORKED_INT(m_iSegments)
-	NETWORKED_VECTOR(m_vecTarget)
-	NETWORKED_FLOAT(m_flWidth)
-	ncPhysicsConstraint m_ropeConstraint;
+    string m_strShader;
+    NETWORKED_FLOAT(m_flSag)
+    NETWORKED_FLOAT(m_flSwingFactor)
+    NETWORKED_INT(m_iSegments)
+    NETWORKED_VECTOR(m_vecTarget)
+    NETWORKED_FLOAT(m_flWidth)
+    ncPhysicsConstraint m_ropeConstraint;
 };
 
 #ifdef CLIENT
@@ -73,67 +73,67 @@ private:
 void
 phys_rope::ReloadVideoResources(void)
 {
-	precache_material(m_strShader);
+    precache_material(m_strShader);
 }
 
 void
 phys_rope::DrawSegment(vector pos1, vector pos2, vector vecPlayer)
 {
-	vector lit1 = /*[0.1,0.1,0.1] */ getlight(pos1) / 255;
-	vector lit2 = /*[0.1,0.1,0.1] */ getlight(pos2) / 255;
+    vector lit1 = /*[0.1,0.1,0.1] */ getlight(pos1) / 255;
+    vector lit2 = /*[0.1,0.1,0.1] */ getlight(pos2) / 255;
 
-	R_BeginPolygon(m_strShader, 0, 0);
-		R_PolygonVertex(pos1, [0,0], lit1, 1.0f);
-		R_PolygonVertex(pos2, [0,1], lit2, 1.0f);
-	R_EndPolygonRibbon(1, [-1,0]);
+    R_BeginPolygon(m_strShader, 0, 0);
+        R_PolygonVertex(pos1, [0,0], lit1, 1.0f);
+        R_PolygonVertex(pos2, [0,1], lit2, 1.0f);
+    R_EndPolygonRibbon(1, [-1,0]);
 }
 
 
 float
 phys_rope::predraw(void)
 {
-	vector vecPlayer;
-	ncPlayer pl;
+    vector vecPlayer;
+    ncPlayer pl;
 
-	int s = (float)getproperty(VF_ACTIVESEAT);
-	pSeat = &g_seats[s];
-	pl = (ncPlayer)pSeat->m_ePlayer;
-	vecPlayer = pl.GetEyePos();
+    int s = (float)getproperty(VF_ACTIVESEAT);
+    pSeat = &g_seats[s];
+    pl = (ncPlayer)pSeat->m_ePlayer;
+    vecPlayer = pl.GetEyePos();
 
 #if 1
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(origin, [0,1], [0,0,0], 1.0f);
-	R_PolygonVertex(m_vecTarget, [1,1], [0,0,0], 1.0f);
-	R_EndPolygon();
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(origin, [0,1], [0,0,0], 1.0f);
+    R_PolygonVertex(m_vecTarget, [1,1], [0,0,0], 1.0f);
+    R_EndPolygon();
 #else
-	DrawSegment(origin, m_vecTarget, vecPlayer);
+    DrawSegment(origin, m_vecTarget, vecPlayer);
 #endif
-	
-	return (PREDRAW_NEXT);
+    
+    return (PREDRAW_NEXT);
 }
 
 void
 phys_rope::ReceiveEntity(float new, float flSendFlags)
 {
-	if (flSendFlags & PHYSROPE_CHANGED_MAT) {
-		m_strShader = readstring();
-		ReloadVideoResources();
-	}
+    if (flSendFlags & PHYSROPE_CHANGED_MAT) {
+        m_strShader = readstring();
+        ReloadVideoResources();
+    }
 
-	if (flSendFlags & PHYSROPE_CHANGED_ORIGIN) {
-		origin[0] = readcoord();
-		origin[1] = readcoord();
-		origin[2] = readcoord();
-		setsize(this, [0,0,0], [0,0,0]);
-		setorigin(this, origin);
-	}
-	if (flSendFlags & PHYSROPE_CHANGED_TARGET) {
-		m_vecTarget[0] = readcoord();
-		m_vecTarget[1] = readcoord();
-		m_vecTarget[2] = readcoord();
-	}
-	if (flSendFlags & PHYSROPE_CHANGED_WIDTH)
-		m_flWidth = readfloat();
+    if (flSendFlags & PHYSROPE_CHANGED_ORIGIN) {
+        origin[0] = readcoord();
+        origin[1] = readcoord();
+        origin[2] = readcoord();
+        setsize(this, [0,0,0], [0,0,0]);
+        setorigin(this, origin);
+    }
+    if (flSendFlags & PHYSROPE_CHANGED_TARGET) {
+        m_vecTarget[0] = readcoord();
+        m_vecTarget[1] = readcoord();
+        m_vecTarget[2] = readcoord();
+    }
+    if (flSendFlags & PHYSROPE_CHANGED_WIDTH)
+        m_flWidth = readfloat();
 }
 #endif
 
@@ -141,124 +141,124 @@ phys_rope::ReceiveEntity(float new, float flSendFlags)
 void
 phys_rope::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	if (HasSpawnFlags(1)) {
-		flags = 1;
-	}
-	SetSize([0,0,0], [0,0,0]);
+    if (HasSpawnFlags(1)) {
+        flags = 1;
+    }
+    SetSize([0,0,0], [0,0,0]);
 }
 void
 phys_rope::EvaluateEntity(void)
 {
-	if (!target)
-		return;
+    if (!target)
+        return;
 
-	entity eFind = find(world, ::targetname, target);
+    entity eFind = find(world, ::targetname, target);
 
-	if (!eFind) {
-		EntError("phys_rope: Unable to find target %S", target);
-		Destroy();
-		return;
-	}
-
-
-	if (!m_ropeConstraint) {
-		m_ropeConstraint = ncPhysicsConstraint::Rope(this, eFind, this.origin, eFind.origin);
-	}
-
-	m_vecTarget = eFind.origin;
+    if (!eFind) {
+        EntError("phys_rope: Unable to find target %S", target);
+        Destroy();
+        return;
+    }
 
 
-	if (ATTR_CHANGED(origin)) {
-		SetSendFlags(PHYSROPE_CHANGED_ORIGIN);
-	}
-	if (ATTR_CHANGED(m_vecTarget)) {
-		SetSendFlags(PHYSROPE_CHANGED_TARGET);
-	}
-	if (ATTR_CHANGED(m_flWidth)) {
-		SetSendFlags(PHYSROPE_CHANGED_WIDTH);
-	}
+    if (!m_ropeConstraint) {
+        m_ropeConstraint = ncPhysicsConstraint::Rope(this, eFind, this.origin, eFind.origin);
+    }
 
-	SAVE_STATE(origin)
-	SAVE_STATE(m_vecTarget)
-	SAVE_STATE(m_flWidth)
+    m_vecTarget = eFind.origin;
+
+
+    if (ATTR_CHANGED(origin)) {
+        SetSendFlags(PHYSROPE_CHANGED_ORIGIN);
+    }
+    if (ATTR_CHANGED(m_vecTarget)) {
+        SetSendFlags(PHYSROPE_CHANGED_TARGET);
+    }
+    if (ATTR_CHANGED(m_flWidth)) {
+        SetSendFlags(PHYSROPE_CHANGED_WIDTH);
+    }
+
+    SAVE_STATE(origin)
+    SAVE_STATE(m_vecTarget)
+    SAVE_STATE(m_flWidth)
 }
 
 float
 phys_rope::SendEntity(entity ePVEnt, float flSendFlags)
 {
-	if (!target)
-		return 0;
+    if (!target)
+        return 0;
 
-	WriteByte(MSG_ENTITY, ENT_PHYSROPE);
-	WriteFloat(MSG_ENTITY, flSendFlags);
+    WriteByte(MSG_ENTITY, ENT_PHYSROPE);
+    WriteFloat(MSG_ENTITY, flSendFlags);
 
-	if (flSendFlags & PHYSROPE_CHANGED_MAT) {
-		WriteString(MSG_ENTITY, m_strShader);
-	}
-	if (flSendFlags & PHYSROPE_CHANGED_ORIGIN) {
-		WriteCoord(MSG_ENTITY, origin[0]);
-		WriteCoord(MSG_ENTITY, origin[1]);
-		WriteCoord(MSG_ENTITY, origin[2]);
-	}
-	if (flSendFlags & PHYSROPE_CHANGED_TARGET) {
-		WriteCoord(MSG_ENTITY, m_vecTarget[0]);
-		WriteCoord(MSG_ENTITY, m_vecTarget[1]);
-		WriteCoord(MSG_ENTITY, m_vecTarget[2]);
-	}
-	if (flSendFlags & PHYSROPE_CHANGED_WIDTH) {
-		WriteFloat(MSG_ENTITY, m_flWidth);
-	}
+    if (flSendFlags & PHYSROPE_CHANGED_MAT) {
+        WriteString(MSG_ENTITY, m_strShader);
+    }
+    if (flSendFlags & PHYSROPE_CHANGED_ORIGIN) {
+        WriteCoord(MSG_ENTITY, origin[0]);
+        WriteCoord(MSG_ENTITY, origin[1]);
+        WriteCoord(MSG_ENTITY, origin[2]);
+    }
+    if (flSendFlags & PHYSROPE_CHANGED_TARGET) {
+        WriteCoord(MSG_ENTITY, m_vecTarget[0]);
+        WriteCoord(MSG_ENTITY, m_vecTarget[1]);
+        WriteCoord(MSG_ENTITY, m_vecTarget[2]);
+    }
+    if (flSendFlags & PHYSROPE_CHANGED_WIDTH) {
+        WriteFloat(MSG_ENTITY, m_flWidth);
+    }
 
-	return 1;
+    return 1;
 }
 
 void
 phys_rope::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "RopeMaterial":
-	case "shader":
-		m_strShader = ReadString(setValue);
-		break;
-	case "NextKey":
-		target = ReadString(setValue);
-		break;
-	case "Width":
-		m_flWidth = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "RopeMaterial":
+    case "shader":
+        m_strShader = ReadString(setValue);
+        break;
+    case "NextKey":
+        target = ReadString(setValue);
+        break;
+    case "Width":
+        m_flWidth = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 phys_rope::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveString(handle, "m_strShader", m_strShader);
-	SaveVector(handle, "m_vecTarget", m_vecTarget);
-	SaveFloat(handle, "m_flWidth", m_flWidth);
+    SaveString(handle, "m_strShader", m_strShader);
+    SaveVector(handle, "m_vecTarget", m_vecTarget);
+    SaveFloat(handle, "m_flWidth", m_flWidth);
 }
 
 void
 phys_rope::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strShader":
-		m_strShader = ReadString(setValue);
-		break;
-	case "m_vecTarget":
-		m_vecTarget = ReadVector(setValue);
-		break;
-	case "m_flWidth":
-		m_flWidth = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strShader":
+        m_strShader = ReadString(setValue);
+        break;
+    case "m_vecTarget":
+        m_vecTarget = ReadVector(setValue);
+        break;
+    case "m_flWidth":
+        m_flWidth = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 #endif
 
@@ -266,23 +266,23 @@ void
 phys_rope::phys_rope(void)
 {
 #ifdef SERVER
-	m_flSwingFactor = random();
-	m_flSag = 15.0f;
-	m_iSegments = 16;
-	m_flWidth = 2.0f;
-	m_strShader = "cable/cable";
+    m_flSwingFactor = random();
+    m_flSag = 15.0f;
+    m_iSegments = 16;
+    m_flWidth = 2.0f;
+    m_strShader = "cable/cable";
 #endif
 
 #ifdef CLIENT
-	/* this is empty for a good reason */
-	drawmask = MASK_ENGINE;
+    /* this is empty for a good reason */
+    drawmask = MASK_ENGINE;
 #endif
 }
 
 class
 move_rope:phys_rope
 {
-	void move_rope(void);
+    void move_rope(void);
 };
 
 void
@@ -294,7 +294,7 @@ move_rope::move_rope(void)
 class
 keyframe_rope:phys_rope
 {
-	void keyframe_rope(void);
+    void keyframe_rope(void);
 };
 
 void

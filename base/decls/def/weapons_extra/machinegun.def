@@ -1,0 +1,58 @@
+entityDef weapon_machinegun
+{
+	"editor_color"		".3 .3 1"
+	"editor_mins"		"-16 -16 0"
+	"editor_maxs"		"16 16 32"
+	"editor_usage"		"Super Nailgun"
+	"editor_rotatable"	"1"
+
+	"inherit"		"weapon_base"
+	"model"				"progs/g_nail2.mdl"
+	"model_view"		"progs/v_nail2.mdl"
+	"spin"				"1"
+	"pickupFlash"		"1"
+	"animPrefix"		"nailgun"
+
+	// weapon specific
+	"def_fireInfo"		"fireInfo_machinegun"
+	"inv_name"			"#WEAPON_MACHINEGUN"
+	"ammoType"			"ammo_nails"
+	"inv_ammo_nails"	"30"
+	"ammoRequired"		"2"
+	"ammoPerShot"		"2"
+
+	"act_fire"			"1"
+	"act_idle"			"0"
+
+	"snd_fire"			"weapon_supernailgun.shoot"
+	"snd_empty"			"weapon.empty"
+
+	"msg_obituary"		"%s was punctured by %s."
+
+	// ncWeapon specific
+	"hudSlot"			"4"
+	"hudSlotPos"		"0"
+	"weight"			"25"
+	"crosshair"			"none"
+	"ammoIcon"			"weapon_supernail.ammo"
+	"icon"				"weapon_supernail.weapon"
+	"iconSelected"		"weapon_supernail.weapon_s"
+}
+
+entityDef fireInfo_superNailgun
+{
+	"def_onFire"		"projectile_supernail"
+	"fireRate"			"0.1"
+	"punchSpring"		"-0.25 0 0"
+}
+
+entityDef projectile_supernail
+{
+	"inherit"			"projectile_bullet_base"
+	"def_damage"			"damage_supernailDirect"
+}
+
+entityDef damage_supernailDirect
+{
+	"damage"	"skill:plr_supernailgun"
+}

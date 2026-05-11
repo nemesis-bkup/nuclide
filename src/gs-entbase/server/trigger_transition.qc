@@ -36,10 +36,10 @@ class
 trigger_transition:ncBrushTrigger
 {
 public:
-	void trigger_transition(void);
+    void trigger_transition(void);
 
-	/* overrides */
-	virtual void Respawn(void);
+    /* overrides */
+    virtual void Respawn(void);
 };
 
 void
@@ -50,6 +50,6 @@ trigger_transition::trigger_transition(void)
 void
 trigger_transition::Respawn(void)
 {
-	InitBrushTrigger();
-	SetSolid(SOLID_NOT);
+    InitBrushTrigger();
+    SetSolid(SOLID_NOT);
 }

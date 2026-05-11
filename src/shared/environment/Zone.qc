@@ -39,19 +39,19 @@ ncZone::CreateZoneBoundsWithDescription(vector minBox, vector maxBox, string zon
 void
 ncZone::SpawnKey(string strKey, string strValue)
 {
-	switch (strKey) {
+    switch (strKey) {
     case "message": /* Q3A */
     case "location_name": /* DoD */
-	case "areaname": /* TFC */
-		m_strDescription = strtoupper(strValue);
-		m_strDescription = strreplace("BLUE", "^x99FBLUE^7", m_strDescription);
-		m_strDescription = strreplace("RED", "^xF66RED^7", m_strDescription);
-		m_strDescription = strreplace("GREEN", "^x4F4GREEN^7", m_strDescription);
-		m_strDescription = strreplace("YELLOW", "^xFF4YELLOW^7", m_strDescription);
-		break;
-	default:
-		super::SpawnKey(strKey, strValue);
-	}
+    case "areaname": /* TFC */
+        m_strDescription = strtoupper(strValue);
+        m_strDescription = strreplace("BLUE", "^x99FBLUE^7", m_strDescription);
+        m_strDescription = strreplace("RED", "^xF66RED^7", m_strDescription);
+        m_strDescription = strreplace("GREEN", "^x4F4GREEN^7", m_strDescription);
+        m_strDescription = strreplace("YELLOW", "^xFF4YELLOW^7", m_strDescription);
+        break;
+    default:
+        super::SpawnKey(strKey, strValue);
+    }
 }
 
 void
@@ -109,10 +109,10 @@ ncZone::ExpandZoneFromPoint(vector pointLocation)
 void
 ncZone::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	/* set up our volume */
-	SetSolid(SOLID_TRIGGER);
+    /* set up our volume */
+    SetSolid(SOLID_TRIGGER);
     vector zoneMins = GetSpawnVector("mins");
     vector zoneMaxs = GetSpawnVector("maxs");
 
@@ -121,16 +121,16 @@ ncZone::Respawn(void)
     else
         SetSize(zoneMins, zoneMaxs);
 
-	serverinfo.SetBool("areadefs", true);
+    serverinfo.SetBool("areadefs", true);
     classname = "ncZone";
 }
 
 void
 ncZone::Touch(entity touchingEntity)
 {
-	if (is.Player(touchingEntity) == false) {
-		return;
-	}
+    if (is.Player(touchingEntity) == false) {
+        return;
+    }
 
-	userinfo.SetString(touchingEntity, "*areadef", m_strDescription);
+    userinfo.SetString(touchingEntity, "*areadef", m_strDescription);
 }

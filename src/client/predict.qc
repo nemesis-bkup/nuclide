@@ -26,41 +26,41 @@ Propagate our pmove state to whatever the current frame before its stomped on
 void
 Predict_EntityUpdate(ncPlayer pl, float new)
 {
-	/* people expect a static camera when paused */
-	if (Util_IsPaused()) {
-		return;
-	}
+    /* people expect a static camera when paused */
+    if (Util_IsPaused()) {
+        return;
+    }
 
-	/* this is a new client entity, let's set it up right */
-	if (new || !is.Player(pl)) {
-		Util_ChangeClass(pl, "player");
+    /* this is a new client entity, let's set it up right */
+    if (new || !is.Player(pl)) {
+        Util_ChangeClass(pl, "player");
 
-		/* is this **us** ? */
-		if (pl.entnum == player_localentnum) {
-			/* this will prevent the client-game from running its own physics between updates */
-			pl.customphysics = Empty;
-		} else {
-			/* other players will act like missiles for interpolation purposes */
-			pl.solid = SOLID_SLIDEBOX;
-			pl.movetype = MOVETYPE_FLY;
-			pl.customphysics = __NULL__;
-		}
+        /* is this **us** ? */
+        if (pl.entnum == player_localentnum) {
+            /* this will prevent the client-game from running its own physics between updates */
+            pl.customphysics = Empty;
+        } else {
+            /* other players will act like missiles for interpolation purposes */
+            pl.solid = SOLID_SLIDEBOX;
+            pl.movetype = MOVETYPE_FLY;
+            pl.customphysics = __NULL__;
+        }
 
-		pl.Physics_SetViewParms();
-		pl.drawmask = MASK_ENGINE;
-		return;
-	}
+        pl.Physics_SetViewParms();
+        pl.drawmask = MASK_ENGINE;
+        return;
+    }
 
-	/* this is us, so we know about this clients' input_ fields */
-	if (pl.entnum == player_localentnum) {
-		/* run the player physics from the last approved servercommandframe to the current one */
-		for (int i = pl.sequence+1; i <= servercommandframe; i++) {
-			/* ...maybe the input state is too old? */
-			if (!getinputstate(i)) {
-				break;
-			}
-			input_sequence = i;
-			pl.Physics_Run();
-		}
-	}
+    /* this is us, so we know about this clients' input_ fields */
+    if (pl.entnum == player_localentnum) {
+        /* run the player physics from the last approved servercommandframe to the current one */
+        for (int i = pl.sequence+1; i <= servercommandframe; i++) {
+            /* ...maybe the input state is too old? */
+            if (!getinputstate(i)) {
+                break;
+            }
+            input_sequence = i;
+            pl.Physics_Run();
+        }
+    }
 }

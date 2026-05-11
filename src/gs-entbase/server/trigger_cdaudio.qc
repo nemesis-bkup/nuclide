@@ -34,83 +34,83 @@ class
 trigger_cdaudio:ncBrushTrigger
 {
 public:
-	void trigger_cdaudio(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Touch(entity);
+    void trigger_cdaudio(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Touch(entity);
 
 private:
-	int m_iCDTrack;
+    int m_iCDTrack;
 };
 
 void
 trigger_cdaudio::trigger_cdaudio(void)
 {
-	m_iCDTrack = 0i;
+    m_iCDTrack = 0i;
 }
 
 void
 trigger_cdaudio::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iCDTrack", m_iCDTrack);
+    super::Save(handle);
+    SaveInt(handle, "m_iCDTrack", m_iCDTrack);
 }
 
 void
 trigger_cdaudio::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iCDTrack":
-		m_iCDTrack = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iCDTrack":
+        m_iCDTrack = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_cdaudio::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "health":
-		m_iCDTrack = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    case "health":
+        m_iCDTrack = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 trigger_cdaudio::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 trigger_cdaudio::Trigger(entity act, triggermode_t unused)
 {
-	if (!(act.flags & FL_CLIENT)) {
-		return;
-	}
+    if (!(act.flags & FL_CLIENT)) {
+        return;
+    }
 
-	EntLog("CD Track %i requested", m_iCDTrack);
+    EntLog("CD Track %i requested", m_iCDTrack);
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_MUSICTRACK);
-	WriteByte(MSG_MULTICAST, m_iCDTrack);
-	msg_entity = world;
-	multicast([0,0,0], MULTICAST_ALL_R);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_MUSICTRACK);
+    WriteByte(MSG_MULTICAST, m_iCDTrack);
+    msg_entity = world;
+    multicast([0,0,0], MULTICAST_ALL_R);
 
-	Destroy();
+    Destroy();
 }
 
 void
 trigger_cdaudio::Touch(entity eToucher)
 {
-	Trigger(eToucher, TRIG_TOGGLE);
+    Trigger(eToucher, TRIG_TOGGLE);
 }

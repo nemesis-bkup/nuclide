@@ -10,23 +10,23 @@ Nuclide has support for bot profiles, like in **Quake III Arena**. They work dif
 
 ```
 {
-	name Albert
-	model zombie01
-	topcolor 0xeff
-	bottomcolor 0xff0020
+    name Albert
+    model zombie01
+    topcolor 0xeff
+    bottomcolor 0xff0020
 }
 {
-	name Susie
-	model police02
-	topcolor 0xff6b00
-	bottomcolor 0xff0b00
+    name Susie
+    model police02
+    topcolor 0xff6b00
+    bottomcolor 0xff0b00
 }
 {
-	name Dog
-	funname ^4D^2o^1g
-	model dog01
-	topcolor 0x9200ff
-	bottomcolor 0xc800ff
+    name Dog
+    funname ^4D^2o^1g
+    model dog01
+    topcolor 0x9200ff
+    bottomcolor 0xc800ff
 }
 ```
 
@@ -41,9 +41,9 @@ This will allow games to add whatever extra keys they wish that they can then re
 /** Data holding Bot Profile entries. */
 typedef struct
 {
-	string m_strName;
-	string m_strNetName;
-	string m_strExtra;
+    string m_strName;
+    string m_strNetName;
+    string m_strExtra;
 } botScript_t;
 
 #define BOTSCRIPT_MAX 64

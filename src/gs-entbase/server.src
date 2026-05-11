@@ -154,4 +154,5 @@ server/trigger_use.qc
 server/trigger_capture_area.qc
 server/trigger_capture_point.qc
 server/team_control_point.qc
+server/target_push.qc
 #endlist

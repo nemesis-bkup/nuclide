@@ -51,29 +51,29 @@ This entity was introduced in Nuclide (2025)
 class
 ncXTerminal:ncMediaSource
 {
-	void ncXTerminal(void);
+    void ncXTerminal(void);
 
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
 
 #endif
 
 #ifdef CLIENT
-	virtual void Draw(void);
-	virtual bool Input(float a,float b,float c,float d);
-	virtual void ReceiveEntity(float,float);
+    virtual void Draw(void);
+    virtual bool Input(float a,float b,float c,float d);
+    virtual void ReceiveEntity(float,float);
 #endif
 
 #ifdef CLIENT
 private:
 
-	entity m_UIChain;
-	entity m_xTermView;
+    entity m_UIChain;
+    entity m_xTermView;
 #endif
 };
 

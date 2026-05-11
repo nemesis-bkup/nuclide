@@ -37,10 +37,10 @@ class
 func_wall:ncRenderableEntity
 {
 public:
-	void func_wall(void);
+    void func_wall(void);
 
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -52,29 +52,29 @@ func_wall::func_wall(void)
 void
 func_wall::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		SetFrame(0);
-		break;
-	case TRIG_ON:
-		SetFrame(1);
-		break;
-	default:
-		SetFrame(1 - frame);
-	}
+    switch (state) {
+    case TRIG_OFF:
+        SetFrame(0);
+        break;
+    case TRIG_ON:
+        SetFrame(1);
+        break;
+    default:
+        SetFrame(1 - frame);
+    }
 }
 
 void
 func_wall::Respawn(void)
 {
-	/* reset the visual parameters */
-	super::Respawn();
+    /* reset the visual parameters */
+    super::Respawn();
 
-	/* func_wall specifics */
-	SetMovetype(MOVETYPE_PUSH);
-	SetSolid(SOLID_BSP);
-	SetFrame(0);
-	ClearAngles();
+    /* func_wall specifics */
+    SetMovetype(MOVETYPE_PUSH);
+    SetSolid(SOLID_BSP);
+    SetFrame(0);
+    ClearAngles();
 }
 #endif
 

@@ -57,47 +57,47 @@ This entity was introduced in Half-Life (1998).
 class light_environment:ncEntity
 {
 public:
-	void light_environment(void);
-	
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	virtual bool CanSpawn(bool);
+    void light_environment(void);
+    
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    virtual bool CanSpawn(bool);
 
 };
 
 void
 light_environment::Respawn(void)
 {
-	setorigin(this, origin);
-	makevectors(g_vecSunDir);
-	cvar_set("r_shadows_throwdirection", sprintf("%v", v_forward));
+    setorigin(this, origin);
+    makevectors(g_vecSunDir);
+    cvar_set("r_shadows_throwdirection", sprintf("%v", v_forward));
 }
 
 void
 light_environment::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "pitch":
-		angles[0] = stof(strKey);
-		break;
-	case "angle":
-	case "sunangle":
-		angles[1] = stof(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "pitch":
+        angles[0] = stof(strKey);
+        break;
+    case "angle":
+    case "sunangle":
+        angles[1] = stof(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 bool
 light_environment::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 light_environment::light_environment(void)
 {
-	solid = SOLID_NOT;
-	isCSQC = true;
+    solid = SOLID_NOT;
+    isCSQC = true;
 }

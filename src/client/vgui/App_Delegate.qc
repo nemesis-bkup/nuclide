@@ -18,20 +18,20 @@
 /* this works, but did not prove to be very effective due to the limited number of multiprogs
  * we seem to be able to run on the client. */
 class
-vguiApp_Delegate:vguiWindow
+vguiApp_Delegate:vguiApplication
 {
-	void vguiApp_Delegate(void);
+    void vguiApp_Delegate(void);
 
-	virtual int MainFunction(void);
-	nonvirtual int RunApplicationFromProgs(string progsPath);
-	nonvirtual void PR_Exec(string commandString);
-	nonvirtual float LoadUIFromFile(string fileName);
+    virtual int MainFunction(void);
+    nonvirtual int RunApplicationFromProgs(string progsPath);
+    nonvirtual void PR_Exec(string commandString);
+    nonvirtual float LoadUIFromFile(string fileName);
 
 private:
-	string m_appProgsPath;
-	float m_appProgsID;
-	entity m_appUI;
-	entity m_appUiChain;
+    string m_appProgsPath;
+    float m_appProgsID;
+    entity m_appUI;
+    entity m_appUiChain;
 };
 
 vguiApp_Delegate g_runApplicationFromProgs;
@@ -39,73 +39,73 @@ vguiApp_Delegate g_runApplicationFromProgs;
 void
 vguiApp_Delegate::vguiApp_Delegate(void)
 {
-	m_appProgsPath = g_string_null;
-	m_appProgsID = 0;
+    m_appProgsPath = g_string_null;
+    m_appProgsID = 0;
 }
 
 void
 vguiApp_Delegate::PR_Exec(string commandString)
 {
-	void(void) MainFunction = externvalue(m_appProgsID, commandString);
-	MainFunction();
+    void(void) MainFunction = externvalue(m_appProgsID, commandString);
+    MainFunction();
 }
 
 int
 vguiApp_Delegate::MainFunction(void)
 {
-	return (0);
+    return (0);
 }
 
 float
 vguiApp_Delegate::LoadUIFromFile(string fileName)
 {
-	g_runApplicationFromProgs.m_appUiChain = spawn(vguiWindow);
-	vguiWidget uiChain = (vguiWindow)g_runApplicationFromProgs.m_appUiChain;
-	uiChain.m_iFlags = 1;
-	g_runApplicationFromProgs.m_appUI = vguiScriptedView::CreateFromMenuFile(g_runApplicationFromProgs.m_appUiChain, fileName);
-	g_runApplicationFromProgs.m_appUI.owner = this;
-	uiChain.Add(g_runApplicationFromProgs.m_appUI);
-	return num_for_edict(g_runApplicationFromProgs.m_appUI);
+    g_runApplicationFromProgs.m_appUiChain = spawn(vguiWindow);
+    vguiWidget uiChain = (vguiWindow)g_runApplicationFromProgs.m_appUiChain;
+    uiChain.m_iFlags = 1;
+    g_runApplicationFromProgs.m_appUI = vguiScriptedView::CreateFromMenuFile(g_runApplicationFromProgs.m_appUiChain, fileName);
+    g_runApplicationFromProgs.m_appUI.owner = this;
+    uiChain.Add(g_runApplicationFromProgs.m_appUI);
+    return num_for_edict(g_runApplicationFromProgs.m_appUI);
 }
 
 int
 vguiApp_Delegate::RunApplicationFromProgs(string progsPath)
 {
-	int returnValue = 0;
+    int returnValue = 0;
 
-	if (!STRING_SET(progsPath)) {
-		return 0;
-	}
+    if (!STRING_SET(progsPath)) {
+        return 0;
+    }
 
-	vguiApp_Delegate newApplication = spawn(vguiApp_Delegate);
-	newApplication.m_appProgsID = addprogs(progsPath);
+    vguiApp_Delegate newApplication = spawn(vguiApp_Delegate);
+    newApplication.m_appProgsID = addprogs(progsPath);
 
-	if (newApplication.m_appProgsID > 0) {
-		newApplication.MainFunction = externvalue(newApplication.m_appProgsID, "main");
-		externset(newApplication.m_appProgsID, LoadUIFromFile, "loadui");
-		g_runApplicationFromProgs = newApplication;
+    if (newApplication.m_appProgsID > 0) {
+        newApplication.MainFunction = externvalue(newApplication.m_appProgsID, "main");
+        externset(newApplication.m_appProgsID, LoadUIFromFile, "loadui");
+        g_runApplicationFromProgs = newApplication;
 
-		if (newApplication.MainFunction) {
-			returnValue = newApplication.MainFunction();
-		}
+        if (newApplication.MainFunction) {
+            returnValue = newApplication.MainFunction();
+        }
 
-		if (!g_runApplicationFromProgs.m_appUI) {
-			remove(newApplication);
-		} else {
-			vguiWidget findDesktop = (vguiWidget)find(world, ::classname, "vguiDesktop");
+        if (!g_runApplicationFromProgs.m_appUI) {
+            remove(newApplication);
+        } else {
+            vguiWidget findDesktop = (vguiWidget)find(world, ::classname, "vguiDesktop");
 
-			if (findDesktop) {
-				findDesktop.Add(newApplication.m_appUiChain);
-				vguiWindow theWindow = (vguiWindow)newApplication.m_appUiChain;
-				theWindow.SetPos([16,32]);
-			} else {
-				printf("Couldn't find desktop\n");
-			}
-		}
+            if (findDesktop) {
+                findDesktop.Add(newApplication.m_appUiChain);
+                vguiWindow theWindow = (vguiWindow)newApplication.m_appUiChain;
+                theWindow.SetPos([16,32]);
+            } else {
+                printf("Couldn't find desktop\n");
+            }
+        }
 
-		g_runApplicationFromProgs = 0;
-	}
+        g_runApplicationFromProgs = 0;
+    }
 
-	return (returnValue);
+    return (returnValue);
 }
 #endif

@@ -36,17 +36,17 @@ This entity was introduced in Half-Life 2 (2004).
 class env_soundscape:ncEntity
 {
 public:
-	void env_soundscape(void);
-	
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	virtual bool CanSpawn(bool);
+    void env_soundscape(void);
+    
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    virtual bool CanSpawn(bool);
 
 private:
-	int m_iID;
-	int m_iShader;
-	int m_iRadius;
-	float m_flVolume;
+    int m_iID;
+    int m_iShader;
+    int m_iRadius;
+    float m_flVolume;
 };
 
 env_soundscape g_entSoundScape;
@@ -56,140 +56,140 @@ env_soundscape g_ambientsound;
 bool
 env_soundscape::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 env_soundscape::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "shader":
-		m_iShader = SoundDef_Precache(strKey);
-		
-		if (m_iShader == -1) {
-			Destroy();
-		}
+    switch (strField) {
+    case "shader":
+        m_iShader = SoundDef_Precache(strKey);
+        
+        if (m_iShader == -1) {
+            Destroy();
+        }
 
-		break;
-	case "radius":
-		m_iRadius = stoi(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+        break;
+    case "radius":
+        m_iRadius = stoi(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 void
 env_soundscape::Respawn(void)
 {
-	super::Respawn();
-	SetSize([0,0,0], [0,0,0]);
+    super::Respawn();
+    SetSize([0,0,0], [0,0,0]);
 }
 
 void
 env_soundscape::env_soundscape(void)
 {
-	g_scapes+=1i;
-	m_iID = g_scapes;
-	m_iRadius = 1024;
-	isCSQC = true;
+    g_scapes+=1i;
+    m_iID = g_scapes;
+    m_iRadius = 1024;
+    isCSQC = true;
 }
 
 void
 DSP_ResetSoundscape(void)
 {
-	g_entSoundScape = __NULL__;
+    g_entSoundScape = __NULL__;
 }
 
 void
 DSP_UpdateSoundscape(ncView playerView)
 {
-	vector vecPlayer;
+    vector vecPlayer;
 
-	if (autocvar_dsp_soundscapes == FALSE) {
-		return;
-	}
+    if (autocvar_dsp_soundscapes == FALSE) {
+        return;
+    }
 
-	/* don't bother with no valid soundscapes. */
-	if (g_scapes <= 0i) {
-		return;
-	}
+    /* don't bother with no valid soundscapes. */
+    if (g_scapes <= 0i) {
+        return;
+    }
 
-	int s = (float)getproperty(VF_ACTIVESEAT);
-	pSeat = &g_seats[s];
-	vecPlayer = pSeat->m_vecPredictedOrigin;
+    int s = (float)getproperty(VF_ACTIVESEAT);
+    pSeat = &g_seats[s];
+    vecPlayer = pSeat->m_vecPredictedOrigin;
 
-	g_entSoundScape = __NULL__;
+    g_entSoundScape = __NULL__;
 
-	float bestdist = 999999;
-	for (entity e = world; (e = find(e, classname, "env_soundscape"));) {
-		env_soundscape scape = (env_soundscape)e;
-		
-		other = world;
-		traceline(scape.origin, vecPlayer, MOVE_OTHERONLY, scape);
-		if (trace_fraction < 1.0f) {
-			continue;
-		}
+    float bestdist = 999999;
+    for (entity e = world; (e = find(e, classname, "env_soundscape"));) {
+        env_soundscape scape = (env_soundscape)e;
+        
+        other = world;
+        traceline(scape.origin, vecPlayer, MOVE_OTHERONLY, scape);
+        if (trace_fraction < 1.0f) {
+            continue;
+        }
 
-		float dist = distanceSquared(e.origin, vecPlayer);
-		if (dist > scape.m_iRadius) {
-			continue;
-		}
+        float dist = distanceSquared(e.origin, vecPlayer);
+        if (dist > scape.m_iRadius) {
+            continue;
+        }
 
-		if (dist > bestdist) {
-			continue;
-		}
+        if (dist > bestdist) {
+            continue;
+        }
 
-		bestdist = dist;
-		g_entSoundScape = scape;
-	}
+        bestdist = dist;
+        g_entSoundScape = scape;
+    }
 
-	/* fix? */
-	if (g_entOldScape != __NULL__) {
-		/* if the shader isn't any different... don't bother changing it? */
-		if (g_entOldScape.m_iShader == g_entSoundScape.m_iShader) {
-			g_entSoundScape = g_entOldScape;
-		}
-	}
-	g_entOldScape = g_entSoundScape;
+    /* fix? */
+    if (g_entOldScape != __NULL__) {
+        /* if the shader isn't any different... don't bother changing it? */
+        if (g_entOldScape.m_iShader == g_entSoundScape.m_iShader) {
+            g_entSoundScape = g_entOldScape;
+        }
+    }
+    g_entOldScape = g_entSoundScape;
 
-	float newvol;
-	for (entity e = world; (e = find(e, classname, "env_soundscape"));) {
-		env_soundscape t = (env_soundscape)e;
+    float newvol;
+    for (entity e = world; (e = find(e, classname, "env_soundscape"));) {
+        env_soundscape t = (env_soundscape)e;
 
-		if (g_ambientsound) {
-			if (e == g_ambientsound) {
-				continue;
-			}
-		}
+        if (g_ambientsound) {
+            if (e == g_ambientsound) {
+                continue;
+            }
+        }
 
-		if (t != g_entSoundScape) {
-			newvol = bound(0, t.m_flVolume - clframetime, 1.0);
-		} else {
-			newvol = bound(0, t.m_flVolume + clframetime, 1.0);
-		}
+        if (t != g_entSoundScape) {
+            newvol = bound(0, t.m_flVolume - clframetime, 1.0);
+        } else {
+            newvol = bound(0, t.m_flVolume + clframetime, 1.0);
+        }
 
-		if (newvol != t.m_flVolume) {
-			t.m_flVolume = newvol;
-			SoundDef_Update(world, 10 + t.m_iID, t.m_iShader, t.m_flVolume);
-		}
-	}
+        if (newvol != t.m_flVolume) {
+            t.m_flVolume = newvol;
+            SoundDef_Update(world, 10 + t.m_iID, t.m_iShader, t.m_flVolume);
+        }
+    }
 
-	/* is a default ambientsound set in worldspawn? */
-	if (!g_ambientsound) {
-		return;
-	}
+    /* is a default ambientsound set in worldspawn? */
+    if (!g_ambientsound) {
+        return;
+    }
 
-	/* is no soundscape active? increase the default volume */
-	if (g_entSoundScape == __NULL__) {
-		newvol = bound(0, g_ambientsound.m_flVolume + clframetime, 1.0);
-	} else{
-		newvol = bound(0, g_ambientsound.m_flVolume - clframetime, 1.0);
-	}
+    /* is no soundscape active? increase the default volume */
+    if (g_entSoundScape == __NULL__) {
+        newvol = bound(0, g_ambientsound.m_flVolume + clframetime, 1.0);
+    } else{
+        newvol = bound(0, g_ambientsound.m_flVolume - clframetime, 1.0);
+    }
 
-	/* only call sound update when the volume changes. this works around a bug in the engine */
-	if (newvol != g_ambientsound.m_flVolume) {
-		g_ambientsound.m_flVolume = newvol;
-		SoundDef_Update(world, 10, g_ambientsound.m_iShader, g_ambientsound.m_flVolume);
-	}
+    /* only call sound update when the volume changes. this works around a bug in the engine */
+    if (newvol != g_ambientsound.m_flVolume) {
+        g_ambientsound.m_flVolume = newvol;
+        SoundDef_Update(world, 10, g_ambientsound.m_iShader, g_ambientsound.m_flVolume);
+    }
 }

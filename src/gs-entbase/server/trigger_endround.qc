@@ -33,14 +33,14 @@ class
 trigger_endround:ncBrushTrigger
 {
 public:
-	void trigger_endround(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Touch(entity);
+    void trigger_endround(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Touch(entity);
 };
 
 void
@@ -51,42 +51,42 @@ trigger_endround::trigger_endround(void)
 void
 trigger_endround::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 }
 
 void
 trigger_endround::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_endround::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 trigger_endround::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 trigger_endround::Trigger(entity act, triggermode_t unused)
 {
-	g_grMode.Input(act, "EndRound", "");
+    g_grMode.Input(act, "endround", "");
 }
 
 void
 trigger_endround::Touch(entity eToucher)
 {
-	Trigger(eToucher, TRIG_TOGGLE);
+    Trigger(eToucher, TRIG_TOGGLE);
 }

@@ -23,9 +23,9 @@ Window that doesn't destroy itself.
 class vguiPanel:vguiWindow
 {
 public:
-	void vguiPanel(void);
+    void vguiPanel(void);
 
-	virtual void WindowDidClose(void);
+    virtual void WindowDidClose(void);
     virtual void NowVisible(void);
     virtual void NowHidden(void);
 };
@@ -51,5 +51,5 @@ vguiPanel::NowHidden(void)
 void
 vguiPanel::WindowDidClose(void)
 {
-	Hide();
+    Hide();
 }

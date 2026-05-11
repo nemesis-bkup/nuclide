@@ -18,7 +18,7 @@ void env_hudhint_send(entity eActivator, string strMessage, int iFlags);
 
 enumflags
 {
-	EHH_ALLPLAYERS
+    EHH_ALLPLAYERS
 };
 
 /*! \brief Server-Entity: Displays HUD Hint Messages */
@@ -48,70 +48,70 @@ class
 env_hudhint:ncPointTrigger
 {
 public:
-	void env_hudhint(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Trigger(entity, triggermode_t);
+    void env_hudhint(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	string m_strMessage;
+    string m_strMessage;
 };
 
 void
 env_hudhint::env_hudhint(void)
 {
-	m_strMessage = __NULL__;
+    m_strMessage = __NULL__;
 }
 
 void
 env_hudhint::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strMessage", m_strMessage);
+    super::Save(handle);
+    SaveString(handle, "m_strMessage", m_strMessage);
 }
 
 void
 env_hudhint::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strMessage":
-		m_strMessage = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strMessage":
+        m_strMessage = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_hudhint::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "message":
-		m_strMessage = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "message":
+        m_strMessage = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_hudhint::Trigger(entity act, triggermode_t state)
 {
-	env_hudhint_send(act, m_strMessage, spawnflags);
+    env_hudhint_send(act, m_strMessage, spawnflags);
 }
 
 void
 env_hudhint_send(entity eAct, string strMessage, int iFlags)
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_HUDHINT);
-	WriteString(MSG_MULTICAST, strMessage);
-	msg_entity = eAct;
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_HUDHINT);
+    WriteString(MSG_MULTICAST, strMessage);
+    msg_entity = eAct;
 
-	if (iFlags & EHH_ALLPLAYERS)
-		multicast([0,0,0], MULTICAST_ALL);
-	else
-		multicast([0,0,0], MULTICAST_ONE_R);
+    if (iFlags & EHH_ALLPLAYERS)
+        multicast([0,0,0], MULTICAST_ALL);
+    else
+        multicast([0,0,0], MULTICAST_ONE_R);
 }

@@ -16,7 +16,7 @@
 
 enumflags
 {
-	LOGICTIMER_OSCILLATOR
+    LOGICTIMER_OSCILLATOR
 };
 
 /*! \brief Server-Entity: Timer Trigger */
@@ -62,249 +62,249 @@ class
 logic_timer:ncPointTrigger
 {
 public:
-	void logic_timer(void);
-	virtual void Spawned(void);
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
+    void logic_timer(void);
+    virtual void Spawned(void);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
 
-	nonvirtual void TimerEvent(void);
-	nonvirtual void TimerSetup(void);
+    nonvirtual void TimerEvent(void);
+    nonvirtual void TimerSetup(void);
 
 private:
-	bool m_bUseRandomTime;
-	float m_flRandMins;
-	float m_flRandMaxs;
-	float m_flRefireTime;
-	bool m_bOscillator;
+    bool m_bUseRandomTime;
+    float m_flRandMins;
+    float m_flRandMaxs;
+    float m_flRefireTime;
+    bool m_bOscillator;
 
-	string m_outputOnTimer;
-	string m_outputOnTimerHigh;
-	string m_outputOnTimerLow;
-	entity m_eActivator;
+    string m_outputOnTimer;
+    string m_outputOnTimerHigh;
+    string m_outputOnTimerLow;
+    entity m_eActivator;
 };
 
 void
 logic_timer::logic_timer(void)
 {
-	m_bUseRandomTime = false;
-	m_flRandMins = 0.0f;
-	m_flRandMaxs = 1.0f;
-	m_flRefireTime = 0.0;
-	m_bOscillator = false;
-	m_eActivator = this;
-	m_outputOnTimer = m_outputOnTimerHigh = m_outputOnTimerLow = __NULL__;
+    m_bUseRandomTime = false;
+    m_flRandMins = 0.0f;
+    m_flRandMaxs = 1.0f;
+    m_flRefireTime = 0.0;
+    m_bOscillator = false;
+    m_eActivator = this;
+    m_outputOnTimer = m_outputOnTimerHigh = m_outputOnTimerLow = __NULL__;
 }
 
 void
 logic_timer::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "UseRandomTime":
-		m_bUseRandomTime = ReadBool(setValue);
-		break;
-	case "LowerRandomBound":
-		m_flRandMins = ReadFloat(setValue);
-		break;
-	case "UpperRandomBound":
-		m_flRandMaxs = ReadFloat(setValue);
-		break;
-	case "RefireTime":
-		m_flRefireTime = ReadFloat(setValue);
-		break;
-	/* I/O related */
-	case "OnTimer":
-		m_outputOnTimer = PrepareOutput(m_outputOnTimer, setValue);
-		break;
-	case "OnTimerHigh":
-		m_outputOnTimerHigh = PrepareOutput(m_outputOnTimerHigh, setValue);
-		break;
-	case "OnTimerLow":
-		m_outputOnTimerLow = PrepareOutput(m_outputOnTimerLow, setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "UseRandomTime":
+        m_bUseRandomTime = ReadBool(setValue);
+        break;
+    case "LowerRandomBound":
+        m_flRandMins = ReadFloat(setValue);
+        break;
+    case "UpperRandomBound":
+        m_flRandMaxs = ReadFloat(setValue);
+        break;
+    case "RefireTime":
+        m_flRefireTime = ReadFloat(setValue);
+        break;
+    /* I/O related */
+    case "OnTimer":
+        m_outputOnTimer = PrepareOutput(m_outputOnTimer, setValue);
+        break;
+    case "OnTimerHigh":
+        m_outputOnTimerHigh = PrepareOutput(m_outputOnTimerHigh, setValue);
+        break;
+    case "OnTimerLow":
+        m_outputOnTimerLow = PrepareOutput(m_outputOnTimerLow, setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 logic_timer::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnTimer)
-		m_outputOnTimer = CreateOutput(m_outputOnTimer);
-	if (m_outputOnTimerHigh)
-		m_outputOnTimerHigh = CreateOutput(m_outputOnTimerHigh);
-	if (m_outputOnTimerLow)
-		m_outputOnTimerLow = CreateOutput(m_outputOnTimerLow);
+    if (m_outputOnTimer)
+        m_outputOnTimer = CreateOutput(m_outputOnTimer);
+    if (m_outputOnTimerHigh)
+        m_outputOnTimerHigh = CreateOutput(m_outputOnTimerHigh);
+    if (m_outputOnTimerLow)
+        m_outputOnTimerLow = CreateOutput(m_outputOnTimerLow);
 }
 
 void
 logic_timer::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (TriggerEnabled()) {
-		nextthink = 0.0f;
-		think = __NULL__;
-	} else {
-		TimerSetup();
-	}
+    if (TriggerEnabled()) {
+        nextthink = 0.0f;
+        think = __NULL__;
+    } else {
+        TimerSetup();
+    }
 }
 
 void
 logic_timer::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveBool(handle, "m_bUseRandomTime", m_bUseRandomTime);
-	SaveFloat(handle, "m_flRandMins", m_flRandMins);
-	SaveFloat(handle, "m_flRandMaxs", m_flRandMaxs);
-	SaveFloat(handle, "m_flRefireTime", m_flRefireTime);
-	SaveString(handle, "m_outputOnTimer", m_outputOnTimer);
-	SaveString(handle, "m_outputOnTimerHigh", m_outputOnTimerHigh);
-	SaveString(handle, "m_outputOnTimerLow", m_outputOnTimerLow);
-	SaveBool(handle, "m_bOscillator", m_bOscillator);
-	SaveEntity(handle, "m_eActivator", m_eActivator);
+    SaveBool(handle, "m_bUseRandomTime", m_bUseRandomTime);
+    SaveFloat(handle, "m_flRandMins", m_flRandMins);
+    SaveFloat(handle, "m_flRandMaxs", m_flRandMaxs);
+    SaveFloat(handle, "m_flRefireTime", m_flRefireTime);
+    SaveString(handle, "m_outputOnTimer", m_outputOnTimer);
+    SaveString(handle, "m_outputOnTimerHigh", m_outputOnTimerHigh);
+    SaveString(handle, "m_outputOnTimerLow", m_outputOnTimerLow);
+    SaveBool(handle, "m_bOscillator", m_bOscillator);
+    SaveEntity(handle, "m_eActivator", m_eActivator);
 }
 
 void
 logic_timer::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_bUseRandomTime":
-		m_bUseRandomTime = ReadBool(setValue);
-		break;
-	case "m_flRandMins":
-		m_flRandMins = ReadFloat(setValue);
-		break;
-	case "m_flRandMaxs":
-		m_flRandMaxs = ReadFloat(setValue);
-		break;
-	case "m_flRefireTime":
-		m_flRefireTime = ReadFloat(setValue);
-		break;
-	case "m_outputOnTimer":
-		m_outputOnTimer = ReadString(setValue);
-		break;
-	case "m_outputOnTimerHigh":
-		m_outputOnTimerHigh = ReadString(setValue);
-		break;
-	case "m_outputOnTimerLow":
-		m_outputOnTimerLow = ReadString(setValue);
-		break;
-	case "m_bOscillator":
-		m_bOscillator = ReadBool(setValue);
-		break;
-	case "m_eActivator":
-		m_eActivator = ReadEntity(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_bUseRandomTime":
+        m_bUseRandomTime = ReadBool(setValue);
+        break;
+    case "m_flRandMins":
+        m_flRandMins = ReadFloat(setValue);
+        break;
+    case "m_flRandMaxs":
+        m_flRandMaxs = ReadFloat(setValue);
+        break;
+    case "m_flRefireTime":
+        m_flRefireTime = ReadFloat(setValue);
+        break;
+    case "m_outputOnTimer":
+        m_outputOnTimer = ReadString(setValue);
+        break;
+    case "m_outputOnTimerHigh":
+        m_outputOnTimerHigh = ReadString(setValue);
+        break;
+    case "m_outputOnTimerLow":
+        m_outputOnTimerLow = ReadString(setValue);
+        break;
+    case "m_bOscillator":
+        m_bOscillator = ReadBool(setValue);
+        break;
+    case "m_eActivator":
+        m_eActivator = ReadEntity(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 logic_timer::Input(entity activatorEntity, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "RefireTime":
-		m_flRefireTime = stof(dataField);
-		break;
-	case "ResetTimer":
-		if (TriggerEnabled() == false)
-			return;
+    switch (inputName) {
+    case "refiretime":
+        m_flRefireTime = stof(dataField);
+        break;
+    case "resettimer":
+        if (TriggerEnabled() == false)
+            return;
 
-		TimerSetup();
-		break;
-	case "FireTimer": /* force fire */
-		if (TriggerEnabled() == false)
-			return;
+        TimerSetup();
+        break;
+    case "firetimer": /* force fire */
+        if (TriggerEnabled() == false)
+            return;
 
-		m_eActivator = activatorEntity;
-		TimerEvent();
-		break;
-	case "Enable":
-		EnableTrigger();
-		TimerSetup(); /* reset timer */
-		break;
-	case "Toggle":
-		ToggleTrigger();
+        m_eActivator = activatorEntity;
+        TimerEvent();
+        break;
+    case "enable":
+        EnableTrigger();
+        TimerSetup(); /* reset timer */
+        break;
+    case "toggle":
+        ToggleTrigger();
 
-		if (TriggerEnabled())
-			TimerSetup();
-		break;
-	case "LowerRandomBound":
-		m_flRandMins = stof(dataField);
-		break;
-	case "UpperRandomBound":
-		m_flRandMaxs = stof(dataField);
-		break;
-	case "AddToTimer":
-		if (nextthink <= 0.0)
-			nextthink += stof(dataField);
-		else
-			EntWarning("AddToTimer when inactive!");
-		break;
-	case "SubtractFromTimer":
-		if (nextthink <= 0.0)
-			nextthink -= stof(dataField);
-		else
-			EntWarning("SubtractFromTimer when inactive!");
+        if (TriggerEnabled())
+            TimerSetup();
+        break;
+    case "lowerrandombound":
+        m_flRandMins = stof(dataField);
+        break;
+    case "upperrandombound":
+        m_flRandMaxs = stof(dataField);
+        break;
+    case "addtotimer":
+        if (nextthink <= 0.0)
+            nextthink += stof(dataField);
+        else
+            EntWarning("AddToTimer when inactive!");
+        break;
+    case "subtractfromtimer":
+        if (nextthink <= 0.0)
+            nextthink -= stof(dataField);
+        else
+            EntWarning("SubtractFromTimer when inactive!");
 
-		break;
-	default:
-		super::Input(activatorEntity, inputName, dataField);
-	}
+        break;
+    default:
+        super::Input(activatorEntity, inputName, dataField);
+    }
 }
 
 void
 logic_timer::TimerSetup(void)
 {
-	float delay;
+    float delay;
 
-	if (TriggerEnabled() == false) {
-		ReleaseThink();
-		return;
-	}
+    if (TriggerEnabled() == false) {
+        ReleaseThink();
+        return;
+    }
 
-	if (m_bUseRandomTime) {
-		delay = random(m_flRandMins, m_flRandMaxs);
-	} else {
-		delay = m_flRefireTime;
-	}
+    if (m_bUseRandomTime) {
+        delay = random(m_flRandMins, m_flRandMaxs);
+    } else {
+        delay = m_flRefireTime;
+    }
 
-	/* just in case? */
-	if (delay == 0.0) {
-		delay = 0.1f;
-	}
+    /* just in case? */
+    if (delay == 0.0) {
+        delay = 0.1f;
+    }
 
 
-	//error(sprintf("TIMER WILL GO OFF IN %f SECONDS!\n", time+delay));
-	nextthink = time + delay;
-	think = TimerEvent;
+    //error(sprintf("TIMER WILL GO OFF IN %f SECONDS!\n", time+delay));
+    nextthink = time + delay;
+    think = TimerEvent;
 }
 
 void
 logic_timer::TimerEvent(void)
 {
-	if (TriggerEnabled() == false) {
-		ReleaseThink();
-		return;
-	}
+    if (TriggerEnabled() == false) {
+        ReleaseThink();
+        return;
+    }
 
-	//error(m_outputOnTimer);
-	if (HasSpawnFlags(LOGICTIMER_OSCILLATOR)) {
-		UseOutput(m_eActivator, (m_bOscillator) ? m_outputOnTimerHigh : m_outputOnTimerLow);
-		m_bOscillator = (m_bOscillator) ? false : true;
-		//print("FIRING %S OSCILLATING %S", m_outputOnTimerHigh, m_outputOnTimerLow));
-	} else {
-		UseOutput(m_eActivator, m_outputOnTimer);
-		//print("FIRING %S", m_outputOnTimer));
-	}
+    //error(m_outputOnTimer);
+    if (HasSpawnFlags(LOGICTIMER_OSCILLATOR)) {
+        UseOutput(m_eActivator, (m_bOscillator) ? m_outputOnTimerHigh : m_outputOnTimerLow);
+        m_bOscillator = (m_bOscillator) ? false : true;
+        //print("FIRING %S OSCILLATING %S", m_outputOnTimerHigh, m_outputOnTimerLow));
+    } else {
+        UseOutput(m_eActivator, m_outputOnTimer);
+        //print("FIRING %S", m_outputOnTimer));
+    }
 
-	TimerSetup(); /* repeat */
+    TimerSetup(); /* repeat */
 }

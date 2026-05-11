@@ -21,6 +21,7 @@ Weapon_Axe.Melee_Hit
 Weapon_Axe.Melee_HitWorld
 {
 	alerts
+    shakes 256
 	sample player/axhit2.wav
 }
 
@@ -47,6 +48,7 @@ sfx_impact.flesh
 weapon_nailgun.ricochet
 {
 	alerts
+    shakes 256
 	sample weapons/ric1.wav
 	sample weapons/ric2.wav
 	sample weapons/ric3.wav
@@ -73,6 +75,7 @@ weapon_grenadelauncher.shoot
 weapon_grenadelauncher.explode
 {
 	alerts
+    shakes 2048
 	sample weapons/r_exp3.wav
 }
 
@@ -91,6 +94,7 @@ weapon_rocketlauncher.shoot
 weapon_rocketlauncher.explode
 {
 	alerts
+    shakes 2048
 	sample weapons/r_exp3.wav
 }
 

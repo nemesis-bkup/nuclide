@@ -24,21 +24,21 @@
 Right now each client will have a single head, a 'left' and a 'right' NSXRInput. */
 typedef enum
 {
-	XR_INPUT_UNKNOWN,	/**< Unknown device. Don't use! */
-	XR_INPUT_HEAD,		/**< Device represents a single head. 
-							A client will have a ncView camera tied to it. */
-	XR_INPUT_LEFT,		/**< Device represents a left hand. */
-	XR_INPUT_RIGHT		/**< Device represents a right hand. */
+    XR_INPUT_UNKNOWN,   /**< Unknown device. Don't use! */
+    XR_INPUT_HEAD,      /**< Device represents a single head. 
+                            A client will have a ncView camera tied to it. */
+    XR_INPUT_LEFT,      /**< Device represents a left hand. */
+    XR_INPUT_RIGHT      /**< Device represents a right hand. */
 } xrinput_t;
 
 /** The NSXRInput is updating its position within the NSXRSpace. */
-#define XR_STATUS_ORG	(1u<<0u)
+#define XR_STATUS_ORG   (1u<<0u)
 /** The NSXRInput is updating its aim direction within the NSXRSpace. */
-#define XR_STATUS_ANG	(1u<<1u)
+#define XR_STATUS_ANG   (1u<<1u)
 /** The NSXRInput is updating its velocity. */
-#define XR_STATUS_VEL	(1u<<2u)
+#define XR_STATUS_VEL   (1u<<2u)
 /** The NSXRInput is updating its angular velocity. */
-#define XR_STATUS_AVEL	(1u<<3u)
+#define XR_STATUS_AVEL  (1u<<3u)
 
 /** This class represents an input device in the world.
 
@@ -57,53 +57,53 @@ That way you can dual (or even triple) wield them.
 */
 class NSXRInput:ncEntity {
   public:
-	void NSXRInput( void );
+    void NSXRInput( void );
 
-	/** Sets the NSXRInput type. */
-	virtual void SetType( xrinput_t );
+    /** Sets the NSXRInput type. */
+    virtual void SetType( xrinput_t );
 
-	/** Sets which NSXRSpace this input belongs to. */
-	virtual void SetParentSpace( NSXRSpace );
+    /** Sets which NSXRSpace this input belongs to. */
+    virtual void SetParentSpace( NSXRSpace );
 
-	/** Returns the world space position of this NSXRInput. */
-	virtual vector GetOrigin( void );
+    /** Returns the world space position of this NSXRInput. */
+    virtual vector GetOrigin( void );
 
-	/** Returns the direction this NSXRInput is facing. */
-	virtual vector GetAngles( void );
+    /** Returns the direction this NSXRInput is facing. */
+    virtual vector GetAngles( void );
 
-	/** Returns the current velocity of this NSXRInput. */
-	virtual vector GetVelocity( void );
+    /** Returns the current velocity of this NSXRInput. */
+    virtual vector GetVelocity( void );
 
-	/** Returns the rotational movement of this NSXRInput. */
-	virtual vector GetAngularVelocity( void );
+    /** Returns the rotational movement of this NSXRInput. */
+    virtual vector GetAngularVelocity( void );
 
-	/** Returns the status of the NSXRInput. */
-	virtual unsigned int GetStatus( void );
+    /** Returns the status of the NSXRInput. */
+    virtual unsigned int GetStatus( void );
 
-	/** Returns the weapon this NSXRInput is wielding. */
-	virtual unsigned int GetWeapon( void );
+    /** Returns the weapon this NSXRInput is wielding. */
+    virtual unsigned int GetWeapon( void );
 
-	/** Returns the type of NSXRInput, check xrinput_t for details. */
-	virtual xrinput_t GetType( void );
+    /** Returns the type of NSXRInput, check xrinput_t for details. */
+    virtual xrinput_t GetType( void );
 
-	/** Returns if this NSXRInput is available/active. */
-	virtual bool IsAvailable( void );
+    /** Returns if this NSXRInput is available/active. */
+    virtual bool IsAvailable( void );
 
-	/** Run every single input event. */
-	virtual void InputFrame( void );
+    /** Run every single input event. */
+    virtual void InputFrame( void );
 
-	/** Debug function that can be called every single frame. */
-	virtual void PrintInfo( void );
+    /** Debug function that can be called every single frame. */
+    virtual void PrintInfo( void );
 
   private:
-	/** Reference to the space we belong to */
-	NSXRSpace m_xrSpace;
-	vector m_vecOrigin;
-	vector m_vecAngles;
-	vector m_vecVelocity;
-	vector m_vecAVelocity;
-	__uint64 m_iStatus;
-	__uint64 m_iWeapon;
+    /** Reference to the space we belong to */
+    NSXRSpace m_xrSpace;
+    vector m_vecOrigin;
+    vector m_vecAngles;
+    vector m_vecVelocity;
+    vector m_vecAVelocity;
+    __uint64 m_iStatus;
+    __uint64 m_iWeapon;
 
-	xrinput_t m_inputType;
+    xrinput_t m_inputType;
 };

@@ -22,25 +22,25 @@
 class ncOutput:ncEntity
 {
 private:
-	entity m_internalTarget;
-	entity m_eActivator;
-	string m_strTarget;
-	string m_strInput;
-	string m_strData;
-	float m_flDelay;
-	int m_iCount;
-	int m_iOldCount;
+    entity m_internalTarget;
+    entity m_eActivator;
+    string m_strTarget;
+    string m_strInput;
+    string m_strData;
+    float m_flDelay;
+    int m_iCount;
+    int m_iOldCount;
 
 public:
-	void ncOutput(void);
+    void ncOutput(void);
 
-	/** Call to trigger the ncOutput's target. */
-	virtual void TriggerOutput(void);
+    /** Call to trigger the ncOutput's target. */
+    virtual void TriggerOutput(void);
 
-	virtual void ScheduleOutput(entity);
+    virtual void ScheduleOutput(entity);
 
-	/** Internal use only. */
-	virtual void Init(void);
-	/** Internal use only. */
-	virtual void Respawn(void);
+    /** Internal use only. */
+    virtual void Init(void);
+    /** Internal use only. */
+    virtual void Respawn(void);
 };

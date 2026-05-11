@@ -18,67 +18,67 @@ class
 prop_static:ncEntity
 {
 public:
-	void prop_static(void);
-	
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Spawned(void);
-	virtual bool CanSpawn(bool);
+    void prop_static(void);
+    
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Spawned(void);
+    virtual bool CanSpawn(bool);
 
 private:
-	int m_iBody;
+    int m_iBody;
 };
 
 void
 prop_static::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "frame":
-	case "sequence":
-		frame = stof(setValue);
-		break;
-	case "modelscale":
-		scale = stof(setValue);
-		break;
-	case "skin":
-		skin = stof(setValue);
-		break;
-	case "body":
-		m_iBody = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "frame":
+    case "sequence":
+        frame = stof(setValue);
+        break;
+    case "modelscale":
+        scale = stof(setValue);
+        break;
+    case "skin":
+        skin = stof(setValue);
+        break;
+    case "body":
+        m_iBody = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 prop_static::Respawn(void)
 {
-	makestatic(this);
+    makestatic(this);
 }
 
 void
 prop_static::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	float skindata;
-	solid = SOLID_NOT;
-	setmodel(this, model);
-	skindata = loadcustomskin("", sprintf("geomset 0 %i\ngeomset 1 %i\n", m_iBody, m_iBody));
-	applycustomskin(this, skindata);
-	setorigin(this, origin);
-	setsize(this, mins * scale, maxs * scale);
+    float skindata;
+    solid = SOLID_NOT;
+    setmodel(this, model);
+    skindata = loadcustomskin("", sprintf("geomset 0 %i\ngeomset 1 %i\n", m_iBody, m_iBody));
+    applycustomskin(this, skindata);
+    setorigin(this, origin);
+    setsize(this, mins * scale, maxs * scale);
 }
 
 bool
 prop_static::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 prop_static::prop_static(void)
 {
-	isCSQC = true;
+    isCSQC = true;
 }

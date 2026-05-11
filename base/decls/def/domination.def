@@ -13,14 +13,14 @@ entityDef domination_area
     "area_time_to_cap"	"1"
     "renderfx" "$RFX_GLOWSHELL"
 
-    "OnCapTeam1"	"!rules,Capture,1,0,-1"
-    "OnCapTeam1"	"!self,Color,255 0 0,0,-1"
-    "OnCapTeam2"	"!rules,Capture,2,0,-1"
-    "OnCapTeam2"	"!self,Color,0 0 255,0,-1"
-    "OnBreakTeam1"	"!rules,Break,1,0,-1"
-    "OnBreakTeam2"	"!rules,Break,2,0,-1"
-    "OnBreakTeam1"	"!self,Color,255 255 255,0,-1"
-    "OnBreakTeam2"	"!self,Color,255 255 255,0,-1"
+    "OnCapTeam1"	"!rules,capture,1,0,-1"
+    "OnCapTeam1"	"!self,color,255 0 0,0,-1"
+    "OnCapTeam2"	"!rules,capture,2,0,-1"
+    "OnCapTeam2"	"!self,color,0 0 255,0,-1"
+    "OnBreakTeam1"	"!rules,break,1,0,-1"
+    "OnBreakTeam2"	"!rules,break,2,0,-1"
+    "OnBreakTeam1"	"!self,color,255 255 255,0,-1"
+    "OnBreakTeam2"	"!self,color,255 255 255,0,-1"
 }
 
 entityDef domination_icon

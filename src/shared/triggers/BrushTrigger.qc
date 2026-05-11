@@ -22,32 +22,32 @@ ncBrushTrigger::ncBrushTrigger(void)
 void
 ncBrushTrigger::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 int
 ncBrushTrigger::GetValue(entity queryingEntity)
 {
-	if (GetSolid() == SOLID_NOT) {
-		return (1);
-	}
+    if (GetSolid() == SOLID_NOT) {
+        return (1);
+    }
 
-	return (0);
+    return (0);
 }
 
 void
 ncBrushTrigger::InitBrushTrigger(void)
 {
-	/* brush triggers generally only need model, origin. no angles. */
-	SetModel(GetSpawnString("model"));
-	SetOrigin(GetSpawnVector("origin"));
-	SetMovetype(MOVETYPE_NONE);
-	SetSolid(SOLID_BSPTRIGGER);
-	geomtype = GEOMTYPE_NONE; /* disable RBE collision... */
-	Hide();
+    /* brush triggers generally only need model, origin. no angles. */
+    SetModel(GetSpawnString("model"));
+    SetOrigin(GetSpawnVector("origin"));
+    SetMovetype(MOVETYPE_NONE);
+    SetSolid(SOLID_BSPTRIGGER);
+    geomtype = GEOMTYPE_NONE; /* disable RBE collision... */
+    Hide();
 
 #ifdef SERVER
-	_RelinkToSpawnParent();
-	m_triggerEnabled = (m_triggerStartsDisabled) ? false : true;
+    _RelinkToSpawnParent();
+    m_triggerEnabled = (m_triggerStartsDisabled) ? false : true;
 #endif
 }

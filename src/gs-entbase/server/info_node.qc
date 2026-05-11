@@ -32,10 +32,10 @@ class
 info_node:ncPointTrigger
 {
 public:
-	void info_node(void);
-	
-	virtual void Spawned(void);
-	virtual void Respawn(void);
+    void info_node(void);
+    
+    virtual void Spawned(void);
+    virtual void Respawn(void);
 
 };
 
@@ -48,26 +48,26 @@ info_node::info_node(void)
 void
 info_node::Spawned(void)
 {
-	if (cvars.GetBool("ai_noNodes")) {
-		Destroy();
-		return;
-	}
+    if (cvars.GetBool("ai_noNodes")) {
+        Destroy();
+        return;
+    }
 
-	super::Respawn();
+    super::Respawn();
 }
 
 void
 info_node::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	SetSize([0,0,0], [0,0,0]);
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
+    SetSize([0,0,0], [0,0,0]);
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
 
-	/* drop to floor, then 32-units above ground
-	   see https://twhl.info/wiki/page/Tutorial%3A_All_about_info_nodes */
-	SetOrigin(GetSpawnVector("origin"));
-	DropToFloor();
-	SetOrigin(GetOrigin() + [0,0,32]);
+    /* drop to floor, then 32-units above ground
+       see https://twhl.info/wiki/page/Tutorial%3A_All_about_info_nodes */
+    SetOrigin(GetSpawnVector("origin"));
+    DropToFloor();
+    SetOrigin(GetOrigin() + [0,0,32]);
 }

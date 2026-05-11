@@ -28,25 +28,44 @@ that is unique to the map and can be captured at other ncCapturePoint instances 
 class ncCaptureItem:ncRenderableEntity
 {
 public:
-	void ncCaptureItem(void);
+    void ncCaptureItem(void);
 
-	virtual void Precache(void);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
-	virtual void SpawnKey(string, string);
-	nonvirtual void Captured(float teamNumber);
-	nonvirtual void WatchPlayer(void);
-	nonvirtual void Return(void);
+    virtual void Precache(void);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
+    virtual void SpawnKey(string, string);
+    nonvirtual void Captured(float teamNumber);
+    nonvirtual void WatchPlayer(void);
+    nonvirtual void Return(void);
+    virtual void Spawned(void);
 
 private:
-	string m_desiredItem;
-	string m_goalItem;
-	string m_requiresItem;
-	int m_playerScore;
-	int m_teamScore;
-	float m_goalNo;
-	ncPlayer m_watchPlayer;
-	string m_outputOnCapture;
-	string m_outputOnTake;
-	string m_outputOnReturn;
+    string m_desiredItem;
+    string m_goalItem;
+    string m_requiresItem;
+    int m_playerScore;
+    int m_teamScore;
+    ncPlayer m_watchPlayer;
+    string m_outputOnCapture;
+    string m_outputOnTake;
+    string m_outputOnReturn;
+    string m_outputOnDrop;
 };
+
+void
+ncCaptureItem::ncCaptureItem(void)
+{
+    m_desiredItem = __NULL__;
+    m_goalItem = __NULL__;
+    m_requiresItem = __NULL__;
+    m_playerScore = 0i;
+    m_teamScore = 0i;
+    m_watchPlayer = __NULL__;
+    m_outputOnCapture = __NULL__;
+    m_outputOnTake = __NULL__;
+    m_outputOnReturn = __NULL__;
+    m_outputOnDrop = __NULL__;
+}
+
+
+.float m_goalNo;

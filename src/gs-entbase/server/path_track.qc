@@ -16,10 +16,10 @@
 
 enumflags
 {
-	PATHTRACK_DISABLED,
-	PATHTRACK_FIREONCE,
-	PATHTRACK_BRANCHREVERSE,
-	PATHTRACK_DISABLETRAIN
+    PATHTRACK_DISABLED,
+    PATHTRACK_FIREONCE,
+    PATHTRACK_BRANCHREVERSE,
+    PATHTRACK_DISABLETRAIN
 };
 
 /*! \brief Server-Entity: Tracktrain Path Node */
@@ -60,245 +60,245 @@ class
 path_track:path_corner
 {
 public:
-	void path_track(void);
+    void path_track(void);
 
-	nonvirtual void PathEndTrigger(entity, triggermode_t);
+    nonvirtual void PathEndTrigger(entity, triggermode_t);
 
-	/* overrides */
-	virtual void DebugDraw(void);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
-	virtual string GetPathTarget(void);
-	virtual string GetSelfTarget(void);
-	virtual path_corner GetPathTargetEntity(void);
-	virtual path_corner GetSelfTargetEntity(void);
-	virtual bool DisablesTrain(void);
+    /* overrides */
+    virtual void DebugDraw(void);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
+    virtual string GetPathTarget(void);
+    virtual string GetSelfTarget(void);
+    virtual path_corner GetPathTargetEntity(void);
+    virtual path_corner GetSelfTargetEntity(void);
+    virtual bool DisablesTrain(void);
 
 private:
-	bool m_bTrackEnabled;
-	bool m_bAltPath;
-	string m_strAltPath;
-	string m_strEndTrigger;
+    bool m_bTrackEnabled;
+    bool m_bAltPath;
+    string m_strAltPath;
+    string m_strEndTrigger;
 };
 
 void
 path_track::path_track(void)
 {
-	m_bAltPath = false;
-	m_bTrackEnabled = true;
-	m_strAltPath = __NULL__;
-	m_strEndTrigger = __NULL__;
+    m_bAltPath = false;
+    m_bTrackEnabled = true;
+    m_strAltPath = __NULL__;
+    m_strEndTrigger = __NULL__;
 }
 
 void
 path_track::DebugDraw(void)
 {
-	vector pos = GetOrigin();
-	pos[2] += 32;
-	R_BeginPolygon("textures/editor/path_track", 0, 0);
-	R_PolygonVertex(pos + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
-	R_PolygonVertex(pos - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
-	R_PolygonVertex(pos - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
-	R_PolygonVertex(pos + v_right * 16 + v_up * 16, [1,0], [1,1,1], 1.0f);
-	R_EndPolygon();
+    vector pos = GetOrigin();
+    pos[2] += 32;
+    R_BeginPolygon("textures/editor/path_track", 0, 0);
+    R_PolygonVertex(pos + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
+    R_PolygonVertex(pos - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
+    R_PolygonVertex(pos - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
+    R_PolygonVertex(pos + v_right * 16 + v_up * 16, [1,0], [1,1,1], 1.0f);
+    R_EndPolygon();
 
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(GetOrigin(), [0,1], [1,1,1], 0.5f);
-	R_PolygonVertex(pos, [1,1], [1,1,1], 0.5f);
-	R_EndPolygon();
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(GetOrigin(), [0,1], [1,1,1], 0.5f);
+    R_PolygonVertex(pos, [1,1], [1,1,1], 0.5f);
+    R_EndPolygon();
 }
 
 
 void
 path_track::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "altpath":
-		m_strAltPath = ReadString(setValue);
-		break;
-	case "netname":
-		m_strEndTrigger = ReadString(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "altpath":
+        m_strAltPath = ReadString(setValue);
+        break;
+    case "netname":
+        m_strEndTrigger = ReadString(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 path_track::Respawn(void)
 {
-	super::Respawn();
-	m_bTrackEnabled = HasSpawnFlags(PATHTRACK_DISABLED) ? false : true;
+    super::Respawn();
+    m_bTrackEnabled = HasSpawnFlags(PATHTRACK_DISABLED) ? false : true;
 }
 
 void
 path_track::Save(float handle)
 {
-	super::Save(handle);
-	SaveBool(handle, "m_bAltPath", m_bAltPath);
-	SaveBool(handle, "m_bTrackEnabled", m_bTrackEnabled);
-	SaveString(handle, "m_strAltPath", m_strAltPath);
-	SaveString(handle, "m_strEndTrigger", m_strEndTrigger);
+    super::Save(handle);
+    SaveBool(handle, "m_bAltPath", m_bAltPath);
+    SaveBool(handle, "m_bTrackEnabled", m_bTrackEnabled);
+    SaveString(handle, "m_strAltPath", m_strAltPath);
+    SaveString(handle, "m_strEndTrigger", m_strEndTrigger);
 }
 
 void
 path_track::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_bAltPath":
-		m_bAltPath = ReadBool(setValue);
-		break;
-	case "m_bTrackEnabled":
-		m_bTrackEnabled = ReadBool(setValue);
-		break;
-	case "m_strAltPath":
-		m_strAltPath = ReadString(setValue);
-		break;
-	case "m_strEndTrigger":
-		m_strEndTrigger = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_bAltPath":
+        m_bAltPath = ReadBool(setValue);
+        break;
+    case "m_bTrackEnabled":
+        m_bTrackEnabled = ReadBool(setValue);
+        break;
+    case "m_strAltPath":
+        m_strAltPath = ReadString(setValue);
+        break;
+    case "m_strEndTrigger":
+        m_strEndTrigger = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 path_track::Input(entity activatingEntity, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "ToggleAlternatePath":
-		Trigger(activatingEntity, TRIG_TOGGLE);
-		break;
-	case "EnableAlternatePath":
-		Trigger(activatingEntity, TRIG_ON);
-		break;
-	case "DisableAlternatePath":
-		Trigger(activatingEntity, TRIG_OFF);
-		break;
-	case "TogglePath":
-		m_bTrackEnabled ^= true;
-		break;
-	case "EnablePath":
-		m_bTrackEnabled = true;
-		break;
-	case "DisablePath":
-		m_bTrackEnabled = false;
-		break;
-	default:
-		super::Input(activatingEntity, inputName, dataField);
-	}
+    switch (inputName) {
+    case "togglealternatepath":
+        Trigger(activatingEntity, TRIG_TOGGLE);
+        break;
+    case "enablealternatepath":
+        Trigger(activatingEntity, TRIG_ON);
+        break;
+    case "disablealternatepath":
+        Trigger(activatingEntity, TRIG_OFF);
+        break;
+    case "togglepath":
+        m_bTrackEnabled ^= true;
+        break;
+    case "enablepath":
+        m_bTrackEnabled = true;
+        break;
+    case "disablepath":
+        m_bTrackEnabled = false;
+        break;
+    default:
+        super::Input(activatingEntity, inputName, dataField);
+    }
 }
 
 void
 path_track::Trigger(entity activatingEntity, triggermode_t triggerMode)
 {
-	/* no idea if this is accurate behaviour, but it should be compatible */
-	if (m_strAltPath) {
-		switch (triggerMode) {
-		case TRIG_ON:
-			m_bAltPath = true;
-			break;
-		case TRIG_OFF:
-			m_bAltPath = false;
-			break;
-		default:
-			m_bAltPath ^= true;
-		}
-	} else {
-		switch (triggerMode) {
-		case TRIG_ON:
-			m_bTrackEnabled = true;
-			break;
-		case TRIG_OFF:
-			m_bTrackEnabled = false;
-			break;
-		default:
-			m_bTrackEnabled ^= true;
-		}
-	}
+    /* no idea if this is accurate behaviour, but it should be compatible */
+    if (m_strAltPath) {
+        switch (triggerMode) {
+        case TRIG_ON:
+            m_bAltPath = true;
+            break;
+        case TRIG_OFF:
+            m_bAltPath = false;
+            break;
+        default:
+            m_bAltPath ^= true;
+        }
+    } else {
+        switch (triggerMode) {
+        case TRIG_ON:
+            m_bTrackEnabled = true;
+            break;
+        case TRIG_OFF:
+            m_bTrackEnabled = false;
+            break;
+        default:
+            m_bTrackEnabled ^= true;
+        }
+    }
 }
 
 bool
 path_track::DisablesTrain(void)
 {
-	return HasSpawnFlags(PATHTRACK_DISABLETRAIN) ? true : false;
+    return HasSpawnFlags(PATHTRACK_DISABLETRAIN) ? true : false;
 }
 
 string
 path_track::GetPathTarget(void)
 {
-	string theTarget = target;
+    string theTarget = target;
 
-	if (m_bTrackEnabled == false){
-		return targetname;
-	}
+    if (m_bTrackEnabled == false){
+        return targetname;
+    }
 
-	if (HasTriggerTarget() == false) {
-		theTarget = targetname;
-	}
+    if (HasTriggerTarget() == false) {
+        theTarget = targetname;
+    }
 
-	if (!m_strAltPath) {
-		return theTarget;
-	}
+    if (!m_strAltPath) {
+        return theTarget;
+    }
 
-	return (m_bAltPath == false) ? theTarget : m_strAltPath;
+    return (m_bAltPath == false) ? theTarget : m_strAltPath;
 }
 
 string
 path_track::GetSelfTarget(void)
 {
-	for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
-		if (f.GetPathTarget() == targetname) {
-			return f.targetname;
-		}
-	}
+    for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
+        if (f.GetPathTarget() == targetname) {
+            return f.targetname;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 path_corner
 path_track::GetPathTargetEntity(void)
 {
-	string theTarget = GetPathTarget();
+    string theTarget = GetPathTarget();
 
-	for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
-		if (f.targetname == theTarget && f.m_bTrackEnabled == true) {
-			return f;
-		}
-	}
+    for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
+        if (f.targetname == theTarget && f.m_bTrackEnabled == true) {
+            return f;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 path_corner
 path_track::GetSelfTargetEntity(void)
 {
-	for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
-		if (f.GetPathTarget() == targetname) {
-			return f;
-		}
-	}
+    for (path_track f = __NULL__; (f = (path_track)find(f, ::classname, "path_track"));) {
+        if (f.GetPathTarget() == targetname) {
+            return f;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 void
 path_track::PathEndTrigger(entity activatingEntity, triggermode_t triggerMode)
 {
-	if (!m_strEndTrigger)
-		return;
+    if (!m_strEndTrigger)
+        return;
 
-	for (entity f = world; (f = find(f, ::targetname, m_strEndTrigger));) {
-		ncTrigger trigger = (ncTrigger)f;
+    for (entity f = world; (f = find(f, ::targetname, m_strEndTrigger));) {
+        ncTrigger trigger = (ncTrigger)f;
 
-		EntLog("Triggering %S %S from %S", f.classname, trigger.targetname, activatingEntity.classname);
+        EntLog("Triggering %S %S from %S", f.classname, trigger.targetname, activatingEntity.classname);
 
-		if (trigger.Trigger != __NULL__) {
-			trigger.Trigger(activatingEntity, triggerMode);
-		}
-	}
+        if (trigger.Trigger != __NULL__) {
+            trigger.Trigger(activatingEntity, triggerMode);
+        }
+    }
 }

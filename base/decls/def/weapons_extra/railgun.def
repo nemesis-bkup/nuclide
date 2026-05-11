@@ -1,0 +1,45 @@
+entityDef weapon_railgun
+{
+	"editor_color"		".3 .3 1"
+	"editor_mins"		"-16 -16 -16"
+	"editor_maxs"		"16 16 16"
+	"editor_usage"		"Railgun"
+	"editor_rotatable"	"1"
+
+	"inherit"			"weapon_base"
+
+	"def_onFire"		"projectile_railgun"
+	"inv_name"			"#WEAPON_RAILGUN"
+	"ammoType" 			"ammo_cells"
+	"ammoRequired" 		"1"
+	"ammoPerShot"		"1"
+	"punchAngle"		"-3 0 0"
+
+	"model"				"progs/g_rail.mdl"
+	"model_view"		"progs/v_rail.mdl"
+	"act_fire"			"1"
+	"act_idle"			"0"
+
+	"act_fire"			"1"
+	"act_idle"			"0"
+    "fireRate"          "2"
+	"inv_ammo_cells"	"10"
+	"spin"			"1"
+
+	"snd_fire"			"weapon_railgun.fire"
+
+	// ncWeapon specific
+	"ammoIcon"			"pics/a_cells.pcx"
+	"hudSlot"			"8"
+	"weight"			"10"
+}
+
+entityDef projectile_railgun
+{
+	"inherit"			"projectile_bullet_base"
+	"damage"			"100"
+	"hitscans"			"1"
+	"spread"			"0 0"
+	"fx_path"			"q2part.teq2_railtrail"
+	"offset"			"0 0 -8"
+}

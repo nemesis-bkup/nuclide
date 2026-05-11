@@ -34,7 +34,7 @@ class
 func_group:info_null
 {
 public:
-	void func_group(void);
+    void func_group(void);
 };
 
 void

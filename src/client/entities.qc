@@ -18,345 +18,345 @@
 void
 Entity_EntityUpdate(float type, float new)
 {
-	switch (type) {
-	case ENT_ENTITY:
-		NSENTITY_READENTITY(ncEntity, new)
-		break;
-	case ENT_SOUND:
-		NSENTITY_READENTITY(ncSound, new)
-		break;
-	case ENT_PMOVEVARS:
-		NSENTITY_READENTITY(ncPMoveVars, new)
-		break;
-	case ENT_ENTITYRENDERABLE:
-		NSENTITY_READENTITY(ncRenderableEntity, new)
-		break;
-	case ENT_RAGDOLL:
-		NSENTITY_READENTITY(ncRagdoll, new)
-		break;
-	case ENT_SURFPROP:
-		NSENTITY_READENTITY(ncSurfacePropEntity, new)
-		break;
-	case ENT_BEAM:
-		NSENTITY_READENTITY(env_beam, new)
-		break;
-	case ENT_FUNNEL:
-		NSENTITY_READENTITY(env_funnel, new)
-		break;
-	case ENT_SMOKER:
-		NSENTITY_READENTITY(env_smoker, new)
-		break;
-	case ENT_LASER:
-		NSENTITY_READENTITY(env_laser, new)
-		break;
-	case ENT_PHYSICS:
-		NSENTITY_READENTITY(ncPhysicsEntity, new)
-		break;
-	case ENT_MONSTER:
-		NSENTITY_READENTITY(ncMonster, new)
-		self.customphysics = Empty;
-		break;
-	case ENT_TALKMONSTER:
-		NSENTITY_READENTITY(ncTalkMonster, new)
-		self.customphysics = Empty;
-		break;
-	case ENT_SPEAKER:
-		NSENTITY_READENTITY(speaker, new)
-		self.customphysics = Empty;
-		break;
-	case ENT_TRACKTRAIN:
-		NSENTITY_READENTITY(func_tracktrain, new)
-		break;
-	case ENT_VEHICLE:
-		NSENTITY_READENTITY(ncVehicle, new)
-		break;
-	case ENT_PORTAL:
-		NSENTITY_READENTITY(ncPortal, new)
-		break;
-	case ENT_VEH_SEAT:
-		NSENTITY_READENTITY(ncVehicleSeat, new)
-		break;
-	case ENT_VEH_BRUSH:
-		NSENTITY_READENTITY(func_vehicle, new)
-		break;
-	case ENT_VEH_TANKMORTAR:
-		NSENTITY_READENTITY(func_tankmortar, new)
-		break;
-	case ENT_VEH_4WHEEL:
-		NSENTITY_READENTITY(prop_vehicle_driveable, new)
-		break;
-	case ENT_ANIMATIONMANAGER:
-		NSENTITY_READENTITY(ncAnimationManager, new)
-		break;
-	case ENT_PLAYER:
-		ncPlayer pl = (ncPlayer)self;
+    switch (type) {
+    case ENT_ENTITY:
+        NSENTITY_READENTITY(ncEntity, new)
+        break;
+    case ENT_SOUND:
+        NSENTITY_READENTITY(ncSound, new)
+        break;
+    case ENT_PMOVEVARS:
+        NSENTITY_READENTITY(ncPMoveVars, new)
+        break;
+    case ENT_ENTITYRENDERABLE:
+        NSENTITY_READENTITY(ncRenderableEntity, new)
+        break;
+    case ENT_RAGDOLL:
+        NSENTITY_READENTITY(ncRagdoll, new)
+        break;
+    case ENT_SURFPROP:
+        NSENTITY_READENTITY(ncSurfacePropEntity, new)
+        break;
+    case ENT_BEAM:
+        NSENTITY_READENTITY(env_beam, new)
+        break;
+    case ENT_FUNNEL:
+        NSENTITY_READENTITY(env_funnel, new)
+        break;
+    case ENT_SMOKER:
+        NSENTITY_READENTITY(env_smoker, new)
+        break;
+    case ENT_LASER:
+        NSENTITY_READENTITY(env_laser, new)
+        break;
+    case ENT_PHYSICS:
+        NSENTITY_READENTITY(ncPhysicsEntity, new)
+        break;
+    case ENT_MONSTER:
+        NSENTITY_READENTITY(ncMonster, new)
+        self.customphysics = Empty;
+        break;
+    case ENT_TALKMONSTER:
+        NSENTITY_READENTITY(ncTalkMonster, new)
+        self.customphysics = Empty;
+        break;
+    case ENT_SPEAKER:
+        NSENTITY_READENTITY(speaker, new)
+        self.customphysics = Empty;
+        break;
+    case ENT_TRACKTRAIN:
+        NSENTITY_READENTITY(func_tracktrain, new)
+        break;
+    case ENT_VEHICLE:
+        NSENTITY_READENTITY(ncVehicle, new)
+        break;
+    case ENT_PORTAL:
+        NSENTITY_READENTITY(ncPortal, new)
+        break;
+    case ENT_VEH_SEAT:
+        NSENTITY_READENTITY(ncVehicleSeat, new)
+        break;
+    case ENT_VEH_BRUSH:
+        NSENTITY_READENTITY(func_vehicle, new)
+        break;
+    case ENT_VEH_TANKMORTAR:
+        NSENTITY_READENTITY(func_tankmortar, new)
+        break;
+    case ENT_VEH_4WHEEL:
+        NSENTITY_READENTITY(prop_vehicle_driveable, new)
+        break;
+    case ENT_ANIMATIONMANAGER:
+        NSENTITY_READENTITY(ncAnimationManager, new)
+        break;
+    case ENT_PLAYER:
+        ncPlayer pl = (ncPlayer)self;
 
-		if (new) {
-			spawnfunc_ncPlayer();
-		}
+        if (new) {
+            spawnfunc_ncPlayer();
+        }
 
-		/* splitscreen */
-		CSQC_UpdateSeat();
-		self.customphysics = Empty;
+        /* splitscreen */
+        CSQC_UpdateSeat();
+        self.customphysics = Empty;
 
-		Predict_EntityUpdate(pl, new);
+        Predict_EntityUpdate(pl, new);
 
-		/* any differences in things that are read below are now
-		   officially from prediction misses. */
-		float a = readfloat();
-		pl.ReceiveEntity(new, a);
-		break;
-	case ENT_SPECTATOR:
-		Spectator_ReadEntity(new);
-		break;
-	case ENT_SPRITE:
-		NSENTITY_READENTITY(env_sprite, new)
-		break;
-	case ENT_GLOW:
-		NSENTITY_READENTITY(env_glow, new)
-		break;
-	case ENT_SPRAY:
-		Spray_Parse();
-		break;
-	case ENT_SPRAYVIDEO:
-		NSENTITY_READENTITY(ncUserEntity_Video, new)
-		break;
-	case ENT_SPRAYAUDIO:
-		NSENTITY_READENTITY(ncUserEntity_Audio, new)
-		break;
-	case ENT_SPRAYIMAGE:
-		NSENTITY_READENTITY(ncUserEntity_Picture, new)
-		break;
-	case ENT_SPRAYWWW:
-		NSENTITY_READENTITY(ncUserEntity_URL, new)
-		break;
-	case ENT_USERENTITY:
-		NSENTITY_READENTITY(ncUserEntity_GameEntity, new)
-		break;
-	case ENT_USEROBJECT:
-		NSENTITY_READENTITY(ncUserEntity_Object, new)
-		break;
-	case ENT_DECAL:
-		Decal_Parse();
-		break;
+        /* any differences in things that are read below are now
+           officially from prediction misses. */
+        float a = readfloat();
+        pl.ReceiveEntity(new, a);
+        break;
+    case ENT_SPECTATOR:
+        Spectator_ReadEntity(new);
+        break;
+    case ENT_SPRITE:
+        NSENTITY_READENTITY(env_sprite, new)
+        break;
+    case ENT_GLOW:
+        NSENTITY_READENTITY(env_glow, new)
+        break;
+    case ENT_SPRAY:
+        Spray_Parse();
+        break;
+    case ENT_SPRAYVIDEO:
+        NSENTITY_READENTITY(ncUserEntity_Video, new)
+        break;
+    case ENT_SPRAYAUDIO:
+        NSENTITY_READENTITY(ncUserEntity_Audio, new)
+        break;
+    case ENT_SPRAYIMAGE:
+        NSENTITY_READENTITY(ncUserEntity_Picture, new)
+        break;
+    case ENT_SPRAYWWW:
+        NSENTITY_READENTITY(ncUserEntity_URL, new)
+        break;
+    case ENT_USERENTITY:
+        NSENTITY_READENTITY(ncUserEntity_GameEntity, new)
+        break;
+    case ENT_USEROBJECT:
+        NSENTITY_READENTITY(ncUserEntity_Object, new)
+        break;
+    case ENT_DECAL:
+        Decal_Parse();
+        break;
     case ENT_AMBIENTMUSIC:
         NSENTITY_READENTITY(ambient_music, new)
         break;
-	case ENT_AMBIENTSOUND:
-		NSENTITY_READENTITY(ambient_generic, new)
-		break;
-	case ENT_OLDCAMERA:
-		NSENTITY_READENTITY(trigger_camera, new)
-		break;
-	case ENT_MONITOR:
-		NSENTITY_READENTITY(func_monitor, new)
-		break;
-	case ENT_DLIGHT:
-		NSENTITY_READENTITY(light_dynamic, new)
-		break;
-	case ENT_PROJECTEDTEXTURE:
-		NSENTITY_READENTITY(env_projectedtexture, new)
-		break;
-	case ENT_SPOTLIGHT:
-		NSENTITY_READENTITY(point_spotlight, new)
-		break;
-	case ENT_FOG:
-		NSENTITY_READENTITY(env_fog, new)
-		break;
-	case ENT_STEAM:
-		NSENTITY_READENTITY(env_steam, new)
-		break;
-	case ENT_RAIN:
-		NSENTITY_READENTITY(env_rain, new)
-		break;
-	case ENT_FOGCONTROLLER:
-		NSENTITY_READENTITY(env_fog_controller, new)
-		break;
-	case ENT_CASCADELIGHT:
-		NSENTITY_READENTITY(env_cascade_light, new)
-		break;
-	case ENT_PARTSYSTEM:
-		NSENTITY_READENTITY(info_particle_system, new)
-		break;
-	case ENT_PROPROPE:
-		NSENTITY_READENTITY(prop_rope, new)
-		break;
-	case ENT_PHYSROPE:
-		NSENTITY_READENTITY(phys_rope, new)
-		break;
-	case ENT_BUBBLES:
-		NSENTITY_READENTITY(env_bubbles, new)
-		break;
-	case ENT_CONVEYOR:
-		NSENTITY_READENTITY(func_conveyor, new)
-		break;
-	case ENT_WAYPOINT:
-		NSENTITY_READENTITY(info_waypoint, new)
-		break;
-	case ENT_HUDCOUNTER:
-		NSENTITY_READENTITY(env_hudcounter, new)
-		break;
-	case ENT_INSTRUCTOR:
-		NSENTITY_READENTITY(env_instructor_hint, new)
-		break;
-	case ENT_PUSH:
-		NSENTITY_READENTITY(trigger_push, new)
-		break;
-	case ENT_ITEM:
-		NSENTITY_READENTITY(ncItem, new)
-		break;
-	case ENT_WEAPON:
-		NSENTITY_READENTITY(ncWeapon, new)
-		break;
-	case ENT_ENTITYPROJECTILE:
-		NSENTITY_READENTITY(ncProjectile, new)
-		break;
-	case ENT_SOUNDSCAPE:
-		NSENTITY_READENTITY(ncSoundScape, new)
-		break;
-	case ENT_MEDIASURFACE:
-		NSENTITY_READENTITY(ncMediaSurface, new)
-		break;
-	case ENT_UISURFACE:
-		NSENTITY_READENTITY(ncInteractiveSurface, new)
-		break;
-	case ENT_TVCHANNEL:
-		NSENTITY_READENTITY(ncAVTransmitter, new)
-		break;
-	case ENT_AVRECEIVER:
-		NSENTITY_READENTITY(ncAVReceiver, new)
-		break;
-	case ENT_SECURITYCAMERA:
-		NSENTITY_READENTITY(ncSecurityCamera, new)
-		break;
-	case ENT_VIDEODISPLAY:
-		NSENTITY_READENTITY(ncVideoDisplay, new)
-		break;
-	case ENT_XTERMINAL:
-		NSENTITY_READENTITY(ncXTerminal, new)
-		break;
-	case ENT_DESKTOPCOMPUTER:
-		NSENTITY_READENTITY(ncComputerDesktop, new)
-		break;
-	case ENT_INPUTDEVICE:
-		NSENTITY_READENTITY(ncInputDevice, new)
-		break;
-    case ENT_MEDIASOURCE:
-		NSENTITY_READENTITY(ncMediaSource, new)
+    case ENT_AMBIENTSOUND:
+        NSENTITY_READENTITY(ambient_generic, new)
         break;
-	default:
-			//error(sprintf("Unknown entity type update received. (%d)\n", t));
-	}
+    case ENT_OLDCAMERA:
+        NSENTITY_READENTITY(trigger_camera, new)
+        break;
+    case ENT_MONITOR:
+        NSENTITY_READENTITY(func_monitor, new)
+        break;
+    case ENT_DLIGHT:
+        NSENTITY_READENTITY(light_dynamic, new)
+        break;
+    case ENT_PROJECTEDTEXTURE:
+        NSENTITY_READENTITY(env_projectedtexture, new)
+        break;
+    case ENT_SPOTLIGHT:
+        NSENTITY_READENTITY(point_spotlight, new)
+        break;
+    case ENT_FOG:
+        NSENTITY_READENTITY(env_fog, new)
+        break;
+    case ENT_STEAM:
+        NSENTITY_READENTITY(env_steam, new)
+        break;
+    case ENT_RAIN:
+        NSENTITY_READENTITY(env_rain, new)
+        break;
+    case ENT_FOGCONTROLLER:
+        NSENTITY_READENTITY(env_fog_controller, new)
+        break;
+    case ENT_CASCADELIGHT:
+        NSENTITY_READENTITY(env_cascade_light, new)
+        break;
+    case ENT_PARTSYSTEM:
+        NSENTITY_READENTITY(info_particle_system, new)
+        break;
+    case ENT_PROPROPE:
+        NSENTITY_READENTITY(prop_rope, new)
+        break;
+    case ENT_PHYSROPE:
+        NSENTITY_READENTITY(phys_rope, new)
+        break;
+    case ENT_BUBBLES:
+        NSENTITY_READENTITY(env_bubbles, new)
+        break;
+    case ENT_CONVEYOR:
+        NSENTITY_READENTITY(func_conveyor, new)
+        break;
+    case ENT_WAYPOINT:
+        NSENTITY_READENTITY(info_waypoint, new)
+        break;
+    case ENT_HUDCOUNTER:
+        NSENTITY_READENTITY(env_hudcounter, new)
+        break;
+    case ENT_INSTRUCTOR:
+        NSENTITY_READENTITY(env_instructor_hint, new)
+        break;
+    case ENT_PUSH:
+        NSENTITY_READENTITY(trigger_push, new)
+        break;
+    case ENT_ITEM:
+        NSENTITY_READENTITY(ncItem, new)
+        break;
+    case ENT_WEAPON:
+        NSENTITY_READENTITY(ncWeapon, new)
+        break;
+    case ENT_ENTITYPROJECTILE:
+        NSENTITY_READENTITY(ncProjectile, new)
+        break;
+    case ENT_SOUNDSCAPE:
+        NSENTITY_READENTITY(ncSoundScape, new)
+        break;
+    case ENT_MEDIASURFACE:
+        NSENTITY_READENTITY(ncMediaSurface, new)
+        break;
+    case ENT_UISURFACE:
+        NSENTITY_READENTITY(ncInteractiveSurface, new)
+        break;
+    case ENT_TVCHANNEL:
+        NSENTITY_READENTITY(ncAVTransmitter, new)
+        break;
+    case ENT_AVRECEIVER:
+        NSENTITY_READENTITY(ncAVReceiver, new)
+        break;
+    case ENT_SECURITYCAMERA:
+        NSENTITY_READENTITY(ncSecurityCamera, new)
+        break;
+    case ENT_VIDEODISPLAY:
+        NSENTITY_READENTITY(ncVideoDisplay, new)
+        break;
+    case ENT_XTERMINAL:
+        NSENTITY_READENTITY(ncXTerminal, new)
+        break;
+    case ENT_DESKTOPCOMPUTER:
+        NSENTITY_READENTITY(ncComputerDesktop, new)
+        break;
+    case ENT_INPUTDEVICE:
+        NSENTITY_READENTITY(ncInputDevice, new)
+        break;
+    case ENT_MEDIASOURCE:
+        NSENTITY_READENTITY(ncMediaSource, new)
+        break;
+    default:
+            //error(sprintf("Unknown entity type update received. (%d)\n", t));
+    }
 }
 
 float
 Entities_ParseLump(void)
 {
-	entity eOld;
-	ncEntity eEnt = __NULL__;
-	string strField, strValue;
-	__fullspawndata = "";
-	int iClass = FALSE;
+    entity eOld;
+    ncEntity eEnt = __NULL__;
+    string strField, strValue;
+    __fullspawndata = "";
+    int iClass = FALSE;
 
-	eOld = self;
+    eOld = self;
 
-	while (1) {
-		strField = getentitytoken();
+    while (1) {
+        strField = getentitytoken();
 
-		if (!strField) {
-			break;
-		}
+        if (!strField) {
+            break;
+        }
 
-		if (strField == "}") {
-			/* invalid entity */
-			if (!eEnt.classname) {
-				break;
-			}
+        if (strField == "}") {
+            /* invalid entity */
+            if (!eEnt.classname) {
+                break;
+            }
 
-			/* remove if we've found no valid class to go with us */
-			if (eEnt && eEnt.isCSQC == false) {
-				remove(eEnt);
-			}
+            /* remove if we've found no valid class to go with us */
+            if (eEnt && eEnt.isCSQC == false) {
+                remove(eEnt);
+            }
 
-			if (eEnt.identity) {
-				if (eEnt.CanSpawn(true) == false) {
-					eEnt.Destroy();
-				}
+            if (eEnt.identity) {
+                if (eEnt.CanSpawn(true) == false) {
+                    eEnt.Destroy();
+                }
 
-				eEnt.m_rawSpawnData = __fullspawndata;
+                eEnt.m_rawSpawnData = __fullspawndata;
 
-				/* this entity is good, attempt to spawn it. */
-				if (eEnt.m_rawSpawnData) {
-					for (int i = 0; i < (tokenize(eEnt.m_rawSpawnData) - 1); i += 2) {
-						eEnt.SpawnKey(argv(i), argv(i+1));
-					}
-				}
+                /* this entity is good, attempt to spawn it. */
+                if (eEnt.m_rawSpawnData) {
+                    for (int i = 0; i < (tokenize(eEnt.m_rawSpawnData) - 1); i += 2) {
+                        eEnt.SpawnKey(argv(i), argv(i+1));
+                    }
+                }
 
-				eEnt.Spawned();
-				__fullspawndata = "";
-			}
+                eEnt.Spawned();
+                __fullspawndata = "";
+            }
 
-			return (1);
-		}
+            return (1);
+        }
 
-		strValue = getentitytoken();
-		if (!strValue) {
-			break;
-		}
+        strValue = getentitytoken();
+        if (!strValue) {
+            break;
+        }
 
-		switch (strField) {
-		case "{":
-		case "}":
-			break;
-		case "classname":
-			eEnt = (ncEntity)spawn();
+        switch (strField) {
+        case "{":
+        case "}":
+            break;
+        case "classname":
+            eEnt = (ncEntity)spawn();
 
-			/* check if our classname has a matching class */
-			if (isfunction(strcat("spawnfunc_", strValue))) {
-				self = eEnt;
-				self._mapspawned = true;
-				callfunction(strcat("spawnfunc_", strValue));
-				self = eOld;
-				iClass = TRUE;
-			} else {
-				eEnt.classname = strValue;
-			}
-			break;
-		default:
-			__fullspawndata = sprintf("%s\"%s\" \"%s\" ",
-				__fullspawndata, strField, strValue);
-			break;
-		}
-	}
+            /* check if our classname has a matching class */
+            if (isfunction(strcat("spawnfunc_", strValue))) {
+                self = eEnt;
+                self._mapspawned = true;
+                callfunction(strcat("spawnfunc_", strValue));
+                self = eOld;
+                iClass = TRUE;
+            } else {
+                eEnt.classname = strValue;
+            }
+            break;
+        default:
+            __fullspawndata = sprintf("%s\"%s\" \"%s\" ",
+                __fullspawndata, strField, strValue);
+            break;
+        }
+    }
 
-	return (0);
+    return (0);
 }
 
 void
 Entities_ReloadVideoResources(void)
 {
-	int c = 0i;
-	int f = 0i;
-	int v = 0i;
+    int c = 0i;
+    int f = 0i;
+    int v = 0i;
 
-	for (entity b = world; (b = findfloat(b, ::isCSQC, TRUE));) {
-		ncEntity pf = (ncEntity) b;
+    for (entity b = world; (b = findfloat(b, ::isCSQC, TRUE));) {
+        ncEntity pf = (ncEntity) b;
 
-		if (pf.m_nuclideFlags & VFL_VIDREMOVE) {
-			pf.Destroy();
-			f++;
-		} else {
-			pf.ReloadVideoResources();
-			c++;
-		}
-	}
+        if (pf.m_nuclideFlags & VFL_VIDREMOVE) {
+            pf.Destroy();
+            f++;
+        } else {
+            pf.ReloadVideoResources();
+            c++;
+        }
+    }
 
-	for (entity b = world; (b = findfloat(b, ::isVGUI, TRUE));) {
-		vguiWidget pf = (vguiWidget) b;
-		pf.ReloadVideoResources();
-		v++;
-	}
+    for (entity b = world; (b = findfloat(b, ::isVGUI, TRUE));) {
+        vguiWidget pf = (vguiWidget) b;
+        pf.ReloadVideoResources();
+        v++;
+    }
 
-	ncLog("...resource reload called on %i entities, flushed %i", c, f);
-	ncLog("...reloaded %i vgui widgets", v);
+    ncLog("...resource reload called on %i entities, flushed %i", c, f);
+    ncLog("...reloaded %i vgui widgets", v);
 }

@@ -36,11 +36,11 @@ with the **.sndshd** file extension inside the `sound/` directory.
 ```
   c1_sentry_loader_in
   {
-    dist_min	10
-    dist_max	25
+    dist_min    10
+    dist_max    25
   
     no_occlusion
-    volume	0.25
+    volume  0.25
   
     sample sound/movers/comm1/sentry_loader_in.wav
   }
@@ -60,9 +60,9 @@ Let's take a look at another one:
 ```
   emetal_impacts
   {
-    dist_min	5
-    dist_max	45
-    volume	0.5
+    dist_min    5
+    dist_max    45
+    volume  0.5
   
     sample sound/impact/ambient_impacts/emetal_01.wav
     sample sound/impact/ambient_impacts/emetal_02.wav
@@ -117,14 +117,14 @@ var logLevel_t autocvar_s_logLevel = LOGLEVEL_DEFAULT;
 void
 _SndLog(string functionName, string msg)
 {
-	if (autocvar_g_logTimestamps)
-		print(sprintf("^9%f ^xF50%s^7: %s\n", time, functionName, msg));
-	else
-		print(sprintf("^xF50%s^7: %s\n", functionName, msg));
+    if (autocvar_g_logTimestamps)
+        print(sprintf("^9%f ^xF50%s^7: %s\n", time, functionName, msg));
+    else
+        print(sprintf("^xF50%s^7: %s\n", functionName, msg));
 }
 
 /** Logs an sound system specific log message.
-	 The console variable `s_developer` has to be `1` for them to be visible.
+     The console variable `s_developer` has to be `1` for them to be visible.
 
 @param ... contains a formatted string containing a description. */
 #define SndLog(...) if (autocvar_s_logLevel >= LOGLEVEL_DEBUG) _SndLog(__FUNC__, sprintf(__VA_ARGS__))
@@ -132,14 +132,14 @@ _SndLog(string functionName, string msg)
 void
 _SndEntLog(string className, string functionName, float edictNum, string warnMessage)
 {
-	if (autocvar_g_logTimestamps)
-		print(sprintf("^9%f ^xF50%s (id: %d)^7: %s\n", time, functionName, edictNum, warnMessage));
-	else
-		print(sprintf("^xF50%s (id: %d)^7: %s\n", functionName, edictNum, warnMessage));
+    if (autocvar_g_logTimestamps)
+        print(sprintf("^9%f ^xF50%s (id: %d)^7: %s\n", time, functionName, edictNum, warnMessage));
+    else
+        print(sprintf("^xF50%s (id: %d)^7: %s\n", functionName, edictNum, warnMessage));
 }
 
 /** Logs an sound specific entity class log message.
-	 The console variable `s_developer` has to be `1` for them to be visible.
+     The console variable `s_developer` has to be `1` for them to be visible.
 
 @param ... contains a formatted string containing a description. */
 #define SndEntLog(...) if (autocvar_s_logLevel >= LOGLEVEL_DEBUG) _SndEntLog(classname, __FUNC__, num_for_edict(this), sprintf(__VA_ARGS__))
@@ -147,9 +147,9 @@ _SndEntLog(string className, string functionName, float edictNum, string warnMes
 /** A sound sample of a sentences.txt word sequence. */
 typedef struct
 {
-	string m_strSnd;
-	float m_flLength;
-	float m_flPitch;
+    string m_strSnd;
+    float m_flLength;
+    float m_flPitch;
 } sound_t;
 
 /** Called by the client inside CSQC_Init(), and on the server inside init(). */

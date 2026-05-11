@@ -21,71 +21,71 @@ static vguiScrollBar scrlSaves;
 static void
 LoadGame_Play ( void )
 {
-	string strSong;
-	strSong = lsbSaves.GetItem( lsbSaves.GetSelected() );
-	localcmd( sprintf( "load %s\n", strSong) );
+    string strSong;
+    strSong = lsbSaves.GetItem( lsbSaves.GetSelected() );
+    localcmd( sprintf( "load %s\n", strSong) );
 }
 
 static void
 LoadGame_ScrollUpdate ( void )
 {
-	scrlSaves.SetValue( lsbSaves.GetOffset() );
+    scrlSaves.SetValue( lsbSaves.GetOffset() );
 }
 
 static void
 LoadGame_ListUpdate ( void )
 {
-	lsbSaves.SetOffset( scrlSaves.GetValue(), FALSE );
+    lsbSaves.SetOffset( scrlSaves.GetValue(), FALSE );
 }
 
 
 void UI_LoadGame_Show ( void )
 {
-	static vguiPanel winLoadGame;
-	static vguiButton btnLoad;
+    static vguiPanel winLoadGame;
+    static vguiButton btnLoad;
 
-	if (Saves_GetSaveCount() < 1) {
+    if (Saves_GetSaveCount() < 1) {
         vguiWindow alertPanel = vguiPopups::NewAlertPanel("No saved games found", "There are no saves\navailable for the current profile.");
         g_uiDesktop.Add(alertPanel);
-		return;
-	}
+        return;
+    }
 
-	if ( !g_iLoadGameInitialized ) {
-		g_iLoadGameInitialized = TRUE;
-		winLoadGame = spawn( vguiPanel );
-		winLoadGame.SetTitle( "Load Game" );
-		winLoadGame.SetSize( [256,180] );
-		winLoadGame.SetIcon( "gfx/icon16/music" );
+    if ( !g_iLoadGameInitialized ) {
+        g_iLoadGameInitialized = TRUE;
+        winLoadGame = spawn( vguiPanel );
+        winLoadGame.SetTitle( "Load Game" );
+        winLoadGame.SetSize( [256,180] );
+        winLoadGame.SetIcon( "gfx/icon16/music" );
 
-		lsbSaves = spawn( vguiList );
-		lsbSaves.SetSize( [192, 96] );
-		lsbSaves.SetPos( [8, 32] );
-		lsbSaves.CallOnScroll( LoadGame_ScrollUpdate );
+        lsbSaves = spawn( vguiList );
+        lsbSaves.SetSize( [192, 96] );
+        lsbSaves.SetPos( [8, 32] );
+        lsbSaves.CallOnScroll( LoadGame_ScrollUpdate );
 
-		scrlSaves = spawn( vguiScrollBar );
-		scrlSaves.SetLength( 96 );
-		scrlSaves.SetPos( [201,32] );
-		scrlSaves.SetMin( 0 );
-		scrlSaves.SetStep( 1 );
-		scrlSaves.CallOnChange( LoadGame_ListUpdate );
+        scrlSaves = spawn( vguiScrollBar );
+        scrlSaves.SetLength( 96 );
+        scrlSaves.SetPos( [201,32] );
+        scrlSaves.SetMin( 0 );
+        scrlSaves.SetStep( 1 );
+        scrlSaves.CallOnChange( LoadGame_ListUpdate );
 
-		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "Load" );
-		btnLoad.SetIcon( "gfx/icon16/book_edit" );
-		btnLoad.SetPos( [8,132] );
-		btnLoad.SetSize([64,24]);
-		btnLoad.SetFunc( LoadGame_Play );
+        btnLoad = spawn( vguiButton );
+        btnLoad.SetTitle( "Load" );
+        btnLoad.SetIcon( "gfx/icon16/book_edit" );
+        btnLoad.SetPos( [8,132] );
+        btnLoad.SetSize([64,24]);
+        btnLoad.SetFunc( LoadGame_Play );
 
-		g_uiDesktop.Add( winLoadGame );
-		winLoadGame.Add( lsbSaves );
-		winLoadGame.Add( scrlSaves );
-		winLoadGame.Add( btnLoad );
+        g_uiDesktop.Add( winLoadGame );
+        winLoadGame.Add( lsbSaves );
+        winLoadGame.Add( scrlSaves );
+        winLoadGame.Add( btnLoad );
 
-		SavesCallback_EntriesUpdated();
-	}
+        SavesCallback_EntriesUpdated();
+    }
 
-	winLoadGame.Show();
-	winLoadGame.SetPos( ( g_vidsize / 2 ) - ( winLoadGame.GetSize() / 2 ) );
+    winLoadGame.Show();
+    winLoadGame.SetPos( ( g_vidsize / 2 ) - ( winLoadGame.GetSize() / 2 ) );
 }
 
 void
@@ -95,13 +95,13 @@ SavesCallback_EntriesUpdated(void)
         return;
     }
 
-	lsbSaves.RemoveAllItems();
-	lsbSaves.SetItemCount( Saves_GetSaveCount() );
-	lsbSaves.CallOnScroll( LoadGame_ScrollUpdate );
+    lsbSaves.RemoveAllItems();
+    lsbSaves.SetItemCount( Saves_GetSaveCount() );
+    lsbSaves.CallOnScroll( LoadGame_ScrollUpdate );
 
-	for ( int i = 0; i < Saves_GetSaveCount(); i++ ) {
-		lsbSaves.AddItem( Saves_GetInfo(i, SAVEINFO_NAME) );
-	}
+    for ( int i = 0; i < Saves_GetSaveCount(); i++ ) {
+        lsbSaves.AddItem( Saves_GetInfo(i, SAVEINFO_NAME) );
+    }
 
-	scrlSaves.SetMax( lsbSaves.GetMaxVisibleItems() );
+    scrlSaves.SetMax( lsbSaves.GetMaxVisibleItems() );
 }

@@ -17,50 +17,50 @@
 void
 vguiRootWindow::vguiRootWindow(void)
 {
-	m_focusedWidget = 0;
+    m_focusedWidget = 0;
 }
 
 vguiWidget
 vguiRootWindow::GetFocusedWidget(void)
 {
-	return (m_focusedWidget);
+    return (m_focusedWidget);
 }
 
 void
 vguiRootWindow::SetFocus(vguiWidget focusedWidget)
 {
-	m_focusedWidget = focusedWidget;
+    m_focusedWidget = focusedWidget;
 }
 
 void
 vguiRootWindow::SetFocusToNextWindow(void)
 {
-	vguiWidget prevWidget = m_focusedWidget.m_rootPrev;
-	m_focusedWidget = m_focusedWidget.m_rootNext;
+    vguiWidget prevWidget = m_focusedWidget.m_rootPrev;
+    m_focusedWidget = m_focusedWidget.m_rootNext;
 
-	if (!m_focusedWidget || wasfreed(m_focusedWidget)) {
-		m_focusedWidget = prevWidget;
-	}
+    if (!m_focusedWidget || wasfreed(m_focusedWidget)) {
+        m_focusedWidget = prevWidget;
+    }
 
-	if (!m_focusedWidget || wasfreed(m_focusedWidget)) {
-		m_focusedWidget = __NULL__;
-	}
+    if (!m_focusedWidget || wasfreed(m_focusedWidget)) {
+        m_focusedWidget = __NULL__;
+    }
 }
 
 void
 vguiRootWindow::Add(vguiWidget wNew)
 {
-	wNew.m_parent = this;
+    wNew.m_parent = this;
 }
 
 void
 vguiRootWindow::Reposition(void)
 {
-	vguiWidget wNext = this;
+    vguiWidget wNext = this;
 
     for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
         if (widgets.GetParent() == this) {
-			widgets.Reposition();
+            widgets.Reposition();
         }
     }
 }
@@ -68,72 +68,73 @@ vguiRootWindow::Reposition(void)
 vector
 vguiRootWindow::GetMousePos(void)
 {
-	return (m_vecMousePos);
+    return (m_vecMousePos);
 }
 
 bool
 vguiRootWindow::MouseActive(void)
 {
-	return (m_activeWidgetCount != 0) ? (true) : (false);
+    return (m_activeWidgetCount != 0) ? (true) : (false);
 }
 
 void
 vguiRootWindow::Draw(void)
 {
-	m_activeWidgetCount = 0;
-	m_bVisible = true;
+    m_activeWidgetCount = 0;
+    m_bVisible = true;
 
     for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
         if (widgets.GetParent() == this && widgets.Visible()) {
             m_activeWidgetCount++;
 
             if not (m_focusedWidget && widgets == m_focusedWidget) {
-				widgets.Draw();
-			}
+                widgets.Draw();
+            }
         }
     }
 
-	/* avoid recursion. */
-	if (m_focusedWidget == this) {
-		m_focusedWidget = __NULL__;
-	}
+    /* avoid recursion. */
+    if (m_focusedWidget == this) {
+        m_focusedWidget = __NULL__;
+    }
 
-	if (m_focusedWidget) {
-		m_focusedWidget.Draw();
-	}
+    if (m_focusedWidget) {
+        m_focusedWidget.Draw();
+    }
 }
 
 bool
 vguiRootWindow::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	float ret = false;
+    float ret = false;
 
-	vguiWidget wNext = this;
+    vguiWidget wNext = this;
 
-	switch (flEVType) {
-	case IE_KEYDOWN:
-		break;
-	case IE_KEYUP:
-		break;
-	case IE_MOUSEABS:
-		m_vecMousePos[0] = flKey;
-		m_vecMousePos[1] = flChar;
-		break;
-	case IE_MOUSEDELTA:
-		m_vecMousePos[0] += flKey;
-		m_vecMousePos[1] += flChar;
-		break;
-	default:
-		return (true);
-	}
+    switch (flEVType) {
+    case IE_KEYDOWN:
+        break;
+    case IE_KEYUP:
+        break;
+    case IE_MOUSEABS:
+        m_vecMousePos[0] = flKey;
+        m_vecMousePos[1] = flChar;
+        break;
+    case IE_MOUSEDELTA:
+        m_vecMousePos[0] += flKey;
+        m_vecMousePos[1] += flChar;
+        break;
+    default:
+        return (true);
+    }
 
 
-	if (m_focusedWidget) {
-		ret = m_focusedWidget.Input(flEVType, flKey, flChar, flDevID);
-	}
+    if (m_focusedWidget) {
+        ret = m_focusedWidget.Input(flEVType, flKey, flChar, flDevID);
+    }
 
-	if (ret == false) {
+    if (ret == false) {
         for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
+            if (widgets != m_focusedWidget)
             if (widgets.GetParent() == this && widgets.Visible()) {
                 ret = widgets.Input(flEVType, flKey, flChar, flDevID);
 
@@ -143,7 +144,7 @@ vguiRootWindow::Input (float flEVType, float flKey, float flChar, float flDevID)
             }
         }
 
-	}
+    }
 
-	return (false);
+    return (false);
 }

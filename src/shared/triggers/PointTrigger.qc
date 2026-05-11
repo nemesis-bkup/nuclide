@@ -22,21 +22,21 @@ ncPointTrigger::ncPointTrigger(void)
 void
 ncPointTrigger::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 }
 
 void
 ncPointTrigger::InitPointTrigger(void)
 {
-	SetOrigin(GetSpawnVector("origin"));
-	SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
+    SetOrigin(GetSpawnVector("origin"));
+    SetSize(VEC_HULL_MIN, VEC_HULL_MAX);
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
 
 #ifdef SERVER
-	RestoreAngles();
-	m_triggerEnabled = (m_triggerStartsDisabled) ? false : true;
-	_RelinkToSpawnParent();
+    RestoreAngles();
+    m_triggerEnabled = (m_triggerStartsDisabled) ? false : true;
+    _RelinkToSpawnParent();
 #endif
 }
 
@@ -44,6 +44,6 @@ void
 ncPointTrigger::DebugDraw(void)
 {
 #ifdef SERVER
-	super::DebugDraw();
+    super::DebugDraw();
 #endif
 }

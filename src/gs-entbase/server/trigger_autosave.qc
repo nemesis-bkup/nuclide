@@ -33,80 +33,80 @@ class
 trigger_autosave:ncBrushTrigger
 {
 public:
-	void trigger_autosave(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
+    void trigger_autosave(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
 
 private:
-	float m_flDelay;
+    float m_flDelay;
 };
 
 void
 trigger_autosave::trigger_autosave(void)
 {
-	m_flDelay = 0.0f;
+    m_flDelay = 0.0f;
 }
 
 void
 trigger_autosave::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
+    super::Save(handle);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
 }
 
 void
 trigger_autosave::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_autosave::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (cvar("sv_playerslots") > 1) {
-		Destroy();
-		return;
-	}
+    if (cvar("sv_playerslots") > 1) {
+        Destroy();
+        return;
+    }
 }
 
 void
 trigger_autosave::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 trigger_autosave::Touch(entity eToucher)
 {
-	if (GetMaster(eToucher) == FALSE)
-		return;
+    if (GetMaster(eToucher) == FALSE)
+        return;
 
-	/* saved text */
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_MESSAGE);
-	WriteString(MSG_MULTICAST, "GAMESAVED");
-	WriteString(MSG_MULTICAST, "common/menu2.wav");
-	WriteFloat(MSG_MULTICAST, 1.0);
-	WriteByte(MSG_MULTICAST, ATTN_NONE);
-	msg_entity = this;
-	multicast(origin, MULTICAST_ALL);
+    /* saved text */
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_MESSAGE);
+    WriteString(MSG_MULTICAST, "GAMESAVED");
+    WriteString(MSG_MULTICAST, "common/menu2.wav");
+    WriteFloat(MSG_MULTICAST, 1.0);
+    WriteByte(MSG_MULTICAST, ATTN_NONE);
+    msg_entity = this;
+    multicast(origin, MULTICAST_ALL);
 
-	EntLog("%S called autosave", eToucher.netname);
+    EntLog("%S called autosave", eToucher.netname);
 
-	localcmd("save autosave\n");
-	SetSolid(SOLID_NOT);
+    localcmd("save autosave\n");
+    SetSolid(SOLID_NOT);
 
-	UseTargets(eToucher, TRIG_TOGGLE, m_flDelay);
+    UseTargets(eToucher, TRIG_TOGGLE, m_flDelay);
 }

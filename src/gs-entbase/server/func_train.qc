@@ -16,10 +16,10 @@
 
 enumflags
 {
-	TRAIN_WAIT,
-	TRAIN_UNUSED1,
-	TRAIN_UNUSED2,
-	TRAIN_NOTSOLID
+    TRAIN_WAIT,
+    TRAIN_UNUSED1,
+    TRAIN_UNUSED2,
+    TRAIN_NOTSOLID
 };
 
 /*! \brief Server-Entity: Linear Moving Brush */
@@ -62,343 +62,343 @@ class
 func_train:ncRenderableEntity
 {
 public:
-	void func_train(void);
+    void func_train(void);
 
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 
-	nonvirtual void SoundMove(void);
-	nonvirtual void SoundStop(void);
-	nonvirtual void AfterSpawn(void);
-	nonvirtual void TrainFinishedMoving(void);
-	nonvirtual void MoveTrainToCurrentTarget(void);
-	virtual void Blocked(entity);
+    nonvirtual void SoundMove(void);
+    nonvirtual void SoundStop(void);
+    nonvirtual void AfterSpawn(void);
+    nonvirtual void TrainFinishedMoving(void);
+    nonvirtual void MoveTrainToCurrentTarget(void);
+    virtual void Blocked(entity);
 
 private:
-	float m_flWait;
-	float m_flSpeed;
-	float m_flDamage;
-	float m_flCurrentSpeed;
+    float m_flWait;
+    float m_flSpeed;
+    float m_flDamage;
+    float m_flCurrentSpeed;
 
-	string m_strMoveSnd;
-	string m_strStopSnd;
+    string m_strMoveSnd;
+    string m_strStopSnd;
 };
 
 void
 func_train::func_train(void)
 {
-	m_flWait = 0.0f;
-	m_flSpeed = 0.0f;
-	m_flDamage = 0.0f;
-	m_flCurrentSpeed = 0.0f;
-	m_strMoveSnd = __NULL__;
-	m_strStopSnd = __NULL__;
+    m_flWait = 0.0f;
+    m_flSpeed = 0.0f;
+    m_flDamage = 0.0f;
+    m_flCurrentSpeed = 0.0f;
+    m_strMoveSnd = __NULL__;
+    m_strStopSnd = __NULL__;
 }
 
 void
 func_train::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flWait", m_flWait);
-	SaveFloat(handle, "m_flSpeed", m_flSpeed);
-	SaveFloat(handle, "m_flDamage", m_flDamage);
-	SaveFloat(handle, "m_flCurrentSpeed", m_flCurrentSpeed);
-	SaveString(handle, "m_strMoveSnd", m_strMoveSnd);
-	SaveString(handle, "m_strStopSnd", m_strStopSnd);
+    super::Save(handle);
+    SaveFloat(handle, "m_flWait", m_flWait);
+    SaveFloat(handle, "m_flSpeed", m_flSpeed);
+    SaveFloat(handle, "m_flDamage", m_flDamage);
+    SaveFloat(handle, "m_flCurrentSpeed", m_flCurrentSpeed);
+    SaveString(handle, "m_strMoveSnd", m_strMoveSnd);
+    SaveString(handle, "m_strStopSnd", m_strStopSnd);
 }
 
 void
 func_train::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flWait":
-		m_flWait = ReadFloat(setValue);
-		break;
-	case "m_flSpeed":
-		m_flSpeed = ReadFloat(setValue);
-		break;
-	case "m_flDamage":
-		m_flDamage = ReadFloat(setValue);
-		break;
-	case "m_flCurrentSpeed":
-		m_flCurrentSpeed = ReadFloat(setValue);
-		break;
-	case "m_strMoveSnd":
-		m_strMoveSnd = ReadString(setValue);
-		break;
-	case "m_strStopSnd":
-		m_strStopSnd = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flWait":
+        m_flWait = ReadFloat(setValue);
+        break;
+    case "m_flSpeed":
+        m_flSpeed = ReadFloat(setValue);
+        break;
+    case "m_flDamage":
+        m_flDamage = ReadFloat(setValue);
+        break;
+    case "m_flCurrentSpeed":
+        m_flCurrentSpeed = ReadFloat(setValue);
+        break;
+    case "m_strMoveSnd":
+        m_strMoveSnd = ReadString(setValue);
+        break;
+    case "m_strStopSnd":
+        m_strStopSnd = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_train::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "dmg":
-		m_flDamage = stof(setValue);
-		break;
-	case "snd_move":
-		m_strMoveSnd = setValue;
-		break;
-	case "snd_stop":
-		m_strStopSnd = setValue;
-		break;
-	case "speed":
-		m_flSpeed = ReadFloat(setValue);
-		break;
-	/* compatibility */
-	case "movesnd":
-		m_strMoveSnd = sprintf("func_train.move_%i", stoi(setValue) + 1i);
-		break;
-	case "stopsnd":
-		m_strStopSnd = sprintf("func_train.stop_%i", stoi(setValue) + 1i);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "dmg":
+        m_flDamage = stof(setValue);
+        break;
+    case "snd_move":
+        m_strMoveSnd = setValue;
+        break;
+    case "snd_stop":
+        m_strStopSnd = setValue;
+        break;
+    case "speed":
+        m_flSpeed = ReadFloat(setValue);
+        break;
+    /* compatibility */
+    case "movesnd":
+        m_strMoveSnd = sprintf("func_train.move_%i", stoi(setValue) + 1i);
+        break;
+    case "stopsnd":
+        m_strStopSnd = sprintf("func_train.stop_%i", stoi(setValue) + 1i);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_train::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	precache.Sound(m_strMoveSnd);
-	precache.Sound(m_strStopSnd);
+    precache.Sound(m_strMoveSnd);
+    precache.Sound(m_strStopSnd);
 }
 
 void
 func_train::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetSolid(HasSpawnFlags(TRAIN_NOTSOLID) ? SOLID_NOT : SOLID_BSP);
-	SetMovetype(MOVETYPE_PUSH);
-	m_flWait = 0.0f;
+    SetSolid(HasSpawnFlags(TRAIN_NOTSOLID) ? SOLID_NOT : SOLID_BSP);
+    SetMovetype(MOVETYPE_PUSH);
+    m_flWait = 0.0f;
 
-	/* let's wait 1/4 a second to give the path_corner entities a chance to
-	 * spawn in case they're after us in the ent lump */
-	SetTriggerTarget(GetSpawnString("target"));
-	ScheduleThink(AfterSpawn, 0.25f);
+    /* let's wait 1/4 a second to give the path_corner entities a chance to
+     * spawn in case they're after us in the ent lump */
+    SetTriggerTarget(GetSpawnString("target"));
+    ScheduleThink(AfterSpawn, 0.25f);
 }
 
 void
 func_train::Blocked(entity eBlocker)
 {
-	vector center;
-	vector dmgDir;
-	ncDict damageDecl;
-	ncSurfacePropEntity toAttack = (ncSurfacePropEntity)eBlocker;
+    vector center;
+    vector dmgDir;
+    ncDict damageDecl;
+    ncSurfacePropEntity toAttack = (ncSurfacePropEntity)eBlocker;
 
-	/* HACK: Make corpses gib instantly */
-	if (is.Sentient(eBlocker) && eBlocker.solid == SOLID_CORPSE) {
-		center = WorldSpaceCenter();
-		dmgDir = dirFromTarget(center, eBlocker.origin);
-		damageDecl = spawn(ncDict);
-		damageDecl.AddKey("damage", "500");
-		toAttack.Damage(this, eBlocker, damageDecl, 1.0f, dmgDir, eBlocker.origin);
-		remove(damageDecl);
-		return;
-	}
+    /* HACK: Make corpses gib instantly */
+    if (is.Sentient(eBlocker) && eBlocker.solid == SOLID_CORPSE) {
+        center = WorldSpaceCenter();
+        dmgDir = dirFromTarget(center, eBlocker.origin);
+        damageDecl = spawn(ncDict);
+        damageDecl.AddKey("damage", "500");
+        toAttack.Damage(this, eBlocker, damageDecl, 1.0f, dmgDir, eBlocker.origin);
+        remove(damageDecl);
+        return;
+    }
 
-	if (eBlocker.takedamage != DAMAGE_NO) {
-		center = WorldSpaceCenter();
-		dmgDir = dirFromTarget(center, eBlocker.origin);
-		damageDecl = spawn(ncDict);
-		damageDecl.AddKey("damage", ftos(m_flDamage));
-		toAttack.Damage(this, eBlocker, damageDecl, 1.0f, dmgDir, eBlocker.origin);
-		remove(damageDecl);
-	} else {
-		/* remove(eBlocker); */
-	}
+    if (eBlocker.takedamage != DAMAGE_NO) {
+        center = WorldSpaceCenter();
+        dmgDir = dirFromTarget(center, eBlocker.origin);
+        damageDecl = spawn(ncDict);
+        damageDecl.AddKey("damage", ftos(m_flDamage));
+        toAttack.Damage(this, eBlocker, damageDecl, 1.0f, dmgDir, eBlocker.origin);
+        remove(damageDecl);
+    } else {
+        /* remove(eBlocker); */
+    }
 }
 
 void
 func_train::SoundMove(void)
 {
-	if (m_strMoveSnd) {
-		StartSoundDef(m_strMoveSnd, CHAN_VOICE, true);
-	}
+    if (m_strMoveSnd) {
+        StartSoundDef(m_strMoveSnd, CHAN_VOICE, true);
+    }
 }
 
 void
 func_train::SoundStop(void)
 {
-	if (m_strStopSnd) {
-		StartSoundDef(m_strStopSnd, CHAN_BODY, true);
-	}
+    if (m_strStopSnd) {
+        StartSoundDef(m_strStopSnd, CHAN_BODY, true);
+    }
 
-	if (m_strMoveSnd) {
-		StopSound(CHAN_VOICE, true);
-	}
+    if (m_strMoveSnd) {
+        StopSound(CHAN_VOICE, true);
+    }
 }
 
 void
 func_train::MoveTrainToCurrentTarget(void)
 {
-	path_corner eNode;
-	float flTravelTime;
-	vector vecVelocity;
-	vector vecWorldPos;
+    path_corner eNode;
+    float flTravelTime;
+    vector vecVelocity;
+    vector vecWorldPos;
 
-	if (!HasTriggerTarget()) {
-		EntLog("No target. Won't move.");
-		ClearVelocity();
-		return;
-	}
+    if (!HasTriggerTarget()) {
+        EntLog("No target. Won't move.");
+        ClearVelocity();
+        return;
+    }
 
-	eNode = (path_corner)find(world, ::targetname, target);
+    eNode = (path_corner)find(world, ::targetname, target);
 
-	if (!eNode) {
-		EntError("Target %S does not exist.", target);
-		ClearVelocity();
-		return;
-	}
+    if (!eNode) {
+        EntError("Target %S does not exist.", target);
+        ClearVelocity();
+        return;
+    }
 
-	/* warp */
-	if (eNode.HasSpawnFlags(PC_TELEPORT)) {
+    /* warp */
+    if (eNode.HasSpawnFlags(PC_TELEPORT)) {
         TrainFinishedMoving();
         return;
-	}
+    }
 
 
-	if (!m_flCurrentSpeed) {
-		m_flCurrentSpeed = 100;
-	}
+    if (!m_flCurrentSpeed) {
+        m_flCurrentSpeed = 100;
+    }
 
-	vecWorldPos = WorldSpaceCenter();
-	vecVelocity = (eNode.origin - vecWorldPos);
-	flTravelTime = (vlen(vecVelocity) / m_flCurrentSpeed);
+    vecWorldPos = WorldSpaceCenter();
+    vecVelocity = (eNode.origin - vecWorldPos);
+    flTravelTime = (vlen(vecVelocity) / m_flCurrentSpeed);
 
-	if (flTravelTime <= 0) {
-		EntLog("Distance is 0, advancing to next node.");
-		ClearVelocity();
-		ScheduleThink(TrainFinishedMoving, 0.0f);
-		return;
-	}
+    if (flTravelTime <= 0) {
+        EntLog("Distance is 0, advancing to next node.");
+        ClearVelocity();
+        ScheduleThink(TrainFinishedMoving, 0.0f);
+        return;
+    }
 
-	SoundMove();
-	EntLog("Travelling at %f up/s", m_flCurrentSpeed);
+    SoundMove();
+    EntLog("Travelling at %f up/s", m_flCurrentSpeed);
 
-	SetVelocity(vecVelocity * (1 / flTravelTime));
-	ScheduleThink(TrainFinishedMoving, flTravelTime);
+    SetVelocity(vecVelocity * (1 / flTravelTime));
+    ScheduleThink(TrainFinishedMoving, flTravelTime);
 }
 
 void
 func_train::ArrivedAtNode(path_corner targetNode)
 {
-	if (!targetNode) {
-		return;
-	}
+    if (!targetNode) {
+        return;
+    }
 
-	SetOrigin(targetNode.origin - (mins + maxs) * 0.5);
+    SetOrigin(targetNode.origin - (mins + maxs) * 0.5);
     EntLog("Touched base with path_corner %S", targetNode.targetname);
 
-	/* fire the path_corners' target */
-	targetNode.PathPassTrigger(this, TRIG_TOGGLE);
-	SoundStop();
-	m_flWait = targetNode.DesiredWaitTime();
-	SetTriggerTarget(targetNode.target);
+    /* fire the path_corners' target */
+    targetNode.PathPassTrigger(this, TRIG_TOGGLE);
+    SoundStop();
+    m_flWait = targetNode.DesiredWaitTime();
+    SetTriggerTarget(targetNode.target);
 
-	if (targetNode.DesiredTrainSpeed() > 0.0f) {
-		m_flCurrentSpeed = targetNode.DesiredTrainSpeed();
-	} else {
-		m_flCurrentSpeed = m_flSpeed;
-	}
+    if (targetNode.DesiredTrainSpeed() > 0.0f) {
+        m_flCurrentSpeed = targetNode.DesiredTrainSpeed();
+    } else {
+        m_flCurrentSpeed = m_flSpeed;
+    }
 }
 
 void
 func_train::TrainFinishedMoving(void)
 {
-	path_corner eNode = __NULL__;
+    path_corner eNode = __NULL__;
 
-	/* it's not as critical here to not have a target anymore */
-	if (HasTriggerTarget() == false) {
-		return;
-	}
+    /* it's not as critical here to not have a target anymore */
+    if (HasTriggerTarget() == false) {
+        return;
+    }
 
-	eNode = (path_corner)find(world, ::targetname, target);
+    eNode = (path_corner)find(world, ::targetname, target);
 
-	/* a little more serious, but we don't want to break the map. */
-	if (eNode == __NULL__) {
-		EntError("Target %S does not exist.", target);
-		ClearVelocity();
-		return;
-	}
+    /* a little more serious, but we don't want to break the map. */
+    if (eNode == __NULL__) {
+        EntError("Target %S does not exist.", target);
+        ClearVelocity();
+        return;
+    }
 
-	ArrivedAtNode(eNode);
+    ArrivedAtNode(eNode);
 
-	eNode = (path_corner)find(world, ::targetname, target);
+    eNode = (path_corner)find(world, ::targetname, target);
 
-	/* stop until triggered again */
-	if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
-		SoundStop();
-		return;
-	}
+    /* stop until triggered again */
+    if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
+        SoundStop();
+        return;
+    }
 
-	/* move after delay, or instantly when none is given */
-	if (m_flWait > 0) {
-		ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
-	} else {
-		MoveTrainToCurrentTarget();
-	}
+    /* move after delay, or instantly when none is given */
+    if (m_flWait > 0) {
+        ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
+    } else {
+        MoveTrainToCurrentTarget();
+    }
 }
 
 /* TODO: Handle state? */
 void
 func_train::Trigger(entity act, triggermode_t state)
 {
-	path_corner eNode = (path_corner)find(world, ::targetname, target);
+    path_corner eNode = (path_corner)find(world, ::targetname, target);
 
-	/* warp */
-	if (eNode.HasSpawnFlags(PC_TELEPORT)) {
+    /* warp */
+    if (eNode.HasSpawnFlags(PC_TELEPORT)) {
         ArrivedAtNode(eNode);
-	}
+    }
 
-	/* stop until triggered again */
-	if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
-		SoundStop();
-		return;
-	}
+    /* stop until triggered again */
+    if (eNode.HasSpawnFlags(PC_WAIT) /*|| HasSpawnFlags(TRAIN_WAIT)*/) {
+        SoundStop();
+        return;
+    }
 
-	/* move after delay, or instantly when none is given */
-	if (m_flWait > 0) {
-		ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
-	} else {
-		MoveTrainToCurrentTarget();
-	}
+    /* move after delay, or instantly when none is given */
+    if (m_flWait > 0) {
+        ScheduleThink(MoveTrainToCurrentTarget, m_flWait);
+    } else {
+        MoveTrainToCurrentTarget();
+    }
 }
 
 void
 func_train::AfterSpawn(void)
 {
-	path_corner eNode = __NULL__;
+    path_corner eNode = __NULL__;
 
-	if (HasTriggerTarget() == false) {
-		EntError("No 'target' set. Won't move.");
-		return;
-	}
+    if (HasTriggerTarget() == false) {
+        EntError("No 'target' set. Won't move.");
+        return;
+    }
 
-	eNode = (path_corner)find(world, ::targetname, GetTriggerTarget());
+    eNode = (path_corner)find(world, ::targetname, GetTriggerTarget());
 
-	if (eNode == __NULL__) {
-		EntError("Target %S does not exist. Won't move.", target);
-		return;
-	}
+    if (eNode == __NULL__) {
+        EntError("Target %S does not exist. Won't move.", target);
+        return;
+    }
 
-	ArrivedAtNode(eNode);
+    ArrivedAtNode(eNode);
 
-	/* if we're unable to be triggered by anything, begin moving */
-	if (HasTargetname() == false) {
-		MoveTrainToCurrentTarget();
-	}
+    /* if we're unable to be triggered by anything, begin moving */
+    if (HasTargetname() == false) {
+        MoveTrainToCurrentTarget();
+    }
 }

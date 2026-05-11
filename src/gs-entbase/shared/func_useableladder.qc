@@ -32,18 +32,18 @@ class
 func_useableladder:ncRenderableEntity
 {
 public:
-	void func_useableladder(void);
+    void func_useableladder(void);
 
-	virtual void SpawnKey(string, string);
-	virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
 
 #ifdef SERVER
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 #endif
 
 private:
-	vector m_vecPoint0;
-	vector m_vecPoint1;
+    vector m_vecPoint0;
+    vector m_vecPoint1;
 };
 
 void
@@ -54,53 +54,53 @@ func_useableladder::func_useableladder(void)
 void
 func_useableladder::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "point0":
-		m_vecPoint0 = ReadVector(setValue);
-		break;
-	case "point1":
-		m_vecPoint1 = ReadVector(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "point0":
+        m_vecPoint0 = ReadVector(setValue);
+        break;
+    case "point1":
+        m_vecPoint1 = ReadVector(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 #ifdef SERVER
 void
 func_useableladder::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		SetSolid(SOLID_NOT);
-		break;
-	case TRIG_ON:
-		SetSolid(SOLID_BBOX);
-		break;
-	default:
-		ToggleTrigger();
-		SetSolid(TriggerEnabled() ? SOLID_BBOX : SOLID_NOT);
-	}
+    switch (state) {
+    case TRIG_OFF:
+        SetSolid(SOLID_NOT);
+        break;
+    case TRIG_ON:
+        SetSolid(SOLID_BBOX);
+        break;
+    default:
+        ToggleTrigger();
+        SetSolid(TriggerEnabled() ? SOLID_BBOX : SOLID_NOT);
+    }
 }
 #endif
 
 void
 func_useableladder::Respawn(void)
 {
-	float height;
+    float height;
 
-	if (m_vecPoint0[2] > m_vecPoint1[2]) {
-		SetOrigin(m_vecPoint1);
-		height = m_vecPoint0[2] - m_vecPoint1[2];
-	} else {
-		SetOrigin(m_vecPoint0);
-		height = m_vecPoint1[2] - m_vecPoint0[2];
-	}
+    if (m_vecPoint0[2] > m_vecPoint1[2]) {
+        SetOrigin(m_vecPoint1);
+        height = m_vecPoint0[2] - m_vecPoint1[2];
+    } else {
+        SetOrigin(m_vecPoint0);
+        height = m_vecPoint1[2] - m_vecPoint0[2];
+    }
 
-	/* func_useableladder specifics */
-	SetSize([-16,-16, 0], [16,16, height]);
-	SetMovetype(MOVETYPE_NONE);
-	Hide();
-	SetSolid(SOLID_BBOX);
-	SetSkin(CONTENT_LADDER);
+    /* func_useableladder specifics */
+    SetSize([-16,-16, 0], [16,16, height]);
+    SetMovetype(MOVETYPE_NONE);
+    Hide();
+    SetSolid(SOLID_BBOX);
+    SetSkin(CONTENT_LADDER);
 }

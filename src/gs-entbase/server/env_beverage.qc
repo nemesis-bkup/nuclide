@@ -16,13 +16,13 @@
 
 typedef enum
 {
-	SKIN_COCACOLA = 0,
-	SKIN_SPRITE,
-	SKIN_DIETCOKE,
-	SKIN_ORANGE,
-	SKIN_SURGE,
-	SKIN_MOXIE,
-	SKIN_RANDOM
+    SKIN_COCACOLA = 0,
+    SKIN_SPRITE,
+    SKIN_DIETCOKE,
+    SKIN_ORANGE,
+    SKIN_SURGE,
+    SKIN_MOXIE,
+    SKIN_RANDOM
 } sodaskin_t;
 
 /*! \brief Server-Entity: Health Refuelling Beverage */
@@ -43,13 +43,13 @@ the shape of a soda can.
 Mainly used in vending machines. You can choose a few select types of beverage.
 
 Beverage-list:
-	- 0 : Coca Cola
-	- 1 : Sprite
-	- 2 : Diet Coke
-	- 3 : Orange
-	- 4 : Surge
-	- 5 : Moxie
-	- 6 : Random (will pack one of the above, picked at the start of the map)
+    - 0 : Coca Cola
+    - 1 : Sprite
+    - 2 : Diet Coke
+    - 3 : Orange
+    - 4 : Surge
+    - 5 : Moxie
+    - 6 : Random (will pack one of the above, picked at the start of the map)
 
 # TRIVIA
 This entity was introduced in Half-Life (1998).
@@ -61,107 +61,107 @@ class
 env_beverage:ncRenderableEntity
 {
 public:
-	void env_beverage(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Precache(void);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    void env_beverage(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Precache(void);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
     virtual void Input(entity entityActivator, string inputName, string dataField);
 
 private:
-	int m_usesLeft;
-	sodaskin_t m_sodaSkin;
+    int m_usesLeft;
+    sodaskin_t m_sodaSkin;
 };
 
 void
 env_beverage::env_beverage(void)
 {
-	m_usesLeft = 15;
-	m_sodaSkin = 0;
+    m_usesLeft = 15;
+    m_sodaSkin = 0;
 }
 
 void
 env_beverage::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_usesLeft", m_usesLeft);
-	SaveFloat(handle, "m_sodaSkin", m_sodaSkin);
+    super::Save(handle);
+    SaveInt(handle, "m_usesLeft", m_usesLeft);
+    SaveFloat(handle, "m_sodaSkin", m_sodaSkin);
 }
 
 void
 env_beverage::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_usesLeft":
-		m_usesLeft = ReadInt(setValue);
-		break;
-	case "m_sodaSkin":
-		m_sodaSkin = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_usesLeft":
+        m_usesLeft = ReadInt(setValue);
+        break;
+    case "m_sodaSkin":
+        m_sodaSkin = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_beverage::Input(entity entityActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "SetSkin":
+    switch (inputName) {
+    case "setskin":
         EntLog("Will now produce beverage type %d", m_sodaSkin);
-		m_sodaSkin = stof(dataField);
-		break;
-	default:
-		super::Input(entityActivator, inputName, dataField);
-	}
+        m_sodaSkin = stof(dataField);
+        break;
+    default:
+        super::Input(entityActivator, inputName, dataField);
+    }
 }
 
 void
 env_beverage::Precache(void)
 {
-	precache.Model("models/can.mdl");
-	precache.Sound("weapons/g_bounce3.wav");
+    precache.Model("models/can.mdl");
+    precache.Sound("weapons/g_bounce3.wav");
 }
 
 void
 env_beverage::Respawn(void)
 {
-	SetValue(1i);
-	m_usesLeft = GetSpawnInt("health");
-	m_sodaSkin = GetSpawnInt("skin");
+    SetValue(1i);
+    m_usesLeft = GetSpawnInt("health");
+    m_sodaSkin = GetSpawnInt("skin");
 
-	if (m_usesLeft <= 0) {
-		m_usesLeft = 15;
-	}
+    if (m_usesLeft <= 0) {
+        m_usesLeft = 15;
+    }
 
-	if (m_sodaSkin == SKIN_RANDOM) {
-		m_sodaSkin = rint(random(SKIN_COCACOLA, SKIN_MOXIE));
-	}
+    if (m_sodaSkin == SKIN_RANDOM) {
+        m_sodaSkin = rint(random(SKIN_COCACOLA, SKIN_MOXIE));
+    }
 }
 
 void
 env_beverage::Trigger(entity act, triggermode_t unused)
 {
-	if (GetValue(this) == false) {
+    if (GetValue(this) == false) {
         EntLog("Blocked beverage dispense (Disabled).");
-		return;
-	}
+        return;
+    }
 
-	if (m_usesLeft <= 0) {
+    if (m_usesLeft <= 0) {
         EntLog("Blocked beverage dispense (No uses left).");
-		return;
-	}
+        return;
+    }
 
-	EntLog("Dispensing beverage type", m_sodaSkin);
-	ncEntity eCan = ents.Create("item_sodacan", GetOrigin());
-	eCan.SetAngles(GetAngles());
-	eCan.SetOwner(this);
-	eCan.SetSkin((float)m_sodaSkin);
+    EntLog("Dispensing beverage type", m_sodaSkin);
+    ncEntity eCan = ents.Create("item_sodacan", GetOrigin());
+    eCan.SetAngles(GetAngles());
+    eCan.SetOwner(this);
+    eCan.SetSkin((float)m_sodaSkin);
     eCan.SetModel("models/can.mdl");
     eCan.owner = this;
 
-	m_usesLeft--;
-	SetValue(0i); /* disable until the can unlocks its owner */
+    m_usesLeft--;
+    SetValue(0i); /* disable until the can unlocks its owner */
 }

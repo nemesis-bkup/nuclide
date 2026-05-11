@@ -18,62 +18,62 @@
 void
 ActivityPub_FetchAccountData(string apUserID)
 {
-	string userID = __NULL__;
-	string apInstance = __NULL__;
+    string userID = __NULL__;
+    string apInstance = __NULL__;
 
-	if (!apUserID) {
-		return;
-	}
+    if (!apUserID) {
+        return;
+    }
 
-	tokenizebyseparator(apUserID, "@");
-	userID = argv(1);
-	apInstance = argv(2);
+    tokenizebyseparator(apUserID, "@");
+    userID = argv(1);
+    apInstance = argv(2);
 
-	uri_get(sprintf("https://%s/api/v1/accounts/%s", apInstance, userID), ACTIVITYPUB_ACCOUNTS);
+    uri_get(sprintf("https://%s/api/v1/accounts/%s", apInstance, userID), ACTIVITYPUB_ACCOUNTS);
 }
 
 /* the json string passed from uri's callback function as data */
 void
 ActivityPub_UpdatePlayerInfo(string jsonData)
 {
-	jsonnode acctNode = json_parse(jsonData);
+    jsonnode acctNode = json_parse(jsonData);
 
-	if (!acctNode) {
-		ncError("Unable to parse ActivityPub info.");
-		return;
-	}
+    if (!acctNode) {
+        ncError("Unable to parse ActivityPub info.");
+        return;
+    }
 
-	string stringName = acctNode["display_name"].s;
-	string stringAvatar = acctNode["avatar_static"].s;
-	string stringHeader = acctNode["header_static"].s;
-	string stringURL = acctNode["url"].s;
-	string stringUsername = acctNode["username"].s;
-	tokenizebyseparator(stringURL, "/");
-	string instanceName = argv(2);
+    string stringName = acctNode["display_name"].s;
+    string stringAvatar = acctNode["avatar_static"].s;
+    string stringHeader = acctNode["header_static"].s;
+    string stringURL = acctNode["url"].s;
+    string stringUsername = acctNode["username"].s;
+    tokenizebyseparator(stringURL, "/");
+    string instanceName = argv(2);
 
-	if (!stringName) {
-		ncError("ActivityPub display name invalid.");
-	} else {
-		cvar_set("name", stringName);
-	}
+    if (!stringName) {
+        ncError("ActivityPub display name invalid.");
+    } else {
+        cvar_set("name", stringName);
+    }
 
-	if (!stringAvatar) {
-		ncError("ActivityPub avatar invalid.");
-	} else {
-		localcmd(sprintf("setinfo avatar %S\n", stringAvatar));
-	}
+    if (!stringAvatar) {
+        ncError("ActivityPub avatar invalid.");
+    } else {
+        localcmd(sprintf("setinfo avatar %S\n", stringAvatar));
+    }
 
-	if (!stringHeader) {
-		ncError("ActivityPub background invalid.");
-	} else {
-		localcmd(sprintf("setinfo bg %S\n", stringHeader));
-	}
+    if (!stringHeader) {
+        ncError("ActivityPub background invalid.");
+    } else {
+        localcmd(sprintf("setinfo bg %S\n", stringHeader));
+    }
 
-	if (!stringURL) {
-		ncError("ActivityPub url invalid.");
-	} else {
-		localcmd(sprintf("setinfo fedi %S\n", strcat(stringUsername, "@", instanceName)));
-	}
+    if (!stringURL) {
+        ncError("ActivityPub url invalid.");
+    } else {
+        localcmd(sprintf("setinfo fedi %S\n", strcat(stringUsername, "@", instanceName)));
+    }
 
-	json_free(acctNode);
+    json_free(acctNode);
 }

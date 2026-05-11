@@ -34,10 +34,10 @@ class
 item_item_crate:ncPhysicsEntity
 {
 public:
-	void item_item_crate(void);
-	
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
+    void item_item_crate(void);
+    
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
 };
 
 void
@@ -48,15 +48,15 @@ item_item_crate::item_item_crate(void)
 void
 item_item_crate::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 item_item_crate::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 }

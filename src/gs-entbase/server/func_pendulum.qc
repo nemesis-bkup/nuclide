@@ -16,14 +16,14 @@
 
 enumflags
 {
-	FUNCPEND_STARTON,
-	FUNCPEND_UNUSED1,
-	FUNCPEND_UNUSED2,
-	FUNCPEND_NONSOLID,
-	FUNCPEND_RETURNONTRIGGER,
-	FUNCPEND_UNUSED3,
-	FUNCPEND_XAXIS,
-	FUNCPEND_YAXIS
+    FUNCPEND_STARTON,
+    FUNCPEND_UNUSED1,
+    FUNCPEND_UNUSED2,
+    FUNCPEND_NONSOLID,
+    FUNCPEND_RETURNONTRIGGER,
+    FUNCPEND_UNUSED3,
+    FUNCPEND_XAXIS,
+    FUNCPEND_YAXIS
 };
 
 /*! \brief Server-Entity: Swinging Pendulum */
@@ -57,125 +57,125 @@ class
 func_pendulum:ncRenderableEntity
 {
 public:
-	void func_pendulum(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void customphysics(void);
+    void func_pendulum(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void customphysics(void);
 
 private:
-	int m_iActive;
-	float m_flProgress;
-	float m_flDampening;
-	float m_flDistance;
+    int m_iActive;
+    float m_flProgress;
+    float m_flDampening;
+    float m_flDistance;
 };
 
 void
 func_pendulum::func_pendulum(void)
 {
-	m_iActive = 0i;
-	m_flProgress = 0.0f;
-	m_flDampening = 0.0f;
-	m_flDistance = 0.0f;
+    m_iActive = 0i;
+    m_flProgress = 0.0f;
+    m_flDampening = 0.0f;
+    m_flDistance = 0.0f;
 }
 
 void
 func_pendulum::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iActive", m_iActive);
-	SaveFloat(handle, "m_flProgress", m_flProgress);
-	SaveFloat(handle, "m_flDampening", m_flDampening);
-	SaveFloat(handle, "m_flDistance", m_flDistance);
+    super::Save(handle);
+    SaveInt(handle, "m_iActive", m_iActive);
+    SaveFloat(handle, "m_flProgress", m_flProgress);
+    SaveFloat(handle, "m_flDampening", m_flDampening);
+    SaveFloat(handle, "m_flDistance", m_flDistance);
 }
 
 void
 func_pendulum::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iActive":
-		m_iActive = ReadInt(setValue);
-		break;
-	case "m_flProgress":
-		m_flProgress = ReadFloat(setValue);
-		break;
-	case "m_flDampening":
-		m_flDampening = ReadFloat(setValue);
-		break;
-	case "m_flDistance":
-		m_flDistance = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iActive":
+        m_iActive = ReadInt(setValue);
+        break;
+    case "m_flProgress":
+        m_flProgress = ReadFloat(setValue);
+        break;
+    case "m_flDampening":
+        m_flDampening = ReadFloat(setValue);
+        break;
+    case "m_flDistance":
+        m_flDistance = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_pendulum::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "damp":
-		m_flDampening = stof(setValue);
-		break;
-	case "distance":
-		m_flDistance = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "damp":
+        m_flDampening = stof(setValue);
+        break;
+    case "distance":
+        m_flDistance = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_pendulum::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	if (HasSpawnFlags(FUNCPEND_STARTON))
-		m_iActive = TRUE;
+    if (HasSpawnFlags(FUNCPEND_STARTON))
+        m_iActive = TRUE;
 
-	if (HasSpawnFlags(FUNCPEND_NONSOLID))
-		SetSolid(SOLID_NOT);
-	else
-		SetSolid(SOLID_BSP);
+    if (HasSpawnFlags(FUNCPEND_NONSOLID))
+        SetSolid(SOLID_NOT);
+    else
+        SetSolid(SOLID_BSP);
 
-	SetMovetype(MOVETYPE_PUSH);
+    SetMovetype(MOVETYPE_PUSH);
 }
 
 void
 func_pendulum::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		m_iActive = 0;
-		break;
-	case TRIG_ON:
-		m_iActive = 1;
-		break;
-	default:
-		m_iActive = 1 - m_iActive;
-	}
+    switch (state) {
+    case TRIG_OFF:
+        m_iActive = 0;
+        break;
+    case TRIG_ON:
+        m_iActive = 1;
+        break;
+    default:
+        m_iActive = 1 - m_iActive;
+    }
 
-	if (m_iActive == 0 && HasSpawnFlags(FUNCPEND_RETURNONTRIGGER))
-		angles = [0.0f, 0.0f, 0.0f];
+    if (m_iActive == 0 && HasSpawnFlags(FUNCPEND_RETURNONTRIGGER))
+        angles = [0.0f, 0.0f, 0.0f];
 }
 
 void
 func_pendulum::customphysics(void)
 {
-	if (!m_iActive)
-		return;
+    if (!m_iActive)
+        return;
 
-	m_flProgress += frametime;
+    m_flProgress += frametime;
 
-	if (HasSpawnFlags(FUNCPEND_XAXIS))
-		angles[2] = sin(m_flProgress);
-	else if (HasSpawnFlags(FUNCPEND_YAXIS))
-		angles[0] = sin(m_flProgress);
-	else
-		angles[1] = sin(m_flProgress);
+    if (HasSpawnFlags(FUNCPEND_XAXIS))
+        angles[2] = sin(m_flProgress);
+    else if (HasSpawnFlags(FUNCPEND_YAXIS))
+        angles[0] = sin(m_flProgress);
+    else
+        angles[1] = sin(m_flProgress);
 
-	angles *= m_flDistance;
+    angles *= m_flDistance;
 }

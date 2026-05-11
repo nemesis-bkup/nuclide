@@ -17,44 +17,44 @@
 /* hint types taken from https://developer.valvesoftware.com/wiki/Hint_nodes#Hint */
 typedef enum
 {
-	HINT_NONE = 0,
-	HINT_WORLD_WINDOW = 2,
-	HINT_WORLD_WORK_POSITION = 12,
-	HINT_WORLD_VISUALLY_INTERESTING = 13,
-	HINT_WORLD_VISUALLY_INTERESTING_DONT_AIM = 14,
-	HINT_WORLD_INHIBIT_COMBINE_MINES = 15,
-	HINT_WORLD_VISUALLY_INTERESTING_STEALTH = 16,
-	HINT_TACTICAL_COVER_MED = 100,
-	HINT_TACTICAL_COVER_LOW = 101,
-	HINT_TACTICAL_WASTESCANNER = 102,
-	HINT_TACTICAL_PINCH = 103,
-	HINT_TACTICAL_GUARD_POINT = 104,
-	HINT_TACTICAL_ENEMY_DISADVANTAGED = 105,
-	HINT_HEALTH_KIT = 106,
-	HINT_ANTLION_BURROW_POINT = 400,
-	HINT_ANTLION_THUMPER_FLEE_POINT = 401,
-	HINT_HEADCRAB_BURROW_POINT = 450,
-	HINT_CROW_FLYTO_POINT = 700,
-	HINT_CROW_PERCH_POINT = 701,
-	HINT_FOLLOW_WAIT_POINT = 900,
-	HINT_JUMP_OVERRIDE = 901,
-	HINT_PLAYER_SQUAD_TRANSITON_POINT = 902,
-	HINT_NPC_EXIT_POINT = 903,
-	HINT_STRIDER_NODE = 904,
-	HINT_PLAYER_ALLY_MOVE_AWAY_DEST = 950,
-	HINT_PLAYER_ALLY_FEAR_DEST = 951,
-	HINT_WORLD_MACHINERY = 1000,
-	HINT_WORLD_BLINKING_LIGHT = 1001,
-	HINT_WORLD_HUMAN_BLOOD = 1002,
-	HINT_WORLD_ALIEN_BLOOD = 1003,
+    HINT_NONE = 0,
+    HINT_WORLD_WINDOW = 2,
+    HINT_WORLD_WORK_POSITION = 12,
+    HINT_WORLD_VISUALLY_INTERESTING = 13,
+    HINT_WORLD_VISUALLY_INTERESTING_DONT_AIM = 14,
+    HINT_WORLD_INHIBIT_COMBINE_MINES = 15,
+    HINT_WORLD_VISUALLY_INTERESTING_STEALTH = 16,
+    HINT_TACTICAL_COVER_MED = 100,
+    HINT_TACTICAL_COVER_LOW = 101,
+    HINT_TACTICAL_WASTESCANNER = 102,
+    HINT_TACTICAL_PINCH = 103,
+    HINT_TACTICAL_GUARD_POINT = 104,
+    HINT_TACTICAL_ENEMY_DISADVANTAGED = 105,
+    HINT_HEALTH_KIT = 106,
+    HINT_ANTLION_BURROW_POINT = 400,
+    HINT_ANTLION_THUMPER_FLEE_POINT = 401,
+    HINT_HEADCRAB_BURROW_POINT = 450,
+    HINT_CROW_FLYTO_POINT = 700,
+    HINT_CROW_PERCH_POINT = 701,
+    HINT_FOLLOW_WAIT_POINT = 900,
+    HINT_JUMP_OVERRIDE = 901,
+    HINT_PLAYER_SQUAD_TRANSITON_POINT = 902,
+    HINT_NPC_EXIT_POINT = 903,
+    HINT_STRIDER_NODE = 904,
+    HINT_PLAYER_ALLY_MOVE_AWAY_DEST = 950,
+    HINT_PLAYER_ALLY_FEAR_DEST = 951,
+    HINT_WORLD_MACHINERY = 1000,
+    HINT_WORLD_BLINKING_LIGHT = 1001,
+    HINT_WORLD_HUMAN_BLOOD = 1002,
+    HINT_WORLD_ALIEN_BLOOD = 1003,
 } hinttype_t;
 
 /* TODO: Make this match ncMonster more */
 typedef enum
 {
-	AISTATE_IDLE,
-	AISTATE_ALERT,
-	AISTATE_COMBAT
+    AISTATE_IDLE,
+    AISTATE_ALERT,
+    AISTATE_COMBAT
 } aistate_t;
 
 #define HINTSF_ALLOWJUMPUP 65536
@@ -138,79 +138,79 @@ class
 info_hint:ncHint
 {
 public:
-	void info_hint(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
+    void info_hint(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
 
 private:
-	hinttype_t m_hintTypeID;
-	aistate_t m_stateIDMin;
-	aistate_t m_stateIDMax;
+    hinttype_t m_hintTypeID;
+    aistate_t m_stateIDMin;
+    aistate_t m_stateIDMax;
 };
 
 void
 info_hint::info_hint(void)
 {
-	m_hintTypeID = HINT_NONE;
-	m_stateIDMin = AISTATE_IDLE;
-	m_stateIDMax = AISTATE_COMBAT;
+    m_hintTypeID = HINT_NONE;
+    m_stateIDMin = AISTATE_IDLE;
+    m_stateIDMax = AISTATE_COMBAT;
 };
 
 void
 info_hint::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_hintTypeID", m_hintTypeID);
-	SaveFloat(handle, "m_stateIDMin", m_stateIDMin);
-	SaveFloat(handle, "m_stateIDMax", m_stateIDMax);
+    super::Save(handle);
+    SaveFloat(handle, "m_hintTypeID", m_hintTypeID);
+    SaveFloat(handle, "m_stateIDMin", m_stateIDMin);
+    SaveFloat(handle, "m_stateIDMax", m_stateIDMax);
 }
 
 void
 info_hint::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_hintTypeID":
-		m_hintTypeID = ReadFloat(setValue);
-		break;
-	case "m_stateIDMin":
-		m_stateIDMin = ReadFloat(setValue);
-		break;
-	case "m_stateIDMax":
-		m_stateIDMax = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_hintTypeID":
+        m_hintTypeID = ReadFloat(setValue);
+        break;
+    case "m_stateIDMin":
+        m_stateIDMin = ReadFloat(setValue);
+        break;
+    case "m_stateIDMax":
+        m_stateIDMax = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 info_hint::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "hinttype":
-		m_hintTypeID = stof(setValue);
-		break;
-	case "State":
-		m_stateIDMin = 
-		m_stateIDMax = stof(setValue);
-		break;
-	case "MinimumState":
-		m_stateIDMin = stof(setValue);
-		break;
-	case "MaximumState":
-		m_stateIDMax = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "hinttype":
+        m_hintTypeID = stof(setValue);
+        break;
+    case "State":
+        m_stateIDMin = 
+        m_stateIDMax = stof(setValue);
+        break;
+    case "MinimumState":
+        m_stateIDMin = stof(setValue);
+        break;
+    case "MaximumState":
+        m_stateIDMax = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 info_hint::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 }

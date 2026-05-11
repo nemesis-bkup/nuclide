@@ -19,15 +19,15 @@ class
 ncDebris:ncPhysicsEntity
 {
 public:
-	void ncDebris(void);
+    void ncDebris(void);
 
-	virtual void Touch(entity);
-	nonvirtual void SetImpactDecal(string);
-	nonvirtual void KeepMoving(void);
+    virtual void Touch(entity);
+    nonvirtual void SetImpactDecal(string);
+    nonvirtual void KeepMoving(void);
 
 private:
-	string m_decalImpact;
-	float m_timeUntilNextDecalPlacement;
+    string m_decalImpact;
+    float m_timeUntilNextDecalPlacement;
 };
 #endif
 

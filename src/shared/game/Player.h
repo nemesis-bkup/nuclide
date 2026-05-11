@@ -100,24 +100,24 @@ A more colorful example, from Rad-Therapy, highlighting the fields relevant to p
 entityDef player
 {
 ...
-	"model"				"models/player.mdl"
-	"spine"				"Bip01 Spine"
-	"torsoStart"		"Bip01 Spine"
-	"torsoEnd"			"Bip01 R Finger12"
-	"act_idle"			"0"
-	"act_jump"			"8"
-	"act_walk_crouch"	"6"
-	"act_idle_crouch"	"7"
-	"act_run"			"12"
-	"act_walk"			"13"
+    "model"             "models/player.mdl"
+    "spine"             "Bip01 Spine"
+    "torsoStart"        "Bip01 Spine"
+    "torsoEnd"          "Bip01 R Finger12"
+    "act_idle"          "0"
+    "act_jump"          "8"
+    "act_walk_crouch"   "6"
+    "act_idle_crouch"   "7"
+    "act_run"           "12"
+    "act_walk"          "13"
 
-	"act_aim"			"16,14"
-	"act_attack"		"17,15"
+    "act_aim"           "16,14"
+    "act_attack"        "17,15"
 
-	"act_aim_crowbar"				"25"
-	"act_attack_crowbar"			"26"
-	"act_aim_crouch_crowbar"		"27"
-	"act_attack_crouch_crowbar"		"28"
+    "act_aim_crowbar"               "25"
+    "act_attack_crowbar"            "26"
+    "act_aim_crouch_crowbar"        "27"
+    "act_attack_crouch_crowbar"     "28"
 ...
 }
 ```
@@ -127,8 +127,8 @@ entityDef player
 entityDef weapon_crowbar
 {
 ...
-	"model_player"		"models/p_crowbar.mdl"
-	"animPrefix"		"crowbar"
+    "model_player"      "models/p_crowbar.mdl"
+    "animPrefix"        "crowbar"
 ...
 }
 ```
@@ -141,224 +141,226 @@ class
 		ncPlayer : ncSpectator
 {
 public:
-	void ncPlayer(void);
+    void ncPlayer(void);
 
-	virtual void PlayGesture(float gestureAnim, float overrideTime);
+    virtual void PlayGesture(float gestureAnim, float overrideTime);
 
-	virtual void ProcessInput(void);
-	virtual void PreFrame(void);
-	virtual void PostFrame(void);
+    virtual void ProcessInput(void);
+    virtual void PreFrame(void);
+    virtual void PostFrame(void);
 
-	virtual void Physics_Fall(float);
-	virtual void Physics_Crouch(void);
-	virtual void Physics_Prone(void);
-	virtual void Physics_Jump(void);
-	virtual void Physics_CheckJump(float);
-	virtual void Physics_SetViewParms(void);
-	virtual void Physics_WaterJump(void);
-	virtual void Physics_WaterMove(void);
-	virtual float Physics_MaxSpeed(void);
-	virtual void Physics_InputPreMove(void);
-	virtual void Physics_InputPostMove(void);
-	virtual void Physics_Run(void);
-	virtual void Physics_InputSprint(void);
+    virtual void Physics_Fall(float);
+    virtual void Physics_Crouch(void);
+    virtual void Physics_Prone(void);
+    virtual void Physics_Jump(void);
+    virtual void Physics_CheckJump(float);
+    virtual void Physics_SetViewParms(void);
+    virtual void Physics_WaterJump(void);
+    virtual void Physics_WaterMove(void);
+    virtual float Physics_MaxSpeed(void);
+    virtual void Physics_InputPreMove(void);
+    virtual void Physics_InputPostMove(void);
+    virtual void Physics_Run(void);
+    virtual void Physics_InputSprint(void);
 
-	virtual bool IsFakeSpectator(void);
-	virtual bool IsRealSpectator(void);
-	virtual bool IsDead(void);
-	virtual bool IsPlayer(void);
-	virtual void SharedInputFrame(void);
+    virtual bool IsSpectator(void);
+    virtual bool IsFakeSpectator(void);
+    virtual bool IsRealSpectator(void);
+    virtual bool IsDead(void);
+    virtual bool IsPlayer(void);
+    virtual void SharedInputFrame(void);
 
-	/** Overridable: Returns whether the client can sprint, with the command +sprint */
-	virtual bool CanSprint(void);
-	/** Overridable: Returns whether the client can prone, with the commands +prone and goprone */
-	virtual bool CanProne(void);
-	/** Overridable: Returns whether the client can crouch, with the commands +crouch and gocrouch */
-	virtual bool CanCrouch(void);
-	/** Overridable: Returns whether the client can lean, with the commands +leanleft and +leanright */
-	virtual bool CanLean(void);
+    /** Overridable: Returns whether the client can sprint, with the command +sprint */
+    virtual bool CanSprint(void);
+    /** Overridable: Returns whether the client can prone, with the commands +prone and goprone */
+    virtual bool CanProne(void);
+    /** Overridable: Returns whether the client can crouch, with the commands +crouch and gocrouch */
+    virtual bool CanCrouch(void);
+    /** Overridable: Returns whether the client can lean, with the commands +leanleft and +leanright */
+    virtual bool CanLean(void);
 
-	/** Empty & shared between Client and Server. This is run on every player, every frame, to update their animation cycle. */
-	virtual void UpdatePlayerAnimation(float);
+    /** Empty & shared between Client and Server. This is run on every player, every frame, to update their animation cycle. */
+    virtual void UpdatePlayerAnimation(float);
 
-	virtual void Damage(entity, entity, ncDict, float, vector, vector);
-	virtual bool CanPickupEntity(ncEntity toPickUp, float massLimit, float sizeLimit);
+    virtual void Damage(entity, entity, ncDict, float, vector, vector);
+    virtual bool CanPickupEntity(ncEntity toPickUp, float massLimit, float sizeLimit);
 
 #ifdef CLIENT
-	virtual void OnRemoveEntity(void);
-	virtual void ReceiveEntity(float, float);
-	virtual void _ReceiveComplete(float, float);
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
-	virtual void ClientInputFrame(void);
+    virtual void OnRemoveEntity(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void _ReceiveComplete(float, float);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
+    virtual void ClientInputFrame(void);
 
-	virtual vector CalculateLean(vector);
-	virtual void UpdateAliveCam(void);
+    virtual vector CalculateLean(vector);
+    virtual void UpdateAliveCam(void);
 
-	/** Empty. Updates the bone controller responsible for mouth movement. */
-	virtual void UpdatePlayerJaw(float);
+    /** Empty. Updates the bone controller responsible for mouth movement. */
+    virtual void UpdatePlayerJaw(float);
 
-	/** Empty. This is run on every player, every frame to update attachments. */
-	virtual void UpdatePlayerAttachments(bool);
+    /** Empty. This is run on every player, every frame to update attachments. */
+    virtual void UpdatePlayerAttachments(bool);
 
-	virtual float predraw(void);
-	virtual void postdraw(void);
+    virtual float predraw(void);
+    virtual void postdraw(void);
 
 #endif
 
-	virtual void Spawned(void);
+    virtual void Spawned(void);
 
 #ifdef SERVER
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void Respawn(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity, float);
-	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual void ServerInputFrame(void);
-	virtual void Input(entity, string, string);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Respawn(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void Death(entity, entity, int, vector, vector, int);
+    virtual void ServerInputFrame(void);
+    virtual void Input(entity, string, string);
 
-	/** Helper function that will optimise the changed-flags of your player entity. */
-	virtual float OptimiseChangedFlags(entity, float);
+    /** Helper function that will optimise the changed-flags of your player entity. */
+    virtual float OptimiseChangedFlags(entity,float);
 
-	/** When called, will turn the client into a proper player. */
-	virtual void MakePlayer(void);
-	/** When called, will turn the client into a spectator until the next round. */
-	virtual void MakeTempSpectator(void);
-	/** When called, will turn the client into a general spectator. */
-	virtual void MakeSpectator(void);
+    /** When called, will turn the client into a proper player. */
+    virtual void MakePlayer(void);
+    /** When called, will turn the client into a spectator until the next round. */
+    virtual void MakeTempSpectator(void);
+    /** When called, will turn the client into a general spectator. */
+    virtual void MakeSpectator(void);
 
-	/** Called when we press the button bound to +use. */
-	virtual void InputUse_Down(void);
-	/** Called when we let go of the button bound to +use. */
-	virtual void InputUse_Up(void);
+    /** Called when we press the button bound to +use. */
+    virtual void InputUse_Down(void);
+    /** Called when we let go of the button bound to +use. */
+    virtual void InputUse_Up(void);
 
-	/* Returns whether we're able to pick up an entity in the game with +use. If `true` you can then use PickupEntity() to attach it to the player. */
-	virtual bool CanPickupEntity(ncEntity, float, float);
-	/* Will attach an entity to the player. It's position will continously update in front of the player camera, but in XR modes it may be attached to one of the hands instead.*/
-	nonvirtual void PickupEntity(ncEntity);
+    /* Returns whether we're able to pick up an entity in the game with +use. If `true` you can then use PickupEntity() to attach it to the player. */
+    virtual bool  CanPickupEntity(ncEntity, float, float);
+    /* Will attach an entity to the player. It's position will continously update in front of the player camera, but in XR modes it may be attached to one of the hands instead.*/
+    nonvirtual void PickupEntity(ncEntity);
 
 #endif
 
-	nonvirtual float WeaponAnimTime(void);
+    nonvirtual float WeaponAnimTime(void);
 
-	virtual void Footsteps_Update(void);
+    virtual void Footsteps_Update(void);
 
 private:
-	nonvirtual void _UpdatePMoveVars(void);
+    nonvirtual void _UpdatePMoveVars(void);
 
 #ifdef CLIENT
-	NETWORKED_INT(m_weaponAnimSequence)
-	NETWORKED_FLOAT(vehicle_entnum)
+    NETWORKED_INT(m_weaponAnimSequence)
+    NETWORKED_FLOAT(vehicle_entnum)
 
-	float clsndindex_idle;
+    float clsndindex_idle;
 #endif
 
 #ifdef SERVER
-	float m_weaponCookingTime;
+    float m_weaponCookingTime;
 #endif
 
-	NETWORKED_FLOAT(health)
-	NETWORKED_FLOAT(sndindex_idle)
+    NETWORKED_FLOAT(health)
+    NETWORKED_FLOAT(sndindex_idle)
 
-	NETWORKED_FLOAT_N(colormap)
-	NETWORKED_FLOAT_N(gflags)
-	NETWORKED_FLOAT(viewzoom)
-	NETWORKED_VECTOR_N(view_ofs)
-	NETWORKED_FLOAT_N(vw_index)
-	NETWORKED_VECTOR_N(m_pmoveBaseVelocity)
-	NETWORKED_VECTOR_N(v_angle)
-	NETWORKED_FLOAT_N(gravity)
-	NETWORKED_FLOAT_N(friction)
-	NETWORKED_FLOAT(speedmod)
+    NETWORKED_FLOAT_N(colormap)
+    NETWORKED_FLOAT_N(gflags)
+    NETWORKED_FLOAT(viewzoom)
+    NETWORKED_VECTOR_N(view_ofs)
+    NETWORKED_FLOAT_N(vw_index)
+    NETWORKED_VECTOR_N(m_pmoveBaseVelocity)
+    NETWORKED_VECTOR_N(v_angle)
+    NETWORKED_FLOAT_N(gravity)
+    NETWORKED_FLOAT_N(friction)
+    NETWORKED_FLOAT(speedmod)
 
-	NETWORKED_VECTOR_N(m_pmoveLadderNormal)
+    NETWORKED_VECTOR_N(m_pmoveLadderNormal)
 
-	NETWORKED_FLOAT(m_timeUntilNextAttack)
-	NETWORKED_FLOAT(m_timeUntilNextIdle)
-	NETWORKED_FLOAT(m_timeUntilReloaded)
-	NETWORKED_FLOAT(m_timeSinceJump)
-	NETWORKED_FLOAT(m_timeSinceTeleport)
-	NETWORKED_VECTOR(m_punchAngle)
-	NETWORKED_VECTOR(m_punchVelocity)
+    NETWORKED_FLOAT(m_timeUntilNextAttack)
+    NETWORKED_FLOAT(m_timeUntilNextIdle)
+    NETWORKED_FLOAT(m_timeUntilReloaded)
+    NETWORKED_FLOAT(m_timeSinceJump)
+    NETWORKED_FLOAT(m_timeSinceTeleport)
+    NETWORKED_VECTOR(m_punchAngle)
+    NETWORKED_VECTOR(m_punchVelocity)
 
-	NETWORKED_INT(m_weaponAnimSequence)
-	NETWORKED_FLOAT(m_weaponAnimTime)
+    NETWORKED_INT(m_weaponAnimSequence)
+    NETWORKED_FLOAT(m_weaponAnimTime)
 
-	/* We can't use the default .items field, because FTE will assume
-	 * effects of some bits. Such as invisibility, quad, etc.
-	 * also, modders probably want 32 bits for items. */
-	NETWORKED_FLOAT_N(activeweapon)
-	ncItem m_itemList_net;
-	int m_ammoTypes_net[MAX_AMMO_TYPES];
+    /* We can't use the default .items field, because FTE will assume
+     * effects of some bits. Such as invisibility, quad, etc.
+     * also, modders probably want 32 bits for items. */
+    NETWORKED_FLOAT_N(activeweapon)
+    ncItem m_itemList_net;
+    int m_ammoTypes_net[MAX_AMMO_TYPES];
 
-	/* vehicle info */
-	NETWORKED_ENT(vehicle)
-	NETWORKED_VECTOR(m_pmoveHookVelocity)
+    /* vehicle info */
+    NETWORKED_ENT(vehicle)
+    NETWORKED_VECTOR(m_pmoveHookVelocity)
 
 #ifdef CLIENT
-	int sequence;
+    int sequence;
 
-	/* external weapon model */
-	ncRenderableEntity p_model;
-	int p_hand_bone;
-	int p_model_bone;
-	float lastweapon;
+    /* external weapon model */
+    ncRenderableEntity p_model;
+    int p_hand_bone;
+    int p_model_bone;
+    float lastweapon;
 #endif
-	ncPMoveVars m_pmoveVars;
+    ncPMoveVars m_pmoveVars;
 
 #ifdef SERVER
-	int voted;
-	int step;
-	float m_timeUntilNextFootstep;
+    int voted;
+    int step;
+    float m_timeUntilNextFootstep;
 
-	int m_underwaterDamageDealt;
-	float m_timeUnderwater;
-	float m_timeUntilNextPainSFX;
+    int m_underwaterDamageDealt;
+    float m_timeUnderwater;
+    float m_timeUntilNextPainSFX;
 
-	entity last_used;
+    entity last_used;
 
-	float pb_angle_delta;
-	float pb_player_delta;
-	vector pb_last_angles;
+    float pb_angle_delta;
+    float pb_player_delta;
+    vector pb_last_angles;
 
-	int m_friendlyFireDamageDealt;
+    int m_friendlyFireDamageDealt;
 #endif
 
 	entity m_holdingEntity;
 	float m_flStuckTime;
 
-	virtual void Event_DrawWeapon(void);
-	virtual void Event_FireWeapon(void);
-	virtual void Event_ReloadWeaponStart(void);
-	virtual void Event_ReloadWeapon(void);
-	virtual void Event_ReloadWeaponEnd(void);
-	virtual void Event_HolsterWeapon(void);
+    virtual void Event_DrawWeapon(void);
+    virtual void Event_FireWeapon(void);
+    virtual void Event_ReloadWeaponStart(void);
+    virtual void Event_ReloadWeapon(void);
+    virtual void Event_ReloadWeaponEnd(void);
+    virtual void Event_HolsterWeapon(void);
 };
 
 /* all potential SendFlags bits we can possibly send */
-enumflags{
-		PLAYER_MODELINDEX,
-		PLAYER_ORIGIN,
-		PLAYER_ANGLES,
-		PLAYER_VELOCITY,
-		PLAYER_FLAGS,
-		PLAYER_WEAPON,
-		PLAYER_ITEMS,
-		PLAYER_HEALTH,
-		PLAYER_SIZE,
-		PLAYER_MOVETYPE,
-		PLAYER_PUNCHANGLE,
-		PLAYER_VIEWZOOM,
-		PLAYER_TIMINGS,
-		PLAYER_VEHICLE,
-		PLAYER_SPECTATE,
-		PLAYER_AMMOTYPES,
-		PLAYER_WEAPONFRAME,
-		PLAYER_TOPFRAME,
-		PLAYER_BOTTOMFRAME,
-		PLAYER_CUSTOMFIELDSTART,
+enumflags
+{
+    PLAYER_MODELINDEX,
+    PLAYER_ORIGIN,
+    PLAYER_ANGLES,
+    PLAYER_VELOCITY,
+    PLAYER_FLAGS,
+    PLAYER_WEAPON,
+    PLAYER_ITEMS,
+    PLAYER_HEALTH,
+    PLAYER_SIZE,
+    PLAYER_MOVETYPE,
+    PLAYER_PUNCHANGLE,
+    PLAYER_VIEWZOOM,
+    PLAYER_TIMINGS,
+    PLAYER_VEHICLE,
+    PLAYER_SPECTATE,
+    PLAYER_AMMOTYPES,
+    PLAYER_WEAPONFRAME,
+    PLAYER_TOPFRAME,
+    PLAYER_BOTTOMFRAME,
+    PLAYER_CUSTOMFIELDSTART,
 };
 
 .bool _isPlayer;

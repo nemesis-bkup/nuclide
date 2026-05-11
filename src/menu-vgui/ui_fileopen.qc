@@ -18,18 +18,18 @@ int g_iFindServersInitialized;
 
 void UI_FindServers_Show ( void )
 {
-	static vguiWindow winFind;
+    static vguiWindow winFind;
 
-	if ( !g_iFindServersInitialized ) {
-		g_iFindServersInitialized = TRUE;
-		winFind = spawn( vguiWindow );
-		winFind.SetTitle( "File Open..." );
-		winFind.SetSize( '256 400' );
-		winFind.SetIcon( "textures/ui/icons/server-new" );
+    if ( !g_iFindServersInitialized ) {
+        g_iFindServersInitialized = TRUE;
+        winFind = spawn( vguiWindow );
+        winFind.SetTitle( "File Open..." );
+        winFind.SetSize( '256 400' );
+        winFind.SetIcon( "textures/ui/icons/server-new" );
 
-		g_uiDesktop.Add( winFind );
-	}
+        g_uiDesktop.Add( winFind );
+    }
 
-	winFind.Show();
-	winFind.SetPos( ( g_vecResolution / 2 ) - ( winFind.GetSize() / 2 ) );
+    winFind.Show();
+    winFind.SetPos( ( g_vecResolution / 2 ) - ( winFind.GetSize() / 2 ) );
 }

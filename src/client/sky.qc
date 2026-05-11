@@ -20,43 +20,43 @@ var string g_strSkyPath;
 void
 Sky_Update(int force)
 {
-	if not (g_strSkyName != serverkey("skyname") || force == TRUE) {
-		return;
-	}
+    if not (g_strSkyName != serverkey("skyname") || force == TRUE) {
+        return;
+    }
 
-	string skyPath;
-	string skyPrefix;
+    string skyPath;
+    string skyPrefix;
 
-	g_strSkyName = serverkey("skyname");
+    g_strSkyName = serverkey("skyname");
 
-	if (!STRING_SET(g_strSkyName)) {
-		ncLog("No sky set.");
-		return;
-	}
+    if (!STRING_SET(g_strSkyName)) {
+        ncLog("No sky set.");
+        return;
+    }
 
-	skyPrefix = substring(g_strSkyName, 0, 4);
-	//print(sprintf("SKY PREFIX: %S\n", skyPrefix));
+    skyPrefix = substring(g_strSkyName, 0, 4);
+    //print(sprintf("SKY PREFIX: %S\n", skyPrefix));
 
-	/* is it a Source Engine material? */
-	if (fileExists(strcat("materials/skybox/", g_strSkyName, "bk.vmt")) == true) {
-		skyPath = strcat("materials/skybox/", g_strSkyName);
-	} else if (fileExists(strcat("env/", g_strSkyName, ".mat")) == true) {
-		skyPath = strcat("env/", g_strSkyName);
-	} else {
-		skyPath = g_strSkyName;
-	}
+    /* is it a Source Engine material? */
+    if (fileExists(strcat("materials/skybox/", g_strSkyName, "bk.vmt")) == true) {
+        skyPath = strcat("materials/skybox/", g_strSkyName);
+    } else if (fileExists(strcat("env/", g_strSkyName, ".mat")) == true) {
+        skyPath = strcat("env/", g_strSkyName);
+    } else {
+        skyPath = g_strSkyName;
+    }
 
-	if not (skyPath) {
-		return;
-	}
+    if not (skyPath) {
+        return;
+    }
 
-	localcmd(sprintf("sky \"%s\"\n", skyPath));
-	g_strSkyPath = skyPath;
-	ncLog("Skybox of map changed to %S.", skyPath);
+    ncCommand("sky \"%s\"", skyPath);
+    g_strSkyPath = skyPath;
+    ncLog("Skybox of map changed to %S.", skyPath);
 }
 
 string
 Sky_GetMaterial(void)
 {
-	return (g_strSkyPath);
+    return (g_strSkyPath);
 }

@@ -38,23 +38,23 @@ in order to listen to network activity.
 /** State of a TCP connection. */
 typedef enum
 {
-	STATE_DISCONNECTED, /**< We're disconnected/unconnected. */
-	STATE_CONNECTING, /**< We're in the process of connecting. */
-	STATE_CONNECTED	/**< We're fully connected. */
+    STATE_DISCONNECTED, /**< We're disconnected/unconnected. */
+    STATE_CONNECTING, /**< We're in the process of connecting. */
+    STATE_CONNECTED /**< We're fully connected. */
 } tcpstate_t;
 
 typedef struct
 {
-	filestream m_fSocket;
-	string m_strBuffer[TCP_BUFFER_LENGTH];
-	int m_iBufferLines;
-	tcpstate_t m_iState;
-	string m_host;
-	string m_port;
+    filestream m_fSocket;
+    string m_strBuffer[TCP_BUFFER_LENGTH];
+    int m_iBufferLines;
+    tcpstate_t m_iState;
+    string m_host;
+    string m_port;
 
-	float m_timeOfConnection;
-	float m_lastMessageSent;
-	float m_lastMessageReceived;
+    float m_timeOfConnection;
+    float m_lastMessageSent;
+    float m_lastMessageReceived;
 } tcpinfo_t;
 
 /** Open a TCP socket connection.

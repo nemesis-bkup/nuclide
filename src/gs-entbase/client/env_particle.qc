@@ -36,85 +36,85 @@ This entity was introduced in The Wastes (2018).
 class env_particle:ncEntity
 {
 public:
-	void env_particle(void);
-	
-	virtual void Respawn(void);
-	virtual void customphysics(void);
-	virtual void SpawnKey(string,string);
-	virtual bool CanSpawn(bool);
+    void env_particle(void);
+    
+    virtual void Respawn(void);
+    virtual void customphysics(void);
+    virtual void SpawnKey(string,string);
+    virtual bool CanSpawn(bool);
 
 private:
-	entity m_eTarget;
-	float m_flNextTime;
-	float m_flPartID;
-	float m_flVelocity;
-	float m_flWait;
-	int m_iCount;
-	string m_strTarget;
+    entity m_eTarget;
+    float m_flNextTime;
+    float m_flPartID;
+    float m_flVelocity;
+    float m_flWait;
+    int m_iCount;
+    string m_strTarget;
 };
 
 bool
 env_particle::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void env_particle::customphysics(void)
 {
-	vector vecPlayer = g_view.GetCameraOrigin();
-	
-	if (checkpvs(vecPlayer, this) == FALSE) {
-		return;
-	}
+    vector vecPlayer = g_view.GetCameraOrigin();
+    
+    if (checkpvs(vecPlayer, this) == FALSE) {
+        return;
+    }
 
-	if (!m_flVelocity) {
-		m_flVelocity = 1.0f;
-	}
+    if (!m_flVelocity) {
+        m_flVelocity = 1.0f;
+    }
 
-	if (m_flNextTime > time) {
-		return;
-	}
+    if (m_flNextTime > time) {
+        return;
+    }
 
-	if (m_strTarget) {
-		m_eTarget = find(world, ::targetname, m_strTarget);
-		makevectors(vectoangles(m_eTarget.origin - origin) * -1);
-		angles = v_forward;
-	}
-	pointparticles(m_flPartID, origin, angles * m_flVelocity, m_iCount);
-	m_flNextTime = time + m_flWait;
+    if (m_strTarget) {
+        m_eTarget = find(world, ::targetname, m_strTarget);
+        makevectors(vectoangles(m_eTarget.origin - origin) * -1);
+        angles = v_forward;
+    }
+    pointparticles(m_flPartID, origin, angles * m_flVelocity, m_iCount);
+    m_flNextTime = time + m_flWait;
 }
 
 void env_particle::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "message":
-		m_flPartID = particleeffectnum(strKey);
-		break;
-	case "wait":
-		m_flWait = stof(strKey);
-		break;
-	case "target":
-		m_strTarget = strKey;
-		break;
-	case "velocity":
-		m_flVelocity = stof(strKey);
-		break;
-	case "count":
-		m_iCount = stoi(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "message":
+        m_flPartID = particleeffectnum(strKey);
+        break;
+    case "wait":
+        m_flWait = stof(strKey);
+        break;
+    case "target":
+        m_strTarget = strKey;
+        break;
+    case "velocity":
+        m_flVelocity = stof(strKey);
+        break;
+    case "count":
+        m_iCount = stoi(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 void
 env_particle::Respawn(void)
 {
-	super::Respawn();
-	SetSize([0,0,0], [0,0,0]);
+    super::Respawn();
+    SetSize([0,0,0], [0,0,0]);
 }
 
 void env_particle::env_particle(void)
 {
-	isCSQC = true;
+    isCSQC = true;
 }

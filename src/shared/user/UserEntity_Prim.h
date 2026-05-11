@@ -25,27 +25,27 @@ class
 ncUserEntity_Prim:ncUserEntity
 {
 public:
-	void ncUserEntity_Prim(void);
+    void ncUserEntity_Prim(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
 
-	nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL);
+    nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
-	virtual float predraw(void);
-	virtual void RenderScene(void);
+    virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual float predraw(void);
+    virtual void RenderScene(void);
 #endif
 
 private:
-	string m_userPictureURL;
-	string m_userPosterName;
+    string m_userPictureURL;
+    string m_userPosterName;
 
 #ifdef CLIENT
-	entity m_uiPic;
-	entity m_uiLabel;
+    entity m_uiPic;
+    entity m_uiLabel;
 #endif
 };

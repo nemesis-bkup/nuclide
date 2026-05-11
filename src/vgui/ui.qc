@@ -99,20 +99,20 @@ everything else will be added to using vguiWidget::Add()
 bool
 VGUI_Active(void)
 {
-	return (g_vguiWidgetCount > 0i) ? (true) : (false);
+    return (g_vguiWidgetCount > 0i) ? (true) : (false);
 }
 
 /** Returns whether our mouse cursor is in a specific region of the screen. */
 bool
 Util_MouseAbove(vector vecMousePos, vector vecPos, vector vecSize)
 {
-	if (vecMousePos[0] >= vecPos[0] && vecMousePos[0] <= vecPos[0] + vecSize[0]) {
-		if (vecMousePos[1] >= vecPos[1] && vecMousePos[1] <= vecPos[1] + vecSize[1]) {
-			return (true);
-		}
-	}
+    if (vecMousePos[0] >= vecPos[0] && vecMousePos[0] <= vecPos[0] + vecSize[0]) {
+        if (vecMousePos[1] >= vecPos[1] && vecMousePos[1] <= vecPos[1] + vecSize[1]) {
+            return (true);
+        }
+    }
 
-	return (false);
+    return (false);
 }
 
 void
@@ -125,26 +125,26 @@ UISystem_Init(void)
 vguiWidget
 UIClass_Spawn(string cname)
 {
-	string func = strcat("spawnfunc_", cname);
+    string func = strcat("spawnfunc_", cname);
 
-	if (isfunction(func)) {
-		vguiWidget new_uiclass = __NULL__;
-		entity oldself = self;
-		void(void) vFunc;
+    if (isfunction(func)) {
+        vguiWidget new_uiclass = __NULL__;
+        entity oldself = self;
+        void(void) vFunc;
 
-		vFunc = externvalue(-2, func);
-		new_uiclass = spawn(vguiWidget);
+        vFunc = externvalue(-2, func);
+        new_uiclass = spawn(vguiWidget);
 
-		self = new_uiclass;
-		vFunc();
-		self = oldself;
+        self = new_uiclass;
+        vFunc();
+        self = oldself;
 
-		return (new_uiclass);
-	} else {
-		error("UIClass_Spawn: failed loading designated UI class\n");
-	}
+        return (new_uiclass);
+    } else {
+        ncError("UIClass_Spawn: failed loading designated UI class\n");
+    }
 
-	return (__NULL__);
+    return (__NULL__);
 }
 #endif
 

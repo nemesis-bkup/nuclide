@@ -22,17 +22,17 @@ var string autocvar_sentences_File = "sound/sentences.txt";
 
 typedef struct
 {
-	string m_strID;
-	string m_strSamples;
+    string m_strID;
+    string m_strSamples;
 } sentences_t;
 
 #ifdef DYNAMIC_SENTENCES
-	sentences_t *g_sentences;
-	int g_sentences_count;
+    sentences_t *g_sentences;
+    int g_sentences_count;
 #else
-	#define SENTENCES_LIMIT 1024
-	sentences_t g_sentences[SENTENCES_LIMIT];
-	int g_sentences_count;
+    #define SENTENCES_LIMIT 1024
+    sentences_t g_sentences[SENTENCES_LIMIT];
+    int g_sentences_count;
 #endif
 
 var string g_sentences_samplepath;
@@ -41,133 +41,133 @@ void
 Sentences_Shutdown(void)
 {
 #ifdef DYNAMIC_SENTENCES
-	if (g_sentences)
-		memfree(g_sentences);
+    if (g_sentences)
+        memfree(g_sentences);
 #endif
 
-	g_sentences_count = 0;
+    g_sentences_count = 0;
 }
 
 void
 Sentences_Init(void)
 {
-	filestream fs_sentences = -1;
-	string temp;
-	int c, i;
+    filestream fs_sentences = -1;
+    string temp;
+    int c, i;
 
-	InitStart();
+    InitStart();
 
-	Sentences_Shutdown();
+    Sentences_Shutdown();
 
-	if (STRING_SET(autocvar_sentences_File)) {
-		fs_sentences = fopen(autocvar_sentences_File, FILE_READ);
-	}
+    if (STRING_SET(autocvar_sentences_File)) {
+        fs_sentences = fopen(autocvar_sentences_File, FILE_READ);
+    }
 
-	if (fs_sentences < 0) {
-		ncWarning("Sentences subsystem unvailable.");
-		InitEnd();
-		return;
-	}
+    if (fs_sentences < 0) {
+        ncWarning("Sentences subsystem unvailable.");
+        InitEnd();
+        return;
+    }
 
-	/* create the hash-table if it doesn't exist */
-	if (!g_hashsentences) {
-		g_hashsentences = hash_createtab(2, HASH_ADD);
-	}
+    /* create the hash-table if it doesn't exist */
+    if (!g_hashsentences) {
+        g_hashsentences = hash_createtab(2, HASH_ADD);
+    }
 
-	while ((temp = fgets(fs_sentences))) {
-		/* tons of comments/garbage in those files,
-		 * so tokenize appropriately */
-		c = tokenize_console(temp);
+    while ((temp = fgets(fs_sentences))) {
+        /* tons of comments/garbage in those files,
+         * so tokenize appropriately */
+        c = tokenize_console(temp);
 
-		/* not enough for an entry. */
-		if (c < 2) {
-			continue;
-		}
+        /* not enough for an entry. */
+        if (c < 2) {
+            continue;
+        }
 
-		/* starts of at 0, for every line increases */
-		int x = g_sentences_count;
+        /* starts of at 0, for every line increases */
+        int x = g_sentences_count;
 
-		/* allocate memory and increase count */
+        /* allocate memory and increase count */
 #ifdef DYNAMIC_SENTENCES
-		g_sentences_count++;
-		g_sentences = (sentences_t *)memreallocOld(g_sentences,
-				sizeof(sentences_t),
-				x,
-				g_sentences_count);
+        g_sentences_count++;
+        g_sentences = (sentences_t *)memreallocOld(g_sentences,
+                sizeof(sentences_t),
+                x,
+                g_sentences_count);
 #else
-		if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
-			ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
-			ncWarning("Sentences subsystem unvailable.");
-			InitEnd();
-			return;
-		}
+        if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
+            ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
+            ncWarning("Sentences subsystem unvailable.");
+            InitEnd();
+            return;
+        }
 
-		g_sentences_count++;
+        g_sentences_count++;
 #endif
 
-		/* loop through the parts of the line */
-		for (i=0; i < c; i++) {
-			/* first entry is the id, prefix with ! as well */
-			if (i==0) {
-				g_sentences[x].m_strID = strtoupper(strcat("!", argv(0)));
-				hash_add(g_hashsentences, g_sentences[x].m_strID, x);
-			} else {
-				if (i == 1) {
-					g_sentences[x].m_strSamples = sprintf("%s", argv(i));
-				} else {
-					g_sentences[x].m_strSamples = sprintf("%s %s", g_sentences[x].m_strSamples, argv(i));
-				}
+        /* loop through the parts of the line */
+        for (i=0; i < c; i++) {
+            /* first entry is the id, prefix with ! as well */
+            if (i==0) {
+                g_sentences[x].m_strID = strtoupper(strcat("!", argv(0)));
+                hash_add(g_hashsentences, g_sentences[x].m_strID, x);
+            } else {
+                if (i == 1) {
+                    g_sentences[x].m_strSamples = sprintf("%s", argv(i));
+                } else {
+                    g_sentences[x].m_strSamples = sprintf("%s %s", g_sentences[x].m_strSamples, argv(i));
+                }
 
-				g_sentences[x].m_strSamples =
-					strreplace(",", " vox/comma.wav", g_sentences[x].m_strSamples);
-			}
-		}
-	}
+                g_sentences[x].m_strSamples =
+                    strreplace(",", " vox/comma.wav", g_sentences[x].m_strSamples);
+            }
+        }
+    }
 
-	fclose(fs_sentences);
-	ncLog("...SentencesDef initialized with %i entries.", g_sentences_count);
-	InitEnd();
+    fclose(fs_sentences);
+    ncLog("...SentencesDef initialized with %i entries.", g_sentences_count);
+    InitEnd();
 }
 
 string
 Sentences_ProcessSample(string sample)
 {
-	int c = tokenizebyseparator(sample, "/");
+    int c = tokenizebyseparator(sample, "/");
 
-	/* this sample contains a path */
-	if (c > 1) {
-		g_sentences_samplepath = argv(0);
-		return sample;
-	}
+    /* this sample contains a path */
+    if (c > 1) {
+        g_sentences_samplepath = argv(0);
+        return sample;
+    }
 
-	/* we don't have a path, so supply the default */
-	return sprintf("%s/%s", g_sentences_samplepath, argv(0));
+    /* we don't have a path, so supply the default */
+    return sprintf("%s/%s", g_sentences_samplepath, argv(0));
 }
 
 void
 Sentences_ResetSample(void)
 {
-	g_sentences_samplepath = "vox";
+    g_sentences_samplepath = "vox";
 }
 
 string
 Sentences_GetSamples(string msg)
 {
-	Sentences_ResetSample();
-	int i = (int)hash_get(g_hashsentences, msg, -1i);
+    Sentences_ResetSample();
+    int i = (int)hash_get(g_hashsentences, msg, -1i);
 
-	if (i != -1i)
-		return g_sentences[i].m_strSamples;
-	else {
-		ncError("Can't find sentence %S", msg);
-		return "";
-	}
+    if (i != -1i)
+        return g_sentences[i].m_strSamples;
+    else {
+        ncError("Can't find sentence %S", msg);
+        return "";
+    }
 }
 
 string
 Sentences_GetString(int idx)
 {
-	return g_sentences[idx].m_strID;
+    return g_sentences[idx].m_strID;
 }
 #endif
 
@@ -175,129 +175,129 @@ Sentences_GetString(int idx)
 void
 Sentences_Init(void)
 {
-	filestream fs_sentences = -1;
-	string temp;
-	int c;
+    filestream fs_sentences = -1;
+    string temp;
+    int c;
 
-	InitStart();
+    InitStart();
 
-	if (g_sentences_count > 0) {
-		g_sentences_count = 0;
+    if (g_sentences_count > 0) {
+        g_sentences_count = 0;
 #ifndef DYNAMIC_SENTENCES
-		if (g_sentences) {
-			memfree(g_sentences);
-		}
+        if (g_sentences) {
+            memfree(g_sentences);
+        }
 #endif
-	}
+    }
 
-	if (STRING_SET(autocvar_sentences_File)) {
-		fs_sentences = fopen(autocvar_sentences_File, FILE_READ);
-	}
+    if (STRING_SET(autocvar_sentences_File)) {
+        fs_sentences = fopen(autocvar_sentences_File, FILE_READ);
+    }
 
-	if (fs_sentences < 0) {
-		ncWarning("Sentences subsystem unvailable.");
-		InitEnd();
-		return;
-	}
+    if (fs_sentences < 0) {
+        ncWarning("Sentences subsystem unvailable.");
+        InitEnd();
+        return;
+    }
 
-	/* create the hash-table if it doesn't exist */
-	if (!g_hashsentences) {
-		g_hashsentences = hash_createtab(2, HASH_ADD);
-	}
+    /* create the hash-table if it doesn't exist */
+    if (!g_hashsentences) {
+        g_hashsentences = hash_createtab(2, HASH_ADD);
+    }
 
-	while ((temp = fgets(fs_sentences))) {
-		/* tons of comments/garbage in those files,
-		 * so tokenize appropriately */
-		c = tokenize_console(temp);
+    while ((temp = fgets(fs_sentences))) {
+        /* tons of comments/garbage in those files,
+         * so tokenize appropriately */
+        c = tokenize_console(temp);
 
-		/* not enough for an entry. */
-		if (c < 2) {
-			continue;
-		}
+        /* not enough for an entry. */
+        if (c < 2) {
+            continue;
+        }
 
-		/* starts of at 0, for every line increases */
-		int x = g_sentences_count;
+        /* starts of at 0, for every line increases */
+        int x = g_sentences_count;
 
-		/* allocate memory and increase count */
+        /* allocate memory and increase count */
 #ifdef DYNAMIC_SENTENCES
-		g_sentences_count++;
-		g_sentences = (string *)memreallocOld(g_sentences,
-				sizeof(string),
-				x,
-				g_sentences_count);
+        g_sentences_count++;
+        g_sentences = (string *)memreallocOld(g_sentences,
+                sizeof(string),
+                x,
+                g_sentences_count);
 #else
-		if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
-			ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
-			ncWarning("Sentences subsystem unvailable.");
-			InitEnd();
-			return;
-		}
+        if (g_sentences_count + 1 >= SENTENCES_LIMIT) {
+            ncError("Reached limit of %d SentenceDefs.", SENTENCES_LIMIT);
+            ncWarning("Sentences subsystem unvailable.");
+            InitEnd();
+            return;
+        }
 
-		g_sentences_count++;
+        g_sentences_count++;
 #endif
 
-		g_sentences[x] = strtoupper(strcat("!", argv(0)));
-		hash_add(g_hashsentences, g_sentences[x], x);
-	}
+        g_sentences[x] = strtoupper(strcat("!", argv(0)));
+        hash_add(g_hashsentences, g_sentences[x], x);
+    }
 
-	fclose(fs_sentences);
-	ncLog("SentencesDef initialized with %i entries.", g_sentences_count);
-	InitEnd();
+    fclose(fs_sentences);
+    ncLog("SentencesDef initialized with %i entries.", g_sentences_count);
+    InitEnd();
 }
 
 string
 Sentences_GetSamples(string word)
 {
-	int len;
-	int gc = 0;
-	int r, x;
+    int len;
+    int gc = 0;
+    int r, x;
 
-	/* you never know what NPCs might do */
-	if (word == "") {
-		return ("");
-	}
+    /* you never know what NPCs might do */
+    if (word == "") {
+        return ("");
+    }
 
-	/* check if the word is present at all */
-	x = (int)hash_get(g_hashsentences, word, -1i);
-	if (x != -1i) {
-		return g_sentences[x];
-	}
+    /* check if the word is present at all */
+    x = (int)hash_get(g_hashsentences, word, -1i);
+    if (x != -1i) {
+        return g_sentences[x];
+    }
 
-	/* it may be a random group of words. */
-	/* start at [WORD]0 */
-	r = (int)hash_get(g_hashsentences, strcat(word, "0"), 0i);
+    /* it may be a random group of words. */
+    /* start at [WORD]0 */
+    r = (int)hash_get(g_hashsentences, strcat(word, "0"), 0i);
 
-	len = strlen(word);
-	for (int i = r; i < g_sentences_count; i++) {
-		string sub = substring(g_sentences[i], 0, len);
-		if (sub == word) {
-			gc++;
-		}
-	}
+    len = strlen(word);
+    for (int i = r; i < g_sentences_count; i++) {
+        string sub = substring(g_sentences[i], 0, len);
+        if (sub == word) {
+            gc++;
+        }
+    }
 
-	/* if we've got one, choose a random sample of them */
-	if (gc) {
-		r = floor(random(0, gc));
-		SndLog("Choosing %s%i", word, r);
-		return sprintf("%s%i", word, r);
-	}
+    /* if we've got one, choose a random sample of them */
+    if (gc) {
+        r = floor(random(0, gc));
+        SndLog("Choosing %s%i", word, r);
+        return sprintf("%s%i", word, r);
+    }
 
-	/* we've somehow messed up catastrophically */
-	ncError("Invalid sentence keyword %s", word);
-	return ("");
+    /* we've somehow messed up catastrophically */
+    ncError("Invalid sentence keyword %s", word);
+    return ("");
 }
 
 int
 Sentences_GetID(string sentence)
 {
-	int i = (int)hash_get(g_hashsentences, sentence, -1i);
+    int i = (int)hash_get(g_hashsentences, sentence, -1i);
 
-	if (i != -1i) {
-		SndLog("Found sentence %S", sentence);
-		return i;
-	} else {
-		ncError("Can't find sentence %S", sentence);
-		return 0;
-	}
+    if (i != -1i) {
+        SndLog("Found sentence %S", sentence);
+        return i;
+    } else {
+        ncError("Can't find sentence %S", sentence);
+        return 0;
+    }
 }
 #endif

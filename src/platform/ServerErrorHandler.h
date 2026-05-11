@@ -32,19 +32,19 @@ The function is designed to be run every frame. It will return `true` only once 
 bool
 Error_ServerDisconnected(void)
 {
-	string disconnectReason;
+    string disconnectReason;
 
-	disconnectReason = cvar_string("_cl_disconnectreason");
+    disconnectReason = cvar_string("_cl_disconnectreason");
 
-	/* still empty */
-	if (disconnectReason == "") {
-		return false;
-	}
+    /* still empty */
+    if (disconnectReason == "") {
+        return false;
+    }
 
-	/* save to cache */
-	g_lastDisconnectReason = disconnectReason;
-	cvar_set("_cl_disconnectreason", "");
-	return true;
+    /* save to cache */
+    g_lastDisconnectReason = disconnectReason;
+    cvar_set("_cl_disconnectreason", "");
+    return true;
 }
 
 /** Query the last reason for a server disconnect. Will stick and always return something valid when you've been disconnected at least once.
@@ -53,7 +53,7 @@ Error_ServerDisconnected(void)
 string
 Error_GetDisconnectReason(void)
 {
-	return g_lastDisconnectReason;
+    return g_lastDisconnectReason;
 }
 
 /** @} */ // end of servererror

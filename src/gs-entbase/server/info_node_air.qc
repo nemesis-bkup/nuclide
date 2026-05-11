@@ -32,9 +32,9 @@ class
 info_node_air:ncPointTrigger
 {
 public:
-	void info_node_air(void);
-	
-	virtual void Respawn(void);
+    void info_node_air(void);
+    
+    virtual void Respawn(void);
 
 };
 
@@ -47,13 +47,13 @@ info_node_air::info_node_air(void)
 void
 info_node_air::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	SetSize([0,0,0], [0,0,0]);
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
+    SetSize([0,0,0], [0,0,0]);
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
 
-	/* air nodes just stay where they are
-	   see https://twhl.info/wiki/page/Tutorial%3A_All_about_info_nodes */
-	SetOrigin(GetSpawnVector("origin"));
+    /* air nodes just stay where they are
+       see https://twhl.info/wiki/page/Tutorial%3A_All_about_info_nodes */
+    SetOrigin(GetSpawnVector("origin"));
 }

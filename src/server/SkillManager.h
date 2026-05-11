@@ -76,8 +76,8 @@ And [entity declarations](@ref entitydef) can query skills like so:
 ```
 entityDef some_def
 {
-	"spawnclass"  "TestClass"
-	"health"      "skill:starthealth"
+    "spawnclass"  "TestClass"
+    "health"      "skill:starthealth"
 }
 ```
 

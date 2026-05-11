@@ -19,99 +19,99 @@ hashtable g_hashLocale;
 static string
 localizeSuffixForLocale(string locale)
 {
-	switch (locale) {
-	case "pt_BR":
-		return "brazilian";
-		break;
-	case "bg_BG":
-		return "bulgarian";
-		break;
-	case "cs_CZ":
-		return "czech";
-		break;
-	case "da_DK":
-		return "danish";
-		break;
-	case "nl_NL":
-		return "dutch";
-		break;
-	case "en_US":
-		return "english";
-		break;
-	case "fi_FI":
-		return "finnish";
-		break;
-	case "fr_FR":
-		return "french";
-		break;
-	case "de_DE":
-		return "german";
-		break;
-	case "el_GR":
-		return "greek";
-		break;
-	case "hu_HU":
-		return "hungarian";
-		break;
-	case "it_IT":
-		return "italian";
-		break;
-	case "ja_JP":
-		return "japanese";
-		break;
-	case "ko_KR":
-		return "koreana";
-		break;
-	case "no_NO":
-		return "norwegian";
-		break;
-	case "pl_PL":
-		return "polish";
-		break;
-	case "pt_PT":
-		return "portuguese";
-		break;
-	case "ro_RO":
-		return "romanian";
-		break;
-	case "ru_RU":
-		return "russian";
-		break;
-	case "zh_CN":
-		return "schinese";
-		break;
-	case "zh_TW":
-		return "spanish";
-		break;
-	case "sv_SE":
-		return "swedish";
-		break;
-	case "th_TH":
-		return "thai";
-		break;
-	case "zh_TW":
-		return "tchinese";
-		break;
-	case "tr_TR":
-		return "turkish";
-		break;
-	default:
-		return "english";
-	}
+    switch (locale) {
+    case "pt_BR":
+        return "brazilian";
+        break;
+    case "bg_BG":
+        return "bulgarian";
+        break;
+    case "cs_CZ":
+        return "czech";
+        break;
+    case "da_DK":
+        return "danish";
+        break;
+    case "nl_NL":
+        return "dutch";
+        break;
+    case "en_US":
+        return "english";
+        break;
+    case "fi_FI":
+        return "finnish";
+        break;
+    case "fr_FR":
+        return "french";
+        break;
+    case "de_DE":
+        return "german";
+        break;
+    case "el_GR":
+        return "greek";
+        break;
+    case "hu_HU":
+        return "hungarian";
+        break;
+    case "it_IT":
+        return "italian";
+        break;
+    case "ja_JP":
+        return "japanese";
+        break;
+    case "ko_KR":
+        return "koreana";
+        break;
+    case "no_NO":
+        return "norwegian";
+        break;
+    case "pl_PL":
+        return "polish";
+        break;
+    case "pt_PT":
+        return "portuguese";
+        break;
+    case "ro_RO":
+        return "romanian";
+        break;
+    case "ru_RU":
+        return "russian";
+        break;
+    case "zh_CN":
+        return "schinese";
+        break;
+    case "zh_TW":
+        return "spanish";
+        break;
+    case "sv_SE":
+        return "swedish";
+        break;
+    case "th_TH":
+        return "thai";
+        break;
+    case "zh_TW":
+        return "tchinese";
+        break;
+    case "tr_TR":
+        return "turkish";
+        break;
+    default:
+        return "english";
+    }
 }
 
 string
 localize(string lookUpToken)
 {
-	string mat = "";
+    string mat = "";
 
-	mat = (string)hash_get(g_hashLocale, strtoupper(lookUpToken));
+    mat = (string)hash_get(g_hashLocale, strtoupper(lookUpToken));
 
-	if not (mat) {
-		return lookUpToken;
-	}
+    if not (mat) {
+        return lookUpToken;
+    }
 
-	return (mat);
+    return (mat);
 }
 
 var string g_localeFiles;
@@ -119,117 +119,117 @@ var string g_localeFiles;
 bool
 Locale_Defined(string stringID)
 {
-	int constIndex = -1i;
+    int constIndex = -1i;
 
-	/* only if we're prefixed */
-	if (substring(stringID, 0, 1) == "@" || (substring(stringID, 0, 1) == "#")) {
-		constIndex = hash_get(g_hashLocale, stringID, -1i);
-	}
+    /* only if we're prefixed */
+    if (substring(stringID, 0, 1) == "@" || (substring(stringID, 0, 1) == "#")) {
+        constIndex = hash_get(g_hashLocale, stringID, -1i);
+    }
 
-	return (constIndex == -1i) ? (false) : (true);
+    return (constIndex == -1i) ? (false) : (true);
 }
 
 void
 Locale_ParseFile(string pathToFile)
 {
-	filestream fileMaterial;
-	string sTemp;
-	string lookUpToken;
-	string localizedString;
-	int entryCount = 0i;
+    filestream fileMaterial;
+    string sTemp;
+    string lookUpToken;
+    string localizedString;
+    int entryCount = 0i;
 
-	/* check if this locale had already been loaded */
-	if (STRING_SET(g_localeFiles)) {
-		for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
-			string fileToLoad = argv(i);
+    /* check if this locale had already been loaded */
+    if (STRING_SET(g_localeFiles)) {
+        for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
+            string fileToLoad = argv(i);
 
-			if (!STRING_SET(fileToLoad)) {
-				continue;
-			}
+            if (!STRING_SET(fileToLoad)) {
+                continue;
+            }
 
-			/* cancel out */
-			if (fileToLoad == pathToFile) {
-				return;
-			}
-		}
-	}
+            /* cancel out */
+            if (fileToLoad == pathToFile) {
+                return;
+            }
+        }
+    }
 
-	fileMaterial = fopen(pathToFile, FILE_READ);
+    fileMaterial = fopen(pathToFile, FILE_READ);
 
-	if (fileMaterial < 0) {
-		ncError("Missing file %s", pathToFile);
-		return;
-	}
+    if (fileMaterial < 0) {
+        ncError("Missing file %s", pathToFile);
+        return;
+    }
 
-	while ((sTemp = fgets(fileMaterial))) {
-		/* tokenize and just parse this stuff in */
-		if (tokenize_console(sTemp) == 2) {
-			lookUpToken = strcat("#", strtoupper(argv(0)));
-			localizedString = argv(1);
+    while ((sTemp = fgets(fileMaterial))) {
+        /* tokenize and just parse this stuff in */
+        if (tokenize_console(sTemp) == 2) {
+            lookUpToken = strcat("#", strtoupper(argv(0)));
+            localizedString = argv(1);
 
-			if (Locale_Defined(lookUpToken) == true) {
-				continue;
-			}
+            if (Locale_Defined(lookUpToken) == true) {
+                continue;
+            }
 
-			hash_add(g_hashLocale, lookUpToken, localizedString, EV_STRING);
-			//ncLog("Add %S %S", lookUpToken, localizedString);
-			entryCount++;
-		}
-	}
+            hash_add(g_hashLocale, lookUpToken, localizedString, EV_STRING);
+            //ncLog("Add %S %S", lookUpToken, localizedString);
+            entryCount++;
+        }
+    }
 
-	g_localeFiles = sprintf("%s%s;", g_localeFiles, pathToFile);
-	printf("...precached locale %S (%i entries)\n", pathToFile, entryCount);
-	fclose(fileMaterial);
+    g_localeFiles = sprintf("%s%s;", g_localeFiles, pathToFile);
+    printf("...precached locale %S (%i entries)\n", pathToFile, entryCount);
+    fclose(fileMaterial);
 }
 
 void
 Locale_AddFile(string resourceName)
 {
-	string languageCode = localizeSuffixForLocale(cvar_string("lang"));
-	string fileName = sprintf("resource/%s_%s.txt", resourceName, languageCode);
-	string fileNameFB = sprintf("resource/%s_english.txt", resourceName);
+    string languageCode = localizeSuffixForLocale(cvar_string("lang"));
+    string fileName = sprintf("resource/%s_%s.txt", resourceName, languageCode);
+    string fileNameFB = sprintf("resource/%s_english.txt", resourceName);
 
-	/* TODO: check if the file has already been added to the list */
-	if (fileExists(fileName) == true) {
-		Locale_ParseFile(fileName);
-	} else if (fileExists(fileNameFB)) {
-		ncWarning("Locale resource %S for %s not found. Falling back to english.", resourceName, languageCode);
-		Locale_ParseFile(fileNameFB);
-	} else {
-		ncLog("Locale resource %S not found.", resourceName);
-	}
+    /* TODO: check if the file has already been added to the list */
+    if (fileExists(fileName) == true) {
+        Locale_ParseFile(fileName);
+    } else if (fileExists(fileNameFB)) {
+        ncWarning("Locale resource %S for %s not found. Falling back to english.", resourceName, languageCode);
+        Locale_ParseFile(fileNameFB);
+    } else {
+        ncLog("Locale resource %S not found.", resourceName);
+    }
 }
 
 void
 Locale_Init(void)
 {
-	string gameDir = cvar_string("fs_game");
+    string gameDir = cvar_string("fs_game");
 
-	g_hashLocale = hash_createtab(2, EV_STRING | HASH_REPLACE);
+    g_hashLocale = hash_createtab(2, EV_STRING | HASH_REPLACE);
 
-	g_localeFiles = "";
+    g_localeFiles = "";
 
-	/* current dir, plus base GAME dir. */
-	Locale_AddFile(gameDir);
+    /* current dir, plus base GAME dir. */
+    Locale_AddFile(gameDir);
 
 #ifdef MENU
-	Locale_AddFile("menu");
+    Locale_AddFile("menu");
 #endif
 
 #ifdef CLIENT
-	Locale_AddFile("client");
-	Locale_AddFile("editor");
+    Locale_AddFile("client");
+    Locale_AddFile("editor");
 #endif
 
-	Locale_AddFile("gameui");
+    Locale_AddFile("gameui");
 }
 
 void
 Locale_Reload(void)
 {
-	for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
-		string fileToLoad = argv(i);
-		ncLog("Indexing locale resource %s", fileToLoad);
-		Locale_ParseFile(fileToLoad);
-	}
+    for (int i = 0; i < (tokenizebyseparator(g_localeFiles, ";") - 1); i++) {
+        string fileToLoad = argv(i);
+        ncLog("Indexing locale resource %s", fileToLoad);
+        Locale_ParseFile(fileToLoad);
+    }
 }

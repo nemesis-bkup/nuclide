@@ -32,9 +32,9 @@ class
 player_weaponstrip:ncPointTrigger
 {
 public:
-	void player_weaponstrip(void);
-	
-	virtual void Trigger(entity, triggermode_t);
+    void player_weaponstrip(void);
+    
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -45,12 +45,12 @@ player_weaponstrip::player_weaponstrip(void)
 void
 player_weaponstrip::Trigger(entity act, triggermode_t unused)
 {
-	ncPlayer pl;
+    ncPlayer pl;
 
-	if (!(act.flags & FL_CLIENT)) {
-		return;
-	}
+    if (!(act.flags & FL_CLIENT)) {
+        return;
+    }
 
-	pl = (ncPlayer)act;
-	pl.RemoveAllWeapons();
+    pl = (ncPlayer)act;
+    pl.RemoveAllWeapons();
 }

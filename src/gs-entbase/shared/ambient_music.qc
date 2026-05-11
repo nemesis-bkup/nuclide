@@ -57,7 +57,7 @@ ambient_music:ncPointTrigger
     virtual void Respawn(void);
     virtual void EvaluateEntity(void);
     virtual bool SendEntity(entity pvsEnt, float flChanged);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 #endif
 
 #ifdef CLIENT
@@ -78,6 +78,8 @@ ambient_music::ambient_music(void)
 {
     m_musicTrack = "";
     m_musicVolume = 0.0f;
+    m_musicPlaying = false;
+    m_musicLoops = false;
 }
 
 #ifdef SERVER
@@ -137,29 +139,29 @@ ambient_music::Event_PlayMusicTrack(void)
 {
     /* call me when I can play this with bgmvolume * m_musicVolume */
     if (m_musicLoops) {
-        localcmd(sprintf("music %S\n", m_musicTrack));
+        ncCommand("music %S", m_musicTrack);
     } else {
-        localcmd(sprintf("music %S -\n", m_musicTrack));
+        ncCommand("music %S -", m_musicTrack);
     }
 }
 
 void
 ambient_music::Event_StopMusicTrack(void)
 {
-    localcmd("stopmusic\n");
+    ncCommand("stopmusic");
 }
 
 void
 ambient_music::ReceiveEvent(float eventID)
 {
-	switch (eventID) {
-	case AMBIENTMUSICEVENT_PLAY:
+    switch (eventID) {
+    case AMBIENTMUSICEVENT_PLAY:
         Event_PlayMusicTrack();
-		break;
+        break;
     case AMBIENTMUSICEVENT_STOP:
         Event_StopMusicTrack();
         break;
-	}
+    }
 }
 
 void

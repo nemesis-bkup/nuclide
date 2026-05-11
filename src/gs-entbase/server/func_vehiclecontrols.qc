@@ -37,7 +37,7 @@ This entity was introduced in Counter-Strike (2000).
 class
 func_vehiclecontrols:func_traincontrols
 {
-	void func_vehiclecontrols(void);
+    void func_vehiclecontrols(void);
 };
 
 void

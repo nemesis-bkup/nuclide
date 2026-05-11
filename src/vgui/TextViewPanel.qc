@@ -17,13 +17,13 @@
 class
 vguiTextViewPanel:vguiWindow
 {
-	void vguiTextViewPanel(void);
+    void vguiTextViewPanel(void);
 
-	virtual void Spawned(void);
-	virtual void ConsoleResized(void);
+    virtual void Spawned(void);
+    virtual void ConsoleResized(void);
 
 private:
-	vguiTextView textView;
+    vguiTextView textView;
 };
 
 void
@@ -35,26 +35,26 @@ vguiTextViewPanel::vguiTextViewPanel(void)
 void
 vguiTextViewPanel::ConsoleResized(void)
 {
-	textView.SetSize(GetSize() - [16, 32]);
+    textView.SetSize(GetSize() - [16, 32]);
 }
 
 
 void
 vguiTextViewPanel::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	classname = "vguiWindow";
-	SetTitle( "Untitled" );
-	SetSize( [480,400] );
-	SetIcon( "gfx/icon16/page_white_text" );
-	SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
-	CallOnResize(ConsoleResized);
+    classname = "vguiWindow";
+    SetTitle( "Untitled" );
+    SetSize( [480,400] );
+    SetIcon( "gfx/icon16/page_white_text" );
+    SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
+    CallOnResize(ConsoleResized);
 
-	textView = spawn( vguiTextView );
-	//btnOK.SetIcon( "gfx/icon16/control_play" );
-	textView.SetPos( [8,32] );
-	ConsoleResized();
+    textView = spawn( vguiTextView );
+    //btnOK.SetIcon( "gfx/icon16/control_play" );
+    textView.SetPos( [8,32] );
+    ConsoleResized();
 
-	Add(textView);
+    Add(textView);
 }

@@ -27,24 +27,24 @@ class
 ncUserEntity_Audio:ncUserEntity
 {
 public:
-	void ncUserEntity_Audio(void);
+    void ncUserEntity_Audio(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
 
-	nonvirtual void Place(ncPlayer audioSharer, string audioName, string audioURL, string audioPreview);
+    nonvirtual void Place(ncPlayer audioSharer, string audioName, string audioURL, string audioPreview);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual void ReceiveEntity(float flNew, float flChanged);
 #endif
 
 private:
-	string m_userAudioURL;
-	string m_userAudioPic;
+    string m_userAudioURL;
+    string m_userAudioPic;
 
 #ifdef CLIENT
-	entity m_audioPic;
+    entity m_audioPic;
 #endif
 };

@@ -40,221 +40,221 @@ class
 func_recharge:ncRenderableEntity
 {
 public:
-	void func_recharge(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Precache(void);
-	virtual void Respawn(void);
-	virtual void customphysics(void);
-	
-	virtual void OnPlayerUse(void);
-	nonvirtual void ResetHealth(void);
-	nonvirtual void SetChargerCapacity(float);
-	nonvirtual float GetChargerCapacity(void);
+    void func_recharge(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Precache(void);
+    virtual void Respawn(void);
+    virtual void customphysics(void);
+    
+    virtual void OnPlayerUse(void);
+    nonvirtual void ResetHealth(void);
+    nonvirtual void SetChargerCapacity(float);
+    nonvirtual float GetChargerCapacity(void);
 
 private:
-	entity m_eUser;
-	float m_flDelay;
-	float m_flCheck;
+    entity m_eUser;
+    float m_flDelay;
+    float m_flCheck;
 
-	string m_strSndFirst;
-	string m_strSndCharging;
-	string m_strSndDone;
+    string m_strSndFirst;
+    string m_strSndCharging;
+    string m_strSndDone;
 };
 
 void
 func_recharge::func_recharge(void)
 {
-	m_strSndFirst = "items/suitchargeok1.wav";
-	m_strSndCharging = "items/suitcharge1.wav";
-	m_strSndDone = "items/suitchargeno1.wav";
-	m_eUser = __NULL__;
-	m_flDelay = 0.0f;
-	m_flCheck = 0.0f;
+    m_strSndFirst = "items/suitchargeok1.wav";
+    m_strSndCharging = "items/suitcharge1.wav";
+    m_strSndDone = "items/suitchargeno1.wav";
+    m_eUser = __NULL__;
+    m_flDelay = 0.0f;
+    m_flCheck = 0.0f;
 }
 
 void
 func_recharge::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveEntity(handle, "m_eUser", m_eUser);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
-	SaveFloat(handle, "m_flCheck", m_flCheck);
-	SaveString(handle, "m_strSndFirst", m_strSndFirst);
-	SaveString(handle, "m_strSndCharging", m_strSndCharging);
-	SaveString(handle, "m_strSndDone", m_strSndDone);
+    SaveEntity(handle, "m_eUser", m_eUser);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
+    SaveFloat(handle, "m_flCheck", m_flCheck);
+    SaveString(handle, "m_strSndFirst", m_strSndFirst);
+    SaveString(handle, "m_strSndCharging", m_strSndCharging);
+    SaveString(handle, "m_strSndDone", m_strSndDone);
 }
 
 void
 func_recharge::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_eUser":
-		m_eUser = ReadEntity(setValue);
-		break;
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	case "m_flCheck":
-		m_flCheck = ReadFloat(setValue);
-		break;
-	case "m_strSndFirst":
-		m_strSndFirst = ReadString(setValue);
-		break;
-	case "m_strSndCharging":
-		m_strSndCharging = ReadString(setValue);
-		break;
-	case "m_strSndDone":
-		m_strSndDone = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_eUser":
+        m_eUser = ReadEntity(setValue);
+        break;
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    case "m_flCheck":
+        m_flCheck = ReadFloat(setValue);
+        break;
+    case "m_strSndFirst":
+        m_strSndFirst = ReadString(setValue);
+        break;
+    case "m_strSndCharging":
+        m_strSndCharging = ReadString(setValue);
+        break;
+    case "m_strSndDone":
+        m_strSndDone = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_recharge::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "snd_first":
-		m_strSndFirst = setValue;
-		break;
-	case "snd_charging":
-		m_strSndCharging = setValue;
-		break;
-	case "snd_done":
-		m_strSndDone = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "snd_first":
+        m_strSndFirst = setValue;
+        break;
+    case "snd_charging":
+        m_strSndCharging = setValue;
+        break;
+    case "snd_done":
+        m_strSndDone = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_recharge::Precache(void)
 {
-	precache.Sound(m_strSndFirst);
-	precache.Sound(m_strSndCharging);
-	precache.Sound(m_strSndDone);
+    precache.Sound(m_strSndFirst);
+    precache.Sound(m_strSndCharging);
+    precache.Sound(m_strSndDone);
 }
 
 void
 func_recharge::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_BSP);
-	SetMovetype(MOVETYPE_NONE);
-	PlayerUse = OnPlayerUse;
-	ResetHealth();
+    super::Respawn();
+    SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_NONE);
+    PlayerUse = OnPlayerUse;
+    ResetHealth();
 }
 
 void
 func_recharge::SetChargerCapacity(float newCapacity)
 {
-	health = newCapacity;
+    health = newCapacity;
 }
 
 float
 func_recharge::GetChargerCapacity(void)
 {
-	return (health);
+    return (health);
 }
 
 void
 func_recharge::ResetHealth(void)
 {
-	if (GetChargerCapacity() <= 0) {
-		StartSound(m_strSndFirst, CHAN_VOICE, 0, true);
-	}
+    if (GetChargerCapacity() <= 0) {
+        StartSound(m_strSndFirst, CHAN_VOICE, 0, true);
+    }
 
-	SetFrame(0);
+    SetFrame(0);
 
-	if (g_grMode.IsMultiplayer() == true) {
-		health = max_health = 30.0f;
-	} else {
-		health = max_health = Skill_GetValue("suitcharger", 75);
-	}
+    if (g_grMode.IsMultiplayer() == true) {
+        health = max_health = 30.0f;
+    } else {
+        health = max_health = Skill_GetValue("suitcharger", 75);
+    }
 }
 
 void
 func_recharge::OnPlayerUse(void)
 {
-	/* let's not let this become too funny... */
-	if (eActivator.health <= 0) {
-		return;
-	}
+    /* let's not let this become too funny... */
+    if (eActivator.health <= 0) {
+        return;
+    }
 
-	eActivator.AddVFlags(VFL_USE_RELEASED);
+    eActivator.AddVFlags(VFL_USE_RELEASED);
 
-	/* First come first serve */ 
-	if (m_eUser && eActivator != m_eUser) {
-		return;
-	}
+    /* First come first serve */ 
+    if (m_eUser && eActivator != m_eUser) {
+        return;
+    }
 
-	/* First time */
-	if (m_eUser == world) {
-		StartSound(m_strSndFirst, CHAN_VOICE, 0, true);
-	}
+    /* First time */
+    if (m_eUser == world) {
+        StartSound(m_strSndFirst, CHAN_VOICE, 0, true);
+    }
 
-	if (m_flDelay > GetTime()) {
-		return;
-	}
+    if (m_flDelay > GetTime()) {
+        return;
+    }
 
-	if (health <= 0) {
-		eActivator.RemoveVFlags(VFL_USE_RELEASED);
-		StartSound(m_strSndDone, CHAN_VOICE, 0, true);
-		m_eUser = world;
-		return;
-	}
+    if (health <= 0) {
+        eActivator.RemoveVFlags(VFL_USE_RELEASED);
+        StartSound(m_strSndDone, CHAN_VOICE, 0, true);
+        m_eUser = world;
+        return;
+    }
 
-	ncPlayer pl = (ncPlayer)eActivator;
-	if (pl.armor >= 100) {
-		eActivator.RemoveVFlags(VFL_USE_RELEASED);
-		StartSound(m_strSndDone, CHAN_VOICE, 0, true);
-	} else {
-		if (m_eUser == world) {
-			StartSound(m_strSndCharging, CHAN_ITEM, 0, true);
-		}
+    ncPlayer pl = (ncPlayer)eActivator;
+    if (pl.armor >= 100) {
+        eActivator.RemoveVFlags(VFL_USE_RELEASED);
+        StartSound(m_strSndDone, CHAN_VOICE, 0, true);
+    } else {
+        if (m_eUser == world) {
+            StartSound(m_strSndCharging, CHAN_ITEM, 0, true);
+        }
 
-		pl.armor = bound(0, pl.armor += 1, 100);
+        pl.armor = bound(0, pl.armor += 1, 100);
 
-		/* Reset 30 seconds after first being used successfully */
-		//if (health == max_health) {
-			ScheduleThink(ResetHealth, 30.0f);
-		//}
-		SetChargerCapacity(GetChargerCapacity() - 1);
+        /* Reset 30 seconds after first being used successfully */
+        //if (health == max_health) {
+            ScheduleThink(ResetHealth, 30.0f);
+        //}
+        SetChargerCapacity(GetChargerCapacity() - 1);
 
-		/* Disable when empty */
-		if (GetChargerCapacity() <= 0) {
-			StopSound(CHAN_ITEM, true);
-			StartSound(m_strSndDone, CHAN_VOICE, 0, true);
-			SetFrame(1);
-			eActivator.RemoveVFlags(VFL_USE_RELEASED);
-			m_eUser = world;
-			return;
-		}
-	}
+        /* Disable when empty */
+        if (GetChargerCapacity() <= 0) {
+            StopSound(CHAN_ITEM, true);
+            StartSound(m_strSndDone, CHAN_VOICE, 0, true);
+            SetFrame(1);
+            eActivator.RemoveVFlags(VFL_USE_RELEASED);
+            m_eUser = world;
+            return;
+        }
+    }
 
-	m_eUser = eActivator;
-	m_flDelay = GetTime() + 0.1f;
-	m_flCheck = GetTime() + 0.25f;
+    m_eUser = eActivator;
+    m_flDelay = GetTime() + 0.1f;
+    m_flCheck = GetTime() + 0.25f;
 }
 
 void
 func_recharge::customphysics(void)
 {
-	if (m_flCheck > GetTime()) {
-		return;
-	}
+    if (m_flCheck > GetTime()) {
+        return;
+    }
 
-	if (m_eUser) {
-		StopSound(CHAN_ITEM, true);
-		m_eUser = world;
-	}
+    if (m_eUser) {
+        StopSound(CHAN_ITEM, true);
+        m_eUser = world;
+    }
 
-	HandleThink();
+    HandleThink();
 }

@@ -17,127 +17,127 @@
 void
 ncBot::Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	ncRuleDelegate rules = g_grMode;
+    ncRuleDelegate rules = g_grMode;
 
-	super::Pain(inflictor, attacker, damage, dir, absImpactPos, hitBody);
+    super::Pain(inflictor, attacker, damage, dir, absImpactPos, hitBody);
 
-	if (attacker != this && attacker != world && rules.IsTeamplay()) {
-		if (is.Player(attacker) && attacker.team == team) {
-			ChatSayTeam("Stop shooting me!");
-			return;
-		}
-	}
+    if (attacker != this && attacker != world && rules.IsTeamplay()) {
+        if (is.Player(attacker) && attacker.team == team) {
+            ChatSayTeam("Stop shooting me!");
+            return;
+        }
+    }
 
-	/* make this pain our new enemy! */
-	if (attacker && attacker != this) {
-		float enemydist = distanceSquared(origin, m_eTarget.origin);
-		float newdist = distanceSquared(origin, attacker.origin);
+    /* make this pain our new enemy! */
+    if (attacker && attacker != this) {
+        float enemydist = distanceSquared(origin, m_eTarget.origin);
+        float newdist = distanceSquared(origin, attacker.origin);
 
-		if (m_eTarget) {
-			if (newdist < enemydist) {
-				SetEnemy(attacker);
-			}
-		} else {
-			SetEnemy(attacker);
-		}
-	}
+        if (m_eTarget) {
+            if (newdist < enemydist) {
+                SetEnemy(attacker);
+            }
+        } else {
+            SetEnemy(attacker);
+        }
+    }
 }
 
 void
 ncBot::SetEnemy(entity en)
 {
-	m_eTarget = en;
+    m_eTarget = en;
 
-	if (m_eTarget) {
-		m_flEnemyDist = distanceSquared(origin, m_eTarget.origin);
-	} else {
-		m_flEnemyDist = -1;
-	}
+    if (m_eTarget) {
+        m_flEnemyDist = distanceSquared(origin, m_eTarget.origin);
+    } else {
+        m_flEnemyDist = -1;
+    }
 }
 
 void
 ncBot::WeaponThink(void)
 {
-	if (!m_activeWeapon) {
-		return;
-	}
+    if (!m_activeWeapon) {
+        return;
+    }
 
-	bool isEmpty = m_activeWeapon.IsEmpty();
+    bool isEmpty = m_activeWeapon.IsEmpty();
 
-	/* clip empty, but the whole weapon isn't */
-	if (isEmpty == false) {
-		/* stop fire, tap reload */
-		input_buttons &= ~INPUT_PRIMARY;
-		input_buttons |= INPUT_RELOAD;
-	} else {
-		/* if empty, switch to the next best weapon */
-		SwitchToBestWeapon(false);
-	}
+    /* clip empty, but the whole weapon isn't */
+    if (isEmpty == false) {
+        /* stop fire, tap reload */
+        input_buttons &= ~INPUT_PRIMARY;
+        input_buttons |= INPUT_RELOAD;
+    } else {
+        /* if empty, switch to the next best weapon */
+        SwitchToBestWeapon(false);
+    }
 
-	//m_wtWeaponType = Weapons_GetType(this, activeweapon);
+    //m_wtWeaponType = Weapons_GetType(this, activeweapon);
 }
 
 void
 ncBot::WeaponAttack(void)
 {
-	bool shouldAttack = false;
+    bool shouldAttack = false;
 
-	/* only attack when the type's suggested distance makes sense to */
-	if (m_wtWeaponType == WPNTYPE_RANGED) {
-		if (m_flEnemyDist <= 1024)
-			shouldAttack = true;
-	} else if (m_wtWeaponType == WPNTYPE_THROW) {
-		if (m_flEnemyDist <= 512)
-			shouldAttack = true;
-	} else if (m_wtWeaponType == WPNTYPE_CLOSE) {
-		if (m_flEnemyDist <= 128)
-			shouldAttack = true;
-	} else {
-		if (m_flEnemyDist <= 1024)
-			shouldAttack = true;
-	}
+    /* only attack when the type's suggested distance makes sense to */
+    if (m_wtWeaponType == WPNTYPE_RANGED) {
+        if (m_flEnemyDist <= 1024)
+            shouldAttack = true;
+    } else if (m_wtWeaponType == WPNTYPE_THROW) {
+        if (m_flEnemyDist <= 512)
+            shouldAttack = true;
+    } else if (m_wtWeaponType == WPNTYPE_CLOSE) {
+        if (m_flEnemyDist <= 128)
+            shouldAttack = true;
+    } else {
+        if (m_flEnemyDist <= 1024)
+            shouldAttack = true;
+    }
 
-	if (m_flForceWeaponAttack > time)
-		shouldAttack = true;
+    if (m_flForceWeaponAttack > time)
+        shouldAttack = true;
 
-	if (shouldAttack && m_flAttackTime < time) {
-		if (!m_iAttackMode) {
-			input_buttons |= INPUT_PRIMARY;
-		}
+    if (shouldAttack && m_flAttackTime < time) {
+        if (!m_iAttackMode) {
+            input_buttons |= INPUT_PRIMARY;
+        }
 
-		/* this might not affect much */
-		if (m_wtWeaponType != WPNTYPE_FULLAUTO) {
-			switch (cvar("bot_skill")) {
-			case 1:
-				m_flAttackTime = time + 0.25f;
-				break;
-			case 2:
-				m_flAttackTime = time + 0.10f;
-				break;
-			case 3:
-				m_flAttackTime = time + 0.05f;
-				break;
-			default:
-				m_flAttackTime = time + 1.0;
-			}
-		}
-	} else {
-		input_buttons &= ~INPUT_PRIMARY;
-		input_buttons &= ~INPUT_RELOAD;
-		input_buttons &= ~INPUT_SECONDARY;
-	}
+        /* this might not affect much */
+        if (m_wtWeaponType != WPNTYPE_FULLAUTO) {
+            switch (cvar("bot_skill")) {
+            case 1:
+                m_flAttackTime = time + 0.25f;
+                break;
+            case 2:
+                m_flAttackTime = time + 0.10f;
+                break;
+            case 3:
+                m_flAttackTime = time + 0.05f;
+                break;
+            default:
+                m_flAttackTime = time + 1.0;
+            }
+        }
+    } else {
+        input_buttons &= ~INPUT_PRIMARY;
+        input_buttons &= ~INPUT_RELOAD;
+        input_buttons &= ~INPUT_SECONDARY;
+    }
 
-	if (m_wtWeaponType != WPNTYPE_FULLAUTO)
-		m_iAttackMode = 1 - m_iAttackMode;
-	else
-		m_iAttackMode = 0;
+    if (m_wtWeaponType != WPNTYPE_FULLAUTO)
+        m_iAttackMode = 1 - m_iAttackMode;
+    else
+        m_iAttackMode = 0;
 }
 
 void
 ncBot::ForceWeaponAttack(vector attackPos, float attackTime)
 {
-	m_vecForceWeaponAttackPos = attackPos;
-	m_flForceWeaponAttack = attackTime + time;
+    m_vecForceWeaponAttackPos = attackPos;
+    m_flForceWeaponAttack = attackTime + time;
 }
 
 var float g_botalert_timer;
@@ -145,42 +145,42 @@ var float g_botalert_timer;
 void
 BotLib_Alert(vector pos, float radius, float t)
 {
-	ncRuleDelegate rules = g_grMode;
+    ncRuleDelegate rules = g_grMode;
 
-	/* sometimes many alert-sounds happen at once... we don't really want
-	 * that */
-	if (g_botalert_timer > time)
-		return;
+    /* sometimes many alert-sounds happen at once... we don't really want
+     * that */
+    if (g_botalert_timer > time)
+        return;
 
-	for (entity w = world; (w = next.Player(w));) {
-		if (is.Bot(w) == false) {
-			continue;
-		}
+    for (entity w = world; (w = next.Player(w));) {
+        if (is.Bot(w) == false) {
+            continue;
+        }
 
-		/* out of radius */
-		if (distance(pos, w.origin) > radius)
-			continue;
+        /* out of radius */
+        if (distance(pos, w.origin) > radius)
+            continue;
 
-		ncBot f = (ncBot) w;
+        ncBot f = (ncBot) w;
 
-		/* they already got a target of some kind */
-		if (f.m_eTarget)
-			continue;
+        /* they already got a target of some kind */
+        if (f.m_eTarget)
+            continue;
 
-		/* if they're our friend... ignore */
-		if (rules.IsTeamplay())
-			if (w.team == t)
-				continue;
+        /* if they're our friend... ignore */
+        if (rules.IsTeamplay())
+            if (w.team == t)
+                continue;
 
-		/* if the bot is dead... ignore */
-		if (f.health <= 0)
-			continue;
+        /* if the bot is dead... ignore */
+        if (f.health <= 0)
+            continue;
 
-		/* we've heard a noise. investigate the location */
-		BotLog("Bot %S (%d) alerted by noise at %v", f.netname, num_for_edict(f), pos);
-		f.RouteClear();
-		f.RouteToPosition(pos);
-	}
+        /* we've heard a noise. investigate the location */
+        BotLog("Bot %S (%d) alerted by noise at %v", f.netname, num_for_edict(f), pos);
+        f.RouteClear();
+        f.RouteToPosition(pos);
+    }
 
-	g_botalert_timer = time + 0.5f;
+    g_botalert_timer = time + 0.5f;
 }

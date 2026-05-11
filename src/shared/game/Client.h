@@ -16,10 +16,10 @@
 
 typedef enum
 {
-	AUTH_UNCONNECTED = 0,
-	AUTH_PROCESSING = 1,
-	AUTH_VERIFIED = 2,
-	AUTH_FAILED = 3,
+    AUTH_UNCONNECTED = 0,
+    AUTH_PROCESSING = 1,
+    AUTH_VERIFIED = 2,
+    AUTH_FAILED = 3,
 } authentication_t;
 
 /** This entity class is the lowest client/player class.
@@ -33,72 +33,74 @@ class
 ncClient:ncBot
 {
 public:
-	void ncClient(void);
+    void ncClient(void);
 
-	/** Called within the class to deal with the final input handling of the client. */
-	virtual void ProcessInput(void);
-	/** Run once, every frame, before physics are run on the player. */
-	virtual void PreFrame(void);
-	/** Run once, every frame, after physics are run on the player. */
-	virtual void PostFrame(void);
-	/** Returns if we're a 'fake' spectator. This is a regular player acting as a spectator. */
-	virtual bool IsFakeSpectator(void);
-	/** Returns if we're a 'real' spectator. That is a client that can only spectate. */
-	virtual bool IsRealSpectator(void);
-	/** Returns if we're considered 'dead'. ncClient, ncSpectator will always return false. */
-	virtual bool IsDead(void);
-	/** Returns if we're a player. That is a type of client that is built on top of ncPlayer. */
-	virtual bool IsPlayer(void);
-	/** Like ClientInputFrame and ServerInputFrame, but run on both client and server at the same time. It is run before ClientInputFrame and ServerInputFrame. When overriding, Make sure to call the super method to enable Nuclide to handle spectator controls properly. */
-	virtual void SharedInputFrame(void);
+    /** Called within the class to deal with the final input handling of the client. */
+    virtual void ProcessInput(void);
+    /** Run once, every frame, before physics are run on the player. */
+    virtual void PreFrame(void);
+    /** Run once, every frame, after physics are run on the player. */
+    virtual void PostFrame(void);
+    /** Returns if we're a spectator. Of any type. */
+    virtual bool IsSpectator(void);
+    /** Returns if we're a 'fake' spectator. This is a regular player acting as a spectator. */
+    virtual bool IsFakeSpectator(void);
+    /** Returns if we're a 'real' spectator. That is a client that can only spectate. */
+    virtual bool IsRealSpectator(void);
+    /** Returns if we're considered 'dead'. ncClient, ncSpectator will always return false. */
+    virtual bool IsDead(void);
+    /** Returns if we're a player. That is a type of client that is built on top of ncPlayer. */
+    virtual bool IsPlayer(void);
+    /** Like ClientInputFrame and ServerInputFrame, but run on both client and server at the same time. It is run before ClientInputFrame and ServerInputFrame. When overriding, Make sure to call the super method to enable Nuclide to handle spectator controls properly. */
+    virtual void SharedInputFrame(void);
 
-	/* overrides */
-	virtual void Spawned(void);
-	virtual void OnRemoveEntity(void);
-	virtual float GetForwardSpeed(void);
-	virtual float GetSideSpeed(void);
-	virtual float GetBackSpeed(void);
+    /* overrides */
+    virtual void Spawned(void);
+    virtual void OnRemoveEntity(void);
+    virtual float GetForwardSpeed(void);
+    virtual float GetSideSpeed(void);
+    virtual float GetBackSpeed(void);
 
 #ifdef CLIENT
-	/** Client: Called on the client to give a chance to override input_* variables before networking them takes place. */
-	virtual void ClientInputFrame(void);
+    /** Client: Called on the client to give a chance to override input_* variables before networking them takes place. */
+    virtual void ClientInputFrame(void);
 
-	/** Client: Called every single client frame when this client is alive. You are expected to manipulate the g_view global here, which is of type ncView. */
-	virtual void UpdateAliveCam(void);
+    /** Client: Called every single client frame when this client is alive. You are expected to manipulate the g_view global here, which is of type ncView. */
+    virtual void UpdateAliveCam(void);
 
-	/** Client: Called every single client frame when this client is dead. You are expected to manipulate the g_view global here, which is of type ncView. */
-	virtual void UpdateDeathcam(void);
+    /** Client: Called every single client frame when this client is dead. You are expected to manipulate the g_view global here, which is of type ncView. */
+    virtual void UpdateDeathcam(void);
 
-	/** Client: Called every single client frame during intermission. You are expected to manipulate the g_view global here, which is of type ncView. */
-	virtual void UpdateIntermissionCam(void);
+    /** Client: Called every single client frame during intermission. You are expected to manipulate the g_view global here, which is of type ncView. */
+    virtual void UpdateIntermissionCam(void);
 
-	/* overrides */
-	virtual float predraw(void);
+    /* overrides */
+    virtual float predraw(void);
 #endif
 
 #ifdef SERVER
-	/** Server: This is where the input* variables arrive after sending them out from the client (see ClientInputFrame). This is also where we will instruct the server to run physics on the client. */
-	virtual void ServerInputFrame(void);
+    /** Server: This is where the input* variables arrive after sending them out from the client (see ClientInputFrame). This is also where we will instruct the server to run physics on the client. */
+    virtual void ServerInputFrame(void);
 
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	
-	nonvirtual authentication_t AuthLevel(void);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+
+    nonvirtual authentication_t AuthLevel(void);
 #endif
 
 private:
-	vector origin_net;
-	vector velocity_net;
+    vector origin_net;
+    vector velocity_net;
 
-	NSXRSpace m_xrSpace;
-	NSXRInput m_xrInputHead;
-	NSXRInput m_xrInputLeft;
-	NSXRInput m_xrInputRight;
+    NSXRSpace m_xrSpace;
+    NSXRInput m_xrInputHead;
+    NSXRInput m_xrInputLeft;
+    NSXRInput m_xrInputRight;
 
 #ifdef SERVER
-	float score;
-	authentication_t m_authLevel;
+    float score;
+    authentication_t m_authLevel;
 #endif
 };
 

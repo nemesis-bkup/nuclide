@@ -16,107 +16,107 @@
 
 typedef enumflags
 {
-	PORTALFL_CHANGED_ORIGIN_X,
-	PORTALFL_CHANGED_ORIGIN_Y,
-	PORTALFL_CHANGED_ORIGIN_Z,
-	PORTALFL_CHANGED_ANGLES_X,
-	PORTALFL_CHANGED_ANGLES_Y,
-	PORTALFL_CHANGED_ANGLES_Z,
-	PORTALFL_CHANGED_TARG_ENTITY,
-	PORTALFL_CHANGED_TARG_ORIGIN_X,
-	PORTALFL_CHANGED_TARG_ORIGIN_Y,
-	PORTALFL_CHANGED_TARG_ORIGIN_Z,
-	PORTALFL_CHANGED_TARG_ANGLES_X,
-	PORTALFL_CHANGED_TARG_ANGLES_Y,
-	PORTALFL_CHANGED_TARG_ANGLES_Z,
-	PORTALFL_CHANGED_ENABLED,
-	PORTALFL_CHANGED_MODELINDEX
+    PORTALFL_CHANGED_ORIGIN_X,
+    PORTALFL_CHANGED_ORIGIN_Y,
+    PORTALFL_CHANGED_ORIGIN_Z,
+    PORTALFL_CHANGED_ANGLES_X,
+    PORTALFL_CHANGED_ANGLES_Y,
+    PORTALFL_CHANGED_ANGLES_Z,
+    PORTALFL_CHANGED_TARG_ENTITY,
+    PORTALFL_CHANGED_TARG_ORIGIN_X,
+    PORTALFL_CHANGED_TARG_ORIGIN_Y,
+    PORTALFL_CHANGED_TARG_ORIGIN_Z,
+    PORTALFL_CHANGED_TARG_ANGLES_X,
+    PORTALFL_CHANGED_TARG_ANGLES_Y,
+    PORTALFL_CHANGED_TARG_ANGLES_Z,
+    PORTALFL_CHANGED_ENABLED,
+    PORTALFL_CHANGED_MODELINDEX
 } nsportal_changed_t;
 
 #warning Needs documentation
 class
 ncPortal:ncEntity
 {
-	void ncPortal(void);
+    void ncPortal(void);
 
-	nonvirtual void _PortalUpdated(void);
-	nonvirtual vector _OriginTransform(vector);
-	nonvirtual vector _DirectionTransform(vector);
+    nonvirtual void _PortalUpdated(void);
+    nonvirtual vector _OriginTransform(vector);
+    nonvirtual vector _DirectionTransform(vector);
 
-	/** overrides */
-	virtual vector camera_transform(vector, vector);
+    /** overrides */
+    virtual vector camera_transform(vector, vector);
 
 #ifdef SERVER
-	virtual void Save(float);
-	virtual void Restore(string,string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
 
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity, float);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity, float);
 
-	virtual void PortalWasClosed(void);
-	virtual void PortalWasOpened(void);
+    virtual void PortalWasClosed(void);
+    virtual void PortalWasOpened(void);
 
-	/** Sets the ncPortal ID. Only used to link portals together via PortalAutoLink. */
-	nonvirtual void SetPortalID(int);
-	/** Will link this portal to another ncPortal. */
-	nonvirtual bool PortalLinkTo(ncPortal, bool);
-	/** Will link this portal to the youngest other ncPortal. */
-	nonvirtual void PortalAutoLink(bool);
-	/** Closes the portal, will not remove it from world. */
-	nonvirtual void PortalClose(void);
-	/** Sets the model to use for the portal. */
-	nonvirtual void SetPortalModel(string);
+    /** Sets the ncPortal ID. Only used to link portals together via PortalAutoLink. */
+    nonvirtual void SetPortalID(int);
+    /** Will link this portal to another ncPortal. */
+    nonvirtual bool PortalLinkTo(ncPortal, bool);
+    /** Will link this portal to the youngest other ncPortal. */
+    nonvirtual void PortalAutoLink(bool);
+    /** Closes the portal, will not remove it from world. */
+    nonvirtual void PortalClose(void);
+    /** Sets the model to use for the portal. */
+    nonvirtual void SetPortalModel(string);
 #endif
 #ifdef CLIENT
-	virtual void ReceiveEntity(float, float);
-	virtual float predraw(void);
+    virtual void ReceiveEntity(float, float);
+    virtual float predraw(void);
 #endif
 
 private:
-	ncPortal m_ePortalTarget;
-	ncPortal m_ePortalTarget_net;
-	NETWORKED_VECTOR(m_vecTargetPos)
-	NETWORKED_VECTOR(m_vecTargetAngle)
-	NETWORKED_BOOL(m_portalEnabled)
-	NETWORKED_FLOAT(m_portalModelIndex)
+    ncPortal m_ePortalTarget;
+    ncPortal m_ePortalTarget_net;
+    NETWORKED_VECTOR(m_vecTargetPos)
+    NETWORKED_VECTOR(m_vecTargetAngle)
+    NETWORKED_BOOL(m_portalEnabled)
+    NETWORKED_FLOAT(m_portalModelIndex)
 
-	vector m_vecPortalPos;
-	vector m_vecPortalN;
-	vector m_vecPortalS;
-	vector m_vecPortalT;
+    vector m_vecPortalPos;
+    vector m_vecPortalN;
+    vector m_vecPortalS;
+    vector m_vecPortalT;
 
-	bool m_portalWasEnabled;
+    bool m_portalWasEnabled;
 
-	/** Will transport an entity from its position to the exit position. */
-	nonvirtual void TransportEntity(ncEntity);
+    /** Will transport an entity from its position to the exit position. */
+    nonvirtual void TransportEntity(ncEntity);
 
-	vector m_vecTargetPos;
-	vector m_vecTargetN;
-	vector m_vecTargetS;
-	vector m_vecTargetT;
+    vector m_vecTargetPos;
+    vector m_vecTargetN;
+    vector m_vecTargetS;
+    vector m_vecTargetT;
 
 #ifdef CLIENT
-	float m_flSize;
+    float m_flSize;
 #endif
 
 #ifdef SERVER
-	int m_iPortalValue;
+    int m_iPortalValue;
 #endif
 
-	int m_brushNum;
+    int m_brushNum;
 };
 
 #ifdef CLIENT
 #define READENTITY_PORTAL(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = (ncPortal)findfloat(world, ::entnum, readentitynum());\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = (ncPortal)findfloat(world, ::entnum, readentitynum());\
+        PRINTFLAG(changedflag); \
+    }\
 }
 #endif
 
 #define SOLID_PORTAL 21
 
 .float portalnum;
-.float impulse;	 //used as the radius for the solid_portal csg subtraction
+.float impulse;  //used as the radius for the solid_portal csg subtraction
 .bool isPortal;

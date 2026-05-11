@@ -1,0 +1,86 @@
+entityDef weapon_portalgun
+{
+	"editor_color"		".3 .3 1"
+	"editor_mins"		"-16 -16 -16"
+	"editor_maxs"		"16 16 16"
+	"editor_usage"		"Portal Gun"
+	"editor_rotatable"	"1"
+
+	"inherit"		"weapon_base"
+	"model"				"progs/g_light.mdl"
+	"model_view"		"progs/v_light.mdl"
+
+	// weapon specific
+	"def_fireInfo"		"fireInfo_portalgun"
+	"def_altFireInfo"	"fireInfo_portalgunAlt"
+	"inv_name"			"PORTAL GUN"
+	"hl2hud_icon"		"l"
+
+	"act_idle"		"0"
+	"act_fire"		"1"
+
+	"hudSlot"		"0"
+	"hudSlotPos"	"1"
+	"weight"		"0"
+	"spin"			"1"
+}
+
+entityDef projectile_portalgun
+{
+	"spawnclass"			"ncProjectile"
+	"model"					""
+
+	"health"				"0"
+	"velocity"				"9000"
+	"angular_velocity"		"0 0 200"
+	"fuse"					"10"
+	"detonate_on_fuse"		"0"
+	"detonate_on_death"		"1"
+	"detonate_on_world"		"1"
+	"detonate_on_actor"		"1"
+	"impact_damage_effect"	"1"
+	"impact_gib"			"1"
+
+	"thrust"				"4000"
+	"thrust_start"			"0.1"
+	"thrust_end"			"2"
+
+
+	"light_color"			"0 0 1"
+	"light_radius"			"160"
+	"light_offset"			"0 0 0"
+	"offset"				"0 7 -8"
+	"def_planeImpact" 	"portal_blue"
+}
+
+entityDef projectile_portalgunAlt
+{
+	"inherit"				"projectile_portalgun"
+	"light_color"			"1 0.5 0"
+	"def_planeImpact" 		"portal_red"
+}
+
+entityDef fireInfo_portalgun
+{
+	"def_onFire"	"projectile_portalgun"
+	"punchAngle"	"-5 0 0"
+	"fireRate"		"0.5"
+}
+
+entityDef fireInfo_portalgunAlt
+{
+	"def_onFire"	"projectile_portalgunAlt"
+	"punchAngle"	"-5 0 0"
+	"fireRate"		"0.5"
+}
+
+entityDef portal_blue
+{
+	"spawnclass"	"prop_portal"
+}
+
+entityDef portal_red
+{
+	"spawnclass"	"prop_portal"
+	"PortalTwo"		"1"
+}

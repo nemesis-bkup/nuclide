@@ -76,285 +76,285 @@ class
 light:ncPointTrigger
 {
 public:
-	void light(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void RestoreComplete(void);
-	virtual void Input(entity, string, string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void DebugDraw(void);
+    void light(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void RestoreComplete(void);
+    virtual void Input(entity, string, string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void DebugDraw(void);
 
-	nonvirtual void TurnLightOn(void);
-	nonvirtual void TurnLightOff(void);
-	nonvirtual void ToggleLight(void);
-	nonvirtual vector GetLightColor(void);
+    nonvirtual void TurnLightOn(void);
+    nonvirtual void TurnLightOff(void);
+    nonvirtual void ToggleLight(void);
+    nonvirtual vector GetLightColor(void);
 
 private:
-	bool m_lightIsOn;
-	bool m_lightStartsOn;
-	float m_lightStyle;
-	float m_lightStyleSwitch;
-	string m_lightPattern;
+    bool m_lightIsOn;
+    bool m_lightStartsOn;
+    float m_lightStyle;
+    float m_lightStyleSwitch;
+    string m_lightPattern;
 
-	vector m_lightColor;
-	vector m_lightStyleColor;
-	bool m_lightLastState;
+    vector m_lightColor;
+    vector m_lightStyleColor;
+    bool m_lightLastState;
 };
 
 void
 light::light(void)
 {
-	m_lightIsOn = true;
-	m_lightStartsOn = true;
-	m_lightPattern = "m";
-	m_lightStyle = 0;
-	m_lightStyleSwitch = 0;
-	m_lightColor = [1,1,1];
-	m_lightStyleColor = [1,1,1];
+    m_lightIsOn = true;
+    m_lightStartsOn = true;
+    m_lightPattern = "m";
+    m_lightStyle = 0;
+    m_lightStyleSwitch = 0;
+    m_lightColor = [1,1,1];
+    m_lightStyleColor = [1,1,1];
 }
 
 vector
 light::GetLightColor(void)
 {
-	return (m_lightColor);
+    return (m_lightColor);
 }
 
 void
 light::Save(float handle)
 {
-	super::Save(handle);
-	SaveBool(handle, "m_lightIsOn", m_lightIsOn);
-	SaveBool(handle, "m_lightStartsOn", m_lightStartsOn);
-	SaveFloat(handle, "m_lightStyle", m_lightStyle);
-	SaveFloat(handle, "m_lightStyleSwitch", m_lightStyleSwitch);
-	SaveString(handle, "m_lightPattern", m_lightPattern);
+    super::Save(handle);
+    SaveBool(handle, "m_lightIsOn", m_lightIsOn);
+    SaveBool(handle, "m_lightStartsOn", m_lightStartsOn);
+    SaveFloat(handle, "m_lightStyle", m_lightStyle);
+    SaveFloat(handle, "m_lightStyleSwitch", m_lightStyleSwitch);
+    SaveString(handle, "m_lightPattern", m_lightPattern);
 }
 
 void
 light::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_lightIsOn":
-		m_lightIsOn = ReadBool(setValue);
-		break;
-	case "m_lightStartsOn":
-		m_lightStartsOn = ReadBool(setValue);
-		break;
-	case "m_lightStyle":
-		m_lightStyle = ReadFloat(setValue);
-		break;
-	case "m_lightStyleSwitch":
-		m_lightStyleSwitch = ReadFloat(setValue);
-		break;
-	case "m_lightPattern":
-		m_lightPattern = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_lightIsOn":
+        m_lightIsOn = ReadBool(setValue);
+        break;
+    case "m_lightStartsOn":
+        m_lightStartsOn = ReadBool(setValue);
+        break;
+    case "m_lightStyle":
+        m_lightStyle = ReadFloat(setValue);
+        break;
+    case "m_lightStyleSwitch":
+        m_lightStyleSwitch = ReadFloat(setValue);
+        break;
+    case "m_lightPattern":
+        m_lightPattern = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 light::RestoreComplete(void)
 {
-	if (m_lightLastState != m_lightIsOn) {
-		m_lightLastState = m_lightIsOn;
+    if (m_lightLastState != m_lightIsOn) {
+        m_lightLastState = m_lightIsOn;
 
-		if (m_lightIsOn) {
-			EntLog("Light now on.");
-		} else {
-			EntLog("Light now off.");
-		}
-	}
+        if (m_lightIsOn) {
+            EntLog("Light now on.");
+        } else {
+            EntLog("Light now off.");
+        }
+    }
 
-	/* not switchable */
-	if (m_lightStyle < 12) {
-		return;
-	}
+    /* not switchable */
+    if (m_lightStyle < 12) {
+        return;
+    }
 
-	if (m_lightIsOn == false) {
-		lightstyle(m_lightStyle, "a", m_lightStyleColor);
-	} else {
-		lightstyle(m_lightStyle, m_lightPattern, m_lightStyleColor);
-	}
+    if (m_lightIsOn == false) {
+        lightstyle(m_lightStyle, "a", m_lightStyleColor);
+    } else {
+        lightstyle(m_lightStyle, m_lightPattern, m_lightStyleColor);
+    }
 }
 
 void
 light::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "pattern":
-		m_lightPattern = ReadString(setValue);
-		break;
-	case "switch_style":
-		m_lightStyleSwitch = ReadFloat(setValue);
-		break;
-	case "style":
-		m_lightStyle = ReadFloat(setValue);
-		style = __NULL__;
-		break;
-	case "start_active":
-		m_lightStartsOn = ReadBool(setValue);
-		break;
-	/* level-compiler keys we don't really use right now */
-	case "_cone":
-	case "_cone2":
-	case "_sky":
-	/* mostly for light_environment */
-	case "pitch":
-		angles[0] = ReadFloat(setValue);
-		break;
-	case "sunangle":
-		angles[1] = ReadFloat(setValue);
-		break;
-	case "color":
-		m_lightColor = ReadVector(setValue);
-		break;
-	case "_light":
-	case "color255":
-		m_lightColor = ReadVector(setValue) / 255;
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "pattern":
+        m_lightPattern = ReadString(setValue);
+        break;
+    case "switch_style":
+        m_lightStyleSwitch = ReadFloat(setValue);
+        break;
+    case "style":
+        m_lightStyle = ReadFloat(setValue);
+        style = __NULL__;
+        break;
+    case "start_active":
+        m_lightStartsOn = ReadBool(setValue);
+        break;
+    /* level-compiler keys we don't really use right now */
+    case "_cone":
+    case "_cone2":
+    case "_sky":
+    /* mostly for light_environment */
+    case "pitch":
+        angles[0] = ReadFloat(setValue);
+        break;
+    case "sunangle":
+        angles[1] = ReadFloat(setValue);
+        break;
+    case "color":
+        m_lightColor = ReadVector(setValue);
+        break;
+    case "_light":
+    case "color255":
+        m_lightColor = ReadVector(setValue) / 255;
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 light::Input(entity theActivator, string inputName, string dataString)
 {
-	switch (inputName) {
-	case "TurnOn":
-		Trigger(theActivator, TRIG_ON);
-		break;
-	case "TurnOff":
-		Trigger(theActivator, TRIG_OFF);
-		break;
-	case "Color":
-		m_lightStyleColor = ReadVector(dataString) / 255;
-		EntLog("Changed lightStyle %d color to %s", m_lightStyle, dataString);
-		RestoreComplete();
-		break;
-	default:
-		super::Input(theActivator, inputName, dataString);
-	}
+    switch (inputName) {
+    case "turnon":
+        Trigger(theActivator, TRIG_ON);
+        break;
+    case "turnoff":
+        Trigger(theActivator, TRIG_OFF);
+        break;
+    case "color":
+        m_lightStyleColor = ReadVector(dataString) / 255;
+        EntLog("Changed lightStyle %d color to %s", m_lightStyle, dataString);
+        RestoreComplete();
+        break;
+    default:
+        super::Input(theActivator, inputName, dataString);
+    }
 }
 
 void
 light::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (autocvar_light_stripUnnamed && !STRING_SET(targetname)) {
-		Destroy();
-		return;
-	}
+    if (autocvar_light_stripUnnamed && !STRING_SET(targetname)) {
+        Destroy();
+        return;
+    }
 
-	/* switch styles before 12 are builtins from Quake. */
-	if (m_lightStyleSwitch > 0 && m_lightStyleSwitch <= 11) {
-		m_lightPattern = getlightstyle(m_lightStyleSwitch);
-	}
+    /* switch styles before 12 are builtins from Quake. */
+    if (m_lightStyleSwitch > 0 && m_lightStyleSwitch <= 11) {
+        m_lightPattern = getlightstyle(m_lightStyleSwitch);
+    }
 }
 
 void
 light::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	switch (serverkeyfloat("*bspversion")) {
-	case BSPVER_PREREL:
-	case BSPVER_Q1:
-	case BSPVER_HL:
-	case BSPVER_Q2:
-	case BSPVER_Q2W:
-		if (HasSpawnFlags(1) && HasTargetname()) {
-			m_lightIsOn = false;
-		} else {
-			m_lightIsOn = true;
-		}
-		break;
-	case BSPVER_Q3:
-	case BSPVER_RTCW:
-	case BSPVER_RBSP:
-		if (!m_lightStartsOn && HasTargetname()) {
-			m_lightIsOn = false;
-		} else {
-			m_lightIsOn = true;
-		}
-		break;
-	default:
-		m_lightIsOn = true;
-	}
+    switch (serverkeyfloat("*bspversion")) {
+    case BSPVER_PREREL:
+    case BSPVER_Q1:
+    case BSPVER_HL:
+    case BSPVER_Q2:
+    case BSPVER_Q2W:
+        if (HasSpawnFlags(1) && HasTargetname()) {
+            m_lightIsOn = false;
+        } else {
+            m_lightIsOn = true;
+        }
+        break;
+    case BSPVER_Q3:
+    case BSPVER_RTCW:
+    case BSPVER_RBSP:
+        if (!m_lightStartsOn && HasTargetname()) {
+            m_lightIsOn = false;
+        } else {
+            m_lightIsOn = true;
+        }
+        break;
+    default:
+        m_lightIsOn = true;
+    }
 
-	m_lightLastState = !m_lightIsOn;
-	RestoreComplete();
+    m_lightLastState = !m_lightIsOn;
+    RestoreComplete();
 }
 
 void
 light::TurnLightOn(void)
 {
-	m_lightIsOn = true;
-	RestoreComplete();
+    m_lightIsOn = true;
+    RestoreComplete();
 }
 
 void
 light::TurnLightOff(void)
 {
-	m_lightIsOn = false;
-	RestoreComplete();
+    m_lightIsOn = false;
+    RestoreComplete();
 }
 
 void
 light::ToggleLight(void)
 {
-	m_lightIsOn = true - m_lightIsOn;
-	RestoreComplete();
+    m_lightIsOn = true - m_lightIsOn;
+    RestoreComplete();
 }
 
 void
 light::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		TurnLightOff();
-		break;
-	case TRIG_ON:
-		TurnLightOn();
-		break;
-	default:
-		ToggleLight();
-	}
+    switch (state) {
+    case TRIG_OFF:
+        TurnLightOff();
+        break;
+    case TRIG_ON:
+        TurnLightOn();
+        break;
+    default:
+        ToggleLight();
+    }
 }
 
 void
 light::DebugDraw(void)
 {
 #ifdef SERVER
-	string debugIcon;
+    string debugIcon;
 
-	if (m_lightIsOn) {
-		debugIcon = "gfx/icon16/lightbulb";
-	} else {
-		debugIcon = "gfx/icon16/lightbulb_off";
-	}
+    if (m_lightIsOn) {
+        debugIcon = "gfx/icon16/lightbulb";
+    } else {
+        debugIcon = "gfx/icon16/lightbulb_off";
+    }
 
-	R_BeginPolygon(debugIcon, 0, 0);
-		R_PolygonVertex(GetOrigin() + v_right * 8 - v_up * 8, [1,1], m_lightColor, 1.0f);
-		R_PolygonVertex(GetOrigin() - v_right * 8 - v_up * 8, [0,1], m_lightColor, 1.0f);
-		R_PolygonVertex(GetOrigin() - v_right * 8 + v_up * 8, [0,0], m_lightColor, 1.0f);
-		R_PolygonVertex(GetOrigin() + v_right * 8 + v_up * 8, [1,0], m_lightColor, 1.0f);
-	R_EndPolygon();
+    R_BeginPolygon(debugIcon, 0, 0);
+        R_PolygonVertex(GetOrigin() + v_right * 8 - v_up * 8, [1,1], m_lightColor, 1.0f);
+        R_PolygonVertex(GetOrigin() - v_right * 8 - v_up * 8, [0,1], m_lightColor, 1.0f);
+        R_PolygonVertex(GetOrigin() - v_right * 8 + v_up * 8, [0,0], m_lightColor, 1.0f);
+        R_PolygonVertex(GetOrigin() + v_right * 8 + v_up * 8, [1,0], m_lightColor, 1.0f);
+    R_EndPolygon();
 #endif
 }
 
 class
 light_spot:light
 {
-	void light_spot(void);
+    void light_spot(void);
 };
 
 void
@@ -367,10 +367,10 @@ class
 light_environment:light
 {
 public:
-	void light_environment(void);
+    void light_environment(void);
 
-	virtual void SpawnKey(string, string);
-	virtual void Spawned(void);
+    virtual void SpawnKey(string, string);
+    virtual void Spawned(void);
 };
 
 void
@@ -382,25 +382,25 @@ light_environment::light_environment(void)
 void
 light_environment::Spawned(void)
 {
-	super::Spawned();
-	//sunLight.m_vecLightColor = m_lightColor;
-	classname = "light_environment";
+    super::Spawned();
+    //sunLight.m_vecLightColor = m_lightColor;
+    classname = "light_environment";
 }
 
 void
 light_environment::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "pitch":
-		angles[0] = stof(strKey);
-		break;
-	case "angle":
-	case "sunangle":
-		angles[1] = stof(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "pitch":
+        angles[0] = stof(strKey);
+        break;
+    case "angle":
+    case "sunangle":
+        angles[1] = stof(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 /*! \brief Tool/Server-Entity: Light Emitting Materials */

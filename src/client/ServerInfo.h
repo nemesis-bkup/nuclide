@@ -26,33 +26,33 @@ class
 ncServerInfoManager
 {
 public:
-	void ncServerInfoManager(void);
+    void ncServerInfoManager(void);
 
-	nonvirtual void Init(void);
-	nonvirtual void Shutdown(void);
-	nonvirtual void UpdateCache(void);
+    nonvirtual void Init(void);
+    nonvirtual void Shutdown(void);
+    nonvirtual void UpdateCache(void);
 
-	nonvirtual string HostName(void);
-	nonvirtual string HostAddress(void);
-	nonvirtual string MapName(void);
+    nonvirtual string HostName(void);
+    nonvirtual string HostAddress(void);
+    nonvirtual string MapName(void);
 
-	nonvirtual int MaxClients(void);
-	nonvirtual int MaxPlayers(void);
-	nonvirtual int MaxSpectators(void);
+    nonvirtual int MaxClients(void);
+    nonvirtual int MaxPlayers(void);
+    nonvirtual int MaxSpectators(void);
 
-	/* speedier for display purposes */
-	nonvirtual string MaxClientsString(void);
-	nonvirtual string MaxPlayersString(void);
-	nonvirtual string MaxSpectatorsString(void);
+    /* speedier for display purposes */
+    nonvirtual string MaxClientsString(void);
+    nonvirtual string MaxPlayersString(void);
+    nonvirtual string MaxSpectatorsString(void);
 
 private:
-	string m_hostName;
-	string m_hostAddress;
-	string m_mapName;
-	string m_maxClientsString;
-	string m_maxPlayersString;
-	string m_maxSpectatorsString;
-	int m_maxClients;
-	int m_maxPlayers;
-	int m_maxSpectators;
+    string m_hostName;
+    string m_hostAddress;
+    string m_mapName;
+    string m_maxClientsString;
+    string m_maxPlayersString;
+    string m_maxSpectatorsString;
+    int m_maxClients;
+    int m_maxPlayers;
+    int m_maxSpectators;
 };

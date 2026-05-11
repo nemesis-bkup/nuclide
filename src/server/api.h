@@ -24,6 +24,6 @@
 void
 main(void)
 {
-	_server_main();
-	_shared_main();
+    _server_main();
+    _shared_main();
 }

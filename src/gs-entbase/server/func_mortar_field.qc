@@ -50,203 +50,203 @@ class
 func_mortar_field:ncBrushTrigger
 {
 public:
-	void func_mortar_field(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	
-	nonvirtual void Fire(entity, vector);
-	nonvirtual void FireRandom(entity);
-	nonvirtual void FireTarget(entity);
-	nonvirtual void FireControlled(entity);
+    void func_mortar_field(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    
+    nonvirtual void Fire(entity, vector);
+    nonvirtual void FireRandom(entity);
+    nonvirtual void FireTarget(entity);
+    nonvirtual void FireControlled(entity);
 
 private:
-	int m_iType;
-	int m_iCount;
-	float m_flSpread;
-	string m_strXController;
-	string m_strYController;
+    int m_iType;
+    int m_iCount;
+    float m_flSpread;
+    string m_strXController;
+    string m_strYController;
 };
 
 void
 func_mortar_field::func_mortar_field(void)
 {
-	m_iType = 0i;
-	m_iCount = 0i;
-	m_flSpread = 0.0f;
-	m_strXController = __NULL__;
-	m_strYController = __NULL__;
+    m_iType = 0i;
+    m_iCount = 0i;
+    m_flSpread = 0.0f;
+    m_strXController = __NULL__;
+    m_strYController = __NULL__;
 }
 
 void
 func_mortar_field::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iType", m_iType);
-	SaveInt(handle, "m_iCount", m_iCount);
-	SaveFloat(handle, "m_flSpread", m_flSpread);
-	SaveString(handle, "m_strXController", m_strXController);
-	SaveString(handle, "m_strYController", m_strYController);
+    super::Save(handle);
+    SaveInt(handle, "m_iType", m_iType);
+    SaveInt(handle, "m_iCount", m_iCount);
+    SaveFloat(handle, "m_flSpread", m_flSpread);
+    SaveString(handle, "m_strXController", m_strXController);
+    SaveString(handle, "m_strYController", m_strYController);
 }
 
 void
 func_mortar_field::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iType":
-		m_iType = ReadInt(setValue);
-		break;
-	case "m_iCount":
-		m_iCount = ReadInt(setValue);
-		break;
-	case "m_flSpread":
-		m_flSpread = ReadFloat(setValue);
-		break;
-	case "m_strXController":
-		m_strXController = ReadString(setValue);
-		break;
-	case "m_strYController":
-		m_strYController = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iType":
+        m_iType = ReadInt(setValue);
+        break;
+    case "m_iCount":
+        m_iCount = ReadInt(setValue);
+        break;
+    case "m_flSpread":
+        m_flSpread = ReadFloat(setValue);
+        break;
+    case "m_strXController":
+        m_strXController = ReadString(setValue);
+        break;
+    case "m_strYController":
+        m_strYController = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_mortar_field::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iszXController":
-		m_strXController = setValue;
-		break;
-	case "m_iszYController":
-		m_strYController = setValue;
-		break;
-	case "m_fControl":
-		m_iType = stoi(setValue);
-		break;
-	case "m_flCount":
-		m_iCount = stoi(setValue);
-		break;
-	case "m_flSpread":
-		m_flSpread = stof(setValue) / 2;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iszXController":
+        m_strXController = setValue;
+        break;
+    case "m_iszYController":
+        m_strYController = setValue;
+        break;
+    case "m_fControl":
+        m_iType = stoi(setValue);
+        break;
+    case "m_flCount":
+        m_iCount = stoi(setValue);
+        break;
+    case "m_flSpread":
+        m_flSpread = stof(setValue) / 2;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_mortar_field::Respawn(void)
 {
-	InitBrushTrigger();
-	ClearAngles();
+    InitBrushTrigger();
+    ClearAngles();
 }
 
 void
 func_mortar_field::Fire(entity firingEnt, vector vecOrg)
 {
-	/* the spread */
-	makevectors([90,0,0]);
-	vecOrg[0] += random(-m_flSpread, m_flSpread);
-	vecOrg[1] += random(-m_flSpread, m_flSpread);
+    /* the spread */
+    makevectors([90,0,0]);
+    vecOrg[0] += random(-m_flSpread, m_flSpread);
+    vecOrg[1] += random(-m_flSpread, m_flSpread);
 
-	/* trace from the sky downwards */
-	traceline(vecOrg, vecOrg + (v_forward * 4096), FALSE, this);
+    /* trace from the sky downwards */
+    traceline(vecOrg, vecOrg + (v_forward * 4096), FALSE, this);
 
-	int maxDamage = 200i;
-	float damageRadius = (float)maxDamage * 2.5f;
-	combat.RadiusDamage(trace_endpos, damageRadius, 0i, maxDamage, this, "");
-	pointparticles(particleeffectnum("fx_explosion.main"), trace_endpos, [0,0,0], 1);
+    int maxDamage = 200i;
+    float damageRadius = (float)maxDamage * 2.5f;
+    combat.RadiusDamage(trace_endpos, damageRadius, 0i, maxDamage, this, "");
+    pointparticles(particleeffectnum("fx_explosion.main"), trace_endpos, [0,0,0], 1);
 }
 
 void
 func_mortar_field::FireRandom(entity act)
 {
-	vector vecPos;
+    vector vecPos;
 
-	/* get our center */
-	vecPos = WorldSpaceCenter();
+    /* get our center */
+    vecPos = WorldSpaceCenter();
 
-	/* now randomize the position in the volume */
-	vecPos[0] += mins[0] + (random() * size[0]);
-	vecPos[1] += mins[1] + (random() * size[1]);
+    /* now randomize the position in the volume */
+    vecPos[0] += mins[0] + (random() * size[0]);
+    vecPos[1] += mins[1] + (random() * size[1]);
 
-	for (int i = 0; i < m_iCount; i++);
-		Fire(act, vecPos);
+    for (int i = 0; i < m_iCount; i++);
+        Fire(act, vecPos);
 }
 
 void
 func_mortar_field::FireTarget(entity act)
 {
-	vector vecPos;
+    vector vecPos;
 
-	/* get our center */
-	vecPos = WorldSpaceCenter();
+    /* get our center */
+    vecPos = WorldSpaceCenter();
 
-	/* orient towards the nearest player pos, clamping by our bounds */
-	vecPos[0] = bound(vecPos[0] + mins[0], act.origin[0], vecPos[0] + maxs[0]);
-	vecPos[1] = bound(vecPos[1] + mins[1], act.origin[1], vecPos[1] + maxs[0]);
+    /* orient towards the nearest player pos, clamping by our bounds */
+    vecPos[0] = bound(vecPos[0] + mins[0], act.origin[0], vecPos[0] + maxs[0]);
+    vecPos[1] = bound(vecPos[1] + mins[1], act.origin[1], vecPos[1] + maxs[0]);
 
-	for (int i = 0; i < m_iCount; i++);
-		Fire(act, vecPos);
+    for (int i = 0; i < m_iCount; i++);
+        Fire(act, vecPos);
 }
 
 void
 func_mortar_field::FireControlled(entity act)
 {
-	momentary_rot_button mX;
-	momentary_rot_button mY;
-	vector vecPos;
-	entity f;
+    momentary_rot_button mX;
+    momentary_rot_button mY;
+    vector vecPos;
+    entity f;
 
-	mX = mY = __NULL__;
+    mX = mY = __NULL__;
 
-	for (f = world; (f = find(f, ::classname, "momentary_rot_button"));) {
-		momentary_rot_button l = (momentary_rot_button) f;
+    for (f = world; (f = find(f, ::classname, "momentary_rot_button"));) {
+        momentary_rot_button l = (momentary_rot_button) f;
 
-		if (l.targetname == m_strXController) {
-			mX = l;
-		}
+        if (l.targetname == m_strXController) {
+            mX = l;
+        }
 
-		if (l.targetname == m_strYController) {
-			mY = l;
-		}
-	}
+        if (l.targetname == m_strYController) {
+            mY = l;
+        }
+    }
 
-	if (!mX || !mY)
-		return;
+    if (!mX || !mY)
+        return;
 
-	/* find our center */
-	vecPos = WorldSpaceCenter();
+    /* find our center */
+    vecPos = WorldSpaceCenter();
 
-	/* now offset the position to the rot_buttons */
-	vecPos[0] += mins[0] + (mX.GetProgress() * size[0]);
-	vecPos[1] += mins[1] + (mY.GetProgress() * size[1]);
+    /* now offset the position to the rot_buttons */
+    vecPos[0] += mins[0] + (mX.GetProgress() * size[0]);
+    vecPos[1] += mins[1] + (mY.GetProgress() * size[1]);
 
-	for (int i = 0; i < m_iCount; i++);
-		Fire(act, vecPos);
+    for (int i = 0; i < m_iCount; i++);
+        Fire(act, vecPos);
 }
 
 void
 func_mortar_field::Trigger(entity act, triggermode_t state)
 {
-	switch (m_iType) {
-	case 0:
-		FireRandom(act);
-		break;
-	case 1:
-		FireTarget(act);
-		break;
-	case 2:
-		FireControlled(act);
-		break;
-	default:
-		break;
-	}
+    switch (m_iType) {
+    case 0:
+        FireRandom(act);
+        break;
+    case 1:
+        FireTarget(act);
+        break;
+    case 2:
+        FireControlled(act);
+        break;
+    default:
+        break;
+    }
 }

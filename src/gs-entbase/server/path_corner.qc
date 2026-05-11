@@ -20,9 +20,9 @@ var int autocvar_dev_cornerspeed = 0;
 
 enumflags
 {
-	PC_WAIT,
-	PC_TELEPORT,
-	PC_FIREONCE
+    PC_WAIT,
+    PC_TELEPORT,
+    PC_FIREONCE
 };
 
 /*! \brief Server-Entity: Train/Mover Path Node */
@@ -56,200 +56,200 @@ class
 path_corner:ncPointTrigger
 {
 public:
-	void path_corner(void);
+    void path_corner(void);
 
-	virtual void Spawned(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual string GetPathTarget(void);
-	virtual string GetSelfTarget(void);
-	virtual path_corner GetPathTargetEntity(void);
-	virtual path_corner GetSelfTargetEntity(void);
-	virtual bool DisablesTrain(void);
+    virtual void Spawned(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual string GetPathTarget(void);
+    virtual string GetSelfTarget(void);
+    virtual path_corner GetPathTargetEntity(void);
+    virtual path_corner GetSelfTargetEntity(void);
+    virtual bool DisablesTrain(void);
 
-	virtual void PathPassTrigger(entity, triggermode_t);
+    virtual void PathPassTrigger(entity, triggermode_t);
 
-	nonvirtual float DesiredTrainSpeed(void);
-	nonvirtual float DesiredTrainYawSpeed(void);
-	nonvirtual float DesiredWaitTime(void);
+    nonvirtual float DesiredTrainSpeed(void);
+    nonvirtual float DesiredTrainYawSpeed(void);
+    nonvirtual float DesiredWaitTime(void);
 
 private:
-	bool m_pathTriggeredTargets;
-	float m_trainSpeed;
-	float m_trainYawSpeed;
-	float m_waitUntilNodeChange;
-	string m_outputOnPass;
-	string m_triggerWhenPassed;
+    bool m_pathTriggeredTargets;
+    float m_trainSpeed;
+    float m_trainYawSpeed;
+    float m_waitUntilNodeChange;
+    string m_outputOnPass;
+    string m_triggerWhenPassed;
 };
 
 void
 path_corner::path_corner(void)
 {
-	m_pathTriggeredTargets = false;
-	m_trainSpeed = 0.0f;
-	m_trainYawSpeed = 0.0f;
-	m_waitUntilNodeChange = 0.0f;
-	m_outputOnPass = __NULL__;
+    m_pathTriggeredTargets = false;
+    m_trainSpeed = 0.0f;
+    m_trainYawSpeed = 0.0f;
+    m_waitUntilNodeChange = 0.0f;
+    m_outputOnPass = __NULL__;
 }
 
 float
 path_corner::DesiredTrainSpeed(void)
 {
-	return (m_trainSpeed);
+    return (m_trainSpeed);
 }
 
 float
 path_corner::DesiredTrainYawSpeed(void)
 {
-	return (m_trainYawSpeed);
+    return (m_trainYawSpeed);
 }
 
 
 float
 path_corner::DesiredWaitTime(void)
 {
-	return (m_waitUntilNodeChange);
+    return (m_waitUntilNodeChange);
 }
 
 
 void
 path_corner::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (STRING_SET(m_outputOnPass))
-		m_outputOnPass = CreateOutput(m_outputOnPass);
+    if (STRING_SET(m_outputOnPass))
+        m_outputOnPass = CreateOutput(m_outputOnPass);
 }
 
 string
 path_corner::GetPathTarget(void)
 {
-	return target;
+    return target;
 }
 
 bool
 path_corner::DisablesTrain(void)
 {
-	return false;
+    return false;
 }
 
 string
 path_corner::GetSelfTarget(void)
 {
-	for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
-		if (f.GetPathTarget() == targetname) {
-			return f.targetname;
-		}
-	}
+    for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
+        if (f.GetPathTarget() == targetname) {
+            return f.targetname;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 path_corner
 path_corner::GetPathTargetEntity(void)
 {
-	string theTarget = GetPathTarget();
+    string theTarget = GetPathTarget();
 
-	for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
-		if (f.targetname == theTarget) {
-			return f;
-		}
-	}
+    for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
+        if (f.targetname == theTarget) {
+            return f;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 path_corner
 path_corner::GetSelfTargetEntity(void)
 {
-	for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
-		if (f.GetPathTarget() == targetname) {
-			return f;
-		}
-	}
+    for (path_corner f = __NULL__; (f = (path_corner)find(f, ::classname, "path_corner"));) {
+        if (f.GetPathTarget() == targetname) {
+            return f;
+        }
+    }
 
-	return __NULL__;
+    return __NULL__;
 }
 
 void
 path_corner::Save(float handle)
 {
-	super::Save(handle);
-	SaveBool(handle, "m_pathTriggeredTargets", m_pathTriggeredTargets);
-	SaveFloat(handle, "m_trainSpeed", m_trainSpeed);
-	SaveFloat(handle, "m_trainYawSpeed", m_trainYawSpeed);
-	SaveFloat(handle, "m_waitUntilNodeChange", m_waitUntilNodeChange);
-	SaveString(handle, "m_outputOnPass", m_outputOnPass);
-	SaveString(handle, "m_triggerWhenPassed", m_triggerWhenPassed);
+    super::Save(handle);
+    SaveBool(handle, "m_pathTriggeredTargets", m_pathTriggeredTargets);
+    SaveFloat(handle, "m_trainSpeed", m_trainSpeed);
+    SaveFloat(handle, "m_trainYawSpeed", m_trainYawSpeed);
+    SaveFloat(handle, "m_waitUntilNodeChange", m_waitUntilNodeChange);
+    SaveString(handle, "m_outputOnPass", m_outputOnPass);
+    SaveString(handle, "m_triggerWhenPassed", m_triggerWhenPassed);
 }
 
 void
 path_corner::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_pathTriggeredTargets":
-		m_pathTriggeredTargets = ReadBool(setValue);
-		break;
-	case "m_trainSpeed":
-		m_trainSpeed = ReadFloat(setValue);
-		break;
-	case "m_trainYawSpeed":
-		m_trainYawSpeed = ReadFloat(setValue);
-		break;
-	case "m_waitUntilNodeChange":
-		m_waitUntilNodeChange = ReadFloat(setValue);
-		break;
-	case "m_outputOnPass":
-		m_outputOnPass = ReadString(setValue);
-		break;
-	case "m_triggerWhenPassed":
-		m_triggerWhenPassed = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_pathTriggeredTargets":
+        m_pathTriggeredTargets = ReadBool(setValue);
+        break;
+    case "m_trainSpeed":
+        m_trainSpeed = ReadFloat(setValue);
+        break;
+    case "m_trainYawSpeed":
+        m_trainYawSpeed = ReadFloat(setValue);
+        break;
+    case "m_waitUntilNodeChange":
+        m_waitUntilNodeChange = ReadFloat(setValue);
+        break;
+    case "m_outputOnPass":
+        m_outputOnPass = ReadString(setValue);
+        break;
+    case "m_triggerWhenPassed":
+        m_triggerWhenPassed = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 path_corner::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "speed":
-		m_trainSpeed = ReadFloat(setValue);
-		break;
-	case "yaw_speed":
-		m_trainYawSpeed = ReadFloat(setValue);
-		break;
-	case "wait":
-		m_waitUntilNodeChange = ReadFloat(setValue);
-		break;
-	case "message":
-		m_triggerWhenPassed = ReadString(setValue);
-		break;
-	/* I/O system */
-	case "OnPass":
-		m_outputOnPass = PrepareOutput(m_outputOnPass, setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "speed":
+        m_trainSpeed = ReadFloat(setValue);
+        break;
+    case "yaw_speed":
+        m_trainYawSpeed = ReadFloat(setValue);
+        break;
+    case "wait":
+        m_waitUntilNodeChange = ReadFloat(setValue);
+        break;
+    case "message":
+        m_triggerWhenPassed = ReadString(setValue);
+        break;
+    /* I/O system */
+    case "OnPass":
+        m_outputOnPass = PrepareOutput(m_outputOnPass, setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 path_corner::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
 #ifdef DEVELOPER
-	if (autocvar_dev_cornerspeed != 0) {
-		m_trainSpeed = autocvar_dev_cornerspeed;
-	}
+    if (autocvar_dev_cornerspeed != 0) {
+        m_trainSpeed = autocvar_dev_cornerspeed;
+    }
 #endif
 
-	m_pathTriggeredTargets = false;
+    m_pathTriggeredTargets = false;
 }
 
 void
@@ -261,30 +261,30 @@ path_corner::Trigger(entity act, triggermode_t state)
 void
 path_corner::PathPassTrigger(entity activatingEntity, triggermode_t triggerMode)
 {
-	if (HasSpawnFlags(PC_FIREONCE) && m_pathTriggeredTargets) {
-		EntLog("tried to fire more than once");
-		return;
-	}
+    if (HasSpawnFlags(PC_FIREONCE) && m_pathTriggeredTargets) {
+        EntLog("tried to fire more than once");
+        return;
+    }
 
-	EntLog("%S (%d) has passed us.", \
-		activatingEntity.classname, num_for_edict(activatingEntity));
+    EntLog("%S (%d) has passed us.", \
+        activatingEntity.classname, num_for_edict(activatingEntity));
 
-	UseOutput(this, m_outputOnPass);
-	m_pathTriggeredTargets = true;
+    UseOutput(this, m_outputOnPass);
+    m_pathTriggeredTargets = true;
 
-	/* never trigger "" */
-	if (!STRING_SET(m_triggerWhenPassed)) {
-		return;
-	}
+    /* never trigger "" */
+    if (!STRING_SET(m_triggerWhenPassed)) {
+        return;
+    }
 
-	for (entity f = world; (f = find(f, ::targetname, m_triggerWhenPassed));) {
-		ncTrigger trigger = (ncTrigger)f;
+    for (entity f = world; (f = find(f, ::targetname, m_triggerWhenPassed));) {
+        ncTrigger trigger = (ncTrigger)f;
 
-		EntLog("Triggering %s `%s` from %s", f.classname, \
-		        trigger.targetname, activatingEntity.classname);
+        EntLog("Triggering %s `%s` from %s", f.classname, \
+                trigger.targetname, activatingEntity.classname);
 
-		if (trigger.Trigger != __NULL__) {
-			trigger.Trigger(activatingEntity, triggerMode);
-		}
-	}
+        if (trigger.Trigger != __NULL__) {
+            trigger.Trigger(activatingEntity, triggerMode);
+        }
+    }
 }

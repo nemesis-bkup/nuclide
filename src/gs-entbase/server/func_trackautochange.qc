@@ -43,9 +43,9 @@ This entity was introduced in Half-Life (1998).
 class
 func_trackautochange:func_trackchange
 {
-	void func_trackautochange(void);
+    void func_trackautochange(void);
 
-	virtual void MoverFinishesMoving(void);
+    virtual void MoverFinishesMoving(void);
 };
 
 void
@@ -59,10 +59,10 @@ func_trackautochange::func_trackautochange(void)
 void
 func_trackautochange::MoverFinishesMoving(void)
 {
-	ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
-	super::MoverFinishesMoving();
+    ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
+    super::MoverFinishesMoving();
 
-	if (ourTrain) {
-		ourTrain.Trigger(this, TRIG_TOGGLE);
-	}
+    if (ourTrain) {
+        ourTrain.Trigger(this, TRIG_TOGGLE);
+    }
 }

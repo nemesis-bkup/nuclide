@@ -16,16 +16,16 @@
 
 enumflags
 {
-	EVSPARK_UNUSED1,
-	EVSPARK_UNUSED2,
-	EVSPARK_UNUSED3,
-	EVSPARK_UNUSED4,
-	EVSPARK_UNUSED5,
-	EVSPARK_TOGGLE,
-	EVSPARK_STARTON,
-	EVSPARK_UNUSED6,
-	EVSPARK_SILENT,
-	EVSPARK_DIRECTIONAL
+    EVSPARK_UNUSED1,
+    EVSPARK_UNUSED2,
+    EVSPARK_UNUSED3,
+    EVSPARK_UNUSED4,
+    EVSPARK_UNUSED5,
+    EVSPARK_TOGGLE,
+    EVSPARK_STARTON,
+    EVSPARK_UNUSED6,
+    EVSPARK_SILENT,
+    EVSPARK_DIRECTIONAL
 };
 
 /*! \brief Server-Entity: Spark Maker */
@@ -66,172 +66,172 @@ class
 env_spark:ncPointTrigger
 {
 public:
-	void env_spark(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
-	nonvirtual void _TimedSpark(void);
+    void env_spark(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
+    nonvirtual void _TimedSpark(void);
 
-	nonvirtual void StartSpark(void);
-	nonvirtual void StopSpark(void);
-	nonvirtual void ToggleSpark(void);
-	nonvirtual void SparkOnce(void);
+    nonvirtual void StartSpark(void);
+    nonvirtual void StopSpark(void);
+    nonvirtual void ToggleSpark(void);
+    nonvirtual void SparkOnce(void);
 
 private:
-	float m_flMaxDelay;
-	int _m_iSparkParticle;
+    float m_flMaxDelay;
+    int _m_iSparkParticle;
 };
 
 void
 env_spark::env_spark(void)
 {
-	m_flMaxDelay = 0.0f;
-	_m_iSparkParticle = 0i;
+    m_flMaxDelay = 0.0f;
+    _m_iSparkParticle = 0i;
 }
 
 void
 env_spark::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flMaxDelay", m_flMaxDelay);
-	SaveInt(handle, "_m_iSparkParticle", _m_iSparkParticle);
+    super::Save(handle);
+    SaveFloat(handle, "m_flMaxDelay", m_flMaxDelay);
+    SaveInt(handle, "_m_iSparkParticle", _m_iSparkParticle);
 }
 
 void
 env_spark::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flMaxDelay":
-		m_flMaxDelay = ReadFloat(setValue);
-		break;
-	case "_m_iSparkParticle":
-		_m_iSparkParticle = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flMaxDelay":
+        m_flMaxDelay = ReadFloat(setValue);
+        break;
+    case "_m_iSparkParticle":
+        _m_iSparkParticle = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_spark::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "MaxDelay":
-		m_flMaxDelay = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "MaxDelay":
+        m_flMaxDelay = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_spark::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	precache.Sound("DoSpark");
-	_m_iSparkParticle = particleeffectnum("fx_spark.main");
+    precache.Sound("DoSpark");
+    _m_iSparkParticle = particleeffectnum("fx_spark.main");
 }
 
 void
 env_spark::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (m_flMaxDelay <= 0) {
-		m_flMaxDelay = 1.0f;
-	}
+    if (m_flMaxDelay <= 0) {
+        m_flMaxDelay = 1.0f;
+    }
 
-	if (HasSpawnFlags(EVSPARK_STARTON)) {
-		StartSpark();
-	}
+    if (HasSpawnFlags(EVSPARK_STARTON)) {
+        StartSpark();
+    }
 
-	if (HasSpawnFlags(EVSPARK_DIRECTIONAL) == false) {
-		SetAngles([0,0,0]);
-	}
+    if (HasSpawnFlags(EVSPARK_DIRECTIONAL) == false) {
+        SetAngles([0,0,0]);
+    }
 }
 
 void
 env_spark::StartSpark(void)
 {
-	ScheduleThink(_TimedSpark, (random() * m_flMaxDelay));
+    ScheduleThink(_TimedSpark, (random() * m_flMaxDelay));
 }
 
 void
 env_spark::StopSpark(void)
 {
-	ReleaseThink();
+    ReleaseThink();
 }
 
 void
 env_spark::ToggleSpark(void)
 {
-	if (IsThinking() == true) {
-		StopSpark();
-	} else {
-		StartSpark();
-	}
+    if (IsThinking() == true) {
+        StopSpark();
+    } else {
+        StartSpark();
+    }
 }
 
 void
 env_spark::SparkOnce(void)
 {
-	if (HasSpawnFlags(EVSPARK_SILENT) == false) {
-		StartSoundDef("DoSpark", CHAN_AUTO, true);
-	}
+    if (HasSpawnFlags(EVSPARK_SILENT) == false) {
+        StartSoundDef("DoSpark", CHAN_AUTO, true);
+    }
 
-	pointparticles(_m_iSparkParticle, origin, angles, 1);
+    pointparticles(_m_iSparkParticle, origin, angles, 1);
 }
 
 void
 env_spark::Trigger(entity act, triggermode_t state)
 {
-	if (!HasSpawnFlags(EVSPARK_TOGGLE) && !HasSpawnFlags(EVSPARK_STARTON)) {
-		SparkOnce();
-		return;
-	}
+    if (!HasSpawnFlags(EVSPARK_TOGGLE) && !HasSpawnFlags(EVSPARK_STARTON)) {
+        SparkOnce();
+        return;
+    }
 
-	switch (state) {
-	case TRIG_OFF:
-		StopSpark();
-		break;
-	case TRIG_ON:
-		StartSpark();
-		break;
-	default:
-		ToggleSpark();
-	}
+    switch (state) {
+    case TRIG_OFF:
+        StopSpark();
+        break;
+    case TRIG_ON:
+        StartSpark();
+        break;
+    default:
+        ToggleSpark();
+    }
 }
 
 void
 env_spark::Input(entity theActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "StartSpark":
-		StartSpark();
-		break;
-	case "StopSpark":
-		StopSpark();
-		break;
-	case "ToggleSpark":
-		ToggleSpark();
-		break;
-	case "SparkOnce":
-		SparkOnce();
-		break;
-	default:
-		super::Input(theActivator, inputName, dataField);
-	}
+    switch (inputName) {
+    case "startspark":
+        StartSpark();
+        break;
+    case "stopspark":
+        StopSpark();
+        break;
+    case "togglespark":
+        ToggleSpark();
+        break;
+    case "sparkonce":
+        SparkOnce();
+        break;
+    default:
+        super::Input(theActivator, inputName, dataField);
+    }
 }
 
 void
 env_spark::_TimedSpark(void)
 {
-	SparkOnce();
-	ScheduleThink(_TimedSpark, (random() * m_flMaxDelay));
+    SparkOnce();
+    ScheduleThink(_TimedSpark, (random() * m_flMaxDelay));
 }

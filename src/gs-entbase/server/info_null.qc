@@ -37,11 +37,11 @@ class
 info_null:ncPointTrigger
 {
 public:
-	void info_null(void);
-	
+    void info_null(void);
+    
 #ifdef DEBUG_INFONULL
-	nonvirtual void WarnDeveloper(void);
-	virtual void Respawn(void);
+    nonvirtual void WarnDeveloper(void);
+    virtual void Respawn(void);
 #endif
 
 };
@@ -50,32 +50,32 @@ void
 info_null::info_null(void)
 {
 #ifndef DEBUG_INFONULL
-	remove(self);
+    remove(self);
 #endif
 }
 
 #ifdef DEBUG_INFONULL
 void
 info_null::WarnDeveloper(void)
-{	
-	if (!targetname)
-		return;
+{   
+    if (!targetname)
+        return;
 
-	for (entity f = world; (f = find(f, ::target, targetname));) {
-		ncEntity enty = (ncEntity)f;
-		if (enty.identity)
-		if (enty.target == targetname) {
-			print(sprintf("^1info_null::WarnDeveloper^7: " \
-			      "%s (%s) is targetting an info_null called %s\n",
-			      enty.targetname, enty.classname, targetname));
-		}
-	}
+    for (entity f = world; (f = find(f, ::target, targetname));) {
+        ncEntity enty = (ncEntity)f;
+        if (enty.identity)
+        if (enty.target == targetname) {
+            print(sprintf("^1info_null::WarnDeveloper^7: " \
+                  "%s (%s) is targetting an info_null called %s\n",
+                  enty.targetname, enty.classname, targetname));
+        }
+    }
 }
 
 void
 info_null::Respawn(void)
 {
-	InitPointTrigger();
-	ScheduleThink(WarnDeveloper, 0.0f);
+    InitPointTrigger();
+    ScheduleThink(WarnDeveloper, 0.0f);
 }
 #endif

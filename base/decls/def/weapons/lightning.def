@@ -6,11 +6,9 @@ entityDef weapon_lightning
 	"editor_usage"		"Lightning Gun"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model"				"progs/g_light.mdl"
 	"model_view"		"progs/v_light.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 	"animPrefix"		"lightning"
@@ -43,6 +41,7 @@ entityDef weapon_lightning
 	"hudSlotPos"		"0"
 	"weight"			"30"
 	"crosshair"			"none"
+	"trailOffset"			"0 0 -8"
 }
 
 entityDef projectile_lightning

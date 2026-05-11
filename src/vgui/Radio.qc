@@ -17,24 +17,24 @@
 static void
 vguiRadio_CallFunctionWithDelegateSender(void(vguiControl sender) targetFunc, vguiWidget delegateWidget, vguiControl sender)
 {
-	entity oldSelf = self;
+    entity oldSelf = self;
 
-	if (delegateWidget) {
-		self = delegateWidget;
-	}
+    if (delegateWidget) {
+        self = delegateWidget;
+    }
 
-	if (targetFunc) {
-		targetFunc(sender);
-	}
+    if (targetFunc) {
+        targetFunc(sender);
+    }
 
-	self = oldSelf;
+    self = oldSelf;
 }
 
 enumflags
 {
-	RADIO_HOVER,
-	RADIO_DOWN,
-	RADIO_ACTIVE
+    RADIO_HOVER,
+    RADIO_DOWN,
+    RADIO_ACTIVE
 };
 
 .void(void) tmpvguiRadio1;
@@ -49,119 +49,121 @@ enumflags
 class vguiRadio:vguiWidget
 {
 public:
-	void vguiRadio(void);
+    void vguiRadio(void);
 
-	nonvirtual void SetTitle(string);
-	nonvirtual int GetValue(void);
-	nonvirtual void SetValue(int);
-	nonvirtual void SetFunc(void(void));
-	virtual void CallOnChangeWithDelegate(void(void) targetFunc, entity delegateEntity);
-	virtual void CallOnPressedWithDelegate(void(void) targetFunc, entity delegateEntity);
+    nonvirtual void SetTitle(string);
+    nonvirtual int GetValue(void);
+    nonvirtual void SetValue(int);
+    nonvirtual void SetFunc(void(void));
+    virtual void CallOnChangeWithDelegate(void(void) targetFunc, entity delegateEntity);
+    virtual void CallOnPressedWithDelegate(void(void) targetFunc, entity delegateEntity);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
 
 private:
-	vector m_vecColor;
-	float m_flAlpha;
-	vector m_vecSize;
-	string m_strTitle;
+    vector m_vecColor;
+    float m_flAlpha;
+    vector m_vecSize;
+    string m_strTitle;
 };
 
 void vguiRadio::vguiRadio(void)
 {
-	m_flAlpha = 1.0f;
+    m_flAlpha = 1.0f;
 }
 
 
 void
 vguiRadio::CallOnChangeWithDelegate(void(void) vFunc, entity delegateEntity)
 {
-	tmpvguiRadio1 = vFunc;
-	tmpvguiRadio1Delegate = delegateEntity;
+    tmpvguiRadio1 = vFunc;
+    tmpvguiRadio1Delegate = delegateEntity;
 }
 
 void
 vguiRadio::CallOnPressedWithDelegate(void(void) vFunc, entity delegateEntity)
 {
-	tmpvguiRadio2 = vFunc;
-	tmpvguiRadio2Delegate = delegateEntity;
+    tmpvguiRadio2 = vFunc;
+    tmpvguiRadio2Delegate = delegateEntity;
 }
 
 
 void
 vguiRadio::Spawned(void)
 {
-	SetSize([96,24]);
+    SetSize([96,24]);
 }
 
 
 void vguiRadio::SetTitle (string strName)
 {
-	m_strTitle = localize(strName);
+    m_strTitle = localize(strName);
 }
 int vguiRadio::GetValue(void)
 {
-	if (m_iFlags & RADIO_ACTIVE) {
-		return (1);
-	} else {
-		return (0);
-	}
+    if (m_iFlags & RADIO_ACTIVE) {
+        return (1);
+    } else {
+        return (0);
+    }
 }
 void vguiRadio::SetValue (int iValue)
 {
-	if (iValue == TRUE) {
-		m_iFlags |= RADIO_ACTIVE;
-	} else {
-		m_iFlags -= (m_iFlags & RADIO_ACTIVE);
-	}
+    if (iValue == TRUE) {
+        m_iFlags |= RADIO_ACTIVE;
+    } else {
+        m_iFlags -= (m_iFlags & RADIO_ACTIVE);
+    }
 }
 void vguiRadio::SetFunc (void(void) vFunc)
 {
-	tmpvguiRadio1 = vFunc;
+    tmpvguiRadio1 = vFunc;
 }
 
 void vguiRadio::Draw(void)
 {
-	vguiTheme theme = GetTheme();
+    vguiTheme theme = GetTheme();
+    vector pos = GetAbsPos();
 
-	if (m_iFlags & RADIO_DOWN) {
-		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
-	} else if (m_iFlags & RADIO_ACTIVE) {
-		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
-	} else {
-		theme.DrawRadioButton(m_parent.m_vecOrigin + m_vecOrigin, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
-	}
+    if (m_iFlags & RADIO_DOWN) {
+        theme.DrawRadioButton(pos, m_strTitle, m_vecSize, VGUI_STATE_CHECKED);
+    } else if (m_iFlags & RADIO_ACTIVE) {
+        theme.DrawRadioButton(pos, m_strTitle, m_vecSize, VGUI_STATE_ACTIVE);
+    } else {
+        theme.DrawRadioButton(pos, m_strTitle, m_vecSize, VGUI_STATE_NORMAL);
+    }
 }
 
 bool vguiRadio::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	bool ret = false;
+    bool ret = false;
+    vector pos = GetAbsPos();
 
-	if (flEVType == IE_KEYDOWN) {
-		if (flKey == K_MOUSE1) {
-			if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				m_iFlags |= RADIO_DOWN;
-				ret = true;
-			}
-		}
-	} else if (flEVType == IE_KEYUP) {
-		if (flKey == K_MOUSE1) {
-			if (m_iFlags & RADIO_DOWN && Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				if (tmpvguiRadio1) {
-					vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio1, tmpvguiRadio1Delegate, this);
-				}
-				SetValue(TRUE);
+    if (flEVType == IE_KEYDOWN) {
+        if (flKey == K_MOUSE1) {
+            if (MouseAbove()) {
+                m_iFlags |= RADIO_DOWN;
+                ret = true;
+            }
+        }
+    } else if (flEVType == IE_KEYUP) {
+        if (flKey == K_MOUSE1) {
+            if (m_iFlags & RADIO_DOWN && MouseAbove()) {
+                if (tmpvguiRadio1) {
+                    vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio1, tmpvguiRadio1Delegate, this);
+                }
+                SetValue(TRUE);
 
-				if (tmpvguiRadio2) {
-					vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio2, tmpvguiRadio2Delegate, this);
-				}
+                if (tmpvguiRadio2) {
+                    vguiRadio_CallFunctionWithDelegateSender(tmpvguiRadio2, tmpvguiRadio2Delegate, this);
+                }
 
-				ret = true;
-			}
-			m_iFlags -= (m_iFlags & RADIO_DOWN);
-		}
-	}
-	return (ret);
+                ret = true;
+            }
+            m_iFlags -= (m_iFlags & RADIO_DOWN);
+        }
+    }
+    return (ret);
 }

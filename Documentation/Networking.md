@@ -1,5 +1,7 @@
 # Networking
 
+This document details the methods in which Nuclides networks its extensions to other clients.
+
 ## Preface
 
 Networking in [FTE](https://www.fteqw.org/) is an extension of the design decisions made for QuakeWorld. All you have to know is that we use NACK feedback to network the changes from client to server. There are a lot of other great resources that document the QuakeWorld protocol, so we will focus on the additions in **FTE** that matter here.
@@ -8,7 +10,7 @@ Networking in [FTE](https://www.fteqw.org/) is an extension of the design decisi
 
 ## Leveraged by FTE QuakeWorld
 
-In **Nuclide**, we make heavy use of custom entity networking. In **FTE**, you can set the server-side entity field `.SendEntity` and `.SendFlags` to control network updates for any given entity. You have to implement your own `.SendEntity` function that communicates:
+In **Nuclide**, we make heavy use of custom entity networking. In **FTE**, you can set the server-side entity field `.SendEntity` and `.SendFlags` to control network updates for any given entity. We have to implement your own `.SendEntity` function that communicates:
 
 1. The type of entity (so the client can interpret it once it arrives)
 2. The type of information that has changed (you'll see references to `flChanged` in code a lot)
@@ -16,7 +18,7 @@ In **Nuclide**, we make heavy use of custom entity networking. In **FTE**, you c
 
 ## Entity updates within Nuclide
 
-To see the type of entity updates we handle internally in Nuclide, look no further than `src/shared/entities.h`. For one-time event updates, you can check `src/shared/events.h`.
+To see the type of entity updates we handle internally in Nuclide, look no further than `src/shared/game/entities.h`. For one-time event updates, you can check `src/common/c_events.h`.
 
 Generally, those entity updates happen and are controlled by these three common methods that are implemented by any entity class that chooses to override networking:
 

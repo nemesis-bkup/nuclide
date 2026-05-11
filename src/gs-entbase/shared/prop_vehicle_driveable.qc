@@ -21,40 +21,40 @@
 
 enumflags
 {
-	VEHFL_DRIVER,
-	VEHFL_MODELINDEX,
-	VEHFL_ORIGIN,
-	VEHFL_ANGLES,
-	VEHFL_VELOCITY,
-	VEHFL_TURNING,
-	VEHFL_FLAGS
+    VEHFL_DRIVER,
+    VEHFL_MODELINDEX,
+    VEHFL_ORIGIN,
+    VEHFL_ANGLES,
+    VEHFL_VELOCITY,
+    VEHFL_TURNING,
+    VEHFL_FLAGS
 };
 
 static class
 prop_vehicle_driveable_wheel:ncEntity
 {
 public:
-	void prop_vehicle_driveable_wheel(void);
+    void prop_vehicle_driveable_wheel(void);
 
 #ifdef CLIENT
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
 #endif
 
-	virtual void UpdateSuspension(float);
-	virtual void Move(float);
-	virtual void Bounce(vector);
-	virtual void Accel(float,float);
-	virtual void Physics(float,float);
+    virtual void UpdateSuspension(float);
+    virtual void Move(float);
+    virtual void Bounce(vector);
+    virtual void Accel(float,float);
+    virtual void Physics(float,float);
 
 private:
-	float m_flSuspension;
-	float m_flSuspensionForce;
+    float m_flSuspension;
+    float m_flSuspensionForce;
 
 #ifdef CLIENT
-	vector origin_net;
-	vector velocity_net;
-	vector angles_net;
+    vector origin_net;
+    vector velocity_net;
+    vector angles_net;
 #endif
 };
 
@@ -83,68 +83,68 @@ This entity was introduced in Half-Life 2 (2004).
 class prop_vehicle_driveable:ncVehicle
 {
 private:
-	/* map-entity fields */
-	float m_flBounceFactor;
-	float m_flAcceleration;
-	float m_flSkidSpeed;
-	float m_flTraction;
-	float m_flBreakFactor;
-	float m_flSteerFactor;
-	float m_flStraightenFactor;
-	vector m_vecGravityDir;
-	float m_flTimeLength;
-	vector m_vecSeatOffest;
+    /* map-entity fields */
+    float m_flBounceFactor;
+    float m_flAcceleration;
+    float m_flSkidSpeed;
+    float m_flTraction;
+    float m_flBreakFactor;
+    float m_flSteerFactor;
+    float m_flStraightenFactor;
+    vector m_vecGravityDir;
+    float m_flTimeLength;
+    vector m_vecSeatOffest;
 
-	/* collision boxes */
-	ncEntity m_eCollBox1;
-	ncEntity m_eCollBox2;
+    /* collision boxes */
+    ncEntity m_eCollBox1;
+    ncEntity m_eCollBox2;
 
-	prop_vehicle_driveable_wheel m_wlFL;
-	prop_vehicle_driveable_wheel m_wlFR;
-	prop_vehicle_driveable_wheel m_wlBL;
-	prop_vehicle_driveable_wheel m_wlBR;
-	vector m_vecControlMins;
-	vector m_vecControlMaxs;
-	NETWORKED_FLOAT(m_flTurn)
+    prop_vehicle_driveable_wheel m_wlFL;
+    prop_vehicle_driveable_wheel m_wlFR;
+    prop_vehicle_driveable_wheel m_wlBL;
+    prop_vehicle_driveable_wheel m_wlBR;
+    vector m_vecControlMins;
+    vector m_vecControlMaxs;
+    NETWORKED_FLOAT(m_flTurn)
 
-	vector m_vecBRWheelAxel;
-	vector m_vecBLWheelAxel;
-	vector m_vecFLWheelAxel;
-	vector m_vecFRWheelAxel;
-	bool m_vehicleNoFlip;
-	float m_flSuspensionScale;
+    vector m_vecBRWheelAxel;
+    vector m_vecBLWheelAxel;
+    vector m_vecFLWheelAxel;
+    vector m_vecFRWheelAxel;
+    bool m_vehicleNoFlip;
+    float m_flSuspensionScale;
 
-	float m_flUseTime;
-	NETWORKED_VECTOR(vehicleOrigin)
-	NETWORKED_VECTOR(vehicleAngles)
-	vector m_firstPersonOrg;
+    float m_flUseTime;
+    NETWORKED_VECTOR(vehicleOrigin)
+    NETWORKED_VECTOR(vehicleAngles)
+    vector m_firstPersonOrg;
 
 public:
-	void prop_vehicle_driveable(void);
+    void prop_vehicle_driveable(void);
 
-	virtual void Spawned(void);
-	virtual void Physics(void);
-	virtual void RunVehiclePhysics(void);
-	virtual void WeaponInput(void);
-	virtual void PlayerInput(void);
-	virtual void OnRemoveEntity(void);
+    virtual void Spawned(void);
+    virtual void Physics(void);
+    virtual void RunVehiclePhysics(void);
+    virtual void WeaponInput(void);
+    virtual void PlayerInput(void);
+    virtual void OnRemoveEntity(void);
 
-	nonvirtual void SpawnWheels();
+    nonvirtual void SpawnWheels();
 
 #ifdef CLIENT
-	virtual bool HideViewWeapon(void);
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void UpdateView(void);
+    virtual bool HideViewWeapon(void);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void UpdateView(void);
 #endif
 
 #ifdef SERVER
-	virtual void Respawn(void);
-	virtual void OnPlayerUse(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void SpawnKey(string keyName, string setValue);
+    virtual void Respawn(void);
+    virtual void OnPlayerUse(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void SpawnKey(string keyName, string setValue);
 #endif
 };
 
@@ -162,31 +162,31 @@ var vector autocvar_car_firstPersonOffset = [0,0,0];
 void
 prop_vehicle_driveable::prop_vehicle_driveable(void)
 {
-	m_eDriver = __NULL__;
-	m_flBounceFactor = autocvar_car_bounceFactor;
-	m_flAcceleration = autocvar_car_acceleration;
-	m_flSkidSpeed = autocvar_car_skidSpeed;
-	m_flTraction = autocvar_car_traction;
-	m_flBreakFactor = autocvar_car_breakFactor;
-	m_flSteerFactor = autocvar_car_steerFactor;
-	m_flStraightenFactor = autocvar_car_straightenFactor;
-	m_vecGravityDir = autocvar_car_gravityDir;
-	m_iVehicleFlags |= VHF_FROZEN;
+    m_eDriver = __NULL__;
+    m_flBounceFactor = autocvar_car_bounceFactor;
+    m_flAcceleration = autocvar_car_acceleration;
+    m_flSkidSpeed = autocvar_car_skidSpeed;
+    m_flTraction = autocvar_car_traction;
+    m_flBreakFactor = autocvar_car_breakFactor;
+    m_flSteerFactor = autocvar_car_steerFactor;
+    m_flStraightenFactor = autocvar_car_straightenFactor;
+    m_vecGravityDir = autocvar_car_gravityDir;
+    m_iVehicleFlags |= VHF_FROZEN;
 
-	m_eCollBox1 = __NULL__;
-	m_eCollBox2 = __NULL__;
+    m_eCollBox1 = __NULL__;
+    m_eCollBox2 = __NULL__;
 
-	m_wlFL = __NULL__;
-	m_wlFR = __NULL__;
-	m_wlBL = __NULL__;
-	m_wlBR = __NULL__;
+    m_wlFL = __NULL__;
+    m_wlFR = __NULL__;
+    m_wlBL = __NULL__;
+    m_wlBR = __NULL__;
 }
 
 #ifdef CLIENT
 bool
 prop_vehicle_driveable::HideViewWeapon(void)
 {
-	return true;
+    return true;
 }
 #endif
 
@@ -194,44 +194,44 @@ void
 prop_vehicle_driveable::Physics(void)
 {
 #ifdef CLIENT
-	DriverRelink();
+    DriverRelink();
 #endif
 
-	/* if nobody is in the car, we need to run physics here
-	 * with fake input frames */
-	if (GetDriver() == __NULL__) {
+    /* if nobody is in the car, we need to run physics here
+     * with fake input frames */
+    if (GetDriver() == __NULL__) {
 #ifdef SERVER
-		m_flTimeLength = frametime;
-		m_vecMoveValues = [0,0,0];
-		m_iMoveButtons = 0;
-		RunVehiclePhysics();
+        m_flTimeLength = frametime;
+        m_vecMoveValues = [0,0,0];
+        m_iMoveButtons = 0;
+        RunVehiclePhysics();
 #endif
 
 #ifdef CLIENT
-		setorigin(this, origin);
+        setorigin(this, origin);
 #endif
-	} else {
-		//crossprint(sprintf("Driver: %s\n", GetDriver().classname));
-	}
+    } else {
+        //crossprint(sprintf("Driver: %s\n", GetDriver().classname));
+    }
 
-	HandleThink();
+    HandleThink();
 }
 
 void
 prop_vehicle_driveable::OnRemoveEntity(void)
 {
-	if (m_wlFL)
-		m_wlFL.Destroy();
-	if (m_wlFR)
-		m_wlFR.Destroy();
-	if (m_wlBL)
-		m_wlBL.Destroy();
-	if (m_wlBR)
-		m_wlBR.Destroy();
-	if (m_eCollBox1)
-		m_eCollBox1.Destroy();
-	if (m_eCollBox2)
-		m_eCollBox2.Destroy();
+    if (m_wlFL)
+        m_wlFL.Destroy();
+    if (m_wlFR)
+        m_wlFR.Destroy();
+    if (m_wlBL)
+        m_wlBL.Destroy();
+    if (m_wlBR)
+        m_wlBR.Destroy();
+    if (m_eCollBox1)
+        m_eCollBox1.Destroy();
+    if (m_eCollBox2)
+        m_eCollBox2.Destroy();
 }
 
 #ifdef CLIENT
@@ -240,357 +240,357 @@ var bool autocvar_car_firstPerson = false;
 void
 prop_vehicle_driveable::UpdateView(void)
 {
-	vector vecStart, vecEnd;
+    vector vecStart, vecEnd;
 
-	if (autocvar_car_firstPerson) {
-		makevectors(angles);
-		g_view.SetCameraOrigin(origin + (v_forward * m_firstPersonOrg[0]) + (v_right * m_firstPersonOrg[1]) + (v_up * m_firstPersonOrg[2]));
-		g_view.SetClientAngle(angles);
-		return;
-	}
+    if (autocvar_car_firstPerson) {
+        makevectors(angles);
+        g_view.SetCameraOrigin(origin + (v_forward * m_firstPersonOrg[0]) + (v_right * m_firstPersonOrg[1]) + (v_up * m_firstPersonOrg[2]));
+        g_view.SetClientAngle(angles);
+        return;
+    }
 
-	pSeat->m_vecPredictedOrigin = origin;
-	makevectors(view_angles);
-	vecStart = [pSeat->m_vecPredictedOrigin[0], pSeat->m_vecPredictedOrigin[1], pSeat->m_vecPredictedOrigin[2] + 16] + (v_right * 4);
-	vecEnd = vecStart + (v_forward * -256) + [0,0,16] + (v_right * 4);
-	other = world;
-	traceline(vecStart, vecEnd, MOVE_OTHERONLY, this);
-	g_view.SetCameraOrigin(trace_endpos + (v_forward * 16));
-	g_view.SetClientAngle(view_angles);
+    pSeat->m_vecPredictedOrigin = origin;
+    makevectors(view_angles);
+    vecStart = [pSeat->m_vecPredictedOrigin[0], pSeat->m_vecPredictedOrigin[1], pSeat->m_vecPredictedOrigin[2] + 16] + (v_right * 4);
+    vecEnd = vecStart + (v_forward * -256) + [0,0,16] + (v_right * 4);
+    other = world;
+    traceline(vecStart, vecEnd, MOVE_OTHERONLY, this);
+    g_view.SetCameraOrigin(trace_endpos + (v_forward * 16));
+    g_view.SetClientAngle(view_angles);
 }
 
 void
 prop_vehicle_driveable_wheel::PredictPreFrame(void)
 {
-	SAVE_STATE(angles)
-	SAVE_STATE(origin)
-	SAVE_STATE(velocity)
+    SAVE_STATE(angles)
+    SAVE_STATE(origin)
+    SAVE_STATE(velocity)
 }
 
 void
 prop_vehicle_driveable_wheel::PredictPostFrame(void)
 {
-	ROLL_BACK(angles)
-	ROLL_BACK(origin)
-	ROLL_BACK(velocity)
+    ROLL_BACK(angles)
+    ROLL_BACK(origin)
+    ROLL_BACK(velocity)
 }
 #endif
 
 void
 prop_vehicle_driveable_wheel::Bounce(vector normal)
 {
-	prop_vehicle_driveable vehParent;
-	vehParent = (prop_vehicle_driveable)owner;
+    prop_vehicle_driveable vehParent;
+    vehParent = (prop_vehicle_driveable)owner;
 
-	vector vecBounce = (velocity * normal) * normal * vehParent.m_flBounceFactor;
-	velocity -= vecBounce;
-	//vehParent.velocity = velocity;
+    vector vecBounce = (velocity * normal) * normal * vehParent.m_flBounceFactor;
+    velocity -= vecBounce;
+    //vehParent.velocity = velocity;
 
 #ifdef SERVER
-	float flStregth = vlen((velocity * normal) * normal);
+    float flStregth = vlen((velocity * normal) * normal);
 
-	if (flStregth > 96) {
-		SoundDef_Play(vehParent, CHAN_VOICE, "prop_vehicle_driveable.bounce");
-	}
+    if (flStregth > 96) {
+        SoundDef_Play(vehParent, CHAN_VOICE, "prop_vehicle_driveable.bounce");
+    }
 #endif
 }
 
 void
 prop_vehicle_driveable_wheel::Move(float flTimeLength)
 {
-	vector vecDest;
-	vector vecSavedNormal;
-	float flStepped;
-	float flMovetime;
-	int i;
+    vector vecDest;
+    vector vecSavedNormal;
+    float flStepped;
+    float flMovetime;
+    int i;
 
-	/* have a few attempts */
-	for (i = 3, flMovetime = flTimeLength; flMovetime > 0 && i; i--) {
-		vecDest = origin + (velocity * flMovetime);
-		tracebox(origin, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
+    /* have a few attempts */
+    for (i = 3, flMovetime = flTimeLength; flMovetime > 0 && i; i--) {
+        vecDest = origin + (velocity * flMovetime);
+        tracebox(origin, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
 
-		if (trace_startsolid) {
-			continue;
-		}
+        if (trace_startsolid) {
+            continue;
+        }
 
-		origin = trace_endpos;
+        origin = trace_endpos;
 
-		if (trace_fraction < 1) {
-			vecSavedNormal = trace_plane_normal;
-			flMovetime -= flMovetime * trace_fraction;
+        if (trace_fraction < 1) {
+            vecSavedNormal = trace_plane_normal;
+            flMovetime -= flMovetime * trace_fraction;
 
-			if (flMovetime) {
-				float roof_fraction;
-				vector roof_plane_normal;
+            if (flMovetime) {
+                float roof_fraction;
+                vector roof_plane_normal;
 
-				/* step up if we can */
-				trace_endpos = origin;
+                /* step up if we can */
+                trace_endpos = origin;
 
-				if (flags & FL_ONGROUND) {
-					trace_endpos[2] += 18;
-				}
+                if (flags & FL_ONGROUND) {
+                    trace_endpos[2] += 18;
+                }
 
-				tracebox(origin, mins, maxs, trace_endpos, MOVE_NOMONSTERS, this);
-				flStepped = trace_endpos[2] - origin[2];
+                tracebox(origin, mins, maxs, trace_endpos, MOVE_NOMONSTERS, this);
+                flStepped = trace_endpos[2] - origin[2];
 
-				roof_fraction = trace_fraction;
-				roof_plane_normal = trace_plane_normal;
+                roof_fraction = trace_fraction;
+                roof_plane_normal = trace_plane_normal;
 
-				vecDest = trace_endpos + velocity * flMovetime;
-				vecDest[2] = trace_endpos[2];
+                vecDest = trace_endpos + velocity * flMovetime;
+                vecDest[2] = trace_endpos[2];
 
-				/* move forwards */
-				tracebox(trace_endpos, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
+                /* move forwards */
+                tracebox(trace_endpos, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
 
-				/* if we got anywhere, make this raised-step move count */
-				if (trace_fraction != 0) {
-					float fwfrac;
-					vector fwplane;
+                /* if we got anywhere, make this raised-step move count */
+                if (trace_fraction != 0) {
+                    float fwfrac;
+                    vector fwplane;
 
-					fwfrac = trace_fraction;
-					fwplane = trace_plane_normal;
+                    fwfrac = trace_fraction;
+                    fwplane = trace_plane_normal;
 
-					/* move down */
-					vecDest = trace_endpos;
-					if (flags & FL_ONGROUND) {
-						vecDest[2] -= flStepped + 1;
-					}
-					tracebox(trace_endpos, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
+                    /* move down */
+                    vecDest = trace_endpos;
+                    if (flags & FL_ONGROUND) {
+                        vecDest[2] -= flStepped + 1;
+                    }
+                    tracebox(trace_endpos, mins, maxs, vecDest, MOVE_NOMONSTERS, this);
 
-					if (trace_fraction < 1 && trace_plane_normal[2] > 0.7f) {
-						flMovetime -= flMovetime * fwfrac;
+                    if (trace_fraction < 1 && trace_plane_normal[2] > 0.7f) {
+                        flMovetime -= flMovetime * fwfrac;
 
-						if (roof_fraction < 1) {
-							Bounce(roof_plane_normal);
-						}
+                        if (roof_fraction < 1) {
+                            Bounce(roof_plane_normal);
+                        }
 
-						/* FIXME: do we need velocity < 0? */
-						if (trace_fraction < 1) {
-							Bounce(trace_plane_normal);
-						} else if (fwfrac < 1) {
-							Bounce(fwplane);
-						}
+                        /* FIXME: do we need velocity < 0? */
+                        if (trace_fraction < 1) {
+                            Bounce(trace_plane_normal);
+                        } else if (fwfrac < 1) {
+                            Bounce(fwplane);
+                        }
 
-						origin = trace_endpos;
-						continue;
-					}
-				}
-			}
+                        origin = trace_endpos;
+                        continue;
+                    }
+                }
+            }
 
-			/* stepping failed, assume crash? */
-			if (trace_ent == world) {
-				if (vlen(velocity) > 300) {
-					float impact;
-					impact = -dotproduct(trace_plane_normal, velocity);
-					int iImpactDamage = impact / 100;
-				}
-			}
+            /* stepping failed, assume crash? */
+            if (trace_ent == world) {
+                if (vlen(velocity) > 300) {
+                    float impact;
+                    impact = -dotproduct(trace_plane_normal, velocity);
+                    int iImpactDamage = impact / 100;
+                }
+            }
 
-			Bounce(vecSavedNormal);
-			/* Physics_DoTouch(this, trace_ent); */
-		} else {
-			break;
-		}
-	}
+            Bounce(vecSavedNormal);
+            /* Physics_DoTouch(this, trace_ent); */
+        } else {
+            break;
+        }
+    }
 }
 
 void
 prop_vehicle_driveable_wheel::Accel(float flMoveTime, float m_flTurn)
 {
-	prop_vehicle_driveable vehParent;
-	entity eDriver;
-	float flTraction;
-	vector vecAngle;
+    prop_vehicle_driveable vehParent;
+    entity eDriver;
+    float flTraction;
+    vector vecAngle;
 
-	vehParent = (prop_vehicle_driveable)owner;
+    vehParent = (prop_vehicle_driveable)owner;
 
-	if (!vehParent) {
-		return;
-	}
+    if (!vehParent) {
+        return;
+    }
 
-	eDriver = vehParent.m_eDriver;
-	vecAngle = vehParent.angles;
+    eDriver = vehParent.m_eDriver;
+    vecAngle = vehParent.angles;
 
-	makevectors(vecAngle);
+    makevectors(vecAngle);
 
-	if (m_flTurn) {
-		/* cripple turnrate by our current velocity */
-		float turnbreak = bound(0, vlen(velocity), 512) * 0.1f;
+    if (m_flTurn) {
+        /* cripple turnrate by our current velocity */
+        float turnbreak = bound(0, vlen(velocity), 512) * 0.1f;
 
-		/* rotates v_forward */
-		rotatevectorsbyangle([ 0, m_flTurn * turnbreak, 0]);
-	}
+        /* rotates v_forward */
+        rotatevectorsbyangle([ 0, m_flTurn * turnbreak, 0]);
+    }
 
-	tracebox(origin, mins, maxs, origin - v_up, MOVE_NOMONSTERS, owner);
+    tracebox(origin, mins, maxs, origin - v_up, MOVE_NOMONSTERS, owner);
 
-	/* allow a range, for 1qu's worth of spare tyre pressure. or something */
-	flTraction = 1 - trace_fraction;
+    /* allow a range, for 1qu's worth of spare tyre pressure. or something */
+    flTraction = 1 - trace_fraction;
 
-	/* air friction, doubles up for general rolling friction, ish */
-	velocity *= 1 - flMoveTime * 0.1;
+    /* air friction, doubles up for general rolling friction, ish */
+    velocity *= 1 - flMoveTime * 0.1;
 
-	if (flags & FL_ONGROUND && flTraction) {
-		if (eDriver) {
-			velocity += v_forward * bound(-1, vehParent.m_vecMoveValues[0] / 400, 1) * vehParent.m_flAcceleration * flMoveTime * flTraction;
-		}
+    if (flags & FL_ONGROUND && flTraction) {
+        if (eDriver) {
+            velocity += v_forward * bound(-1, vehParent.m_vecMoveValues[0] / 400, 1) * vehParent.m_flAcceleration * flMoveTime * flTraction;
+        }
 
-		/* test if this car is skidding */
-		float skid = (velocity * v_right);
-		if ( fabs(skid) > vehParent.m_flSkidSpeed ) {
-			vehParent.m_nuclideFlags |= VEH_SKIDDING;
-		}
+        /* test if this car is skidding */
+        float skid = (velocity * v_right);
+        if ( fabs(skid) > vehParent.m_flSkidSpeed ) {
+            vehParent.m_nuclideFlags |= VEH_SKIDDING;
+        }
 
-		/* nuke sideways velocity. if a wheel is off the ground this probably
-		   means that it'll be pushed further. players should try not to roll
-		   too much. */
-		/* FIXME: push opposite wheel up slightly to model chassis momentum
-		   not slowing as much as the wheel itself (zomg: race conditions!) */
-		velocity -= (velocity * v_right) * v_right * vehParent.m_flTraction * flMoveTime * flTraction;
+        /* nuke sideways velocity. if a wheel is off the ground this probably
+           means that it'll be pushed further. players should try not to roll
+           too much. */
+        /* FIXME: push opposite wheel up slightly to model chassis momentum
+           not slowing as much as the wheel itself (zomg: race conditions!) */
+        velocity -= (velocity * v_right) * v_right * vehParent.m_flTraction * flMoveTime * flTraction;
 
-		if ((!eDriver || (vehParent.m_iMoveButtons & INPUT_BUTTON2 || vehParent.m_vecMoveValues[2] > 0))) {
-			vector t;
+        if ((!eDriver || (vehParent.m_iMoveButtons & INPUT_BUTTON2 || vehParent.m_vecMoveValues[2] > 0))) {
+            vector t;
 
-			/* empty cars are assumed to have their brakes on.
-			   nuke forward velocity. if a wheel is off the ground this probably
-			   means that it'll be pushed further. players should try not to
-			   roll too much.
+            /* empty cars are assumed to have their brakes on.
+               nuke forward velocity. if a wheel is off the ground this probably
+               means that it'll be pushed further. players should try not to
+               roll too much.
 
-			   Note: really we ought to be applying some axel friction even
-			   when not breaking, but we'll just depend on air friction for
-			   that. */
-			velocity -= (velocity * v_forward) * v_forward * vehParent.m_flBreakFactor * flMoveTime * flTraction;
+               Note: really we ought to be applying some axel friction even
+               when not breaking, but we'll just depend on air friction for
+               that. */
+            velocity -= (velocity * v_forward) * v_forward * vehParent.m_flBreakFactor * flMoveTime * flTraction;
 
-			/* if break is on, nuke the final part of the velocity, so we can
-			   become truely motionless.*/
-			t = velocity - velocity * dotproduct(velocity, vehParent.m_vecGravityDir);
-			if (vlen(t) < 15) {
-				velocity -= t;
-			}
+            /* if break is on, nuke the final part of the velocity, so we can
+               become truely motionless.*/
+            t = velocity - velocity * dotproduct(velocity, vehParent.m_vecGravityDir);
+            if (vlen(t) < 15) {
+                velocity -= t;
+            }
 
-			/* don't bother with gravity if we're already on the ground and
-			   breaking. this avoids weird slides. */
-			if (!trace_fraction && trace_plane_normal * vehParent.m_vecGravityDir < -0.7f) {
-				return;
-			}
-		}
-	}
+            /* don't bother with gravity if we're already on the ground and
+               breaking. this avoids weird slides. */
+            if (!trace_fraction && trace_plane_normal * vehParent.m_vecGravityDir < -0.7f) {
+                return;
+            }
+        }
+    }
 
-	/* apply gravity */
-	velocity += vehParent.m_vecGravityDir * flMoveTime * g_pmoveVars.g_gravity * trace_fraction;
+    /* apply gravity */
+    velocity += vehParent.m_vecGravityDir * flMoveTime * g_pmoveVars.g_gravity * trace_fraction;
 
-	tracebox(origin, mins * 4.0, maxs * 4.0, origin, MOVE_NORMAL, owner);
-	if (trace_ent && trace_ent != vehParent.m_eDriver) {
-		int iImpactDamage = vlen(velocity) / 10;
+    tracebox(origin, mins * 4.0, maxs * 4.0, origin, MOVE_NORMAL, owner);
+    if (trace_ent && trace_ent != vehParent.m_eDriver) {
+        int iImpactDamage = vlen(velocity) / 10;
 
-		if (iImpactDamage > 10) {
-			trace_ent.velocity = velocity * 2.0 + [0,0,500];
-			//velocity *= 0.25f;
+        if (iImpactDamage > 10) {
+            trace_ent.velocity = velocity * 2.0 + [0,0,500];
+            //velocity *= 0.25f;
 #ifdef SERVER
-			if (trace_ent.takedamage) {
-				ncSurfacePropEntity foo = (ncSurfacePropEntity)trace_ent;
-				vector dmgDir = dirFromTarget(trace_endpos, foo.origin);
-				ncDict damageDecl = spawn(ncDict);
-				damageDecl.AddKey("damage", itos(iImpactDamage));
-				foo.Damage(this, vehParent.m_eDriver, damageDecl, 1.0, dmgDir, foo.origin);
-				remove(damageDecl);
-				//print(sprintf("Delivering %i impact damage\n", iImpactDamage));
-			}
+            if (trace_ent.takedamage) {
+                ncSurfacePropEntity foo = (ncSurfacePropEntity)trace_ent;
+                vector dmgDir = dirFromTarget(trace_endpos, foo.origin);
+                ncDict damageDecl = spawn(ncDict);
+                damageDecl.AddKey("damage", itos(iImpactDamage));
+                foo.Damage(this, vehParent.m_eDriver, damageDecl, 1.0, dmgDir, foo.origin);
+                remove(damageDecl);
+                //print(sprintf("Delivering %i impact damage\n", iImpactDamage));
+            }
 #endif
-		}
-	}
+        }
+    }
 }
 
 void
 prop_vehicle_driveable_wheel::UpdateSuspension(float flTimeLength)
 {
-	float flDamp;
-	float flForce;
+    float flDamp;
+    float flForce;
 
-	if (fabs(m_flSuspension) > 0.001 || fabs(m_flSuspensionForce) > 0.001) {
-		m_flSuspension += m_flSuspensionForce * flTimeLength;
-		
-		flForce = bound(0, flTimeLength * 60, 2);
-		flDamp = 1 - (flTimeLength * 2);
-		if (flDamp < 0) {
-			flDamp = 0;
-		}
-		m_flSuspensionForce *= flDamp;
-		m_flSuspensionForce -= m_flSuspension * flForce;
-		m_flSuspension = bound(-16, m_flSuspension, 16);
-	}
+    if (fabs(m_flSuspension) > 0.001 || fabs(m_flSuspensionForce) > 0.001) {
+        m_flSuspension += m_flSuspensionForce * flTimeLength;
+        
+        flForce = bound(0, flTimeLength * 60, 2);
+        flDamp = 1 - (flTimeLength * 2);
+        if (flDamp < 0) {
+            flDamp = 0;
+        }
+        m_flSuspensionForce *= flDamp;
+        m_flSuspensionForce -= m_flSuspension * flForce;
+        m_flSuspension = bound(-16, m_flSuspension, 16);
+    }
 }
 
 void
 prop_vehicle_driveable_wheel::Physics(float turnrate, float flTimeLength)
 {
-	vector owner_pos;
-	//geomtype = GEOMTYPE_SPHERE;
+    vector owner_pos;
+    //geomtype = GEOMTYPE_SPHERE;
 
-	/* try to correct the wheel's position, in case it got stuck */
-	owner_pos = owner.origin + (owner.mins + owner.maxs) * 0.5f;
-	tracebox(owner_pos, mins, maxs, origin, MOVE_NORMAL, owner);
-	setorigin(this, trace_endpos);
+    /* try to correct the wheel's position, in case it got stuck */
+    owner_pos = owner.origin + (owner.mins + owner.maxs) * 0.5f;
+    tracebox(owner_pos, mins, maxs, origin, MOVE_NORMAL, owner);
+    setorigin(this, trace_endpos);
 
-	/* see if we're in-air */
-	other = world;
-	tracebox(origin, mins, maxs, origin - [0,0,1], MOVE_OTHERONLY, this);
-	if (!trace_startsolid) {
-		if ((trace_fraction < 1) && (trace_plane_normal[2] > 0.7)) {
-			flags |= FL_ONGROUND;
-		} else {
-			flags &= ~FL_ONGROUND;
-			m_flSuspensionForce += flTimeLength * 200.0;
-		}
-	}
+    /* see if we're in-air */
+    other = world;
+    tracebox(origin, mins, maxs, origin - [0,0,1], MOVE_OTHERONLY, this);
+    if (!trace_startsolid) {
+        if ((trace_fraction < 1) && (trace_plane_normal[2] > 0.7)) {
+            flags |= FL_ONGROUND;
+        } else {
+            flags &= ~FL_ONGROUND;
+            m_flSuspensionForce += flTimeLength * 200.0;
+        }
+    }
 
-	Accel(flTimeLength / 2, turnrate);
-	Move(flTimeLength);
-	Accel(flTimeLength / 2, turnrate);
-	UpdateSuspension(flTimeLength);
-	//print(sprintf("suspension: %f, force: %f\n", m_flSuspension, m_flSuspensionForce));
+    Accel(flTimeLength / 2, turnrate);
+    Move(flTimeLength);
+    Accel(flTimeLength / 2, turnrate);
+    UpdateSuspension(flTimeLength);
+    //print(sprintf("suspension: %f, force: %f\n", m_flSuspension, m_flSuspensionForce));
 }
 
 void
 prop_vehicle_driveable_wheel::prop_vehicle_driveable_wheel(void)
 {
-	mins = [-16,-16,-35];
-	maxs = [16,16,-35+32];
-	hitcontentsmaski = CONTENTBIT_BODY | CONTENTBITS_POINTSOLID | CONTENTBIT_VEHICLECLIP | CONTENTBIT_PLAYERCLIP;
+    mins = [-16,-16,-35];
+    maxs = [16,16,-35+32];
+    hitcontentsmaski = CONTENTBIT_BODY | CONTENTBITS_POINTSOLID | CONTENTBIT_VEHICLECLIP | CONTENTBIT_PLAYERCLIP;
 }
 
 #ifdef CLIENT
 void
 prop_vehicle_driveable::PredictPreFrame(void)
 {
-	SAVE_STATE(modelindex)
-	SAVE_STATE(origin)
-	SAVE_STATE(angles)
-	SAVE_STATE(velocity)
-	SAVE_STATE(m_flTurn)
-	SAVE_STATE(flags)
-	SAVE_STATE(driver_entnum)
+    SAVE_STATE(modelindex)
+    SAVE_STATE(origin)
+    SAVE_STATE(angles)
+    SAVE_STATE(velocity)
+    SAVE_STATE(m_flTurn)
+    SAVE_STATE(flags)
+    SAVE_STATE(driver_entnum)
 
-	m_wlFL.PredictPreFrame();
-	m_wlFR.PredictPreFrame();
-	m_wlBL.PredictPreFrame();
-	m_wlBR.PredictPreFrame();
+    m_wlFL.PredictPreFrame();
+    m_wlFR.PredictPreFrame();
+    m_wlBL.PredictPreFrame();
+    m_wlBR.PredictPreFrame();
 }
 
 void
 prop_vehicle_driveable::PredictPostFrame(void)
 {
-	ROLL_BACK(modelindex)
-	ROLL_BACK(angles)
-	ROLL_BACK(origin)
-	ROLL_BACK(velocity)
-	ROLL_BACK(m_flTurn)
-	ROLL_BACK(flags)
-	ROLL_BACK(driver_entnum)
+    ROLL_BACK(modelindex)
+    ROLL_BACK(angles)
+    ROLL_BACK(origin)
+    ROLL_BACK(velocity)
+    ROLL_BACK(m_flTurn)
+    ROLL_BACK(flags)
+    ROLL_BACK(driver_entnum)
 
-	m_wlFL.PredictPostFrame();
-	m_wlFR.PredictPostFrame();
-	m_wlBL.PredictPostFrame();
-	m_wlBR.PredictPostFrame();
+    m_wlFL.PredictPostFrame();
+    m_wlFR.PredictPostFrame();
+    m_wlBL.PredictPostFrame();
+    m_wlBR.PredictPostFrame();
 }
 #endif
 
@@ -603,373 +603,373 @@ prop_vehicle_driveable::WeaponInput(void)
 void
 prop_vehicle_driveable::PlayerInput(void)
 {
-	m_vecMoveValues = input_movevalues;
-	m_iMoveButtons = input_buttons;
-	m_flTimeLength = input_timelength;
+    m_vecMoveValues = input_movevalues;
+    m_iMoveButtons = input_buttons;
+    m_flTimeLength = input_timelength;
 
-	/* prediction frame... */
-	RunVehiclePhysics();
+    /* prediction frame... */
+    RunVehiclePhysics();
 
 #ifdef SERVER
-	/* allow us to exit */
-	if (m_flUseTime < time) {
-		if (input_buttons & INPUT_BUTTON5) {
-			eActivator = m_eDriver;
-			OnPlayerUse();
-			input_buttons &= ~INPUT_BUTTON5;
-		}
-	}
+    /* allow us to exit */
+    if (m_flUseTime < time) {
+        if (input_buttons & INPUT_BUTTON5) {
+            eActivator = m_eDriver;
+            OnPlayerUse();
+            input_buttons &= ~INPUT_BUTTON5;
+        }
+    }
 #endif
 
-	WeaponInput();
+    WeaponInput();
 
-	/* only allow use key */
-	input_buttons = (input_buttons & INPUT_BUTTON5);
+    /* only allow use key */
+    input_buttons = (input_buttons & INPUT_BUTTON5);
 }
 
 void
 prop_vehicle_driveable::RunVehiclePhysics(void)
 {
 #ifdef CLIENT
-	return;
+    return;
 #endif
 
 #if SERVER
-	/* eject the dead */
-	if (m_eDriver && m_eDriver.health <= 0) {
-		PlayerLeave((ncPlayer)m_eDriver);
-	}
+    /* eject the dead */
+    if (m_eDriver && m_eDriver.health <= 0) {
+        PlayerLeave((ncPlayer)m_eDriver);
+    }
 #endif
 
-	if (m_eDriver) {
-		float y;
+    if (m_eDriver) {
+        float y;
 
-		y = m_vecMoveValues[1];
-		y = bound(-200, y, 200) / 200;
-		y *= m_flSteerFactor;
+        y = m_vecMoveValues[1];
+        y = bound(-200, y, 200) / 200;
+        y *= m_flSteerFactor;
 
-		if (y) {
-			if (y < 0 && m_flTurn < 0) {
-				m_flTurn = 0.0f;
-			} else if (y > 0 && m_flTurn > 0) {
-				m_flTurn = 0.0f;
-			} else {
-				m_flTurn = bound(-1, m_flTurn - y * m_flTimeLength, 1);
-			}
-		} else {
-			/* straighten wheels forward over time */
-			if (m_flTurn < 0) {
-				m_flTurn = min(0, m_flTurn + (m_flTimeLength * m_flStraightenFactor));
-			} else if (m_flTurn > 0) {
-				m_flTurn = max(0, m_flTurn - (m_flTimeLength * m_flStraightenFactor));
-			}
-		}
+        if (y) {
+            if (y < 0 && m_flTurn < 0) {
+                m_flTurn = 0.0f;
+            } else if (y > 0 && m_flTurn > 0) {
+                m_flTurn = 0.0f;
+            } else {
+                m_flTurn = bound(-1, m_flTurn - y * m_flTimeLength, 1);
+            }
+        } else {
+            /* straighten wheels forward over time */
+            if (m_flTurn < 0) {
+                m_flTurn = min(0, m_flTurn + (m_flTimeLength * m_flStraightenFactor));
+            } else if (m_flTurn > 0) {
+                m_flTurn = max(0, m_flTurn - (m_flTimeLength * m_flStraightenFactor));
+            }
+        }
 
-		PlayerUpdateFlags();
-	}
+        PlayerUpdateFlags();
+    }
 
-	angles = fixAngle(angles);
+    angles = fixAngle(angles);
 
-	if ((angles[2] > 45) || (angles[2] < -45)) {
-		if (0) {
-			PlayerLeave(m_eDriver);
-		}
-		if (m_vehicleNoFlip) {
-			angles[0] = bound(-45, angles[0], 45);
-			angles[2] = bound(-45, angles[2], 45);
-		}
-	}
+    if ((angles[2] > 45) || (angles[2] < -45)) {
+        if (0) {
+            PlayerLeave(m_eDriver);
+        }
+        if (m_vehicleNoFlip) {
+            angles[0] = bound(-45, angles[0], 45);
+            angles[2] = bound(-45, angles[2], 45);
+        }
+    }
 
-	m_nuclideFlags &= ~VEH_SKIDDING;
+    m_nuclideFlags &= ~VEH_SKIDDING;
 
-	velocity[0] = bound(-1000, velocity[0], 1000);
-	velocity[1] = bound(-1000, velocity[1], 1000);
-	velocity[2] = bound(-1000, velocity[2], 1000);
+    velocity[0] = bound(-1000, velocity[0], 1000);
+    velocity[1] = bound(-1000, velocity[1], 1000);
+    velocity[2] = bound(-1000, velocity[2], 1000);
 
-	setorigin( m_wlFL, origin );
-	makevectors(angles);
-	setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
-	setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
-	setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
-	setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
+    setorigin( m_wlFL, origin );
+    makevectors(angles);
+    setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
+    setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
+    setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
+    setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
 
-	m_wlFL.Physics( this.m_flTurn, m_flTimeLength);
-	m_wlFR.Physics( this.m_flTurn, m_flTimeLength);
-	m_wlBL.Physics( 0, m_flTimeLength);
-	m_wlBR.Physics( 0, m_flTimeLength);
+    m_wlFL.Physics( this.m_flTurn, m_flTimeLength);
+    m_wlFR.Physics( this.m_flTurn, m_flTimeLength);
+    m_wlBL.Physics( 0, m_flTimeLength);
+    m_wlBR.Physics( 0, m_flTimeLength);
 
-	velocity = m_wlFL.velocity;
-	velocity += m_wlFR.velocity;
-	velocity += m_wlBL.velocity;
-	velocity += m_wlBR.velocity;
-	velocity *= 0.25f;
+    velocity = m_wlFL.velocity;
+    velocity += m_wlFR.velocity;
+    velocity += m_wlBL.velocity;
+    velocity += m_wlBR.velocity;
+    velocity *= 0.25f;
 
-	/* figure out the new visual chassis position */
-	vector wheelFR = m_wlFR.origin + [0,0,(m_wlFR.m_flSuspension * m_flSuspensionScale)];
-	vector wheelFL = m_wlFL.origin + [0,0,(m_wlFL.m_flSuspension * m_flSuspensionScale)];
-	vector wheelBR = m_wlBR.origin + [0,0,(m_wlBR.m_flSuspension * m_flSuspensionScale)];
-	vector wheelBL = m_wlBL.origin + [0,0,(m_wlBL.m_flSuspension * m_flSuspensionScale)];
+    /* figure out the new visual chassis position */
+    vector wheelFR = m_wlFR.origin + [0,0,(m_wlFR.m_flSuspension * m_flSuspensionScale)];
+    vector wheelFL = m_wlFL.origin + [0,0,(m_wlFL.m_flSuspension * m_flSuspensionScale)];
+    vector wheelBR = m_wlBR.origin + [0,0,(m_wlBR.m_flSuspension * m_flSuspensionScale)];
+    vector wheelBL = m_wlBL.origin + [0,0,(m_wlBL.m_flSuspension * m_flSuspensionScale)];
 
-	v_right = (wheelFR - wheelFL);
-	v_right += (wheelBR - wheelBL);
-	v_forward = (wheelFL + wheelFR);
-	v_forward -= (wheelBL + wheelBR);
-	v_up = -crossproduct(v_forward, v_right);
-	vehicleAngles = vectoangles( v_forward, v_up );
+    v_right = (wheelFR - wheelFL);
+    v_right += (wheelBR - wheelBL);
+    v_forward = (wheelFL + wheelFR);
+    v_forward -= (wheelBL + wheelBR);
+    v_up = -crossproduct(v_forward, v_right);
+    vehicleAngles = vectoangles( v_forward, v_up );
 
-	vehicleOrigin = wheelFL;
-	vehicleOrigin += wheelFR;
-	vehicleOrigin += wheelBL;
-	vehicleOrigin += wheelBR;
-	vehicleOrigin *= 0.25f;
+    vehicleOrigin = wheelFL;
+    vehicleOrigin += wheelFR;
+    vehicleOrigin += wheelBL;
+    vehicleOrigin += wheelBR;
+    vehicleOrigin *= 0.25f;
 
-	/* real chassis position */
-	wheelFR = m_wlFR.origin;
-	wheelFL = m_wlFL.origin;
-	wheelBR = m_wlBR.origin;
-	wheelBL = m_wlBL.origin;
+    /* real chassis position */
+    wheelFR = m_wlFR.origin;
+    wheelFL = m_wlFL.origin;
+    wheelBR = m_wlBR.origin;
+    wheelBL = m_wlBL.origin;
 
-	v_right = (wheelFR - wheelFL);
-	v_right += (wheelBR - wheelBL);
-	v_forward = (wheelFL + wheelFR);
-	v_forward -= (wheelBL + wheelBR);
-	v_up = -crossproduct(v_forward, v_right);
-	angles = vectoangles( v_forward, v_up );
+    v_right = (wheelFR - wheelFL);
+    v_right += (wheelBR - wheelBL);
+    v_forward = (wheelFL + wheelFR);
+    v_forward -= (wheelBL + wheelBR);
+    v_up = -crossproduct(v_forward, v_right);
+    angles = vectoangles( v_forward, v_up );
 
-	/* figure out the new visual chassis position */
-	vector new_origin;
-	new_origin = m_wlFL.origin;
-	new_origin += m_wlFR.origin;
-	new_origin += m_wlBL.origin;
-	new_origin += m_wlBR.origin;
-	new_origin *= 0.25f;
-	setorigin(this, new_origin);
+    /* figure out the new visual chassis position */
+    vector new_origin;
+    new_origin = m_wlFL.origin;
+    new_origin += m_wlFR.origin;
+    new_origin += m_wlBL.origin;
+    new_origin += m_wlBR.origin;
+    new_origin *= 0.25f;
+    setorigin(this, new_origin);
 
-	makevectors(angles);
-	m_eCollBox1.SetOrigin(origin + (v_forward * 64));
-	m_eCollBox2.SetOrigin(origin + (v_forward * -72));
-	m_eCollBox1.SetSolid(SOLID_NOT);
-	m_eCollBox2.SetSolid(SOLID_NOT);
+    makevectors(angles);
+    m_eCollBox1.SetOrigin(origin + (v_forward * 64));
+    m_eCollBox2.SetOrigin(origin + (v_forward * -72));
+    m_eCollBox1.SetSolid(SOLID_NOT);
+    m_eCollBox2.SetSolid(SOLID_NOT);
 
-	PlayerAlign();
+    PlayerAlign();
 
-	/* actiony stuff */
+    /* actiony stuff */
 }
 
 #ifdef SERVER
 void
 prop_vehicle_driveable::OnPlayerUse(void)
 {
-	if (m_flUseTime > time)
-		return;
+    if (m_flUseTime > time)
+        return;
 
-	if (eActivator) {
-		ncPlayer theActivator = (ncPlayer)eActivator;
+    if (eActivator) {
+        ncPlayer theActivator = (ncPlayer)eActivator;
 
-		if (theActivator.vehicle) {
-			ncVehicle ourVehicle = (ncVehicle)theActivator.vehicle;
-			ourVehicle.PlayerLeave(theActivator);
-			return;
-		}
-	}
+        if (theActivator.vehicle) {
+            ncVehicle ourVehicle = (ncVehicle)theActivator.vehicle;
+            ourVehicle.PlayerLeave(theActivator);
+            return;
+        }
+    }
 
-	if (m_eDriver == eActivator) {
-		PlayerLeave((ncPlayer)eActivator);
-		setorigin(eActivator, GetExitPos());
-	} else if (!m_eDriver) {
-		angles = fixAngle(angles);
-		if ((angles[2] > 45) || (angles[2] < -45)) {
-			angles = [0,angles[1],200];
-			velocity = [0,0,200];
-		}
+    if (m_eDriver == eActivator) {
+        PlayerLeave((ncPlayer)eActivator);
+        setorigin(eActivator, GetExitPos());
+    } else if (!m_eDriver) {
+        angles = fixAngle(angles);
+        if ((angles[2] > 45) || (angles[2] < -45)) {
+            angles = [0,angles[1],200];
+            velocity = [0,0,200];
+        }
 
-		PlayerEnter((ncPlayer)eActivator);
-		m_vecPlayerPos = [0,0,0];
-	}
-	m_flUseTime = time + 2.0f;
+        PlayerEnter((ncPlayer)eActivator);
+        m_vecPlayerPos = [0,0,0];
+    }
+    m_flUseTime = time + 2.0f;
 }
 
 void
 prop_vehicle_driveable::Respawn(void)
 {
-	SetMovetype(MOVETYPE_NONE);
-	SetSolid(SOLID_BBOX);
-	SetOrigin(GetSpawnVector("origin"));
-	SetAngles(GetSpawnVector("angles"));
-	SetModel(GetSpawnString("model"));
+    SetMovetype(MOVETYPE_NONE);
+    SetSolid(SOLID_BBOX);
+    SetOrigin(GetSpawnVector("origin"));
+    SetAngles(GetSpawnVector("angles"));
+    SetModel(GetSpawnString("model"));
 
-	m_vecBRWheelAxel = GetSpawnVector( "wheelRearRight" );
-	m_vecBLWheelAxel = GetSpawnVector( "wheelRearLeft" );
-	m_vecFLWheelAxel = GetSpawnVector( "wheelFrontLeft" );
-	m_vecFRWheelAxel = GetSpawnVector( "wheelFrontRight" );
-	m_vehicleNoFlip = GetSpawnBool("vehicleNoFlip");
-	m_flBounceFactor = GetSpawnFloat("bounceFactor");
-	m_flAcceleration = GetSpawnFloat("accelerationSpeed");
-	m_flSkidSpeed = GetSpawnFloat("skidSpeed");
-	m_flTraction = GetSpawnFloat("tractionScale");
-	m_flBreakFactor = GetSpawnFloat("breakFactor");
-	m_flSteerFactor = GetSpawnFloat("steerFactor");
-	m_flStraightenFactor = GetSpawnFloat("straightenFactor");
-	m_flSuspensionScale = GetSpawnFloat("suspensionScale");
-	m_vecGravityDir = GetSpawnVector( "gravityDir" );
+    m_vecBRWheelAxel = GetSpawnVector( "wheelRearRight" );
+    m_vecBLWheelAxel = GetSpawnVector( "wheelRearLeft" );
+    m_vecFLWheelAxel = GetSpawnVector( "wheelFrontLeft" );
+    m_vecFRWheelAxel = GetSpawnVector( "wheelFrontRight" );
+    m_vehicleNoFlip = GetSpawnBool("vehicleNoFlip");
+    m_flBounceFactor = GetSpawnFloat("bounceFactor");
+    m_flAcceleration = GetSpawnFloat("accelerationSpeed");
+    m_flSkidSpeed = GetSpawnFloat("skidSpeed");
+    m_flTraction = GetSpawnFloat("tractionScale");
+    m_flBreakFactor = GetSpawnFloat("breakFactor");
+    m_flSteerFactor = GetSpawnFloat("steerFactor");
+    m_flStraightenFactor = GetSpawnFloat("straightenFactor");
+    m_flSuspensionScale = GetSpawnFloat("suspensionScale");
+    m_vecGravityDir = GetSpawnVector( "gravityDir" );
 
-	if (m_flBounceFactor <= 0.0f)
-		m_flBounceFactor = autocvar_car_bounceFactor;
-	if (m_flAcceleration <= 0.0f)
-		m_flAcceleration = autocvar_car_acceleration;
-	if (m_flSkidSpeed <= 0.0f)
-		m_flSkidSpeed = autocvar_car_skidSpeed;
-	if (m_flTraction <= 0.0f)
-		m_flTraction = autocvar_car_traction;
-	if (m_flBreakFactor <= 0.0f)
-		m_flBreakFactor = autocvar_car_breakFactor;
-	if (m_flSteerFactor <= 0.0f)
-		m_flSteerFactor = autocvar_car_steerFactor;
-	if (m_flStraightenFactor <= 0.0f)
-		m_flStraightenFactor = autocvar_car_straightenFactor;
-	if (m_flSuspensionScale <= 0.0f)
-		m_flSuspensionScale = autocvar_car_suspensionScale;
-	if (m_vecGravityDir == g_vec_null)
-		m_vecGravityDir = autocvar_car_gravityDir;
+    if (m_flBounceFactor <= 0.0f)
+        m_flBounceFactor = autocvar_car_bounceFactor;
+    if (m_flAcceleration <= 0.0f)
+        m_flAcceleration = autocvar_car_acceleration;
+    if (m_flSkidSpeed <= 0.0f)
+        m_flSkidSpeed = autocvar_car_skidSpeed;
+    if (m_flTraction <= 0.0f)
+        m_flTraction = autocvar_car_traction;
+    if (m_flBreakFactor <= 0.0f)
+        m_flBreakFactor = autocvar_car_breakFactor;
+    if (m_flSteerFactor <= 0.0f)
+        m_flSteerFactor = autocvar_car_steerFactor;
+    if (m_flStraightenFactor <= 0.0f)
+        m_flStraightenFactor = autocvar_car_straightenFactor;
+    if (m_flSuspensionScale <= 0.0f)
+        m_flSuspensionScale = autocvar_car_suspensionScale;
+    if (m_vecGravityDir == g_vec_null)
+        m_vecGravityDir = autocvar_car_gravityDir;
 
-	m_wlFL.velocity =
-	m_wlFR.velocity =
-	m_wlBL.velocity =
-	m_wlBR.velocity =
-	velocity = [0,0,0];
-	PlayerUse = OnPlayerUse;
-	setsize( this, GetSpawnVector("mins"), GetSpawnVector("maxs"));
+    m_wlFL.velocity =
+    m_wlFR.velocity =
+    m_wlBL.velocity =
+    m_wlBR.velocity =
+    velocity = [0,0,0];
+    PlayerUse = OnPlayerUse;
+    setsize( this, GetSpawnVector("mins"), GetSpawnVector("maxs"));
 
-	if (m_eDriver)
-		PlayerLeave((ncPlayer)m_eDriver);
+    if (m_eDriver)
+        PlayerLeave((ncPlayer)m_eDriver);
 
-	SendFlags = -1;
+    SendFlags = -1;
 }
 #endif
 
 void
 prop_vehicle_driveable::SpawnWheels(void)
 {
-	if (!m_eCollBox1)
-		m_eCollBox1 = spawn(ncEntity);
-	if (!m_eCollBox2)
-		m_eCollBox2 = spawn(ncEntity);
+    if (!m_eCollBox1)
+        m_eCollBox1 = spawn(ncEntity);
+    if (!m_eCollBox2)
+        m_eCollBox2 = spawn(ncEntity);
 
-	{
-		m_eCollBox1.SetSize([-32,-32,0], [32,32,32]);
-		m_eCollBox2.SetSize([-32,-32,0], [32,32,32]);
-	}
+    {
+        m_eCollBox1.SetSize([-32,-32,0], [32,32,32]);
+        m_eCollBox2.SetSize([-32,-32,0], [32,32,32]);
+    }
 
-	m_eCollBox1.hitcontentsmaski = hitcontentsmaski;
-	m_eCollBox2.hitcontentsmaski = hitcontentsmaski;
+    m_eCollBox1.hitcontentsmaski = hitcontentsmaski;
+    m_eCollBox2.hitcontentsmaski = hitcontentsmaski;
 
-	if (!m_wlFL)
-		m_wlFL = spawn(prop_vehicle_driveable_wheel);
-	if (!m_wlFR)
-		m_wlFR = spawn(prop_vehicle_driveable_wheel);
-	if (!m_wlBL)
-		m_wlBL = spawn(prop_vehicle_driveable_wheel);
-	if (!m_wlBR)
-		m_wlBR = spawn(prop_vehicle_driveable_wheel);
+    if (!m_wlFL)
+        m_wlFL = spawn(prop_vehicle_driveable_wheel);
+    if (!m_wlFR)
+        m_wlFR = spawn(prop_vehicle_driveable_wheel);
+    if (!m_wlBL)
+        m_wlBL = spawn(prop_vehicle_driveable_wheel);
+    if (!m_wlBR)
+        m_wlBR = spawn(prop_vehicle_driveable_wheel);
 
-	m_eCollBox1.owner = m_eCollBox2.owner = \
-		m_wlFL.owner = m_wlFR.owner = \
-		m_wlBL.owner = m_wlBR.owner = this;
+    m_eCollBox1.owner = m_eCollBox2.owner = \
+        m_wlFL.owner = m_wlFR.owner = \
+        m_wlBL.owner = m_wlBR.owner = this;
 
-	float wheelSize = GetSpawnFloat("wheelSize");
+    float wheelSize = GetSpawnFloat("wheelSize");
 
-	if (wheelSize < 0) {
-		wheelSize = 16;
-	}
+    if (wheelSize < 0) {
+        wheelSize = 16;
+    }
 
-	setsize( this, [-50,-50,0], [50,50,64]);
-	setsize(m_wlFL, [-wheelSize,-wheelSize,m_vecFLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
-	setsize(m_wlFR, [-wheelSize,-wheelSize,m_vecFRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
-	setsize(m_wlBL, [-wheelSize,-wheelSize,m_vecBLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
-	setsize(m_wlBR, [-wheelSize,-wheelSize,m_vecBRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+    setsize( this, [-50,-50,0], [50,50,64]);
+    setsize(m_wlFL, [-wheelSize,-wheelSize,m_vecFLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+    setsize(m_wlFR, [-wheelSize,-wheelSize,m_vecFRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+    setsize(m_wlBL, [-wheelSize,-wheelSize,m_vecBLWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
+    setsize(m_wlBR, [-wheelSize,-wheelSize,m_vecBRWheelAxel[2]], [16,16,16 + m_vecBRWheelAxel[2]]);
 }
 
 #ifdef CLIENT
 void
 prop_vehicle_driveable::ReceiveEntity(float flNew, float flSendFlags)
 {
-	if (flSendFlags & VEHFL_DRIVER) {
-		driver_entnum = readentitynum();
-		DriverRelink();
-	}
+    if (flSendFlags & VEHFL_DRIVER) {
+        driver_entnum = readentitynum();
+        DriverRelink();
+    }
 
-	if (flSendFlags & VEHFL_MODELINDEX) {
-		entityDefID = readint();
-		EntityDef_SetFromEntNum(this, entityDefID);
-		modelindex = readshort();
-		m_vecSeatOffest[0] = readfloat();
-		m_vecSeatOffest[1] = readfloat();
-		m_vecSeatOffest[2] = readfloat();
-		setsize( this, [-50,-50,0], [50,50,64]);
-	}
+    if (flSendFlags & VEHFL_MODELINDEX) {
+        entityDefID = readint();
+        EntityDef_SetFromEntNum(this, entityDefID);
+        modelindex = readshort();
+        m_vecSeatOffest[0] = readfloat();
+        m_vecSeatOffest[1] = readfloat();
+        m_vecSeatOffest[2] = readfloat();
+        setsize( this, [-50,-50,0], [50,50,64]);
+    }
 
-	if (flNew) {
-		SpawnWheels();
-	}
+    if (flNew) {
+        SpawnWheels();
+    }
 
-	if (flSendFlags & VEHFL_ORIGIN) {
-		origin[0] = readcoord();
-		origin[1] = readcoord();
-		origin[2] = readcoord();
-		setorigin(this, origin);
-	}
+    if (flSendFlags & VEHFL_ORIGIN) {
+        origin[0] = readcoord();
+        origin[1] = readcoord();
+        origin[2] = readcoord();
+        setorigin(this, origin);
+    }
 
-	if (flSendFlags & VEHFL_ANGLES) {
-		angles[0] = readfloat();
-		angles[1] = readfloat();
-		angles[2] = readfloat();
-	}
+    if (flSendFlags & VEHFL_ANGLES) {
+        angles[0] = readfloat();
+        angles[1] = readfloat();
+        angles[2] = readfloat();
+    }
 
-	if ((flSendFlags & VEHFL_ORIGIN) || (flSendFlags & VEHFL_ANGLES)) {
-		makevectors(angles);
-		setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
-		setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
-		setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
-		setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
+    if ((flSendFlags & VEHFL_ORIGIN) || (flSendFlags & VEHFL_ANGLES)) {
+        makevectors(angles);
+        setorigin( m_wlFL, origin + (v_forward * m_vecFLWheelAxel[0]) + (v_right * m_vecFLWheelAxel[1]));
+        setorigin( m_wlFR, origin + (v_forward * m_vecFRWheelAxel[0]) + (v_right * m_vecFRWheelAxel[1]));
+        setorigin( m_wlBL, origin + (v_forward * m_vecBLWheelAxel[0]) + (v_right * m_vecBLWheelAxel[1]));
+        setorigin( m_wlBR, origin + (v_forward * m_vecBRWheelAxel[0]) + (v_right * m_vecBRWheelAxel[1]));
 
-		m_eCollBox1.SetOrigin(origin + (v_forward * 64));
-		m_eCollBox2.SetOrigin(origin + (v_forward * -72));
-	}
+        m_eCollBox1.SetOrigin(origin + (v_forward * 64));
+        m_eCollBox2.SetOrigin(origin + (v_forward * -72));
+    }
 
-	if (flSendFlags & VEHFL_VELOCITY) {
-		velocity[0] = readfloat();
-		velocity[1] = readfloat();
-		velocity[2] = readfloat();
-	}
+    if (flSendFlags & VEHFL_VELOCITY) {
+        velocity[0] = readfloat();
+        velocity[1] = readfloat();
+        velocity[2] = readfloat();
+    }
 
-	if (flSendFlags & VEHFL_TURNING)
-		m_flTurn = readfloat();
+    if (flSendFlags & VEHFL_TURNING)
+        m_flTurn = readfloat();
 
-	if (flSendFlags & VEHFL_FLAGS)
-		flags = readfloat();
+    if (flSendFlags & VEHFL_FLAGS)
+        flags = readfloat();
 
-	if (flNew) {
-		drawmask = MASK_ENGINE;
-		SetMovetype(MOVETYPE_NONE);
-		SetSolid(SOLID_BBOX);
+    if (flNew) {
+        drawmask = MASK_ENGINE;
+        SetMovetype(MOVETYPE_NONE);
+        SetSolid(SOLID_BBOX);
 
-		m_vecBRWheelAxel = GetSpawnVector("RRWheelAxel");
-		m_vecBLWheelAxel = GetSpawnVector("RLWheelAxel");
-		m_vecFLWheelAxel = GetSpawnVector("FLWheelAxel");
-		m_vecFRWheelAxel = GetSpawnVector("FRWheelAxel");
+        m_vecBRWheelAxel = GetSpawnVector("RRWheelAxel");
+        m_vecBLWheelAxel = GetSpawnVector("RLWheelAxel");
+        m_vecFLWheelAxel = GetSpawnVector("FLWheelAxel");
+        m_vecFRWheelAxel = GetSpawnVector("FRWheelAxel");
 
-		m_firstPersonOrg = GetSpawnVector("firstPersonOffset");
+        m_firstPersonOrg = GetSpawnVector("firstPersonOffset");
 
-		m_wlFL.velocity =
-		m_wlFR.velocity =
-		m_wlBL.velocity =
-		m_wlBR.velocity =
-		velocity = [0,0,0];
-		RunVehiclePhysics();
-		customphysics = Physics;
-	}
+        m_wlFL.velocity =
+        m_wlFR.velocity =
+        m_wlBL.velocity =
+        m_wlBR.velocity =
+        velocity = [0,0,0];
+        RunVehiclePhysics();
+        customphysics = Physics;
+    }
 
-	PredictPreFrame();
+    PredictPreFrame();
 }
 #endif
 
@@ -977,129 +977,129 @@ prop_vehicle_driveable::ReceiveEntity(float flNew, float flSendFlags)
 void
 prop_vehicle_driveable::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "bounceFactor":
-		m_flBounceFactor = ReadFloat(setValue);
-		break;
-	case "acceleration":
-		m_flAcceleration  = ReadFloat(setValue);
-		break;
-	case "skidSpeed":
-		m_flSkidSpeed = ReadFloat(setValue);
-		break;
-	case "fraction":
-		m_flTraction = ReadFloat(setValue);
-		break;
-	case "breakFactor":
-		m_flBreakFactor = ReadFloat(setValue);
-		break;
-	case "steerFactor":
-		m_flSteerFactor  = ReadFloat(setValue);
-		break;
-	case "straightenFactor":
-		m_flStraightenFactor = ReadFloat(setValue);
-		break;
-	case "gravityDir":
-		m_vecGravityDir = ReadVector(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "bounceFactor":
+        m_flBounceFactor = ReadFloat(setValue);
+        break;
+    case "acceleration":
+        m_flAcceleration  = ReadFloat(setValue);
+        break;
+    case "skidSpeed":
+        m_flSkidSpeed = ReadFloat(setValue);
+        break;
+    case "fraction":
+        m_flTraction = ReadFloat(setValue);
+        break;
+    case "breakFactor":
+        m_flBreakFactor = ReadFloat(setValue);
+        break;
+    case "steerFactor":
+        m_flSteerFactor  = ReadFloat(setValue);
+        break;
+    case "straightenFactor":
+        m_flStraightenFactor = ReadFloat(setValue);
+        break;
+    case "gravityDir":
+        m_vecGravityDir = ReadVector(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 prop_vehicle_driveable::EvaluateEntity(void)
 {
-	/* while the engine is still handling physics for these, we can't
-	 * predict when origin/angle might change */
-	if (ATTR_CHANGED(origin))
-		SetSendFlags(VEHFL_ORIGIN);
+    /* while the engine is still handling physics for these, we can't
+     * predict when origin/angle might change */
+    if (ATTR_CHANGED(origin))
+        SetSendFlags(VEHFL_ORIGIN);
 
-	if (ATTR_CHANGED(angles)) {
-		SetSendFlags(VEHFL_ANGLES);
-	}
-	if (ATTR_CHANGED(modelindex))
-		SetSendFlags(VEHFL_MODELINDEX);
-	if (ATTR_CHANGED(velocity))
-		SetSendFlags(VEHFL_VELOCITY);
-	if (ATTR_CHANGED(m_flTurn))
-		SetSendFlags(VEHFL_TURNING);
-	if (ATTR_CHANGED(m_eDriver))
-		SetSendFlags(VEHFL_DRIVER);
-	if (ATTR_CHANGED(flags))
-		SetSendFlags(VEHFL_FLAGS);
+    if (ATTR_CHANGED(angles)) {
+        SetSendFlags(VEHFL_ANGLES);
+    }
+    if (ATTR_CHANGED(modelindex))
+        SetSendFlags(VEHFL_MODELINDEX);
+    if (ATTR_CHANGED(velocity))
+        SetSendFlags(VEHFL_VELOCITY);
+    if (ATTR_CHANGED(m_flTurn))
+        SetSendFlags(VEHFL_TURNING);
+    if (ATTR_CHANGED(m_eDriver))
+        SetSendFlags(VEHFL_DRIVER);
+    if (ATTR_CHANGED(flags))
+        SetSendFlags(VEHFL_FLAGS);
 
-	SAVE_STATE(origin)
-	SAVE_STATE(angles)
-	SAVE_STATE(modelindex);
-	SAVE_STATE(velocity)
-	SAVE_STATE(m_flTurn)
-	SAVE_STATE(m_eDriver)
-	SAVE_STATE(flags)
+    SAVE_STATE(origin)
+    SAVE_STATE(angles)
+    SAVE_STATE(modelindex);
+    SAVE_STATE(velocity)
+    SAVE_STATE(m_flTurn)
+    SAVE_STATE(m_eDriver)
+    SAVE_STATE(flags)
 }
 
 float
 prop_vehicle_driveable::SendEntity(entity ePVSent, float flSendFlags)
 {
-	if (!modelindex)
-		return (false);
+    if (!modelindex)
+        return (false);
 
-	WriteByte(MSG_ENTITY, ENT_VEH_4WHEEL);
-	WriteFloat(MSG_ENTITY, flSendFlags);
+    WriteByte(MSG_ENTITY, ENT_VEH_4WHEEL);
+    WriteFloat(MSG_ENTITY, flSendFlags);
 
-	if (flSendFlags & VEHFL_DRIVER) {
-		WriteEntity(MSG_ENTITY, m_eDriver);
-	}
+    if (flSendFlags & VEHFL_DRIVER) {
+        WriteEntity(MSG_ENTITY, m_eDriver);
+    }
 
-	if (flSendFlags & VEHFL_MODELINDEX) {
-		WriteInt(MSG_ENTITY, entityDefID);
-		WriteShort(MSG_ENTITY, modelindex);
-		WriteFloat(MSG_ENTITY, m_vecSeatOffest[0]);
-		WriteFloat(MSG_ENTITY, m_vecSeatOffest[1]);
-		WriteFloat(MSG_ENTITY, m_vecSeatOffest[2]);
-	}
+    if (flSendFlags & VEHFL_MODELINDEX) {
+        WriteInt(MSG_ENTITY, entityDefID);
+        WriteShort(MSG_ENTITY, modelindex);
+        WriteFloat(MSG_ENTITY, m_vecSeatOffest[0]);
+        WriteFloat(MSG_ENTITY, m_vecSeatOffest[1]);
+        WriteFloat(MSG_ENTITY, m_vecSeatOffest[2]);
+    }
 
-	if (flSendFlags & VEHFL_ORIGIN) {
-		WriteCoord(MSG_ENTITY, vehicleOrigin[0]);
-		WriteCoord(MSG_ENTITY, vehicleOrigin[1]);
-		WriteCoord(MSG_ENTITY, vehicleOrigin[2]);
-	}
+    if (flSendFlags & VEHFL_ORIGIN) {
+        WriteCoord(MSG_ENTITY, vehicleOrigin[0]);
+        WriteCoord(MSG_ENTITY, vehicleOrigin[1]);
+        WriteCoord(MSG_ENTITY, vehicleOrigin[2]);
+    }
 
-	if (flSendFlags & VEHFL_ANGLES) {
-		WriteFloat(MSG_ENTITY, vehicleAngles[0]);
-		WriteFloat(MSG_ENTITY, vehicleAngles[1]);
-		WriteFloat(MSG_ENTITY, vehicleAngles[2]);
-	}
+    if (flSendFlags & VEHFL_ANGLES) {
+        WriteFloat(MSG_ENTITY, vehicleAngles[0]);
+        WriteFloat(MSG_ENTITY, vehicleAngles[1]);
+        WriteFloat(MSG_ENTITY, vehicleAngles[2]);
+    }
 
-	if (flSendFlags & VEHFL_VELOCITY) {
-		WriteFloat(MSG_ENTITY, velocity[0]);
-		WriteFloat(MSG_ENTITY, velocity[1]);
-		WriteFloat(MSG_ENTITY, velocity[2]);
-	}
+    if (flSendFlags & VEHFL_VELOCITY) {
+        WriteFloat(MSG_ENTITY, velocity[0]);
+        WriteFloat(MSG_ENTITY, velocity[1]);
+        WriteFloat(MSG_ENTITY, velocity[2]);
+    }
 
-	if (flSendFlags & VEHFL_TURNING)
-		WriteFloat(MSG_ENTITY, m_flTurn);
+    if (flSendFlags & VEHFL_TURNING)
+        WriteFloat(MSG_ENTITY, m_flTurn);
 
-	if (flSendFlags & VEHFL_FLAGS)
-		WriteFloat(MSG_ENTITY, flags);
+    if (flSendFlags & VEHFL_FLAGS)
+        WriteFloat(MSG_ENTITY, flags);
 
-	return true;
+    return true;
 }
 #endif
 
 void
 prop_vehicle_driveable::Spawned(void)
 {
-	super::Spawned();
-	m_iVehicleFlags |= VHF_FROZEN;
-	hitcontentsmaski = CONTENTBIT_BODY | CONTENTBITS_POINTSOLID | CONTENTBIT_VEHICLECLIP | CONTENTBIT_VEHICLECLIP;
+    super::Spawned();
+    m_iVehicleFlags |= VHF_FROZEN;
+    hitcontentsmaski = CONTENTBIT_BODY | CONTENTBITS_POINTSOLID | CONTENTBIT_VEHICLECLIP | CONTENTBIT_VEHICLECLIP;
 
-	SpawnWheels();
+    SpawnWheels();
 
-	customphysics = Physics;
+    customphysics = Physics;
 
 #ifdef SERVER
-	precache.Sound("prop_vehicle_driveable.bounce");
+    precache.Sound("prop_vehicle_driveable.bounce");
 #endif
 }

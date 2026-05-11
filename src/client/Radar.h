@@ -29,53 +29,53 @@ class
 ncRadar:ncView
 {
 public:
-	void ncRadar(void);
+    void ncRadar(void);
 
-	/** Init a radar for the map we're currently on. */
-	nonvirtual ncRadar InitForCurrentMap(void);
-	/** Init a radar for a specified map, will automatically choose the best available type. */
-	nonvirtual ncRadar InitWithMapname(string);
+    /** Init a radar for the map we're currently on. */
+    nonvirtual ncRadar InitForCurrentMap(void);
+    /** Init a radar for a specified map, will automatically choose the best available type. */
+    nonvirtual ncRadar InitWithMapname(string);
 
-	/** Init as Overview from GoldSrc HLTV script file. */
-	nonvirtual ncRadar InitFromHLTVScript(string);
-	/** Init as Overview from Source Engine HLTV script file. */
-	nonvirtual ncRadar InitFromSourceHLTVScript(string);
-	/** Init a wireframe overview. */
-	nonvirtual ncRadar InitWireframe(void);
-	/** Init an empty overview. */
-	nonvirtual ncRadar InitEmpty(void);
+    /** Init as Overview from GoldSrc HLTV script file. */
+    nonvirtual ncRadar InitFromHLTVScript(string);
+    /** Init as Overview from Source Engine HLTV script file. */
+    nonvirtual ncRadar InitFromSourceHLTVScript(string);
+    /** Init a wireframe overview. */
+    nonvirtual ncRadar InitWireframe(void);
+    /** Init an empty overview. */
+    nonvirtual ncRadar InitEmpty(void);
 
-	nonvirtual void RenderOverviewPlane(void);
-	nonvirtual void RenderWireframePlane(void);
+    nonvirtual void RenderOverviewPlane(void);
+    nonvirtual void RenderWireframePlane(void);
 
-	nonvirtual void SetRadarPitch(float);
+    nonvirtual void SetRadarPitch(float);
 
-	virtual void RenderPlayerIcon(entity);
+    virtual void RenderPlayerIcon(entity);
 
-	/* overrides */
-	virtual void RenderView(void);
-	virtual void SetupView(void);
+    /* overrides */
+    virtual void RenderView(void);
+    virtual void SetupView(void);
 
 private:
-	/* internal */
-	vector m_vecOrigin;
-	bool m_bRotated;
-	string m_strMaterial;
-	float m_flScale;
-	float m_flHeight;
-	float m_flZoom;
+    /* internal */
+    vector m_vecOrigin;
+    bool m_bRotated;
+    string m_strMaterial;
+    float m_flScale;
+    float m_flHeight;
+    float m_flZoom;
 
-	vector m_vecVert1;
-	vector m_vecVert2;
-	vector m_vecVert3;
-	vector m_vecVert4;
+    vector m_vecVert1;
+    vector m_vecVert2;
+    vector m_vecVert3;
+    vector m_vecVert4;
 
-	bool m_bShowPlayers;
+    bool m_bShowPlayers;
 
-	float m_flRadarPitch;
+    float m_flRadarPitch;
 
-	nonvirtual void CalculateVertices(void);
-	nonvirtual void CalculateVerticesSource(float, float);
+    nonvirtual void CalculateVertices(void);
+    nonvirtual void CalculateVerticesSource(float, float);
 };
 
 /** @} */ // end of client

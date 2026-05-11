@@ -136,30 +136,30 @@ Available keys are:
 
 typedef struct
 {
-	string m_strBase;
-	float m_flMaterial;
-	float m_flThickness;
-	float m_flDensity;
-	float m_flElasticity;
-	float m_flFriction;
-	float m_flDampening;
-	float m_flJumpFactor;
-	float m_flMaxSpeedFactor;
+    string m_strBase;
+    float m_flMaterial;
+    float m_flThickness;
+    float m_flDensity;
+    float m_flElasticity;
+    float m_flFriction;
+    float m_flDampening;
+    float m_flJumpFactor;
+    float m_flMaxSpeedFactor;
 
-	string m_sndStepLeft;
-	string m_sndStepRight;
-	string m_sndBulletImpact;
-	string m_sndScrapeRough;
-	string m_sndScrapeSoft;
-	string m_sndImpactHard;
-	string m_sndImpactSoft;
-	string m_sndShake;
-	string m_sndStrain;
-	string m_sndRoll;
-	string m_sndBreak;
+    string m_sndStepLeft;
+    string m_sndStepRight;
+    string m_sndBulletImpact;
+    string m_sndScrapeRough;
+    string m_sndScrapeSoft;
+    string m_sndImpactHard;
+    string m_sndImpactSoft;
+    string m_sndShake;
+    string m_sndStrain;
+    string m_sndRoll;
+    string m_sndBreak;
 
-	string m_fxBulletImpact;
-	float m_fxBulletImpactID;
+    string m_fxBulletImpact;
+    float m_fxBulletImpactID;
 } surfaceData_t;
 
 /* entity will have to have a .surfdata field pointing to an id */
@@ -170,27 +170,27 @@ var hashtable g_hashsurfdata;
 /* querying API */
 typedef enum
 {
-	SURFDATA_MATERIAL,
-	SURFDATA_THICKNESS,
-	SURFDATA_DENSITY,
-	SURFDATA_ELASTICITY,
-	SURFDATA_FRICTION,
-	SURFDATA_DAMPENING,
-	SURFDATA_JUMPFACTOR,
-	SURFDATA_MAXSPEEDFACTOR,
-	SURFDATA_SND_STEPLEFT,
-	SURFDATA_SND_STEPRIGHT,
-	SURFDATA_SND_BULLETIMPACT,
-	SURFDATA_SND_SCRAPEROUGH,
-	SURFDATA_SND_SCRAPESOFT,
-	SURFDATA_SND_IMPACTHARD,
-	SURFDATA_SND_IMPACTSOFT,
-	SURFDATA_SND_SHAKE,
-	SURFDATA_SND_STRAIN,
-	SURFDATA_SND_ROLL,
-	SURFDATA_SND_BREAK,
-	SURFDATA_FX_BULLETIMPACT,
-	SURFDATA_FX_BULLETIMPACTID
+    SURFDATA_MATERIAL,
+    SURFDATA_THICKNESS,
+    SURFDATA_DENSITY,
+    SURFDATA_ELASTICITY,
+    SURFDATA_FRICTION,
+    SURFDATA_DAMPENING,
+    SURFDATA_JUMPFACTOR,
+    SURFDATA_MAXSPEEDFACTOR,
+    SURFDATA_SND_STEPLEFT,
+    SURFDATA_SND_STEPRIGHT,
+    SURFDATA_SND_BULLETIMPACT,
+    SURFDATA_SND_SCRAPEROUGH,
+    SURFDATA_SND_SCRAPESOFT,
+    SURFDATA_SND_IMPACTHARD,
+    SURFDATA_SND_IMPACTSOFT,
+    SURFDATA_SND_SHAKE,
+    SURFDATA_SND_STRAIN,
+    SURFDATA_SND_ROLL,
+    SURFDATA_SND_BREAK,
+    SURFDATA_FX_BULLETIMPACT,
+    SURFDATA_FX_BULLETIMPACTID
 } surfinfo_t;
 
 class

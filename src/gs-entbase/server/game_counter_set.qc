@@ -16,7 +16,7 @@
 
 enumflags
 {
-	GMCNTS_REMOVE,
+    GMCNTS_REMOVE,
 };
 
 /*! \brief Server-Entity: game_counter Controller */
@@ -44,81 +44,81 @@ class
 game_counter_set:ncPointTrigger
 {
 public:
-	void game_counter_set(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
+    void game_counter_set(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
 
 private:
-	int m_iCount;
+    int m_iCount;
 };
 
 void
 game_counter_set::game_counter_set(void)
 {
-	m_iCount = 0i;
+    m_iCount = 0i;
 }
 
 void
 game_counter_set::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iCount", m_iCount);
+    super::Save(handle);
+    SaveInt(handle, "m_iCount", m_iCount);
 }
 
 void
 game_counter_set::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iCount":
-		m_iCount = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iCount":
+        m_iCount = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 game_counter_set::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "frags":
-		m_iCount = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "frags":
+        m_iCount = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 game_counter_set::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 }
 
 void
 game_counter_set::Trigger(entity act, triggermode_t state)
 {
-	if (GetMaster(act) == FALSE)
-		return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	EntLog("%s's manipulating %s to be %i", targetname, target, m_iCount);
+    EntLog("%s's manipulating %s to be %i", targetname, target, m_iCount);
 
-	/* apply the value to all the relevant game_counter entities */
-	for (entity f = world; (f = find(f, ::targetname, target));) {
-		game_counter targ;
+    /* apply the value to all the relevant game_counter entities */
+    for (entity f = world; (f = find(f, ::targetname, target));) {
+        game_counter targ;
 
-		/* just to be safe */
-		if (f.classname != "game_counter")
-			continue;
-		
-		targ = (game_counter)f;
-		targ.SetCount(m_iCount);
-	}
+        /* just to be safe */
+        if (f.classname != "game_counter")
+            continue;
+        
+        targ = (game_counter)f;
+        targ.SetCount(m_iCount);
+    }
 
-	if (HasSpawnFlags(GMCNTS_REMOVE))
-		Destroy();
+    if (HasSpawnFlags(GMCNTS_REMOVE))
+        Destroy();
 }

@@ -46,9 +46,9 @@ class
 prop_static:ncRenderableEntity
 {
 public:
-	void prop_static(void);
-	
-	virtual void Respawn(void);
+    void prop_static(void);
+    
+    virtual void Respawn(void);
 
 };
 
@@ -60,8 +60,8 @@ prop_static::prop_static(void)
 void
 prop_static::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_NOT);
+    super::Respawn();
+    SetSolid(SOLID_NOT);
     SetMovetype(MOVETYPE_NONE);
     SetSize([-999999,-999999,-999999], [999999,999999,999999]);
     pvsflags = PVSF_NOTRACECHECK | PVSF_NOREMOVE;

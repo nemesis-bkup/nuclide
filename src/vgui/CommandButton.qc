@@ -16,10 +16,10 @@
 
 enumflags
 {
-	BUTTON_HOVER,
-	BUTTON_DOWN,
-	BUTTON_LASTACTIVE,
-	BUTTON_CUSTOMFLAGS
+    BUTTON_HOVER,
+    BUTTON_DOWN,
+    BUTTON_LASTACTIVE,
+    BUTTON_CUSTOMFLAGS
 };
 
 /** VGUI Widget: Command Menu Button
@@ -29,48 +29,48 @@ enumflags
 class vguiCommandButton:vguiButton
 {
 public:
-	void vguiCommandButton(void);
+    void vguiCommandButton(void);
 
-	/* overrides */
-	virtual void Draw(void);
-	virtual bool Input(float,float,float,float);
+    /* overrides */
+    virtual void Draw(void);
+    virtual bool Input(float,float,float,float);
 
-	nonvirtual bool WillDisplay(void);
-	nonvirtual void SetMapCondition(string);
-	nonvirtual void SetTeamCondition(string);
-	nonvirtual void SetClassCondition(string);
-	nonvirtual void SetClientCommand(string);
+    nonvirtual bool WillDisplay(void);
+    nonvirtual void SetMapCondition(string);
+    nonvirtual void SetTeamCondition(string);
+    nonvirtual void SetClassCondition(string);
+    nonvirtual void SetClientCommand(string);
 private:
 
-	string m_strMapCondition;
-	string m_strTeamCondition;
-	string m_strClassCondition;
+    string m_strMapCondition;
+    string m_strTeamCondition;
+    string m_strClassCondition;
 };
 
 void
 vguiCommandButton::vguiCommandButton(void)
 {
-	m_strMapCondition = __NULL__;
-	m_strTeamCondition = __NULL__;
-	m_strClassCondition = __NULL__;
+    m_strMapCondition = __NULL__;
+    m_strTeamCondition = __NULL__;
+    m_strClassCondition = __NULL__;
 }
 
 void
 vguiCommandButton::SetMapCondition(string condition)
 {
-	m_strMapCondition = condition;
+    m_strMapCondition = condition;
 }
 
 void
 vguiCommandButton::SetTeamCondition(string condition)
 {
-	m_strTeamCondition = condition;
+    m_strTeamCondition = condition;
 }
 
 void
 vguiCommandButton::SetClassCondition(string condition)
 {
-	m_strClassCondition = condition;
+    m_strClassCondition = condition;
 }
 
 void
@@ -81,36 +81,36 @@ vguiCommandButton::SetClientCommand(string condition)
 bool
 vguiCommandButton::WillDisplay(void)
 {
-	if (STRING_SET(m_strMapCondition)) {
+    if (STRING_SET(m_strMapCondition)) {
 
-	}
+    }
 
-	if (STRING_SET(m_strTeamCondition)) {
+    if (STRING_SET(m_strTeamCondition)) {
 
-	}
+    }
 
-	if (STRING_SET(m_strClassCondition)) {
+    if (STRING_SET(m_strClassCondition)) {
 
-	}
+    }
 
-	return (true);
+    return (true);
 }
 
 void
 vguiCommandButton::Draw(void)
 {
-	super::Draw();
-	//vguiWidget::Draw();
+    super::Draw();
+    //vguiWidget::Draw();
 }
 
 bool
 vguiCommandButton::Input(float flEVType, float flKey, float flChar, float flDevID)
 {
-	bool returnValue = super::Input(flEVType, flKey, flChar, flDevID);
+    bool returnValue = super::Input(flEVType, flKey, flChar, flDevID);
 
-	if (!returnValue) {
-		//return vguiWidget::Input(flEVType, flKey, flChar, flDevID);
-	}
+    if (!returnValue) {
+        //return vguiWidget::Input(flEVType, flKey, flChar, flDevID);
+    }
 
-	return (returnValue);
+    return (returnValue);
 }

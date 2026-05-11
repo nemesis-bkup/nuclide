@@ -1,7 +1,5 @@
-This is MAYHEM
+Welcome to Nuclide
+DIGITAL WORLD BUILD
 
-Play!
-
-Learn!
-
-Create!
+Server admins can change the message
+of the day by editing motd.txt

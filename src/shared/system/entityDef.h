@@ -45,8 +45,8 @@ Using this example definition, we can re-invent func_illusionary using an alread
 
 ```
 entityDef func_illusionary {
-	"spawnclass" "func_wall"
-	"solid" "0"
+    "spawnclass" "func_wall"
+    "solid" "0"
 }
 ```
 
@@ -54,11 +54,11 @@ We also have features exclusive to our entityDef format. In the following exampl
 
 ```
 entityDef foobar {
-	[...]
+    [...]
 
-	when "body" equals 1 {
-		"skin" "4"
-	}
+    when "body" equals 1 {
+        "skin" "4"
+    }
 }
 ```
 
@@ -70,11 +70,11 @@ and true I/O system:
 
 ```
 entityDef foobar {
-	[...]
+    [...]
 
-	events {
-		1004 "SpawnDef" "foobar_projectile"
-	}
+    events {
+        1004 "SpawnDef" "foobar_projectile"
+    }
 }
 ```
 
@@ -98,27 +98,27 @@ to in-game events without you having to dig into the source code.
 /** Options for EntityDef checks. */
 enum
 {
-	EDEFTWEAK_EQ = 0, /**< Equals Check */
-	EDEFTWEAK_LT, /**< Less-Than Check */
-	EDEFTWEAK_GT, /**< Greater-Than Check */
-	EDEFTWEAK_NOT, /**< Not (Invert) Gate */
-	EDEFTWEAK_CONTAINS /**< Contains Bit (&) Check */
+    EDEFTWEAK_EQ = 0, /**< Equals Check */
+    EDEFTWEAK_LT, /**< Less-Than Check */
+    EDEFTWEAK_GT, /**< Greater-Than Check */
+    EDEFTWEAK_NOT, /**< Not (Invert) Gate */
+    EDEFTWEAK_CONTAINS /**< Contains Bit (&) Check */
 };
 
 /** Data holding EntityDef entries. */
 typedef struct
 {
-	string entClass;
-	string spawnClass;
-	string spawnData;
-	string inheritKeys;
+    string entClass;
+    string spawnClass;
+    string spawnData;
+    string inheritKeys;
 
-	string tweakDefs; /* when (field) equals/greater-than/less-than/is-not (value) */
-	string tweakKeys;
+    string tweakDefs; /* when (field) equals/greater-than/less-than/is-not (value) */
+    string tweakKeys;
 
-	string eventList; /* model events */
-	bool precacheDone;
-	int inheritID;
+    string eventList; /* model events */
+    bool precacheDone;
+    int inheritID;
 } entityDef_t;
 
 void EntityDef_Init(void);

@@ -17,22 +17,22 @@
 #ifdef SERVER
 enumflags
 {
-	SPEAKFL_SILENT
+    SPEAKFL_SILENT
 };
 
 string g_speaker_hlpresets[] = {
-	"!C1A0_",
-	"!C1A1_",
-	"!C1A2_",
-	"!C1A3_",
-	"!C1A4_",
-	"!C2A1_",
-	"!C2A2_",
-	"!C2A3_",
-	"!C2A4_",
-	"!C2A5_",
-	"!C3A1_",
-	"!C3A2_"
+    "!C1A0_",
+    "!C1A1_",
+    "!C1A2_",
+    "!C1A3_",
+    "!C1A4_",
+    "!C2A1_",
+    "!C2A2_",
+    "!C2A3_",
+    "!C2A4_",
+    "!C2A5_",
+    "!C3A1_",
+    "!C3A2_"
 };
 #endif
 
@@ -74,32 +74,32 @@ class
 speaker:ncTalkMonster
 {
 public:
-	void speaker(void);
+    void speaker(void);
 
 #ifdef SERVER
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	
-	nonvirtual void Announce(void);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    
+    nonvirtual void Announce(void);
 
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float, float);
+    virtual void ReceiveEntity(float, float);
 #endif
 
 #ifdef SERVER
 private:
 
-	string m_strSentence;
-	float m_flVolume;
+    string m_strSentence;
+    float m_flVolume;
 #endif
 };
 
@@ -107,8 +107,8 @@ void
 speaker::speaker(void)
 {
 #ifdef SERVER
-	m_strSentence = __NULL__;
-	m_flVolume = 1.0f;
+    m_strSentence = __NULL__;
+    m_flVolume = 1.0f;
 #endif
 }
 
@@ -116,123 +116,123 @@ speaker::speaker(void)
 void
 speaker::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strSentence", m_strSentence);
-	SaveFloat(handle, "m_flVolume", m_flVolume);
+    super::Save(handle);
+    SaveString(handle, "m_strSentence", m_strSentence);
+    SaveFloat(handle, "m_flVolume", m_flVolume);
 }
 
 void
 speaker::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strSentence":
-		m_strSentence = ReadString(setValue);
-		break;
-	case "m_flVolume":
-		m_flVolume = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strSentence":
+        m_strSentence = ReadString(setValue);
+        break;
+    case "m_flVolume":
+        m_flVolume = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 speaker::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "preset":
-		int p = stoi(setValue);
+    switch (strKey) {
+    case "preset":
+        int p = stoi(setValue);
 
-		/* fit in a valid preset string */
-		if (p > 0 && p < g_speaker_hlpresets.length)
-			m_strSentence = g_speaker_hlpresets[p-1];
-		break;
-	case "message":
-		m_strSentence = setValue;
-		break;
-	case "health":
-		m_flVolume = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+        /* fit in a valid preset string */
+        if (p > 0 && p < g_speaker_hlpresets.length)
+            m_strSentence = g_speaker_hlpresets[p-1];
+        break;
+    case "message":
+        m_strSentence = setValue;
+        break;
+    case "health":
+        m_flVolume = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 speaker::Spawned(void)
 {
-	/* HACK: avoid de-spawning */
-	spawnflags |= MSF_MULTIPLAYER;
+    /* HACK: avoid de-spawning */
+    spawnflags |= MSF_MULTIPLAYER;
 
-	super::Spawned();
+    super::Spawned();
 }
 
 void
 speaker::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	if (HasSpawnFlags(SPEAKFL_SILENT) == false) {
-		ScheduleThink(Announce, 10.0f);
-	}
+    if (HasSpawnFlags(SPEAKFL_SILENT) == false) {
+        ScheduleThink(Announce, 10.0f);
+    }
 
-	SetSize([0,0,0], [0,0,0]);
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
-	customphysics = __NULL__;
+    SetSize([0,0,0], [0,0,0]);
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
+    customphysics = __NULL__;
 }
 
 void
 speaker::Announce(void)
 {
-	string seq = Sentences_GetSamples(m_strSentence);
+    string seq = Sentences_GetSamples(m_strSentence);
 
-	if (seq == "") {
-		return;
-	}
+    if (seq == "") {
+        return;
+    }
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_SENTENCE);
-	WriteEntity(MSG_MULTICAST, this);
-	WriteInt(MSG_MULTICAST, Sentences_GetID(seq));
-	msg_entity = this;
-	multicast(origin, MULTICAST_PVS);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_SENTENCE);
+    WriteEntity(MSG_MULTICAST, this);
+    WriteInt(MSG_MULTICAST, Sentences_GetID(seq));
+    msg_entity = this;
+    multicast(origin, MULTICAST_PVS);
 
-	/* ...onto the next announcement */
-	ScheduleThink(Announce, random(30.0f, 60.0f));
+    /* ...onto the next announcement */
+    ScheduleThink(Announce, random(30.0f, 60.0f));
 }
 
 void
 speaker::Trigger(entity eAct, triggermode_t foo)
 {
-	ScheduleThink(Announce, 0.0f);
+    ScheduleThink(Announce, 0.0f);
 }
 
 void
 speaker::EvaluateEntity(void)
 {
-	EVALUATE_VECTOR(origin, 0, MONFL_CHANGED_ORIGIN_X)
-	EVALUATE_VECTOR(origin, 1, MONFL_CHANGED_ORIGIN_Y)
-	EVALUATE_VECTOR(origin, 2, MONFL_CHANGED_ORIGIN_Z)
+    EVALUATE_VECTOR(origin, 0, MONFL_CHANGED_ORIGIN_X)
+    EVALUATE_VECTOR(origin, 1, MONFL_CHANGED_ORIGIN_Y)
+    EVALUATE_VECTOR(origin, 2, MONFL_CHANGED_ORIGIN_Z)
 }
 
 /* Make sure StartFrame calls this */
 float
 speaker::SendEntity(entity ePEnt, float flChanged)
 {
-	if (clienttype(ePEnt) != CLIENTTYPE_REAL)
-		return (0);
+    if (clienttype(ePEnt) != CLIENTTYPE_REAL)
+        return (0);
 
-	WriteByte(MSG_ENTITY, ENT_SPEAKER);
+    WriteByte(MSG_ENTITY, ENT_SPEAKER);
 
-	/* broadcast how much data is expected to be read */
-	WriteFloat(MSG_ENTITY, flChanged);
+    /* broadcast how much data is expected to be read */
+    WriteFloat(MSG_ENTITY, flChanged);
 
-	SENDENTITY_COORD(origin[0], MONFL_CHANGED_ORIGIN_X)
-	SENDENTITY_COORD(origin[1], MONFL_CHANGED_ORIGIN_Y)
-	SENDENTITY_COORD(origin[2], MONFL_CHANGED_ORIGIN_Z)
+    SENDENTITY_COORD(origin[0], MONFL_CHANGED_ORIGIN_X)
+    SENDENTITY_COORD(origin[1], MONFL_CHANGED_ORIGIN_Y)
+    SENDENTITY_COORD(origin[2], MONFL_CHANGED_ORIGIN_Z)
 
-	return (1);
+    return (1);
 }
 #endif
 
@@ -240,9 +240,9 @@ speaker::SendEntity(entity ePEnt, float flChanged)
 void
 speaker::ReceiveEntity(float flNew, float flChanged)
 {
-	READENTITY_COORD(origin[0], MONFL_CHANGED_ORIGIN_X)
-	READENTITY_COORD(origin[1], MONFL_CHANGED_ORIGIN_Y)
-	READENTITY_COORD(origin[2], MONFL_CHANGED_ORIGIN_Z)
-	SetOrigin(origin);
+    READENTITY_COORD(origin[0], MONFL_CHANGED_ORIGIN_X)
+    READENTITY_COORD(origin[1], MONFL_CHANGED_ORIGIN_Y)
+    READENTITY_COORD(origin[2], MONFL_CHANGED_ORIGIN_Z)
+    SetOrigin(origin);
 }
 #endif

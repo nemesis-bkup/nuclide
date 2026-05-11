@@ -34,19 +34,19 @@ class
 script_vehicle:ncRenderableEntity
 {
 public:
-	void script_vehicle(void);
-	virtual void Trigger(entity, triggermode_t);
+    void script_vehicle(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
 script_vehicle::script_vehicle(void)
 {
-	
+    
 }
 
 void
 script_vehicle::Trigger(entity entityActivator, triggermode_t state)
 {
-	
+    
 }
 

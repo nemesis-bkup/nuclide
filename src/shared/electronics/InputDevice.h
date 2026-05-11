@@ -40,11 +40,11 @@ This entity was introduced in Nuclide (2025).
 class ncInputDevice:ncVehicle
 {
 public:
-	void ncInputDevice(void);
+    void ncInputDevice(void);
 
-	virtual void Spawned(void);
-	virtual void WeaponInput(void);
-	virtual void PlayerInput(void);
+    virtual void Spawned(void);
+    virtual void WeaponInput(void);
+    virtual void PlayerInput(void);
 
 #ifdef CLIENT
     virtual bool HideViewWeapon(void);
@@ -55,15 +55,15 @@ public:
 #endif
 
 #ifdef SERVER
-	virtual void Respawn(void);
-	virtual void OnPlayerUse(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void SpawnKey(string keyName, string setValue);
+    virtual void Respawn(void);
+    virtual void OnPlayerUse(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void SpawnKey(string keyName, string setValue);
 #endif
 
 private:
-	NETWORKED_VECTOR(m_vecSeatOffest)
-	NETWORKED_FLOAT(m_flUseTime)
+    NETWORKED_VECTOR(m_vecSeatOffest)
+    NETWORKED_FLOAT(m_flUseTime)
 };
 

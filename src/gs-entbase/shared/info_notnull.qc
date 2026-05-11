@@ -39,8 +39,8 @@ class
 info_notnull:ncPointTrigger
 {
 public:
-	void info_notnull(void);
-	virtual bool CanSpawn(bool);
+    void info_notnull(void);
+    virtual bool CanSpawn(bool);
 };
 
 void
@@ -51,5 +51,5 @@ info_notnull::info_notnull(void)
 bool
 info_notnull::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }

@@ -39,7 +39,7 @@ class
 func_detail_illusionary:info_null
 {
 public:
-	void func_detail_illusionary(void);
+    void func_detail_illusionary(void);
 };
 
 void

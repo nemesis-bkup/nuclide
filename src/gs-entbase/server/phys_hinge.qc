@@ -49,101 +49,101 @@ class
 phys_hinge:ncPhysicsConstraint
 {
 public:
-	void phys_hinge(void);
+    void phys_hinge(void);
 
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
 
 private:
-	float m_flHingeFriction;
-	vector m_vecHingeAxis;
+    float m_flHingeFriction;
+    vector m_vecHingeAxis;
 };
 
 void
 phys_hinge::phys_hinge(void)
 {
-	m_flHingeFriction = 1.0f;
-	m_vecHingeAxis = g_vec_null;
+    m_flHingeFriction = 1.0f;
+    m_vecHingeAxis = g_vec_null;
 }
 
 void
 phys_hinge::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flHingeFriction", m_flHingeFriction);
-	SaveVector(handle, "m_vecHingeAxis", m_vecHingeAxis);
+    super::Save(handle);
+    SaveFloat(handle, "m_flHingeFriction", m_flHingeFriction);
+    SaveVector(handle, "m_vecHingeAxis", m_vecHingeAxis);
 }
 
 void
 phys_hinge::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flHingeFriction":
-		m_flHingeFriction = ReadFloat(setValue);
-		break;
-	case "m_vecHingeAxis":
-		m_vecHingeAxis = ReadVector(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flHingeFriction":
+        m_flHingeFriction = ReadFloat(setValue);
+        break;
+    case "m_vecHingeAxis":
+        m_vecHingeAxis = ReadVector(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 phys_hinge::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "hingefriction":
-		m_flHingeFriction = ReadFloat(setValue);
-		break;
-	case "hingeaxis":
-		m_vecHingeAxis = ReadVector(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "hingefriction":
+        m_flHingeFriction = ReadFloat(setValue);
+        break;
+    case "hingeaxis":
+        m_vecHingeAxis = ReadVector(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 phys_hinge::Respawn(void)
 {
-	ScheduleThink(AfterSpawn, 0.0f);
+    ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
 phys_hinge::AfterSpawn(void)
 {
-	SetConstraintType(CONSTRAINT_HINGE);
-	SetOrigin(GetSpawnVector("origin"));
+    SetConstraintType(CONSTRAINT_HINGE);
+    SetOrigin(GetSpawnVector("origin"));
 
-	SetEntity1(find(world, ::targetname, m_strEnt1));
+    SetEntity1(find(world, ::targetname, m_strEnt1));
 
-	if (m_strEnt2)
-		SetEntity2(find(world, ::targetname, m_strEnt2));
-	else
-		SetEntity2(this);
+    if (m_strEnt2)
+        SetEntity2(find(world, ::targetname, m_strEnt2));
+    else
+        SetEntity2(this);
 
-	SetAngles(vectoangles(m_vecHingeAxis - GetOrigin()));
-	SetSliderMaxVelocity(99999);
-	SetSliderFriction(m_flHingeFriction);
+    SetAngles(vectoangles(m_vecHingeAxis - GetOrigin()));
+    SetSliderMaxVelocity(99999);
+    SetSliderFriction(m_flHingeFriction);
 
-	WakeTargets();
+    WakeTargets();
 }
 
 void
 phys_hinge::Input(entity activatorEnt, string inputName, string dataString)
 {
-	switch (inputName) {
-	case "SetAngularVelocity":
-		SetSliderVelocity(stof(dataString));
-		break;
-	default:
-		super::Input(activatorEnt, inputName, dataString);
-		break;
-	}
+    switch (inputName) {
+    case "setangularvelocity":
+        SetSliderVelocity(stof(dataString));
+        break;
+    default:
+        super::Input(activatorEnt, inputName, dataString);
+        break;
+    }
 }

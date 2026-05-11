@@ -17,73 +17,73 @@
 vector
 Cross_GetPos(vector sizeXY)
 {
-	vector crossPos;
+    vector crossPos;
 
-	if (autocvar_pm_thirdPerson == false) {
-		crossPos = g_hudmins + (g_hudres / 2) + [-(sizeXY[0]/2),-(sizeXY[1]/2)];
-		crossPos[0] = rint(crossPos[0]);
-		crossPos[1] = rint(crossPos[1]);
+    if (autocvar_pm_thirdPerson == false) {
+        crossPos = g_hudmins + (g_hudres / 2) + [-(sizeXY[0]/2),-(sizeXY[1]/2)];
+        crossPos[0] = rint(crossPos[0]);
+        crossPos[1] = rint(crossPos[1]);
 
-		/* terrible hack to deal with engine's bad autoscale positioning */
-		if (cvar("vid_conautoscale") > 1) {
-			crossPos[0] -= 0.25f;
-			crossPos[1] -= 0.25f;
-		}
-	} else {
-		vector vecSrc;
-		vector vecDst;
-		ncPlayer pl = (ncPlayer)pSeat->m_ePlayer;
+        /* terrible hack to deal with engine's bad autoscale positioning */
+        if (cvar("vid_conautoscale") > 1) {
+            crossPos[0] -= 0.25f;
+            crossPos[1] -= 0.25f;
+        }
+    } else {
+        vector vecSrc;
+        vector vecDst;
+        ncPlayer pl = (ncPlayer)pSeat->m_ePlayer;
 
-		vecSrc = pSeat->m_vecPredictedOrigin + pSeat->m_ePlayer.view_ofs;
-		makevectors(view_angles);
-		vecDst = (vecSrc + v_forward * 4096);
-		traceline(vecSrc, vecDst, MOVE_NORMAL, pSeat->m_ePlayer);
-		crossPos = project(trace_endpos) + [-(sizeXY[0]/2),-(sizeXY[1]/2)];
-		crossPos[0] = rint(crossPos[0]);
-		crossPos[1] = rint(crossPos[1]);
-	}
+        vecSrc = pSeat->m_vecPredictedOrigin + pSeat->m_ePlayer.view_ofs;
+        makevectors(view_angles);
+        vecDst = (vecSrc + v_forward * 4096);
+        traceline(vecSrc, vecDst, MOVE_NORMAL, pSeat->m_ePlayer);
+        crossPos = project(trace_endpos) + [-(sizeXY[0]/2),-(sizeXY[1]/2)];
+        crossPos[0] = rint(crossPos[0]);
+        crossPos[1] = rint(crossPos[1]);
+    }
 
-	return (crossPos);
+    return (crossPos);
 }
 
 void
 Cross_Draw(string materialPath, vector sizeXY)
 {
-	Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], [1.0f, 1.0f, 1.0f], 1.0f);
+    Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], [1.0f, 1.0f, 1.0f], 1.0f);
 }
 
 void
 Cross_DrawRGB(string materialPath, vector sizeXY, vector colorRGB)
 {
-	Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], colorRGB, 1.0f);
+    Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], colorRGB, 1.0f);
 }
 
 void
 Cross_DrawRGBA(string materialPath, vector sizeXY, vector colorRGB, float alphaValue)
 {
-	Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], colorRGB, alphaValue);
+    Cross_DrawSubRGBA(materialPath, sizeXY, [0,0], [1,1], colorRGB, alphaValue);
 }
 
 void
 Cross_DrawSub(string materialPath, vector sizeXY, vector sourcePosXY, vector sourceSizeXY)
 {
-	Cross_DrawSubRGBA(materialPath, sizeXY, sourcePosXY, sourceSizeXY, [1.0f, 1.0f, 1.0f], 1.0f);
+    Cross_DrawSubRGBA(materialPath, sizeXY, sourcePosXY, sourceSizeXY, [1.0f, 1.0f, 1.0f], 1.0f);
 }
 
 void
 Cross_DrawSubRGB(string materialPath, vector sizeXY, vector sourcePosXY, vector sourceSizeXY, vector colorRGB)
 {
-	Cross_DrawSubRGBA(materialPath, sizeXY, sourcePosXY, sourceSizeXY, colorRGB, 1.0f);
+    Cross_DrawSubRGBA(materialPath, sizeXY, sourcePosXY, sourceSizeXY, colorRGB, 1.0f);
 }
 
 void
 Cross_DrawSubRGBA(string materialPath, vector sizeXY, vector sourcePosXY, vector sourceSizeXY, vector colorRGB, float alphaValue)
 {
-	vector crossPos = Cross_GetPos(sizeXY);
+    vector crossPos = Cross_GetPos(sizeXY);
 
-	if (autocvar_pm_thirdPerson == false) {
-		drawsubpic(crossPos, sizeXY, materialPath, sourcePosXY, sourceSizeXY, colorRGB, alphaValue, DRAWFLAG_NORMAL);
-	} else {
-		drawsubpic(crossPos, sizeXY, materialPath, sourcePosXY, sourceSizeXY, colorRGB, alphaValue, DRAWFLAG_NORMAL);
-	}
+    if (autocvar_pm_thirdPerson == false) {
+        drawsubpic(crossPos, sizeXY, materialPath, sourcePosXY, sourceSizeXY, colorRGB, alphaValue, DRAWFLAG_NORMAL);
+    } else {
+        drawsubpic(crossPos, sizeXY, materialPath, sourcePosXY, sourceSizeXY, colorRGB, alphaValue, DRAWFLAG_NORMAL);
+    }
 }

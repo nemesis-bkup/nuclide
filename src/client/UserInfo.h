@@ -18,37 +18,37 @@ class
 ncUserInfo
 {
 public:
-	void ncUserInfo(void);
+    void ncUserInfo(void);
 
-	nonvirtual void Update(void);
+    nonvirtual void Update(void);
 
-	nonvirtual string ID(void);
-	nonvirtual string Name(void);
-	nonvirtual string Model(void);
-	nonvirtual string Avatar(void);
-	nonvirtual string Banner(void);
-	nonvirtual string Contact(void);
-	nonvirtual string Flag(void);
-	nonvirtual string Location(void);
-	nonvirtual int Team(void);
-	nonvirtual int Kills(void);
-	nonvirtual int Deaths(void);
-	nonvirtual int Score(void);
+    nonvirtual string ID(void);
+    nonvirtual string Name(void);
+    nonvirtual string Model(void);
+    nonvirtual string Avatar(void);
+    nonvirtual string Banner(void);
+    nonvirtual string Contact(void);
+    nonvirtual string Flag(void);
+    nonvirtual string Location(void);
+    nonvirtual int Team(void);
+    nonvirtual int Kills(void);
+    nonvirtual int Deaths(void);
+    nonvirtual int Score(void);
 
-	nonvirtual void DebugPrint(void);
+    nonvirtual void DebugPrint(void);
 
 private:
-	string m_userID;
-	string m_userNames;
-	string m_userModels;
-	string m_userAvatars;
-	string m_userBanner;
-	string m_userContact;
-	string m_userFlag;
-	string m_area;
-	int m_userKills;
-	int m_userTeam;
-	int m_userDeaths;
-	int m_userScore;
-	float m_slot;
+    string m_userID;
+    string m_userNames;
+    string m_userModels;
+    string m_userAvatars;
+    string m_userBanner;
+    string m_userContact;
+    string m_userFlag;
+    string m_area;
+    int m_userKills;
+    int m_userTeam;
+    int m_userDeaths;
+    int m_userScore;
+    float m_slot;
 };

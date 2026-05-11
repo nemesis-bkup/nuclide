@@ -37,21 +37,21 @@
 var bool autocvar_net_showArrivals = false;
 
 #define NSENTITY_READENTITY(x, y) \
-	{ \
-		local x x ##_e = ( x )self;\
-		local float x ##receivedFlags;\
-		if (y == true) { \
-			self.classname = strcat("spawnfunc_", #x); \
-			callfunction(self.classname); \
-			if (autocvar_net_showArrivals)\
-			ncError("New entity appeared to client: %S", self.classname);\
-			x ##_e.Spawned();\
-		} \
-		x ##receivedFlags = readfloat();\
-		x ##_e.ReceiveEntity( y, x ##receivedFlags );\
-		x ##_e.Relink();\
-		x ##_e._ReceiveComplete( y, x ##receivedFlags );\
-	}
+    { \
+        local x x ##_e = ( x )self;\
+        local float x ##receivedFlags;\
+        if (y == true) { \
+            self.classname = strcat("spawnfunc_", #x); \
+            callfunction(self.classname); \
+            if (autocvar_net_showArrivals)\
+            ncError("New entity appeared to client: %S", self.classname);\
+            x ##_e.Spawned();\
+        } \
+        x ##receivedFlags = readfloat();\
+        x ##_e.ReceiveEntity( y, x ##receivedFlags );\
+        x ##_e.Relink();\
+        x ##_e._ReceiveComplete( y, x ##receivedFlags );\
+    }
 #else
 
 #endif
@@ -167,14 +167,14 @@ string __fullspawndata;
 #include "user/UserEntity_GameEntity.h"
 #include "user/UserEntity_Object.h"
 
-#define BSPVER_PREREL 	28
-#define BSPVER_Q1		29
-#define BSPVER_HL		30
-#define BSPVER_Q2		38
-#define BSPVER_Q2W		69
-#define BSPVER_Q3		46
-#define BSPVER_RTCW		47
-#define BSPVER_RBSP 	1
+#define BSPVER_PREREL   28
+#define BSPVER_Q1       29
+#define BSPVER_HL       30
+#define BSPVER_Q2       38
+#define BSPVER_Q2W      69
+#define BSPVER_Q3       46
+#define BSPVER_RTCW     47
+#define BSPVER_RBSP     1
 
 #define CLASSEXPORT(a,b) void a(void) { if (!isfunction(#b)) { self.classname = strcat("spawnfunc_", #b); } else { self.classname = #b; } callfunction(self.classname); }
 
@@ -186,18 +186,18 @@ const vector VEC_CHULL_MAX = [16,16,18];
 #include "input/input.h"
 
 /* sendflags */
-#define UPDATE_ALL				16777215
+#define UPDATE_ALL              16777215
 
 #define clamp(d,min,max) bound(min,d,max)
 
 enumflags
 {
-	SEARCH_INSENSITIVE,
-	SEARCH_FULLPACKAGE,
-	SEARCH_ALLOWDUPES,
-	SEARCH_FORCESEARCH,
-	SEARCH_MULTISEARCH,
-	SEARCH_NAMESORT
+    SEARCH_INSENSITIVE,
+    SEARCH_FULLPACKAGE,
+    SEARCH_ALLOWDUPES,
+    SEARCH_FORCESEARCH,
+    SEARCH_MULTISEARCH,
+    SEARCH_NAMESORT
 };
 
 .vector m_pmoveBaseVelocity;
@@ -222,9 +222,9 @@ void
 crossprint(string m)
 {
 #ifdef CLIENT
-	print(strcat("CLIENT: ", m));
+    print(strcat("CLIENT: ", m));
 #else
-	print(strcat("SERVER: ", m));
+    print(strcat("SERVER: ", m));
 #endif
 }
 
@@ -232,24 +232,24 @@ crossprint(string m)
 __wrap string
 precache_model(string m)
 {
-	if (!STRING_SET(m)) {
-		return ("");
-	}
+    if (!STRING_SET(m)) {
+        return ("");
+    }
 
-	return prior(m);
+    return prior(m);
 }
 #endif
 
 __wrap string
 precache_sound(string sample)
 {
-	if (sample != "") /* not empty */
-		if not(whichpack(strcat("sound/", sample))) { /* not present on disk */
-			ncError("SFX sample %S does not exist.", sample);
-			return "misc/missing.wav";
-		}
+    if (sample != "") /* not empty */
+        if not(whichpack(strcat("sound/", sample))) { /* not present on disk */
+            ncError("SFX sample %S does not exist.", sample);
+            return "misc/missing.wav";
+        }
 
-	return prior(sample);
+    return prior(sample);
 }
 
 /* this could probably be a lot better, use this from now on so that it can be improved later */
@@ -257,141 +257,141 @@ noref float input_sequence;
 float
 pseudorandom()
 {
-	float seed = (float)input_sequence % 5.0f;
-	seed += (float)input_sequence % 8.0f;
-	seed += (float)input_sequence % 4.0f;
-	seed += (float)input_sequence % 13.0f;
-	seed += (float)input_sequence % 70.0f;
+    float seed = (float)input_sequence % 5.0f;
+    seed += (float)input_sequence % 8.0f;
+    seed += (float)input_sequence % 4.0f;
+    seed += (float)input_sequence % 13.0f;
+    seed += (float)input_sequence % 70.0f;
 
-	/* like the engine its random(), never return 0, never return 1 */
-	return bound(0.01, (seed) / 100.0f, 0.99f);
+    /* like the engine its random(), never return 0, never return 1 */
+    return bound(0.01, (seed) / 100.0f, 0.99f);
 }
 
 
 float
 randomWithSeed(int seedVa)
 {
-	float seed = (float)seedVa % 5.0f;
-	seed += (float)seedVa % 8.0f;
-	seed += (float)seedVa % 4.0f;
-	seed += (float)seedVa % 13.0f;
-	seed += (float)seedVa % 70.0f;
+    float seed = (float)seedVa % 5.0f;
+    seed += (float)seedVa % 8.0f;
+    seed += (float)seedVa % 4.0f;
+    seed += (float)seedVa % 13.0f;
+    seed += (float)seedVa % 70.0f;
 
-	/* like the engine its random(), never return 0, never return 1 */
-	return bound(0.01, (seed) / 100.0f, 0.99f);
+    /* like the engine its random(), never return 0, never return 1 */
+    return bound(0.01, (seed) / 100.0f, 0.99f);
 }
 
 #if 0
 __wrap void
 WriteByte(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteChar(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteShort(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteLong(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteCoord(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteAngle(float to, float val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteString(float to, string val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 
 __wrap void
 WriteEntity(float to, entity val)
 {
-	breakpoint();
-	prior(to, val);
+    breakpoint();
+    prior(to, val);
 }
 #endif
 
 __wrap void
 setmodel(entity ent, string mname)
 {
-	if (mname != "") /* not empty */
-	if (substring(mname, 0, 1) != "*") /* not a brush */
-		if not(whichpack(mname)) /* not present on disk */
-			return prior(ent, "models/error.vvm");
+    if (mname != "") /* not empty */
+    if (substring(mname, 0, 1) != "*") /* not a brush */
+        if not(whichpack(mname)) /* not present on disk */
+            return prior(ent, "models/error.vvm");
 
-	return prior(ent, mname);
+    return prior(ent, mname);
 }
 
 .float removed;
 __wrap void
 remove(entity target)
 {
-	/* it's an ncEntity sub-class */
-	if (target.identity) {
-		ncEntity ent = (ncEntity)target;
+    /* it's an ncEntity sub-class */
+    if (target.identity) {
+        ncEntity ent = (ncEntity)target;
 
-		/* if we're calling remove() on it and not .Destroy()... it's being uncleanly removed! */
-		if (ent.removed == 0) {
-			ent.OnRemoveEntity();
-			breakpoint();
-			print(sprintf("^1WARNING: Entity %d of class %s uncleanly removed!\n", num_for_edict(ent), ent.classname));
-			ent.removed = 1;
-		}
-	}
+        /* if we're calling remove() on it and not .Destroy()... it's being uncleanly removed! */
+        if (ent.removed == 0) {
+            ent.OnRemoveEntity();
+            breakpoint();
+            print(sprintf("^1WARNING: Entity %d of class %s uncleanly removed!\n", num_for_edict(ent), ent.classname));
+            ent.removed = 1;
+        }
+    }
 
-	prior(target);
+    prior(target);
 }
 
 __wrap void
 traceline(vector v1, vector v2, float flags, entity ent)
 {
 #ifdef SERVER
-	if (autocvar(com_showTracers, 0) == 1) {
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, EV_TRACEDEBUG);
-		WriteCoord(MSG_MULTICAST, v1[0]);
-		WriteCoord(MSG_MULTICAST, v1[1]);
-		WriteCoord(MSG_MULTICAST, v1[2]);
-		WriteCoord(MSG_MULTICAST, v2[0]);
-		WriteCoord(MSG_MULTICAST, v2[1]);
-		WriteCoord(MSG_MULTICAST, v2[2]);
-		msg_entity = world;
-		multicast(v1, MULTICAST_PVS_R);
-	}
+    if (autocvar(com_showTracers, 0) == 1) {
+        WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+        WriteByte(MSG_MULTICAST, EV_TRACEDEBUG);
+        WriteCoord(MSG_MULTICAST, v1[0]);
+        WriteCoord(MSG_MULTICAST, v1[1]);
+        WriteCoord(MSG_MULTICAST, v1[2]);
+        WriteCoord(MSG_MULTICAST, v2[0]);
+        WriteCoord(MSG_MULTICAST, v2[1]);
+        WriteCoord(MSG_MULTICAST, v2[2]);
+        msg_entity = world;
+        multicast(v1, MULTICAST_PVS_R);
+    }
 #endif
 
 #ifdef CLIENT
-	// TODO
+    // TODO
 #endif
-	prior(v1, v2, flags, ent);
+    prior(v1, v2, flags, ent);
 }
 
 #ifdef SERVER
@@ -402,24 +402,24 @@ string
 unpackStringCommand(string commandString)
 {
 #ifdef SERVER
-	/* is this supposed to be read from a skill cvar? */
-	if (substring(commandString, 0, 6) == "skill:") {
-		return Skill_GetStringValue(substring(commandString, 6, -1), "");
-	}
-	/* is this supposed to be read from a skill cvar? */
-	if (substring(commandString, 0, 5) == "cvar:") {
-		return cvar_string(substring(commandString, 5, -1));
-	}
+    /* is this supposed to be read from a skill cvar? */
+    if (substring(commandString, 0, 6) == "skill:") {
+        return Skill_GetStringValue(substring(commandString, 6, -1), "");
+    }
+    /* is this supposed to be read from a skill cvar? */
+    if (substring(commandString, 0, 5) == "cvar:") {
+        return cvar_string(substring(commandString, 5, -1));
+    }
 #endif
 
-	return ncConstantManager::LookUp(commandString, commandString);
+    return ncConstantManager::LookUp(commandString, commandString);
 }
 
 #ifdef NO_LEGACY
 void
 readcmd(string foo)
 {
-	localcmd(foo);
+    localcmd(foo);
 }
 #else
 void(string cmd) readcmd = #0:readcmd;
@@ -433,39 +433,39 @@ void(string cmd) readcmd = #0:readcmd;
 */
 string Util_FixModel(string mdl)
 {
-	if (!STRING_SET(mdl)) {
-		return "";
-	}
-	mdl = strreplace("\\", "/", mdl);
+    if (!STRING_SET(mdl)) {
+        return "";
+    }
+    mdl = strreplace("\\", "/", mdl);
 
-	/* don't allow empty directories, some Source maps have them. */
-	mdl = strreplace("//", "/", mdl);
+    /* don't allow empty directories, some Source maps have them. */
+    mdl = strreplace("//", "/", mdl);
 
-	int c = tokenizebyseparator(mdl, "/", "\\ ", "!");
-	string newpath = "";
+    int c = tokenizebyseparator(mdl, "/", "\\ ", "!");
+    string newpath = "";
 
-	for (int i = 0; i < c; i++) {
-		newpath = sprintf("%s/%s", newpath, argv(i));
-	}
+    for (int i = 0; i < c; i++) {
+        newpath = sprintf("%s/%s", newpath, argv(i));
+    }
 
-	/* Kill the first / */
-	newpath = substring(newpath, 1, strlen(newpath)-1);
+    /* Kill the first / */
+    newpath = substring(newpath, 1, strlen(newpath)-1);
 
-	/* Now we need to fix \/ because I hate people */
-	c = tokenizebyseparator(newpath, "\\/");
-	mdl = "";
-	for (int i = 0; i < c; i++) {
-		mdl = sprintf("%s/%s", mdl, argv(i));
-	}
-	/* Kill the first / again */
-	mdl = substring(mdl, 1, strlen(mdl)-1);
+    /* Now we need to fix \/ because I hate people */
+    c = tokenizebyseparator(newpath, "\\/");
+    mdl = "";
+    for (int i = 0; i < c; i++) {
+        mdl = sprintf("%s/%s", mdl, argv(i));
+    }
+    /* Kill the first / again */
+    mdl = substring(mdl, 1, strlen(mdl)-1);
 
-	if (substring(mdl, 0, 1) == "/")
-		mdl = substring(mdl, 1, -1);
+    if (substring(mdl, 0, 1) == "/")
+        mdl = substring(mdl, 1, -1);
 
-	mdl = strreplace("/ ", "/", mdl);
+    mdl = strreplace("/ ", "/", mdl);
 
-	return mdl;
+    return mdl;
 }
 
 /** Returns a string (usually filename) with only the file extension
@@ -474,71 +474,71 @@ string Util_FixModel(string mdl)
 string
 Util_ChangeExtension(string baseString, string newExtension)
 {
-	float stringOffset = 0;
-	string tempString = "";
-	float foundOffset = 0;
+    float stringOffset = 0;
+    string tempString = "";
+    float foundOffset = 0;
 
-	while ((tempString = substring(baseString, stringOffset, 1))) {
-		if (tempString == ".")
-			foundOffset = stringOffset;
-		if (tempString == "")
-			break;
-		if not (tempString)
-			break;
+    while ((tempString = substring(baseString, stringOffset, 1))) {
+        if (tempString == ".")
+            foundOffset = stringOffset;
+        if (tempString == "")
+            break;
+        if not (tempString)
+            break;
 
-		stringOffset++;
-	}
+        stringOffset++;
+    }
 
-	if (!STRING_SET(newExtension)) {
-		if (foundOffset == 0) {
-			return strcat(baseString);
-		}
+    if (!STRING_SET(newExtension)) {
+        if (foundOffset == 0) {
+            return strcat(baseString);
+        }
 
-		return strcat(substring(baseString, 0, foundOffset));
-	}
+        return strcat(substring(baseString, 0, foundOffset));
+    }
 
-	/* no extension found? append to the end then. */
-	if (foundOffset == 0) {
-		return strcat(baseString, ".", newExtension);
-	}
+    /* no extension found? append to the end then. */
+    if (foundOffset == 0) {
+        return strcat(baseString, ".", newExtension);
+    }
 
-	return strcat(substring(baseString, 0, foundOffset), ".", newExtension);
+    return strcat(substring(baseString, 0, foundOffset), ".", newExtension);
 }
 
 bool
 Util_IsSingleplayer(void)
 {
 #ifdef SERVER
-	/* playerslots 1 is always singleplayer */
-	if (cvar("sv_playerslots") == 1)
-		return true;
+    /* playerslots 1 is always singleplayer */
+    if (cvar("sv_playerslots") == 1)
+        return true;
 
-	/* only when coop is 1, only in multiplayer */
-	if (cvar("coop") == 1 && cvar("sv_playerslots") > 1)
-		return true;
+    /* only when coop is 1, only in multiplayer */
+    if (cvar("coop") == 1 && cvar("sv_playerslots") > 1)
+        return true;
 #endif
 
-	/* else we're multiplayer */
-	return false;
+    /* else we're multiplayer */
+    return false;
 }
 
 string
 textfile_to_string(string filename)
 {
-	string fileContents = __NULL__;
+    string fileContents = __NULL__;
 
-	filestream fileHandle = fopen(filename, FILE_READ);
-	string temp;
+    filestream fileHandle = fopen(filename, FILE_READ);
+    string temp;
 
-	if (fileHandle != -1) {
-		while ((temp = fgets(fileHandle))) {
-			fileContents = strcat(fileContents, temp, "\n");
-		}
-	} else {
-		fileContents = __NULL__;
-	}
+    if (fileHandle != -1) {
+        while ((temp = fgets(fileHandle))) {
+            fileContents = strcat(fileContents, temp, "\n");
+        }
+    } else {
+        fileContents = __NULL__;
+    }
 
-	return fileContents;
+    return fileContents;
 }
 
 /* moved from src/botlib/route.qc */
@@ -547,123 +547,123 @@ vector
 Route_GetJumpVelocity(vector vecFrom, vector vecTo, float flGravMod)
 {
 #if 1
-	float flHeight, flGravity, flTime, flDistance, flDir;
-	vector vecJump = [0,0,0];
+    float flHeight, flGravity, flTime, flDistance, flDir;
+    vector vecJump = [0,0,0];
 
-	if (flGravMod <= 0.0)
-		flGravMod = 1.0f;
+    if (flGravMod <= 0.0)
+        flGravMod = 1.0f;
 
-	flGravity = 800 * flGravMod;
-	flHeight = vecTo[2] - vecFrom[2];
+    flGravity = 800 * flGravMod;
+    flHeight = vecTo[2] - vecFrom[2];
 
-	/* this may not be a much verticality to this jump, use distance instead */
-	if (flHeight <= 0) {
-		flHeight = vlen(vecTo - vecFrom);
-		flTime = flHeight / flGravity;
-	} else {
-		flTime = sqrt(flHeight / (flGravity * 0.5f));
-		if (flTime <= 0) {
-			return [0,0,0];
-		}
-	}
+    /* this may not be a much verticality to this jump, use distance instead */
+    if (flHeight <= 0) {
+        flHeight = vlen(vecTo - vecFrom);
+        flTime = flHeight / flGravity;
+    } else {
+        flTime = sqrt(flHeight / (flGravity * 0.5f));
+        if (flTime <= 0) {
+            return [0,0,0];
+        }
+    }
 
-	vecJump = vecTo - vecFrom;
-	vecJump[2] = 0;
-	flDistance = vlen(normalize(vecJump));
+    vecJump = vecTo - vecFrom;
+    vecJump[2] = 0;
+    flDistance = vlen(normalize(vecJump));
 
-	flDir = flDistance / flTime;
-	vecJump *= flDir;
-	vecJump[2] = flTime * flGravity;
+    flDir = flDistance / flTime;
+    vecJump *= flDir;
+    vecJump[2] = flTime * flGravity;
 #else
-	vector vecJump = [0,0,0];
-	float flDist = vlen(vecTo - vecFrom);
-	makevectors(vectoangles(vecTo - vecFrom));
-	vecJump = v_forward * flDist;
-	vecJump[2] = 280;
+    vector vecJump = [0,0,0];
+    float flDist = vlen(vecTo - vecFrom);
+    makevectors(vectoangles(vecTo - vecFrom));
+    vecJump = v_forward * flDist;
+    vecJump[2] = 280;
 #endif
-	return vecJump;
+    return vecJump;
 }
 
 void
 DebugBox(vector absPos, vector minSize, vector maxSize, vector boxColor, float boxAlpha)
 {
-	vector a, b, c, d;
-	vector w, x, y, z;
+    vector a, b, c, d;
+    vector w, x, y, z;
 
-	a[0] = absPos[0] + minSize[0];
-	a[1] = absPos[1] + maxSize[1];
+    a[0] = absPos[0] + minSize[0];
+    a[1] = absPos[1] + maxSize[1];
 
-	b[0] = absPos[0] + maxSize[0];
-	b[1] = absPos[1] + maxSize[1];
+    b[0] = absPos[0] + maxSize[0];
+    b[1] = absPos[1] + maxSize[1];
 
-	c[0] = absPos[0] + maxSize[0];
-	c[1] = absPos[1] + minSize[1];
+    c[0] = absPos[0] + maxSize[0];
+    c[1] = absPos[1] + minSize[1];
 
-	d[0] = absPos[0] + minSize[0];
-	d[1] = absPos[1] + minSize[1];
+    d[0] = absPos[0] + minSize[0];
+    d[1] = absPos[1] + minSize[1];
 
-	a[2] = absPos[2] + maxSize[2];
-	c[2] = absPos[2] + maxSize[2];
-	d[2] = absPos[2] + maxSize[2];
-	b[2] = absPos[2] + maxSize[2];
+    a[2] = absPos[2] + maxSize[2];
+    c[2] = absPos[2] + maxSize[2];
+    d[2] = absPos[2] + maxSize[2];
+    b[2] = absPos[2] + maxSize[2];
 
-	w = a;
-	x = b;
-	y = c;
-	z = d;
+    w = a;
+    x = b;
+    y = c;
+    z = d;
 
-	w[2] = absPos[2] + minSize[2];
-	x[2] = absPos[2] + minSize[2];
-	y[2] = absPos[2] + minSize[2];
-	z[2] = absPos[2] + minSize[2];
+    w[2] = absPos[2] + minSize[2];
+    x[2] = absPos[2] + minSize[2];
+    y[2] = absPos[2] + minSize[2];
+    z[2] = absPos[2] + minSize[2];
 
-	/* top */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(a, [1,1], boxColor, boxAlpha);
-	R_PolygonVertex(b, [0,1], boxColor, boxAlpha);
-	R_PolygonVertex(c, [0,0], boxColor, boxAlpha);
-	R_PolygonVertex(d, [1,0], boxColor, boxAlpha);
-	R_EndPolygon();
+    /* top */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(a, [1,1], boxColor, boxAlpha);
+    R_PolygonVertex(b, [0,1], boxColor, boxAlpha);
+    R_PolygonVertex(c, [0,0], boxColor, boxAlpha);
+    R_PolygonVertex(d, [1,0], boxColor, boxAlpha);
+    R_EndPolygon();
 
-	/* front */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(d, [1,1], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(c, [0,1], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(y, [0,0], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(z, [1,0], boxColor * 0.9f, boxAlpha);
-	R_EndPolygon();
+    /* front */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(d, [1,1], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(c, [0,1], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(y, [0,0], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(z, [1,0], boxColor * 0.9f, boxAlpha);
+    R_EndPolygon();
 
-	/* back */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(w, [1,1], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(x, [0,1], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(b, [0,0], boxColor * 0.9f, boxAlpha);
-	R_PolygonVertex(a, [1,0], boxColor * 0.9f, boxAlpha);
-	R_EndPolygon();
+    /* back */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(w, [1,1], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(x, [0,1], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(b, [0,0], boxColor * 0.9f, boxAlpha);
+    R_PolygonVertex(a, [1,0], boxColor * 0.9f, boxAlpha);
+    R_EndPolygon();
 
-	/* left */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(a, [1,1], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(d, [0,1], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(z, [0,0], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(w, [1,0], boxColor * 0.8f, boxAlpha);
-	R_EndPolygon();
+    /* left */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(a, [1,1], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(d, [0,1], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(z, [0,0], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(w, [1,0], boxColor * 0.8f, boxAlpha);
+    R_EndPolygon();
 
-	/* right */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(c, [1,1], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(b, [0,1], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(x, [0,0], boxColor * 0.8f, boxAlpha);
-	R_PolygonVertex(y, [1,0], boxColor * 0.8f, boxAlpha);
-	R_EndPolygon();
+    /* right */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(c, [1,1], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(b, [0,1], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(x, [0,0], boxColor * 0.8f, boxAlpha);
+    R_PolygonVertex(y, [1,0], boxColor * 0.8f, boxAlpha);
+    R_EndPolygon();
 
-	/* bottom */
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(z, [1,1], boxColor, boxAlpha);
-	R_PolygonVertex(y, [0,1], boxColor, boxAlpha);
-	R_PolygonVertex(x, [0,0], boxColor, boxAlpha);
-	R_PolygonVertex(w, [1,0], boxColor, boxAlpha);
-	R_EndPolygon();
+    /* bottom */
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(z, [1,1], boxColor, boxAlpha);
+    R_PolygonVertex(y, [0,1], boxColor, boxAlpha);
+    R_PolygonVertex(x, [0,0], boxColor, boxAlpha);
+    R_PolygonVertex(w, [1,0], boxColor, boxAlpha);
+    R_EndPolygon();
 }
 
 /* doxygen definitions */

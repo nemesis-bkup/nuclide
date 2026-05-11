@@ -46,124 +46,124 @@ class
 func_brush:ncRenderableEntity
 {
 public:
-	void func_brush(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void SpawnKey(string,string);
+    void func_brush(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void SpawnKey(string,string);
 
 private:
-	int m_iSolidity;
-	int m_iStartOff;
+    int m_iSolidity;
+    int m_iStartOff;
 };
 
 void
 func_brush::func_brush(void)
 {
-	m_iSolidity = 0i;
-	m_iStartOff = 0i;
+    m_iSolidity = 0i;
+    m_iStartOff = 0i;
 }
 
 void
 func_brush::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iSolidity", m_iSolidity);
-	SaveInt(handle, "m_iStartOff", m_iStartOff);
+    super::Save(handle);
+    SaveInt(handle, "m_iSolidity", m_iSolidity);
+    SaveInt(handle, "m_iStartOff", m_iStartOff);
 }
 
 void
 func_brush::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iSolidity":
-		m_iSolidity = ReadInt(setValue);
-		break;
-	case "m_iStartOff":
-		m_iStartOff = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iSolidity":
+        m_iSolidity = ReadInt(setValue);
+        break;
+    case "m_iStartOff":
+        m_iStartOff = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_brush::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "Solidity":
-		m_iSolidity = stoi(setValue);
-		break;
-	case "StartDisabled":
-		m_iStartOff = stoi(setValue);
-		break;
-	/* TODO: implement these */
-	case "solidbsp":
-		break;
-	case "excludednpc":
-		break;
-	case "invert_exclusion":
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "Solidity":
+        m_iSolidity = stoi(setValue);
+        break;
+    case "StartDisabled":
+        m_iStartOff = stoi(setValue);
+        break;
+    /* TODO: implement these */
+    case "solidbsp":
+        break;
+    case "excludednpc":
+        break;
+    case "invert_exclusion":
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_brush::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetMovetype(MOVETYPE_PUSH);
+    SetMovetype(MOVETYPE_PUSH);
 
-	/* make sure solid and so on are set */
-	if (m_iStartOff) {
-		Trigger(this, TRIG_OFF);
-	} else {
-		Trigger(this, TRIG_ON);
-	}
+    /* make sure solid and so on are set */
+    if (m_iStartOff) {
+        Trigger(this, TRIG_OFF);
+    } else {
+        Trigger(this, TRIG_ON);
+    }
 }
 
 void
 func_brush::Trigger(entity act, triggermode_t state)
 {
-	/* collision */
-	switch (m_iSolidity) {
-	case 1:
-		SetSolid(SOLID_NOT);
-		break;
-	case 2:
-		SetSolid(SOLID_BSP);
-		break;
-	default:
-		switch (state) {
-		case TRIG_OFF:
-			SetSolid(SOLID_NOT);
-			break;
-		case TRIG_ON:
-			SetSolid(SOLID_BSP);
-			break;
-		default:
-			SetSolid(modelindex != 0 ? SOLID_NOT : SOLID_BSP);
-		}
-	}
+    /* collision */
+    switch (m_iSolidity) {
+    case 1:
+        SetSolid(SOLID_NOT);
+        break;
+    case 2:
+        SetSolid(SOLID_BSP);
+        break;
+    default:
+        switch (state) {
+        case TRIG_OFF:
+            SetSolid(SOLID_NOT);
+            break;
+        case TRIG_ON:
+            SetSolid(SOLID_BSP);
+            break;
+        default:
+            SetSolid(modelindex != 0 ? SOLID_NOT : SOLID_BSP);
+        }
+    }
 
-	/* visual */
-	switch (state) {
-	case TRIG_OFF:
-		SetModelindex(0);
-		break;
-	case TRIG_ON:
-		SetModel(GetSpawnString("model"));
-		break;
-	default:
-		if (modelindex != 0)
-			SetModelindex(0);
-		else
-			SetModel(GetSpawnString("model"));
-	}
+    /* visual */
+    switch (state) {
+    case TRIG_OFF:
+        SetModelindex(0);
+        break;
+    case TRIG_ON:
+        SetModel(GetSpawnString("model"));
+        break;
+    default:
+        if (modelindex != 0)
+            SetModelindex(0);
+        else
+            SetModel(GetSpawnString("model"));
+    }
 }
 
 #define MAX_DIST 999999

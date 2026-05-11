@@ -21,32 +21,32 @@ var int autocvar_mp_td_dmgToWarn = 200i;
 void
 ncRuleDelegate::ncRuleDelegate(void)
 {
-	identity = 2;
-	m_flIntermissionCycle = 0;
+    identity = 2;
+    m_flIntermissionCycle = 0;
 }
 
 void
 ncRuleDelegate::Save(float handle)
 {
-	SaveInt(handle, "m_iIntermission", m_iIntermission);
-	SaveFloat(handle, "m_flIntermissionTime", m_flIntermissionTime);
-	SaveFloat(handle, "m_flIntermissionCycle", m_flIntermissionCycle);
+    SaveInt(handle, "m_iIntermission", m_iIntermission);
+    SaveFloat(handle, "m_flIntermissionTime", m_flIntermissionTime);
+    SaveFloat(handle, "m_flIntermissionCycle", m_flIntermissionCycle);
 }
 
 void
 ncRuleDelegate::Restore(string strKey, string strValue)
 {
-	switch (strKey) {
-	case "m_iIntermission":
-		m_iIntermission = ReadInt(strValue);
-		break;
-	case "m_flIntermissionTime":
-		m_flIntermissionTime = ReadFloat(strValue);
-		break;
-	case "m_flIntermissionCycle":
-		m_flIntermissionCycle = ReadFloat(strValue);
-		break;
-	}
+    switch (strKey) {
+    case "m_iIntermission":
+        m_iIntermission = ReadInt(strValue);
+        break;
+    case "m_flIntermissionTime":
+        m_flIntermissionTime = ReadFloat(strValue);
+        break;
+    case "m_flIntermissionCycle":
+        m_flIntermissionCycle = ReadFloat(strValue);
+        break;
+    }
 }
 
 void
@@ -57,8 +57,8 @@ ncRuleDelegate::Input(entity eAct, string strInput, string strData)
 void
 ncRuleDelegate::RestoreComplete(void)
 {
-	/* mark this as our active game-rule upon restore. */
-	g_grMode = this;
+    /* mark this as our active game-rule upon restore. */
+    g_grMode = this;
 }
 
 /* init */
@@ -70,10 +70,10 @@ ncRuleDelegate::InitPostEnts(void)
 void
 ncRuleDelegate::Precache(void)
 {
-	if (!g_ruleCProgs)
-		return;
+    if (!g_ruleCProgs)
+        return;
 
-	ncWarning("Gamerule progs with no CodeCallback_Precache");
+    ncWarning("Gamerule progs with no CodeCallback_Precache");
 }
 
 void
@@ -85,36 +85,36 @@ ncRuleDelegate::Shutdown(void)
 void
 ncRuleDelegate::FrameStart(void)
 {
-	if (!m_iIntermission) {
-		if (cvar("timelimit")) {
-			if (time >= (cvar("timelimit") * 60)) {
+    if (!m_iIntermission) {
+        if (cvar("timelimit")) {
+            if (time >= (cvar("timelimit") * 60)) {
 
-				if (serverinfo.GetString("mode") != "singleplayer") {
-					ncStats::EndGame("timelimit");
-					IntermissionStart();
-				}
-			}
-		}
-	}
+                if (serverinfo.GetString("mode") != "singleplayer") {
+                    ncStats::EndGame("timelimit");
+                    IntermissionStart();
+                }
+            }
+        }
+    }
 
-	IntermissionCycle();
+    IntermissionCycle();
 }
 
 bool
 ncRuleDelegate::ConsoleCommand(ncPlayer pl, string cmd)
 {
-	return (false);
+    return (false);
 }
 bool
 ncRuleDelegate::ClientCommand(ncClient pl, string cmd)
 {
-	return (false);
+    return (false);
 }
 
 bool
 ncRuleDelegate::ImpulseCommand(ncClient pl, float num)
 {
-	return (false);
+    return (false);
 }
 
 void
@@ -130,7 +130,7 @@ ncRuleDelegate::PlayerDisconnect(ncPlayer pl)
 void
 ncRuleDelegate::PlayerKill(ncPlayer pl)
 {
-	pl.Input(pl, "Kill", "");
+    pl.Input(pl, "Kill", "");
 }
 
 void
@@ -141,40 +141,40 @@ ncRuleDelegate::NPCDeath(ncActor npc, ncEntity attacker, ncEntity inflictor)
 void
 ncRuleDelegate::PlayerDeath(ncPlayer deadPlayer, ncEntity inflictor, ncEntity attacker, string weaponDef)
 {
-	/* death-counter */
-	deadPlayer.deaths++;
-	userinfo.SetString(deadPlayer, "*deaths", ftos(deadPlayer.deaths));
+    /* death-counter */
+    deadPlayer.deaths++;
+    userinfo.SetString(deadPlayer, "*deaths", ftos(deadPlayer.deaths));
 
-	/* update score-counter */
-	if (is.Player(attacker)) {
-		if (deadPlayer == attacker) {
-			attacker.frags--;
-		} else {
-			attacker.frags++;
-		}
-	}
+    /* update score-counter */
+    if (is.Player(attacker)) {
+        if (deadPlayer == attacker) {
+            attacker.frags--;
+        } else {
+            attacker.frags++;
+        }
+    }
 }
 
 void
 ncRuleDelegate::PlayerPain(ncPlayer pl, ncActor attacker, ncDict damageDecl)
 {
-	/* fallback code here, or rest implemented by sub-class */
+    /* fallback code here, or rest implemented by sub-class */
 }
 
 void
 ncRuleDelegate::PlayerSpawn(ncPlayer pl)
 {
-	/* implemented by sub-class */
+    /* implemented by sub-class */
 }
 void
 ncRuleDelegate::PlayerPreFrame(ncPlayer pl)
 {
-	/* implemented by sub-class */
+    /* implemented by sub-class */
 }
 void
 ncRuleDelegate::PlayerPostFrame(ncPlayer pl)
 {
-	/* implemented by sub-class */
+    /* implemented by sub-class */
 }
 
 /* level transitions */
@@ -200,37 +200,37 @@ ncRuleDelegate::LevelNewParms(void)
 /*void
 ncRuleDelegate::SpectatorConnect(ncSpectator pl)
 {
-	//print("SpectatorConnect!\n");
+    //print("SpectatorConnect!\n");
 }
 void
 ncRuleDelegate::SpectatorDisconnect(ncSpectator pl)
 {
-	//print("SpectatorDisconnect!\n");
+    //print("SpectatorDisconnect!\n");
 }
 void
 ncRuleDelegate::SpectatorThink(ncSpectator pl)
 {
-	//print("SpectatorThink!\n");
+    //print("SpectatorThink!\n");
 }*/
 
 int
 ncRuleDelegate::MaxItemPerSlot(int slot)
 {
-	return (-1);
+    return (-1);
 }
 
 void
 ncRuleDelegate::IntermissionStart(void)
 {
-	if (m_iIntermission)
-		return;
+    if (m_iIntermission)
+        return;
 
-	m_iIntermission = TRUE;
-	m_flIntermissionTime = time + 5.0f;
+    m_iIntermission = TRUE;
+    m_flIntermissionTime = time + 5.0f;
 
-	for (entity p = world; (p = next.Player(p));) {
-		ents.ChangeToClass(p, "spectator");
-	}
+    for (entity p = world; (p = next.Player(p));) {
+        ents.ChangeToClass(p, "spectator");
+    }
 }
 
 void
@@ -242,133 +242,133 @@ ncRuleDelegate::OnIntermissionCycle(void)
 void
 ncRuleDelegate::IntermissionCycle(void)
 {
-	ncEntity targ;
+    ncEntity targ;
 
-	if (!m_iIntermission) {
-		return;
-	}
+    if (!m_iIntermission) {
+        return;
+    }
 
-	if (time < m_flIntermissionCycle) {
-		return;
-	}
+    if (time < m_flIntermissionCycle) {
+        return;
+    }
 
-	if (m_flIntermissionCycle == -1) {
-		return;
-	}
+    if (m_flIntermissionCycle == -1) {
+        return;
+    }
 
-	/* make the clients aware */
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_INTERMISSION);
+    /* make the clients aware */
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_INTERMISSION);
 
-	m_eIntermissionPoint = (ncEntity)find(m_eIntermissionPoint, ::classname, "info_intermission");
+    m_eIntermissionPoint = (ncEntity)find(m_eIntermissionPoint, ::classname, "info_intermission");
 
-	/* if we have an intermission point, send it to all players. */
-	if (m_eIntermissionPoint) {
-		targ = __NULL__;
+    /* if we have an intermission point, send it to all players. */
+    if (m_eIntermissionPoint) {
+        targ = __NULL__;
 
-		if (STRING_SET(m_eIntermissionPoint.target)) {
-			targ = (ncEntity)find(world, ::targetname, m_eIntermissionPoint.target);
-		}
+        if (STRING_SET(m_eIntermissionPoint.target)) {
+            targ = (ncEntity)find(world, ::targetname, m_eIntermissionPoint.target);
+        }
 
-		if (targ) {
-			m_eIntermissionPoint.angles = vectoangles(targ.origin - m_eIntermissionPoint.origin);
-		}
+        if (targ) {
+            m_eIntermissionPoint.angles = vectoangles(targ.origin - m_eIntermissionPoint.origin);
+        }
 
-		WriteByte(MSG_MULTICAST, 1);
-		WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[0]);
-		WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[1]);
-		WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[2]);
-		WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[0]);
-		WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[1]);
-		WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[2]);
+        WriteByte(MSG_MULTICAST, 1);
+        WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[0]);
+        WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[1]);
+        WriteFloat(MSG_MULTICAST, m_eIntermissionPoint.angles[2]);
+        WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[0]);
+        WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[1]);
+        WriteCoord(MSG_MULTICAST, m_eIntermissionPoint.origin[2]);
 
-		for (entity pl = world; (pl = next.Player(pl));) {
-			setorigin(pl, m_eIntermissionPoint.origin);
-		}
-	} else {
-		WriteByte(MSG_MULTICAST, 0);
-	}
+        for (entity pl = world; (pl = next.Player(pl));) {
+            setorigin(pl, m_eIntermissionPoint.origin);
+        }
+    } else {
+        WriteByte(MSG_MULTICAST, 0);
+    }
 
-	msg_entity = world;
-	multicast([0,0,0], MULTICAST_ALL);
+    msg_entity = world;
+    multicast([0,0,0], MULTICAST_ALL);
 
-	OnIntermissionCycle();
+    OnIntermissionCycle();
 
-	if (!m_eIntermissionPoint)
-		m_flIntermissionCycle = -1;
-	else
-		m_flIntermissionCycle = time + 5.0f;
+    if (!m_eIntermissionPoint)
+        m_flIntermissionCycle = -1;
+    else
+        m_flIntermissionCycle = time + 5.0f;
 }
 
 void
 ncRuleDelegate::IntermissionToPlayer(ncPlayer targetPlayer)
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_INTERMISSION);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_INTERMISSION);
 
-	/* we're in an intermission already, so this should be set. */
-	if (g_grMode.m_eIntermissionPoint) {
-		WriteByte(MSG_MULTICAST, 1);
-		WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[0]);
-		WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[1]);
-		WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[2]);
-		WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[0]);
-		WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[1]);
-		WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[2]);
-	} else {
-		WriteByte(MSG_MULTICAST, 0);
-	}
+    /* we're in an intermission already, so this should be set. */
+    if (g_grMode.m_eIntermissionPoint) {
+        WriteByte(MSG_MULTICAST, 1);
+        WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[0]);
+        WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[1]);
+        WriteFloat(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.angles[2]);
+        WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[0]);
+        WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[1]);
+        WriteCoord(MSG_MULTICAST, g_grMode.m_eIntermissionPoint.origin[2]);
+    } else {
+        WriteByte(MSG_MULTICAST, 0);
+    }
 
-	msg_entity = targetPlayer;
-	multicast([0,0,0], MULTICAST_ONE_R);
+    msg_entity = targetPlayer;
+    multicast([0,0,0], MULTICAST_ONE_R);
 }
 
 bool
 ncRuleDelegate::InIntermission(void)
 {
-	return (m_iIntermission) ? true : false;
+    return (m_iIntermission) ? true : false;
 }
 
 bool
 ncRuleDelegate::MonstersSpawn(void)
 {
-	return (true);
+    return (true);
 }
 
 /* init */
 bool
 ncRuleDelegate::IsTeamplay(void)
 {
-	return (serverkeyfloat("teams") > 0);
+    return (serverkeyfloat("teams") > 0);
 }
 bool
 ncRuleDelegate::IsMultiplayer(void)
 {
-	return (false);
+    return (false);
 }
 
 void
 ncRuleDelegate::IntermissionEnd(void)
 {
-	if (!m_iIntermission)
-		return;
+    if (!m_iIntermission)
+        return;
 
-	if (time < m_flIntermissionTime)
-		return;
+    if (time < m_flIntermissionTime)
+        return;
 
-	if (!(input_buttons & INPUT_PRIMARY) && !(input_buttons & INPUT_JUMP))
-		return;
+    if (!(input_buttons & INPUT_PRIMARY) && !(input_buttons & INPUT_JUMP))
+        return;
 
-	localcmd("nextmap\n");
+    localcmd("nextmap\n");
 
-	m_iIntermission = 0;
-	m_flIntermissionTime = -1;
+    m_iIntermission = 0;
+    m_flIntermissionTime = -1;
 }
 
 bool
 ncRuleDelegate::PlayerCanAttack(ncPlayer bp)
 {
-	return (true);
+    return (true);
 }
 
 void
@@ -379,168 +379,168 @@ ncRuleDelegate::PlayerInventoryChanged(ncPlayer pl)
 bool
 ncRuleDelegate::PlayerRequestRespawn(ncPlayer pl)
 {
-	return (true);
+    return (true);
 }
 
 bool
 ncRuleDelegate::PlayerRequestTeam(ncPlayer pl, int teamNum)
 {
-	return (false);
+    return (false);
 }
 
 void
 ncRuleDelegate::ChatMessageAll(ncClient cl, string strMessage)
 {
-	float edictNum = num_for_edict(cl) - 1;
+    float edictNum = num_for_edict(cl) - 1;
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_CHAT);
-	WriteByte(MSG_MULTICAST, edictNum);
-	WriteByte(MSG_MULTICAST, cl.team);
-	WriteString(MSG_MULTICAST, strMessage);
-	multicast([0,0,0], MULTICAST_ALL_R);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_CHAT);
+    WriteByte(MSG_MULTICAST, edictNum);
+    WriteByte(MSG_MULTICAST, cl.team);
+    WriteString(MSG_MULTICAST, strMessage);
+    multicast([0,0,0], MULTICAST_ALL_R);
 
-	/* TODO: don't print on listen games */
-	print(Util_ChatFormat(edictNum, 0, strMessage));
-	print("\n");
+    /* TODO: don't print on listen games */
+    print(Util_ChatFormat(edictNum, 0, strMessage));
+    print("\n");
 }
 
 void
 ncRuleDelegate::ChatMessageTeam(ncClient cl, string strMessage)
 {
-	float edictNum = num_for_edict(cl) - 1;
+    float edictNum = num_for_edict(cl) - 1;
 
-	/* their finger probably slipped */
-	if (IsTeamplay() == false) {
-		ChatMessageAll(cl, strMessage);
-		return;
-	}
+    /* their finger probably slipped */
+    if (IsTeamplay() == false) {
+        ChatMessageAll(cl, strMessage);
+        return;
+    }
 
-	/* single handedly pick out team members */
-	for (entity a = world; (a = next.Player(a));) {
-		/* not one of us! */
-		if (a.team != cl.team)
-			continue;
+    /* single handedly pick out team members */
+    for (entity a = world; (a = next.Player(a));) {
+        /* not one of us! */
+        if (a.team != cl.team)
+            continue;
 
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, EV_CHAT_TEAM);
-		WriteByte(MSG_MULTICAST, edictNum);
-		WriteByte(MSG_MULTICAST, cl.team);
-		WriteString(MSG_MULTICAST, strMessage);
+        WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+        WriteByte(MSG_MULTICAST, EV_CHAT_TEAM);
+        WriteByte(MSG_MULTICAST, edictNum);
+        WriteByte(MSG_MULTICAST, cl.team);
+        WriteString(MSG_MULTICAST, strMessage);
 
-		msg_entity = a;
-		multicast([0,0,0], MULTICAST_ONE_R);
-	}
+        msg_entity = a;
+        multicast([0,0,0], MULTICAST_ONE_R);
+    }
 
-	print(Util_ChatFormat(edictNum, cl.team, strMessage));
-	print("\n");
+    print(Util_ChatFormat(edictNum, cl.team, strMessage));
+    print("\n");
 }
 
 string
 ncRuleDelegate::Title(void)
 {
-	if (STRING_SET(g_ruleCName)) {
-		return (g_ruleCName);
-	}
+    if (STRING_SET(g_ruleCName)) {
+        return (g_ruleCName);
+    }
 
-	return ("Default");
+    return ("Default");
 }
 
 ncRuleDelegate
 ncRuleDelegate::ActiveInstance(void)
 {
-	return (g_grMode);
+    return (g_grMode);
 }
 
 void
 ncRuleDelegate::LinkProgs(void)
 {
-	ncRuleDelegate newRule;
+    ncRuleDelegate newRule;
 
-	if (g_ruleCName == "singleplayer") {
-		newRule = spawn(ncGameRule_SinglePlayer);
-	} else if (g_ruleCName == "editor") {
-		newRule = spawn(ncGameRule_Editor);
-	} else if (g_ruleCName == "home") {
-		newRule = spawn(ncGameRule_Home);
-	} else if (g_ruleCName == "shutterbug") {
-		newRule = spawn(ncGameRule_DevShutterbug);
-	} else {
-		newRule = spawn(ncRuleDelegate);
-	}
+    if (g_ruleCName == "singleplayer") {
+        newRule = spawn(ncGameRule_SinglePlayer);
+    } else if (g_ruleCName == "editor") {
+        newRule = spawn(ncGameRule_Editor);
+    } else if (g_ruleCName == "home") {
+        newRule = spawn(ncGameRule_Home);
+    } else if (g_ruleCName == "shutterbug") {
+        newRule = spawn(ncGameRule_DevShutterbug);
+    } else {
+        newRule = spawn(ncRuleDelegate);
+    }
 
-	if (g_ruleCProgs && g_ruleCName != "editor" && g_ruleCName != "home") {
-		RULEMAP(newRule, ClientCommand, "CodeCallback_ClientCommand")
-		RULEMAP(newRule, ConsoleCommand, "CodeCallback_ConsoleCommand")
-		RULEMAP(newRule, FrameStart, "CodeCallback_FrameStart")
-		RULEMAP(newRule, ImpulseCommand, "CodeCallback_ImpulseCommand")
-		RULEMAP(newRule, Precache, "CodeCallback_Precache")
-		RULEMAP(newRule, InitPostEnts, "CodeCallback_StartGameType")
-		RULEMAP(newRule, Input, "CodeCallback_Input")
-		RULEMAP(newRule, NPCDeath, "CodeCallback_NPCKilled")
-		RULEMAP(newRule, PlayerCanAttack, "CodeCallback_PlayerCanAttack")
-		RULEMAP(newRule, PlayerConnect, "CodeCallback_PlayerConnect")
-		RULEMAP(newRule, PlayerDeath, "CodeCallback_PlayerKilled")
-		RULEMAP(newRule, PlayerDisconnect, "CodeCallback_PlayerDisconnect")
-		RULEMAP(newRule, PlayerPain, "CodeCallback_PlayerDamage")
-		RULEMAP(newRule, PlayerPreFrame, "CodeCallback_PlayerPreFrame")
-		RULEMAP(newRule, PlayerRequestRespawn, "CodeCallback_PlayerRequestRespawn")
-		RULEMAP(newRule, PlayerRequestTeam, "CodeCallback_CallRequestTeam")
-		RULEMAP(newRule, PlayerSpawn, "CodeCallback_PlayerSpawn")
-		RULEMAP(newRule, PlayerInventoryChanged, "CodeCallback_PlayerInventoryChanged")
-		RULEMAP(newRule, Title, "CodeCallback_Title")
-		RULEMAP(newRule, MaxItemPerSlot, "CodeCallback_MaxItemsPerSlot")
-		RULEMAP(newRule, Shutdown, "CodeCallback_Shutdown")
-	}
+    if (g_ruleCProgs && g_ruleCName != "editor" && g_ruleCName != "home") {
+        RULEMAP(newRule, ClientCommand, "CodeCallback_ClientCommand")
+        RULEMAP(newRule, ConsoleCommand, "CodeCallback_ConsoleCommand")
+        RULEMAP(newRule, FrameStart, "CodeCallback_FrameStart")
+        RULEMAP(newRule, ImpulseCommand, "CodeCallback_ImpulseCommand")
+        RULEMAP(newRule, Precache, "CodeCallback_Precache")
+        RULEMAP(newRule, InitPostEnts, "CodeCallback_StartGameType")
+        RULEMAP(newRule, Input, "CodeCallback_Input")
+        RULEMAP(newRule, NPCDeath, "CodeCallback_NPCKilled")
+        RULEMAP(newRule, PlayerCanAttack, "CodeCallback_PlayerCanAttack")
+        RULEMAP(newRule, PlayerConnect, "CodeCallback_PlayerConnect")
+        RULEMAP(newRule, PlayerDeath, "CodeCallback_PlayerKilled")
+        RULEMAP(newRule, PlayerDisconnect, "CodeCallback_PlayerDisconnect")
+        RULEMAP(newRule, PlayerPain, "CodeCallback_PlayerDamage")
+        RULEMAP(newRule, PlayerPreFrame, "CodeCallback_PlayerPreFrame")
+        RULEMAP(newRule, PlayerRequestRespawn, "CodeCallback_PlayerRequestRespawn")
+        RULEMAP(newRule, PlayerRequestTeam, "CodeCallback_CallRequestTeam")
+        RULEMAP(newRule, PlayerSpawn, "CodeCallback_PlayerSpawn")
+        RULEMAP(newRule, PlayerInventoryChanged, "CodeCallback_PlayerInventoryChanged")
+        RULEMAP(newRule, Title, "CodeCallback_Title")
+        RULEMAP(newRule, MaxItemPerSlot, "CodeCallback_MaxItemsPerSlot")
+        RULEMAP(newRule, Shutdown, "CodeCallback_Shutdown")
+    }
 
-	serverinfo.SetString("mode", newRule.Title());
-	g_grMode = newRule;
+    serverinfo.SetString("mode", newRule.Title());
+    g_grMode = newRule;
 }
 
 __weak string
 Game_DefaultRules(void)
 {
-	string gameType = cvars.GetString("g_gametype");
+    string gameType = cvars.GetString("g_gametype");
 
-	if (!STRING_SET(gameType)) {
-		bool isCoop = cvars.GetBool("coop");
-		bool isSingle = (cvars.GetInteger("sv_playerslots") <= 1i) ? (true) : (false);
-		gameType = ((isSingle || isCoop) == (true)) ? ("singleplayer") : ("deathmatch");
-	}
+    if (!STRING_SET(gameType)) {
+        bool isCoop = cvars.GetBool("coop");
+        bool isSingle = (cvars.GetInteger("sv_playerslots") <= 1i) ? (true) : (false);
+        gameType = ((isSingle || isCoop) == (true)) ? ("singleplayer") : ("deathmatch");
+    }
 
-	return (gameType);
+    return (gameType);
 }
 
 /* Rule specific Scripting, nicknamed 'RuleC' because MapC exists. */
 void
-RuleC_Init(void)
+ncRuleDelegate::Init(void)
 {
-	string gameType = g_ruleCName = Game_DefaultRules();
-	string pathToProgs;
+    string gameType = g_ruleCName = Game_DefaultRules();
+    string pathToProgs;
 
-	pathToProgs = strcat("progs/", gameType, ".dat");
+    pathToProgs = strcat("progs/", gameType, ".dat");
 
-	/* No progs .dat, exit out */
-	if (fileExists(pathToProgs) == false) {
-		ncError("Progs at %S does not exist.", pathToProgs);
-		g_ruleCProgs = 0;
-		return;
-	}
+    /* No progs .dat, exit out */
+    if (fileExists(pathToProgs) == false) {
+        ncError("Progs at %S does not exist.", pathToProgs);
+        g_ruleCProgs = 0;
+        return;
+    }
 
-	ncLogAlways("Active RuleC:");
-	ncLogAlways("\tType: %S", gameType);
-	ncLogAlways("\tProgs: %S", pathToProgs);
+    ncLogAlways("Active RuleC:");
+    ncLogAlways("\tType: %S", gameType);
+    ncLogAlways("\tProgs: %S", pathToProgs);
 
-	g_ruleCProgs = addprogs(pathToProgs);
+    g_ruleCProgs = addprogs(pathToProgs);
 
-	if (g_ruleCProgs) {
-		void(void) mainFunction;
-		mainFunction = externvalue(g_ruleCProgs, "main");
+    if (g_ruleCProgs) {
+        void(void) mainFunction;
+        mainFunction = externvalue(g_ruleCProgs, "main");
 
-		if (mainFunction) {
-			mainFunction();
-		} else {
-			ncError("RuleC progs %S does not have a main function.", pathToProgs);
-		}
-	}
+        if (mainFunction) {
+            mainFunction();
+        } else {
+            ncError("RuleC progs %S does not have a main function.", pathToProgs);
+        }
+    }
 }

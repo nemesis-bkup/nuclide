@@ -34,9 +34,9 @@ class
 func_traincontrols:ncBrushTrigger
 {
 public:
-	void func_traincontrols(void);
-	
-	virtual void Respawn(void);
+    void func_traincontrols(void);
+    
+    virtual void Respawn(void);
 
 };
 
@@ -48,7 +48,7 @@ func_traincontrols::func_traincontrols(void)
 void
 func_traincontrols::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_TRIGGER);
-	SetParent(target);
+    super::Respawn();
+    SetSolid(SOLID_TRIGGER);
+    SetParent(target);
 }

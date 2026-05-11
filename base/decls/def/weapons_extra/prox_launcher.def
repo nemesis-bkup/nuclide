@@ -1,0 +1,88 @@
+entityDef weapon_prox_launcher
+{
+	"editor_color"		".3 .3 1"
+	"editor_mins"		"-16 -16 0"
+	"editor_maxs"		"16 16 32"
+	"editor_usage"		"Proximity Gun"
+	"editor_rotatable"	"1"
+
+	"spawnclass"		"ncWeapon"
+	"model"				"progs/g_rock.mdl"
+	"model_view"		"progs/v_rock.mdl"
+	"snd_acquire"		"dmc_weapon.pickup"
+	"snd_respawn"		"dmc_item.respawn"
+	"spin"				"1"
+	"pickupFlash"		"1"
+
+	// weapon specific
+	"def_fireInfo"		"fireInfo_proximityGun"
+	"inv_name"			"Proximity Gun"
+	"ammoType"			"ammo_rockets"
+	"inv_ammo_rockets"	"5"
+	"ammoRequired"		"1"
+	"ammoPerShot"		"1"
+
+	"act_fire"			"1"
+	"act_idle"			"0"
+
+	"snd_fire"			"weapon_prox_launcher.shoot"
+	"snd_empty"			"weapon.empty"
+
+//	"msg_obituary"		"%s got too friendly with %s's bomb."
+//	"msg_obituary2"		"%s did the rhumba with %s's bomb."
+//	"msg_gib"			"%s was gibbed by %s's bomb."
+//	"msg_suicide"		"%s tries to put the pin back in."
+
+	// hlWeapon specific
+	"hudSlot"			"5"
+	"hudSlotPos"		"2"
+	"weight"			"25"
+	"crosshair"			"none"
+}
+
+entityDef fireInfo_proximityGun
+{
+	"def_onFire"		"projectile_proxgrenade"
+	"fireRate"			"0.6"
+	"punchAngle"		"-2 0 0"
+}
+
+entityDef projectile_proxgrenade
+{
+	"spawnclass"				"ncProjectile"
+	"model"						"progs/grenade.mdl"
+	"offset"					"24 0 -8"
+	"bounce"					"1"
+	"velocity"					"600 0 200"
+	"angular_velocity"			"300 300 300"
+	"fuse"						"0"
+	"detonate_on_fuse"			"1"
+	"detonate_on_death"			"1"
+	"detonate_on_world"			"0"
+    "health"                    "5"
+    "mins"                      "-8 -8 -8"
+    "maxs"                      "8 8 8"
+	"detonate_on_actor"			"1"
+	"stick_to_world"			"1"
+	"stick_to_actor"			"1"
+	"impact_damage_effect"		"1"
+	"impact_gib"				"1"
+	"decal_detonate"			"ExplosionScorch"
+	"model_detonate"			"fx_explosion.main"
+	"explode_light_color"		"2 1.6 0.8"
+	"explode_light_radius"		"320"
+	"explode_light_fadetime"	"0.5"
+    "proximityRadius"           "256"
+	"snd_explode"				"weapon_grenadelauncher.explode"
+	"snd_bounce"				"weapon_grenadelauncher.bounce"
+	"def_splash_damage"			"damage_proxSplash"
+}
+
+entityDef damage_proxSplash
+{
+	"damage"		"150"
+	"radius"		"160"
+	"knockback"		"300"
+	"push"			"45000"
+	"gib"			"1"
+}

@@ -19,16 +19,16 @@ class
 ncBreakableBrush:ncSurfacePropEntity
 {
 public:
-	void ncBreakableBrush(void);
+    void ncBreakableBrush(void);
 
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void OnRemoveEntity(void);
-	virtual void Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void OnRemoveEntity(void);
+    virtual void Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody);
 private:
 
-	string m_outsideTexture;
+    string m_outsideTexture;
 #endif
 };
 
@@ -36,7 +36,7 @@ void
 ncBreakableBrush::ncBreakableBrush(void)
 {
 #ifdef SERVER
-	m_outsideTexture = "gfx/conback";
+    m_outsideTexture = "gfx/conback";
 #endif
 }
 
@@ -52,36 +52,36 @@ ncBreakableBrush::OnRemoveEntity(void)
 void
 ncBreakableBrush::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
 #if 0
-	/* we want to ideally load out own brush data. however that's not possible yet without engine changes */
-	float targetModel = getmodelindex(GetSpawnString("model"), false);
+    /* we want to ideally load out own brush data. however that's not possible yet without engine changes */
+    float targetModel = getmodelindex(GetSpawnString("model"), false);
 #else
-	SetModel(GetSpawnString("model"));
+    SetModel(GetSpawnString("model"));
 
-	/* TODO: not even passing inside texture yet */
-	ncBreakableBrushManager::CreateBrush(absmin, absmax, m_outsideTexture);
+    /* TODO: not even passing inside texture yet */
+    ncBreakableBrushManager::CreateBrush(absmin, absmax, m_outsideTexture);
 #endif
 }
 
 void
 ncBreakableBrush::Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	SetHealth(99999);
-	SetMovetype(MOVETYPE_PUSH);
-	//EntError("Ow! %i", damage);
+    SetHealth(99999);
+    SetMovetype(MOVETYPE_PUSH);
+    //EntError("Ow! %i", damage);
 }
 
 void
 ncBreakableBrush::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	MakeVulnerable();
-	Hide();
-	SetSolid(SOLID_BSP);
-	SetMovetype(MOVETYPE_PUSH);
-	SetHealth(99999);
+    MakeVulnerable();
+    Hide();
+    SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_PUSH);
+    SetHealth(99999);
 }
 #endif

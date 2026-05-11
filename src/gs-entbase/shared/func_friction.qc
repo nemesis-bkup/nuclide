@@ -37,45 +37,45 @@ This entity was introduced in Half-Life (1998).
 class func_friction:ncEntity
 {
 public:
-	void func_friction(void);
-	
-	virtual void Touch(entity);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
+    void func_friction(void);
+    
+    virtual void Touch(entity);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
 
 private:
-	float m_flFriction;
+    float m_flFriction;
 };
 
 void
 func_friction::Touch(entity eToucher)
 {
-	eToucher.friction = m_flFriction;
+    eToucher.friction = m_flFriction;
 }
 
 void
 func_friction::Respawn(void)
 {
-	SetModel(model);
-	SetMovetype(MOVETYPE_NONE);
-	SetSolid(SOLID_BSPTRIGGER);
+    SetModel(model);
+    SetMovetype(MOVETYPE_NONE);
+    SetSolid(SOLID_BSPTRIGGER);
 
-	solid = SOLID_BSPTRIGGER;
+    solid = SOLID_BSPTRIGGER;
 #ifdef GS_DEVELOPER
-	alpha = 0.5f;
+    alpha = 0.5f;
 #endif
 }
 
 void
 func_friction::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "modifier":
-		m_flFriction = stof(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "modifier":
+        m_flFriction = stof(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 void

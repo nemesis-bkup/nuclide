@@ -22,38 +22,38 @@ ncSpawnPoint::ncSpawnPoint(void)
 void
 ncSpawnPoint::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
 #ifdef SERVER
-	ncHint::PlaceEntityHint(this, "SPAWN");
+    ncHint::PlaceEntityHint(this, "SPAWN");
 #endif
 }
 
 void
 ncSpawnPoint::Respawn(void)
 {
-	vector newMins, newMaxs;
+    vector newMins, newMaxs;
 
-	newMins = GetSpawnVector("mins");
-	newMaxs = GetSpawnVector("maxs");
+    newMins = GetSpawnVector("mins");
+    newMaxs = GetSpawnVector("maxs");
 
-	if (newMins == g_vec_null) {
-		newMins = VEC_HULL_MIN;
-		newMaxs = VEC_HULL_MAX;
-	}
+    if (newMins == g_vec_null) {
+        newMins = VEC_HULL_MIN;
+        newMaxs = VEC_HULL_MAX;
+    }
 
-	SetSolid(SOLID_BBOX);
-	SetSize(newMins, newMaxs);
+    SetSolid(SOLID_BBOX);
+    SetSize(newMins, newMaxs);
 
-	if (CreatedByMap() == true) {
-		SetOriginUnstick(GetSpawnVector("origin"));
-	}
+    if (CreatedByMap() == true) {
+        SetOriginUnstick(GetSpawnVector("origin"));
+    }
 
 #ifdef SERVER
-	RestoreAngles();
+    RestoreAngles();
 #endif
-	
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
-	Disappear();
+    
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
+    Disappear();
 }

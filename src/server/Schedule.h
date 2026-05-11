@@ -17,11 +17,11 @@
 /** @defgroup npc_schedules NPC: Schedules & Tasks
     @brief Scheduled tasks for computer controlled characters
     @ingroup npc
-	@ingroup server
+    @ingroup server
 
     # Schedules
 
-	Computer controlled NPC actors execute [tasks](@ref npc_tasks)
+    Computer controlled NPC actors execute [tasks](@ref npc_tasks)
 within the game-world as part of a **Schedule**.
 
 ## Using Schedules
@@ -33,10 +33,10 @@ A schedule decl looks something like this:
 ```
 scheduleDef dodgeEnemyFire
 {
-	"task_1"           "FindDodgeDirection 3"
-	"task_2"           "Jump"
+    "task_1"           "FindDodgeDirection 3"
+    "task_2"           "Jump"
 
-	"OnLightDamage"    "EndTask"
+    "OnLightDamage"    "EndTask"
 }
 ```
 
@@ -90,36 +90,36 @@ class
 ncSchedule:ncIO
 {
 public:
-	void ncSchedule(void);
+    void ncSchedule(void);
 
-	/* overrides */
-	virtual void OnRemoveEntity(void);
+    /* overrides */
+    virtual void OnRemoveEntity(void);
 
-	/** Creates a schedule for an NPC and returns it. */
-	nonvirtual ncSchedule CreateSchedule(ncActor targetActor, string scheduleDecl);
-	nonvirtual void SetTarget(ncEntity target);
-	nonvirtual ncEntity GetTarget(void);
-	nonvirtual void Think(void);
-	nonvirtual bool ProgressOnMovement(void);
-	nonvirtual void SetFailSchedule(string);
+    /** Creates a schedule for an NPC and returns it. */
+    nonvirtual ncSchedule CreateSchedule(ncActor targetActor, string scheduleDecl);
+    nonvirtual void SetTarget(ncEntity target);
+    nonvirtual ncEntity GetTarget(void);
+    nonvirtual void Think(void);
+    nonvirtual bool ProgressOnMovement(void);
+    nonvirtual void SetFailSchedule(string);
 
 private:
-	string m_name;
-	int m_taskCount;
-	int m_onTask;
-	ncActor m_controllingActor;
-	ncDict m_scheduleDecl;
-	ncEntity m_eTarget;
-	bool m_inProgress;
-	bool m_bProgressOnMovement;
-	string m_failSchedule;
+    string m_name;
+    int m_taskCount;
+    int m_onTask;
+    ncActor m_controllingActor;
+    ncDict m_scheduleDecl;
+    ncEntity m_eTarget;
+    bool m_inProgress;
+    bool m_bProgressOnMovement;
+    string m_failSchedule;
 
-	nonvirtual bool AssignActor(ncActor targetActor);
-	nonvirtual void Advance(void);
-	nonvirtual void AdvanceLater(float timeDelta);
-	nonvirtual void Cancel(void);
-	nonvirtual void Message(string);
-	nonvirtual bool InProgress(void);
+    nonvirtual bool AssignActor(ncActor targetActor);
+    nonvirtual void Advance(void);
+    nonvirtual void AdvanceLater(float timeDelta);
+    nonvirtual void Cancel(void);
+    nonvirtual void Message(string);
+    nonvirtual bool InProgress(void);
 };
 
 /** @} */ // end of npc_schedules

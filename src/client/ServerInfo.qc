@@ -17,107 +17,107 @@
 void
 ncServerInfoManager::ncServerInfoManager(void)
 {
-	m_hostName = "";
-	m_hostAddress = "";
-	m_maxClients = 0i;
-	m_maxPlayers = 0i;
-	m_maxSpectators = 0i;
-	
-	m_maxClientsString = "";
-	m_maxPlayersString = "";
-	m_maxSpectatorsString = "";
+    m_hostName = "";
+    m_hostAddress = "";
+    m_maxClients = 0i;
+    m_maxPlayers = 0i;
+    m_maxSpectators = 0i;
+    
+    m_maxClientsString = "";
+    m_maxPlayersString = "";
+    m_maxSpectatorsString = "";
 }
 
 void
 ncServerInfoManager::Init(void)
 {
-	/* allocations happen here */
+    /* allocations happen here */
 }
 
 void
 ncServerInfoManager::Shutdown(void)
 {
-	/* deallocations happen here */
+    /* deallocations happen here */
 }
 
 string
 ncServerInfoManager::HostName(void)
 {
-	return (m_hostName);
+    return (m_hostName);
 }
 
 string
 ncServerInfoManager::HostAddress(void)
 {
-	return (m_mapName);
+    return (m_mapName);
 }
 
 string
 ncServerInfoManager::MapName(void)
 {
-	return (m_hostAddress);
+    return (m_hostAddress);
 }
 
 int
 ncServerInfoManager::MaxClients(void)
 {
-	return (m_maxClients);
+    return (m_maxClients);
 }
 
 int
 ncServerInfoManager::MaxPlayers(void)
 {
-	return (m_maxPlayers);
+    return (m_maxPlayers);
 }
 
 int
 ncServerInfoManager::MaxSpectators(void)
 {
-	return (m_maxSpectators);
+    return (m_maxSpectators);
 }
 
 string
 ncServerInfoManager::MaxClientsString(void)
 {
-	return (m_maxClientsString);
+    return (m_maxClientsString);
 }
 
 string
 ncServerInfoManager::MaxPlayersString(void)
 {
-	return (m_maxPlayersString);
+    return (m_maxPlayersString);
 }
 
 string
 ncServerInfoManager::MaxSpectatorsString(void)
 {
-	return (m_maxSpectatorsString);
+    return (m_maxSpectatorsString);
 }
 
 void
 ncServerInfoManager::UpdateCache(void)
 {
-	m_hostName = serverinfo.GetString("hostname");
-	m_hostAddress = serverinfo.GetString("ip");
-	m_mapName = serverinfo.GetString("mapname");
+    m_hostName = serverinfo.GetString("hostname");
+    m_hostAddress = serverinfo.GetString("ip");
+    m_mapName = serverinfo.GetString("mapname");
 
-	m_maxClientsString = serverinfo.GetString("maxclients");
-	m_maxPlayersString = serverinfo.GetString("sv_playerslots");
-	m_maxSpectatorsString = serverinfo.GetString("maxspectators");
-	m_maxClients = stoi(m_maxClientsString);
-	m_maxPlayers = stoi(m_maxPlayersString);
-	m_maxSpectators = stoi(m_maxSpectatorsString);
+    m_maxClientsString = serverinfo.GetString("maxclients");
+    m_maxPlayersString = serverinfo.GetString("sv_playerslots");
+    m_maxSpectatorsString = serverinfo.GetString("maxspectators");
+    m_maxClients = stoi(m_maxClientsString);
+    m_maxPlayers = stoi(m_maxPlayersString);
+    m_maxSpectators = stoi(m_maxSpectatorsString);
 }
 
 void
 CSQC_ServerInfoChanged(void)
 {
-	static ncServerInfoManager g_serverInfo;
+    static ncServerInfoManager g_serverInfo;
 
-	if (!g_serverInfo) {
-		g_serverInfo = spawn(ncServerInfoManager);
-		g_serverInfo.Init();
-	}
+    if (!g_serverInfo) {
+        g_serverInfo = spawn(ncServerInfoManager);
+        g_serverInfo.Init();
+    }
 
-	g_serverInfo.UpdateCache();
+    g_serverInfo.UpdateCache();
 }

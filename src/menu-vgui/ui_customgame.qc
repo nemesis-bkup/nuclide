@@ -18,80 +18,80 @@ int g_iCustomGameInitialized;
 
 void UI_CustomGame_Show ( void )
 {
-	static vguiPanel winCustomGame;
-	static vguiList lsbGames;
-	static vguiScrollBar scrlGames;
-	static vguiButton btnLoad;
-	static vguiButton btnDisable;
+    static vguiPanel winCustomGame;
+    static vguiList lsbGames;
+    static vguiScrollBar scrlGames;
+    static vguiButton btnLoad;
+    static vguiButton btnDisable;
 
-	static void CustomGame_Play ( void ) {
-		GameLibrary_Activate(lsbGames.GetSelected() + 1);
-	}
-	static void CustomGame_Disable ( void ) {
-		GameLibrary_Activate( 0 );
-	}
+    static void CustomGame_Play ( void ) {
+        GameLibrary_Activate(lsbGames.GetSelected() + 1);
+    }
+    static void CustomGame_Disable ( void ) {
+        GameLibrary_Activate( 0 );
+    }
 
-	static void CustomGame_ScrollUpdate ( void ) {
-		scrlGames.SetValue( lsbGames.GetOffset() );
-	}
-	static void CustomGame_ListUpdate ( void ) {
-		lsbGames.SetOffset( scrlGames.GetValue(), FALSE );
-	}
+    static void CustomGame_ScrollUpdate ( void ) {
+        scrlGames.SetValue( lsbGames.GetOffset() );
+    }
+    static void CustomGame_ListUpdate ( void ) {
+        lsbGames.SetOffset( scrlGames.GetValue(), FALSE );
+    }
 
-	if ( !g_iCustomGameInitialized ) {
-		g_iCustomGameInitialized = TRUE;
+    if ( !g_iCustomGameInitialized ) {
+        g_iCustomGameInitialized = TRUE;
 
-		GameLibrary_InitCustom();
+        GameLibrary_InitCustom();
 
-		winCustomGame = spawn( vguiPanel );
-		winCustomGame.SetTitle( "#BTN_CUSTOMGAME" );
-		winCustomGame.SetSize( [256,180] );
-		winCustomGame.SetIcon( "gfx/icon16/rainbow" );
+        winCustomGame = spawn( vguiPanel );
+        winCustomGame.SetTitle( "#BTN_CUSTOMGAME" );
+        winCustomGame.SetSize( [256,180] );
+        winCustomGame.SetIcon( "gfx/icon16/rainbow" );
 
-		lsbGames = spawn( vguiList );
-		lsbGames.SetSize( [192, 96] );
-		lsbGames.SetPos( [8, 32] );
-		lsbGames.SetItemCount( GameLibrary_GetGameCount() );
-		lsbGames.CallOnScroll( CustomGame_ScrollUpdate );
+        lsbGames = spawn( vguiList );
+        lsbGames.SetSize( [192, 96] );
+        lsbGames.SetPos( [8, 32] );
+        lsbGames.SetItemCount( GameLibrary_GetGameCount() );
+        lsbGames.CallOnScroll( CustomGame_ScrollUpdate );
 
-		for ( int i = 1; i < GameLibrary_GetGameCount(); i++ ) {
-			lsbGames.AddItem( GameLibrary_GetGameInfo(i, GAMEINFO_NAME) );
-		}
+        for ( int i = 1; i < GameLibrary_GetGameCount(); i++ ) {
+            lsbGames.AddItem( GameLibrary_GetGameInfo(i, GAMEINFO_NAME) );
+        }
 
-		scrlGames = spawn( vguiScrollBar );
-		scrlGames.SetLength( 96 );
-		scrlGames.SetPos( [201,32] );
-		scrlGames.SetMin( 0 );
-		scrlGames.SetStep( 1 );
-		scrlGames.SetMax( lsbGames.GetMaxVisibleItems() );
-		scrlGames.CallOnChange( CustomGame_ListUpdate );
+        scrlGames = spawn( vguiScrollBar );
+        scrlGames.SetLength( 96 );
+        scrlGames.SetPos( [201,32] );
+        scrlGames.SetMin( 0 );
+        scrlGames.SetStep( 1 );
+        scrlGames.SetMax( lsbGames.GetMaxVisibleItems() );
+        scrlGames.CallOnChange( CustomGame_ListUpdate );
 
-		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "#BTN_LOAD" );
-		btnLoad.SetIcon( "gfx/icon16/control_play" );
-		btnLoad.SetPos( [8,132] );
-		btnLoad.SetSize([64,24]);
-		btnLoad.SetFunc( CustomGame_Play );
+        btnLoad = spawn( vguiButton );
+        btnLoad.SetTitle( "#BTN_LOAD" );
+        btnLoad.SetIcon( "gfx/icon16/control_play" );
+        btnLoad.SetPos( [8,132] );
+        btnLoad.SetSize([64,24]);
+        btnLoad.SetFunc( CustomGame_Play );
 
-		btnDisable = spawn( vguiButton );
-		btnDisable.SetTitle( "#BTN_DISABLE" );
-		btnDisable.SetIcon( "gfx/icon16/control_stop" );
-		btnDisable.SetPos( [8 + 80,132] );
-		btnDisable.SetSize([64,24]);
-		btnDisable.SetFunc( CustomGame_Disable );
+        btnDisable = spawn( vguiButton );
+        btnDisable.SetTitle( "#BTN_DISABLE" );
+        btnDisable.SetIcon( "gfx/icon16/control_stop" );
+        btnDisable.SetPos( [8 + 80,132] );
+        btnDisable.SetSize([64,24]);
+        btnDisable.SetFunc( CustomGame_Disable );
 
-		/* no reason to go back to the already running game */
-		if (cvar_string("fs_game") == GAME_DIR) {
-			btnDisable.Hide();
-		}
+        /* no reason to go back to the already running game */
+        if (cvar_string("fs_game") == GAME_DIR) {
+            btnDisable.Hide();
+        }
 
-		g_uiDesktop.Add( winCustomGame );
-		winCustomGame.Add( lsbGames );
-		winCustomGame.Add( scrlGames );
-		winCustomGame.Add( btnLoad );
-		winCustomGame.Add( btnDisable );
-	}
+        g_uiDesktop.Add( winCustomGame );
+        winCustomGame.Add( lsbGames );
+        winCustomGame.Add( scrlGames );
+        winCustomGame.Add( btnLoad );
+        winCustomGame.Add( btnDisable );
+    }
 
-	winCustomGame.Show();
-	winCustomGame.SetPos( ( g_vidsize / 2 ) - ( winCustomGame.GetSize() / 2 ) );
+    winCustomGame.Show();
+    winCustomGame.SetPos( ( g_vidsize / 2 ) - ( winCustomGame.GetSize() / 2 ) );
 }

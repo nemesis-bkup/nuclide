@@ -20,36 +20,36 @@
 void
 URI_Get_Callback(float uriID, float code, string data, int resourcebytes)
 {
-	switch (uriID) {
-	case ACTIVITYPUB_ACCOUNTS:
-		ActivityPub_UpdatePlayerInfo(data);
-		break;
+    switch (uriID) {
+    case ACTIVITYPUB_ACCOUNTS:
+        ActivityPub_UpdatePlayerInfo(data);
+        break;
     case MATRIX_ACCOUNTS:
         Matrix_UpdatePlayerInfo(data);
         break;
-	case MATRIX_MXC:
+    case MATRIX_MXC:
         Matrix_UpdatePlayerAvatar(data);
-		break;
-	case ARCHIVE_ITEM_WEB:
-        Archive_ParseItemWeb(data);
-		break;
-	case ARCHIVE_ITEM_TEXT:
-        Archive_ParseItemText(data);
-		break;
-	case ARCHIVE_ITEM_VIDEO:
-        Archive_ParseItemVideo(data);
-		break;
-	case ARCHIVE_ITEM_AUDIO:
-        Archive_ParseItemAudio(data);
-		break;
-	case ARCHIVE_ITEM_SOFTWARE:
-        Archive_ParseItemSoftware(data);
-		break;
-	case ARCHIVE_ITEM_IMAGE:
-        Archive_ParseItemImage(data);
-		break;
-	default:
-		ncError("Unknown request id %d with code %d", uriID, code);
-	}
+        break;
+    case ARCHIVE_ITEM_WEB:
+        Archive_ParseItem(data, ARCHIVE_ITEM_WEB);
+        break;
+    case ARCHIVE_ITEM_TEXT:
+        Archive_ParseItem(data, ARCHIVE_ITEM_TEXT);
+        break;
+    case ARCHIVE_ITEM_VIDEO:
+        Archive_ParseItem(data, ARCHIVE_ITEM_VIDEO);
+        break;
+    case ARCHIVE_ITEM_AUDIO:
+        Archive_ParseItem(data, ARCHIVE_ITEM_AUDIO);
+        break;
+    case ARCHIVE_ITEM_SOFTWARE:
+        Archive_ParseItem(data, ARCHIVE_ITEM_SOFTWARE);
+        break;
+    case ARCHIVE_ITEM_IMAGE:
+        Archive_ParseItem(data, ARCHIVE_ITEM_IMAGE);
+        break;
+    default:
+        ncError("Unknown request id %d with code %d", uriID, code);
+    }
 }
 #endif

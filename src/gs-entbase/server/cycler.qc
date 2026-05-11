@@ -41,10 +41,10 @@ class
 cycler:ncSurfacePropEntity
 {
 public:
-	void cycler(void);
-	
-	virtual void Respawn(void);
-	virtual void Pain(entity, entity, int, vector, vector, int);
+    void cycler(void);
+    
+    virtual void Respawn(void);
+    virtual void Pain(entity, entity, int, vector, vector, int);
 };
 
 void
@@ -55,29 +55,29 @@ cycler::cycler(void)
 void
 cycler::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetSolid(SOLID_BBOX);
-	MakeVulnerable();
-	EnableAimAssist();
-	SetHealth(9999);
+    SetSolid(SOLID_BBOX);
+    MakeVulnerable();
+    EnableAimAssist();
+    SetHealth(9999);
 
-	if (serverkeyfloat("*bspversion") == BSPVER_HL) {
-		SetSize(VEC_HULL_MIN + [0,0,36], VEC_HULL_MAX + [0,0,36]);
-	} else {
-		SetSize(GetModelMins(), GetModelMaxs());
-	}
+    if (serverkeyfloat("*bspversion") == BSPVER_HL) {
+        SetSize(VEC_HULL_MIN + [0,0,36], VEC_HULL_MAX + [0,0,36]);
+    } else {
+        SetSize(GetModelMins(), GetModelMaxs());
+    }
 }
 
 void
 cycler::Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	if (frame >= modelframecount(modelindex)) {
-		SetFrame(0);
-	} else {
-		SetFrame(GetFrame() + 1);
-	}
+    if (frame >= modelframecount(modelindex)) {
+        SetFrame(0);
+    } else {
+        SetFrame(GetFrame() + 1);
+    }
 
-	frame1time = 0.0f;
-	SetHealth(9999);
+    frame1time = 0.0f;
+    SetHealth(9999);
 }

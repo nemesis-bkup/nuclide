@@ -25,12 +25,12 @@ inside its `ncIO::Respawn()` reimplementation.
 class ncPointTrigger:ncEntity
 {
 public:
-	void ncPointTrigger(void);
+    void ncPointTrigger(void);
 
-	/* overrides */
-	virtual void Respawn(void);
-	virtual void DebugDraw(void);
+    /* overrides */
+    virtual void Respawn(void);
+    virtual void DebugDraw(void);
 
-	/** Sets up a point entity trigger with no size. */
-	nonvirtual void InitPointTrigger(void);
+    /** Sets up a point entity trigger with no size. */
+    nonvirtual void InitPointTrigger(void);
 };

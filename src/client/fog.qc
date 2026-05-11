@@ -19,8 +19,8 @@ var string g_strFogParms;
 void
 Fog_Update(void)
 {
-	if (g_strFogParms != serverkey("fogparms")) {
-		g_strFogParms = serverkey("fogparms");
-		localcmd(sprintf("fog %s\n", g_strFogParms));
-	}
+    if (g_strFogParms != serverkey("fogparms")) {
+        g_strFogParms = serverkey("fogparms");
+        ncCommand("fog %s", g_strFogParms);
+    }
 }

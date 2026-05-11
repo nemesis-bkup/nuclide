@@ -26,16 +26,16 @@ An example file looks like this:
 
 ```
 // render modes
-RM_NORMAL			0
-RM_COLOR			1
-RM_TEXTURE			2
-RM_GLOW				3
-RM_SOLID			4
-RM_ADDITIVE			5
-RM_FULLBRIGHT		6
-RM_ADDFRAC			7
-RM_WORLDGLOW		9
-RM_DONTRENDER		10
+RM_NORMAL           0
+RM_COLOR            1
+RM_TEXTURE          2
+RM_GLOW             3
+RM_SOLID            4
+RM_ADDITIVE         5
+RM_FULLBRIGHT       6
+RM_ADDFRAC          7
+RM_WORLDGLOW        9
+RM_DONTRENDER       10
 ```
 
 Within [EntityDefs](@ref entitydef) files, you will then be able to set a given key to the value

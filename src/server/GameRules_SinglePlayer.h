@@ -22,35 +22,35 @@ Can still be overriden with a singleplayer.dat etc.
 class ncGameRule_SinglePlayer:ncRuleDelegate
 {
 public:
-	void ncGameRule_SinglePlayer(void);
+    void ncGameRule_SinglePlayer(void);
 
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void RestoreComplete(void);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void RestoreComplete(void);
 
-	/* level transitions */
-	/** Overridable: Called to set up new level parms for any ncPlayer. */
-	virtual void LevelNewParms(void);
-	/** Overridable: Called to store parms for a specific ncPlayer. */
-	virtual void LevelChangeParms(ncPlayer);
-	/** Overridable: Called to decode parms for a specific ncPlayer. */
-	virtual void LevelDecodeParms(ncPlayer);
+    /* level transitions */
+    /** Overridable: Called to set up new level parms for any ncPlayer. */
+    virtual void LevelNewParms(void);
+    /** Overridable: Called to store parms for a specific ncPlayer. */
+    virtual void LevelChangeParms(ncPlayer);
+    /** Overridable: Called to decode parms for a specific ncPlayer. */
+    virtual void LevelDecodeParms(ncPlayer);
 
-	/** Overridable: Called when all map entities have initialized. */
-	virtual void InitPostEnts(void);
+    /** Overridable: Called when all map entities have initialized. */
+    virtual void InitPostEnts(void);
 
-	/* logic */
-	/** Overridable: Called from initents(). */
-	virtual void Precache(void);
+    /* logic */
+    /** Overridable: Called from initents(). */
+    virtual void Precache(void);
 
-	/** Overridable: Called from SV_Shutdown(). */
-	virtual void Shutdown(void);
+    /** Overridable: Called from SV_Shutdown(). */
+    virtual void Shutdown(void);
 
-	/** Overridable: Called every server frame. */
-	virtual void FrameStart(void);
+    /** Overridable: Called every server frame. */
+    virtual void FrameStart(void);
 
 
-	/** Returns the title of the gamemode running. */
-	virtual string Title(void);
+    /** Returns the title of the gamemode running. */
+    virtual string Title(void);
 };

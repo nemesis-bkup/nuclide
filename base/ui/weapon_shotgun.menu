@@ -1,0 +1,26 @@
+{
+	assetglobaldef
+	{
+		font fonts/font16 16
+	}
+
+
+	menuDef
+	{
+		name "Shotgun HUD"
+		rect 0 0 128 128
+		visible 1
+
+		itemDef
+		{
+			name WeaponAmmo
+			rect 8 8 128 128
+			forecolor 1 1 1 1
+			decoration
+			visible 1
+			ownerdraw CG_PLAYER_AMMO_VALUE
+			text "25"
+		}
+
+	}
+}

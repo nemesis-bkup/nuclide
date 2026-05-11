@@ -37,9 +37,9 @@ class
 game_team_set:ncPointTrigger
 {
 public:
-	void game_team_set(void);
+    void game_team_set(void);
 
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -50,22 +50,22 @@ game_team_set::game_team_set(void)
 void
 game_team_set::Trigger(entity activatorEntity, triggermode_t state)
 {
-	game_team_master toChange = __NULL__;
+    game_team_master toChange = __NULL__;
 
-	if (GetMaster(activatorEntity) == FALSE) {
-		return;
-	}
+    if (GetMaster(activatorEntity) == FALSE) {
+        return;
+    }
 
-	toChange = (game_team_master)GetTargetEntity();
+    toChange = (game_team_master)GetTargetEntity();
 
-	if (!toChange) {
-		EntWarning("Unable to find game_team_master named %S", GetTriggerTarget());
-		return;
-	}
+    if (!toChange) {
+        EntWarning("Unable to find game_team_master named %S", GetTriggerTarget());
+        return;
+    }
 
-	toChange.SetTeamIndex((int)activatorEntity.team);
+    toChange.SetTeamIndex((int)activatorEntity.team);
 
-	if (HasSpawnFlags(1)) {
-		Destroy();
-	}
+    if (HasSpawnFlags(1)) {
+        Destroy();
+    }
 }

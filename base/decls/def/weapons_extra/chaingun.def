@@ -1,0 +1,46 @@
+entityDef weapon_chaingun
+{
+	"editor_color"		".3 .3 1"
+	"editor_mins"		"-16 -16 -16"
+	"editor_maxs"		"16 16 16"
+	"editor_usage"		"Chaingun"
+	"editor_rotatable"	"1"
+
+	"inherit"			"weapon_base"
+	"model"				"models/g_chain.vvm"
+	"model_view"		"models/v_chain.vvm"
+	"spin"			"1"
+
+	// weapon specific
+	"def_onFire"		"projectile_chaingun"
+	"inv_name"			"Chaingun"
+	"ammoType" 			"ammo_nails"
+	"ammoRequired" 		"1"
+	"ammoPerShot"		"1"
+	"punchAngle"		"-1.5 0 0"
+	"inv_ammo_nails"	"50"
+	"fireRate"			"0.05"
+
+	"act_idle"			"0"
+	"act_fireStart"		"1"
+	"act_loop"		    "2"
+	"act_fireStop"		"1"
+
+
+	"snd_fire"			"weapon_chaingun.fire"
+
+	// ncWeapon specific
+	"ammoIcon"			"pics/a_bullets.pcx"
+	"hudSlot"			"4"
+	"weight"			"10"
+    "muzzleRelativeOffset"  "18 0 -4"
+	"smoke_muzzle"		"muzzle.smoke"
+}
+
+entityDef projectile_chaingun
+{
+	"inherit"			"projectile_bullet_base"
+	"damage"			"8"
+	"hitscans"			"1"
+	"spread"			"0.1220703125 0.06103515625"
+}

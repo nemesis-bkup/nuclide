@@ -25,38 +25,38 @@ class
 ncTimer:ncEntity
 {
 public:
-	void ncTimer(void);
+    void ncTimer(void);
 
-	/** When called, creates and sets up a new timer, starts immediately. */
-	static ncTimer ScheduleTimer(entity, void(), float, bool);
+    /** When called, creates and sets up a new timer, starts immediately. */
+    static ncTimer ScheduleTimer(entity, void(), float, bool);
 
-	/** When called, creates a self garbage collecting version of a timer. */
-	static ncTimer TemporaryTimer(entity, void(), float, bool);
+    /** When called, creates a self garbage collecting version of a timer. */
+    static ncTimer TemporaryTimer(entity, void(), float, bool);
 
-	/** Runs the timer that's set up. */
-	virtual void RunTimer(void);
+    /** Runs the timer that's set up. */
+    virtual void RunTimer(void);
 
-	nonvirtual bool IsRunning(void);
+    nonvirtual bool IsRunning(void);
 
-	/** When called, sets up a timer that has to be run manually later. */
-	nonvirtual void SetupTimer(entity receiver, void() call, float interval, bool repeats);
+    /** When called, sets up a timer that has to be run manually later. */
+    nonvirtual void SetupTimer(entity receiver, void() call, float interval, bool repeats);
 
-	/** Invalidates the timer when called. */
-	nonvirtual void StopTimer(void);
+    /** Invalidates the timer when called. */
+    nonvirtual void StopTimer(void);
 
-	nonvirtual void WipeEntityTimers(entity targetEntity);
+    nonvirtual void WipeEntityTimers(entity targetEntity);
 
-	virtual void OnRemoveEntity(void);
+    virtual void OnRemoveEntity(void);
 
 #ifdef SERVER
-	virtual void Save(float);
-	virtual void Restore(string, string);
+    virtual void Save(float);
+    virtual void Restore(string, string);
 #endif
 
 private:
-	float m_flTime;
-	bool m_bRepeats;
+    float m_flTime;
+    bool m_bRepeats;
 
-	virtual void _TimerThink(void);
-	virtual void _TempTimerThink(void);
+    virtual void _TimerThink(void);
+    virtual void _TempTimerThink(void);
 };

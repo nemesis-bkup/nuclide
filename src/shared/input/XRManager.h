@@ -33,18 +33,18 @@ You can take advantage of **Extended Reality**, aka **XR** by using the `openxr`
 class
 ncXRManager
 {
-	/** Called internally by client/server modules for when a player joins. */
-	nonvirtual void Init(entity);
-	/** Called internally by client/server modules for when a player leaves. */
-	nonvirtual void Shutdown(entity);
-	/** Returns if XR features are available on the entity. */
-	nonvirtual bool Available(entity);
-	/** Called on client/server modules after an input packet has been dispatched. */
-	nonvirtual void InputFrame(entity);
+    /** Called internally by client/server modules for when a player joins. */
+    nonvirtual void Init(entity);
+    /** Called internally by client/server modules for when a player leaves. */
+    nonvirtual void Shutdown(entity);
+    /** Returns if XR features are available on the entity. */
+    nonvirtual bool Available(entity);
+    /** Called on client/server modules after an input packet has been dispatched. */
+    nonvirtual void InputFrame(entity);
 
 #ifdef CLIENT
-	/** Sets up view properties from a client entity before a rendering call. */
-	nonvirtual void UpdateView(entity);
+    /** Sets up view properties from a client entity before a rendering call. */
+    nonvirtual void UpdateView(entity);
 #endif
 };
 

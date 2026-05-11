@@ -61,18 +61,18 @@ var bool g_firstLoaded = false;
 void
 Plug_Load(void)
 {
-	if (g_firstLoaded == false) {
-		printf("Hello world!\n");
-		g_firstLoaded = true;
-	} else {
-		printf("Hello again!\n");
-	}
+    if (g_firstLoaded == false) {
+        printf("Hello world!\n");
+        g_firstLoaded = true;
+    } else {
+        printf("Hello again!\n");
+    }
 }
 
 void
 Plug_Shutdown(void)
 {
-	printf("See you again!\n");
+    printf("See you again!\n");
 }
 ```
 
@@ -101,50 +101,50 @@ The underlying return values and parameters are inherited from its class counter
 class ncAddonDelegate
 {
 public:
-	void ncAddonDelegate(void);
+    void ncAddonDelegate(void);
 
-	/** Overridable: Called when the plugin gets loaded. */
-	virtual void Load(void);
-	/** Overridable: Called when the plugin gets unloaded. */
-	virtual void Shutdown(void);
+    /** Overridable: Called when the plugin gets loaded. */
+    virtual void Load(void);
+    /** Overridable: Called when the plugin gets unloaded. */
+    virtual void Shutdown(void);
 
-	/** Overridable: Called when the server gets activated and the addon is loaded alongside with it. Called after Plug_Load. */
-	virtual void ServerActivate(void);
-	/** Overridable: Called when the addon is loaded after server activation. Called after Plug_Load. */
-	virtual void LateActivate(void);
+    /** Overridable: Called when the server gets activated and the addon is loaded alongside with it. Called after Plug_Load. */
+    virtual void ServerActivate(void);
+    /** Overridable: Called when the addon is loaded after server activation. Called after Plug_Load. */
+    virtual void LateActivate(void);
 
-	/** Overridable: Called when the server issues a console command. */
-	virtual bool ConsoleCommand(ncPlayer,string);
-	/** Overridable: Called when a client issues a client command. */
-	virtual bool ClientCommand(ncClient, string);
-	/** Overridable: Called when a ncPlayer joins the server. */
-	virtual void PlayerConnect(ncPlayer);
-	/** Overridable: Called when a ncPlayer leaves the server. */
-	virtual void PlayerDisconnect(ncPlayer);
-	/** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
-	virtual void PlayerSpawn(ncPlayer);
-	/** Overridable: Called when a ncPlayer dies in the game. */
-	virtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
-	/** Overridable:: Called when an NPC gets killed. */
-	virtual void NPCDeath(ncActor, ncEntity, ncEntity);
+    /** Overridable: Called when the server issues a console command. */
+    virtual bool ConsoleCommand(ncPlayer,string);
+    /** Overridable: Called when a client issues a client command. */
+    virtual bool ClientCommand(ncClient, string);
+    /** Overridable: Called when a ncPlayer joins the server. */
+    virtual void PlayerConnect(ncPlayer);
+    /** Overridable: Called when a ncPlayer leaves the server. */
+    virtual void PlayerDisconnect(ncPlayer);
+    /** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
+    virtual void PlayerSpawn(ncPlayer);
+    /** Overridable: Called when a ncPlayer dies in the game. */
+    virtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
+    /** Overridable:: Called when an NPC gets killed. */
+    virtual void NPCDeath(ncActor, ncEntity, ncEntity);
 
-	/** Called to link functions defined within multiprogs with the delegate's methods. */
-	virtual void LinkProgs(void);
+    /** Called to link functions defined within multiprogs with the delegate's methods. */
+    virtual void LinkProgs(void);
 
-	/** Creates an addon delegate from a progs handle. 
-	@param addonName is the name of the addon. Required for look-up purposes.
-	@param progsHandle is the valid handle of a progs loaded via addprogs(). */
-	nonvirtual ncAddonDelegate CreateFromProgs(string addonName, float progsHandle);
+    /** Creates an addon delegate from a progs handle. 
+    @param addonName is the name of the addon. Required for look-up purposes.
+    @param progsHandle is the valid handle of a progs loaded via addprogs(). */
+    nonvirtual ncAddonDelegate CreateFromProgs(string addonName, float progsHandle);
 
-	/** Closes the addon. */
-	nonvirtual void Close(void);
+    /** Closes the addon. */
+    nonvirtual void Close(void);
 
-	/** Returns the name of the addon. Generally the name (without extension) of the progs. */
-	nonvirtual string Name(void);
+    /** Returns the name of the addon. Generally the name (without extension) of the progs. */
+    nonvirtual string Name(void);
 
 private:
-	float m_progHandle;
-	string m_name;
+    float m_progHandle;
+    string m_name;
 };
 
 #define ADDON_LINK(y, z) this.y = externvalue(m_progHandle, z); if (!this.y) { this.y = ncAddonDelegate::y; }

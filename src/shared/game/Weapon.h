@@ -16,60 +16,60 @@
 
 typedef enumflags
 {
-	WEAPONFL_CHANGED_MODELINDEX,
-	WEAPONFL_CHANGED_ORIGIN,
-	WEAPONFL_CHANGED_ANGLES,
-	WEAPONFL_CHANGED_VELOCITY,
-	WEAPONFL_CHANGED_ANGULARVELOCITY,
-	WEAPONFL_CHANGED_SIZE,
-	WEAPONFL_CHANGED_FLAGS,
-	WEAPONFL_CHANGED_SOLID,
-	WEAPONFL_CHANGED_FRAME,
-	WEAPONFL_CHANGED_SKIN,
-	WEAPONFL_CHANGED_MOVETYPE,
-	WEAPONFL_CHANGED_EFFECTS,
-	WEAPONFL_CHANGED_BODY,
-	WEAPONFL_CHANGED_SCALE,
-	WEAPONFL_CHANGED_ENTITYDEF,
-	WEAPONFL_CHANGED_CLIP,
-	WEAPONFL_CHANGED_CHAIN,
-	WEAPONFL_CHANGED_STATE,
-	WEAPONFL_CHANGED_NEXTWEAPON,
-	WEAPONFL_CHANGED_PREVWEAPON,
+    WEAPONFL_CHANGED_MODELINDEX,
+    WEAPONFL_CHANGED_ORIGIN,
+    WEAPONFL_CHANGED_ANGLES,
+    WEAPONFL_CHANGED_VELOCITY,
+    WEAPONFL_CHANGED_ANGULARVELOCITY,
+    WEAPONFL_CHANGED_SIZE,
+    WEAPONFL_CHANGED_FLAGS,
+    WEAPONFL_CHANGED_SOLID,
+    WEAPONFL_CHANGED_FRAME,
+    WEAPONFL_CHANGED_SKIN,
+    WEAPONFL_CHANGED_MOVETYPE,
+    WEAPONFL_CHANGED_EFFECTS,
+    WEAPONFL_CHANGED_BODY,
+    WEAPONFL_CHANGED_SCALE,
+    WEAPONFL_CHANGED_ENTITYDEF,
+    WEAPONFL_CHANGED_CLIP,
+    WEAPONFL_CHANGED_CHAIN,
+    WEAPONFL_CHANGED_STATE,
+    WEAPONFL_CHANGED_NEXTWEAPON,
+    WEAPONFL_CHANGED_PREVWEAPON,
 } nsweapon_changed_t;
 
 typedef enum
 {
-	WEAPONSTATE_IDLE,
-	WEAPONSTATE_COCK,
-	WEAPONSTATE_CHARGING,
-	WEAPONSTATE_FIRELOOP,
-	WEAPONSTATE_RELEASED,
-	WEAPONSTATE_OVERHEATED,
-	WEAPONSTATE_DRAW,
-	WEAPONSTATE_RELOAD_START,
-	WEAPONSTATE_RELOAD,
-	WEAPONSTATE_RELOAD_END,
-	WEAPONSTATE_BURSTFIRING
+    WEAPONSTATE_IDLE,
+    WEAPONSTATE_COCK,
+    WEAPONSTATE_CHARGING,
+    WEAPONSTATE_FIRELOOP,
+    WEAPONSTATE_RELEASED,
+    WEAPONSTATE_OVERHEATED,
+    WEAPONSTATE_DRAW,
+    WEAPONSTATE_RELOAD_START,
+    WEAPONSTATE_RELOAD,
+    WEAPONSTATE_RELOAD_END,
+    WEAPONSTATE_BURSTFIRING
 } nsweapon_state_t;
 
 string nsweapon_state_s[] =
 {
-	"WEAPONSTATE_IDLE",
-	"WEAPONSTATE_RELOAD_START",
-	"WEAPONSTATE_RELOAD",
-	"WEAPONSTATE_RELOAD_END",
-	"WEAPONSTATE_CHARGING",
-	"WEAPONSTATE_FIRELOOP",
-	"WEAPONSTATE_RELEASED",
-	"WEAPONSTATE_OVERHEATED"
+    "WEAPONSTATE_IDLE",
+    "WEAPONSTATE_RELOAD_START",
+    "WEAPONSTATE_RELOAD",
+    "WEAPONSTATE_RELOAD_END",
+    "WEAPONSTATE_CHARGING",
+    "WEAPONSTATE_FIRELOOP",
+    "WEAPONSTATE_RELEASED",
+    "WEAPONSTATE_OVERHEATED"
 };
 
 typedef enum
 {
-	WEPEVENT_FIRED,
-	WEPEVENT_RELEASED,
-	WEPEVENT_RELOADED
+    WEPEVENT_FIRED,
+    WEPEVENT_RELEASED,
+    WEPEVENT_RELOADED
 } nsweapon_event_t;
 
 #define CHAN_LOOP 5
@@ -77,7 +77,7 @@ typedef enum
 /*! \brief This entity class represents weapon based items. */
 /*!QUAKED ncWeapon (0 0.8 0.8) (-16 -16 0) (16 16 32)
 # OVERVIEW
-This entity class represents weapon based items. 
+This entity class represents weapon based items.
 It is based on ncItem. The only difference is that the attack
 related keys get forwarded only to items of this class.
 
@@ -99,7 +99,7 @@ FireInfo. If that does not exist, secondary attacks are not possible.
 # KEYS
 - "model" : Item/pickup model in world.
 - "model_view" : First-person view model.
-- "model_flash" : muzzleflash model/sprite to use. 
+- "model_flash" : muzzleflash model/sprite to use.
 - "flashColor" : muzzleflash dlight color
 - "flashRadius" : muzzleflash dlight radius
 - "def_dropItem" : when this item is dropped from someones inventory, will spawn this entityDef item instead.
@@ -119,7 +119,7 @@ FireInfo. If that does not exist, secondary attacks are not possible.
 
 ### Ammo management related keys
 - "ammoType" : name of the ammo type def entry which the weapon uses
-- "ammoRequired" : set to 1 if we require ammo. 
+- "ammoRequired" : set to 1 if we require ammo.
 - "ammoPerShot" : Amount of ammo to deduct per successful shot.
 
 ### Charging/Overcharging
@@ -129,7 +129,7 @@ for delivering a lethal charge to other enemies.
 
 ### Overheating weapons
 Overheating of the weapon is done when both keys are set.
-- "overheatLength"	 : Time in which it takes for the weapon to cool down.
+- "overheatLength"   : Time in which it takes for the weapon to cool down.
 - "overheatPerShot" : Time added against "overheatLength" when a shot is fired.
 
 ### Mode switching
@@ -181,31 +181,31 @@ A baseball bat:
 // Baseball Bat
 entityDef weapon_bat
 {
-	"spawnclass"		"ncWeapon"					// any weapon has to be at least this class, or a child-class
-	"model_view"		"models/weapons/v_bat.vvm"	// the first-person view model
-	"model"				"models/weapons/w_bat.vvm"	// the world/pickup/item model
-	"inv_name"			"Baseball Bat" 				// the name for the inventory/log display
-	"ammoRequired"		"0"							// Will never charge or check for ammo
+    "spawnclass"        "ncWeapon"                  // any weapon has to be at least this class, or a child-class
+    "model_view"        "models/weapons/v_bat.vvm"  // the first-person view model
+    "model"             "models/weapons/w_bat.vvm"  // the world/pickup/item model
+    "inv_name"          "Baseball Bat"              // the name for the inventory/log display
+    "ammoRequired"      "0"                         // Will never charge or check for ammo
 
-	"def_onFire"		"damage_bat"				// Spawn this projectile upon successful fire
-	"testDistance"		"-32"						// Fire can only be successful if we collide with something within 32 units. The value being positive would mean the opposite (success only when there's nothing in the way)
+    "def_onFire"        "damage_bat"                // Spawn this projectile upon successful fire
+    "testDistance"      "-32"                       // Fire can only be successful if we collide with something within 32 units. The value being positive would mean the opposite (success only when there's nothing in the way)
 
-	"meleeRateMiss"		"0.6"						// The firing rate if "testDistance" fails
-	"meleeRateHit"		"0.75"						// The firing rate if "testDistance" succeeds
+    "meleeRateMiss"     "0.6"                       // The firing rate if "testDistance" fails
+    "meleeRateHit"      "0.75"                      // The firing rate if "testDistance" succeeds
 
-	"act_idle"			"0,2"						// a set of idle sequences to play, when idle
-	"act_draw"			"4"							// the animation sequence to play when deploying the weapon
-	"act_holster"		"6"							// the animation sequence to play when putting the weapon away.
-	"act_fireFailed"	"9,11,13"					// the animation sequences to pick from for when "testDistance" fails
-	"act_fire"			"8,10,12"					// the animation sequences to pick from for when "testDistance" succeeds
+    "act_idle"          "0,2"                       // a set of idle sequences to play, when idle
+    "act_draw"          "4"                         // the animation sequence to play when deploying the weapon
+    "act_holster"       "6"                         // the animation sequence to play when putting the weapon away.
+    "act_fireFailed"    "9,11,13"                   // the animation sequences to pick from for when "testDistance" fails
+    "act_fire"          "8,10,12"                   // the animation sequences to pick from for when "testDistance" succeeds
 }
 
 entityDef damage_bat
 {
-	"spawnclass"		"ncProjectile"				// attacks can be either this, or ncAttack
-	"is_bullet"			"1"							// make it hitscan based
-	"damage"			"15"						// we make 15 damage with a hit
-	"push"				"300"						// apply this much push force to the target
+    "spawnclass"        "ncProjectile"              // attacks can be either this, or ncAttack
+    "is_bullet"         "1"                         // make it hitscan based
+    "damage"            "15"                        // we make 15 damage with a hit
+    "push"              "300"                       // apply this much push force to the target
 }
 ```
 
@@ -219,76 +219,76 @@ Here's an example for a gun that fires both bullets and grenades:
 ```
 entityDef weapon_rifle
 {
-	"editor_color"			".3 .3 1"
-	"editor_mins"			"-16 -16 -16"
-	"editor_maxs"			"16 16 16"
-	"editor_usage"			"Rifle with Grenade Launcher Attachment"
-	"editor_rotatable"		"1"
+    "editor_color"          ".3 .3 1"
+    "editor_mins"           "-16 -16 -16"
+    "editor_maxs"           "16 16 16"
+    "editor_usage"          "Rifle with Grenade Launcher Attachment"
+    "editor_rotatable"      "1"
 
-	"spawnclass"			"ncWeapon"
-	"model"					"models/weapons/w_rifle.vvm"
-	"model_view"			"models/weapons/v_rifle.vvm"
+    "spawnclass"            "ncWeapon"
+    "model"                 "models/weapons/w_rifle.vvm"
+    "model_view"            "models/weapons/v_rifle.vvm"
 
-	// ncWeapon specific
-	"def_fireInfo"			"fireInfo_rifleBullets"
-	"def_altFireInfo"		"fireInfo_rifleGrenade"
-	"inv_name"				"Cool Rifle"
-	"clipSize"				"50"
-	"clipSizeDefault"		"45"
+    // ncWeapon specific
+    "def_fireInfo"          "fireInfo_rifleBullets"
+    "def_altFireInfo"       "fireInfo_rifleGrenade"
+    "inv_name"              "Cool Rifle"
+    "clipSize"              "50"
+    "clipSizeDefault"       "45"
 
-	"act_fire"				"5,6,7"
-	"act_holster"			"4"
-	"act_reload"			"3"
-	"act_draw"				"4"
-	"act_idle"				"0,1"
-	"weight"				"15"
+    "act_fire"              "5,6,7"
+    "act_holster"           "4"
+    "act_reload"            "3"
+    "act_draw"              "4"
+    "act_idle"              "0,1"
+    "weight"                "15"
 }
 
 entityDef projectile_rifleBullets
 {
-	"spawnclass"			"ncProjectile"
-	"is_bullet"				"1"
-	"damage"				"15"
+    "spawnclass"            "ncProjectile"
+    "is_bullet"             "1"
+    "damage"                "15"
 }
 
 entityDef fireInfo_rifleBullets
 {
-	"def_onFire"			"projectile_rifleBullets"
-	"ammoType"				"ammo_bullets"
-	"ammoRequired"			"1"
-	"ammoPerShot"			"1"
-	"fireRate"				"0.1"
-	"punchAngle"			"-4 0 0"
+    "def_onFire"            "projectile_rifleBullets"
+    "ammoType"              "ammo_bullets"
+    "ammoRequired"          "1"
+    "ammoPerShot"           "1"
+    "fireRate"              "0.1"
+    "punchAngle"            "-4 0 0"
 }
 
 entityDef fireInfo_rifleGrenade
 {
-	"def_onFire"			"projectile_grenade"
-	"ammoType"				"ammo_grenade"
-	"ammoRequired"			"1"
-	"ammoPerShot"			"1"
-	"fireRate"				"1"
-	"punchAngle"			"-15 0 0"
-	"act_fire"				"2"
+    "def_onFire"            "projectile_grenade"
+    "ammoType"              "ammo_grenade"
+    "ammoRequired"          "1"
+    "ammoPerShot"           "1"
+    "fireRate"              "1"
+    "punchAngle"            "-15 0 0"
+    "act_fire"              "2"
 }
 
 entityDef projectile_grenade
 {
-	"spawnclass"			"ncProjectile"
-	"model"					"models/projectiles/grenade.vvm"
-	"offset"				"16 0 0"
-	"velocity"				"1000 0 0"
-	"angular_velocity"		"-300 0 0"
-	"gravity"				"0.5"
-	"bounce"				"1"
-	"mins"					"0 0 0"
-	"maxs"					"0 0 0"
-	"detonate_on_fuse"		"0"
-	"detonate_on_death"		"1"
-	"detonate_on_world"		"1"
-	"detonate_on_actor"		"1"
-	"damage"				"150"
-	"splash_damage"			"80"
+    "spawnclass"            "ncProjectile"
+    "model"                 "models/projectiles/grenade.vvm"
+    "offset"                "16 0 0"
+    "velocity"              "1000 0 0"
+    "angular_velocity"      "-300 0 0"
+    "gravity"               "0.5"
+    "bounce"                "1"
+    "mins"                  "0 0 0"
+    "maxs"                  "0 0 0"
+    "detonate_on_fuse"      "0"
+    "detonate_on_death"     "1"
+    "detonate_on_world"     "1"
+    "detonate_on_actor"     "1"
+    "damage"                "150"
+    "splash_damage"         "80"
 }
 ```
 
@@ -304,271 +304,272 @@ class
 ncWeapon:ncItem
 {
 public:
-	void ncWeapon(void);
+    void ncWeapon(void);
 
-	virtual void InputFrame(void);
-	virtual void AddedToInventory(void);
-	virtual void RemovedFromInventory(void);
+    virtual void InputFrame(void);
+    virtual void AddedToInventory(void);
+    virtual void RemovedFromInventory(void);
 
-	/* overrides */
+    /* overrides */
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void SpawnKey(string, string);
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void RestoreComplete(void);
-	virtual void GiveBonusItems(entity, bool);
-	virtual bool ItemBonusCheck(entity);
+    virtual void Spawned(void);
+    virtual void SpawnKey(string, string);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void RestoreComplete(void);
+    virtual void GiveBonusItems(entity, bool);
+    virtual bool ItemBonusCheck(entity);
 
-	virtual void EjectBrass(void);
-	virtual void EjectCartridge(void);
+    virtual void EjectBrass(void);
+    virtual void EjectCartridge(void);
 #endif
 
-	virtual bool TestFireAbility(string);
+    virtual bool TestFireAbility(string);
 
 #ifdef CLIENT
-	virtual void ClientFX(bool);
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void ReceiveEvent(float);
+    virtual void ClientFX(bool);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void ReceiveEvent(float);
 #endif
 
-	virtual bool UsesSecondaryAmmo(void);
-	virtual bool IsEmpty(void);
-	virtual bool IsWeapon(void);
-	virtual bool HasReserveAmmo(void);
+    virtual bool UsesSecondaryAmmo(void);
+    virtual bool IsEmpty(void);
+    virtual bool IsWeapon(void);
+    virtual bool HasReserveAmmo(void);
 
-	/** Overridable: Called when we switch to this weapon from another. */
-	virtual void Draw(void);
-	/** Overridable: Called when we are about to switch to another weapon */
-	virtual void Holster(void);
-	/** Overridable: On +attack execution. */
-	virtual void PrimaryAttack(void);
-	/** Overridable: On +attack2 execution. */
-	virtual void SecondaryAttack(void);
-	/** Overridable: On +reload execution. */
-	virtual void Reload(void);
-	/** Overridable: When no buttons are held, or you forcefully want to stop firing. */
-	virtual void Release(void);
-	/** Overridable: When the weapon is supposed to be doing something on its own. */
-	virtual void Idle(void);
-	/** Overridable: When the HUD is requested to be drawn. */
-	virtual void UpdateGUI(void);
+    /** Overridable: Called when we switch to this weapon from another. */
+    virtual void Draw(void);
+    /** Overridable: Called when we are about to switch to another weapon */
+    virtual void Holster(void);
+    /** Overridable: On +attack execution. */
+    virtual void PrimaryAttack(void);
+    /** Overridable: On +attack2 execution. */
+    virtual void SecondaryAttack(void);
+    /** Overridable: On +reload execution. */
+    virtual void Reload(void);
+    /** Overridable: When no buttons are held, or you forcefully want to stop firing. */
+    virtual void Release(void);
+    /** Overridable: When the weapon is supposed to be doing something on its own. */
+    virtual void Idle(void);
+    /** Overridable: When the HUD is requested to be drawn. */
+    virtual void UpdateGUI(void);
 
-	nonvirtual void SetViewModel(string);
-	nonvirtual void SetWorldModel(string);
-	nonvirtual void SetPlayerModel(string);
-	nonvirtual void SetWeaponFrame(float);
-	nonvirtual void PlaySound(string, float, bool);
+    nonvirtual void SetViewModel(string);
+    nonvirtual void SetWorldModel(string);
+    nonvirtual void SetPlayerModel(string);
+    nonvirtual void SetWeaponFrame(float);
+    nonvirtual void PlaySound(string, float, bool);
 
-	/* state */
-	nonvirtual nsweapon_state_t GetWeaponState(void);
+    /* state */
+    nonvirtual nsweapon_state_t GetWeaponState(void);
 
-	virtual void SetAttackNext(float);
-	virtual void SetReloadNext(float);
-	virtual void SetIdleNext(float);
-	virtual bool CanFire(void);
-	virtual bool CanIdle(void);
-	virtual bool CanReload(void);
-	virtual bool UseAmmo(string);
+    virtual void SetAttackNext(float);
+    virtual void SetReloadNext(float);
+    virtual void SetIdleNext(float);
+    virtual bool CanFire(void);
+    virtual bool CanIdle(void);
+    virtual bool CanReload(void);
+    virtual bool UseAmmo(string);
 
-	/** Overridable: Called once when the weapon started firing. */
-	virtual void WeaponStartedFiring(void);
-	/** Overridable: Called once when the weapon stopped firing. */
-	virtual void WeaponStoppedFiring(void);
-	/** Overridable: Called once when the weapon stopped reloading. */
-	virtual void WeaponStartedReloading(void);
-	/** Overridable: Called once when the weapon stopped reloading. */
-	virtual void WeaponStoppedReloading(void);
+    /** Overridable: Called once when the weapon started firing. */
+    virtual void WeaponStartedFiring(void);
+    /** Overridable: Called once when the weapon stopped firing. */
+    virtual void WeaponStoppedFiring(void);
+    /** Overridable: Called once when the weapon stopped reloading. */
+    virtual void WeaponStartedReloading(void);
+    /** Overridable: Called once when the weapon stopped reloading. */
+    virtual void WeaponStoppedReloading(void);
 
-	/** Overridable: Controls def_onFire event. */
-	virtual void FiredWeaponAttack(string);
-	/** Overridable: Controls def_onRelease event. */
-	virtual void ReleasedWeaponAttack(string);
+    /** Overridable: Controls def_onFire event. */
+    virtual void FiredWeaponAttack(string);
+    /** Overridable: Controls def_onRelease event. */
+    virtual void ReleasedWeaponAttack(string);
 
-	/** Overridable: Called when we've switched to this weapon successfully. */
-	virtual void SwitchedToWeapon(void);
-	/** Overridable: Called when we've switched from this weapon successfully. */
-	virtual void SwitchedFromWeapon(void);
+    /** Overridable: Called when we've switched to this weapon successfully. */
+    virtual void SwitchedToWeapon(void);
+    /** Overridable: Called when we've switched from this weapon successfully. */
+    virtual void SwitchedFromWeapon(void);
 
-	/** Overridable: Called when requesting to cache values from decl to attributes. Call super function. */
-	virtual void UpdateFireInfoCache(void);
-	/** Overridable: Called when the active fireInfo changed. Call super function. */
-	virtual void FireInfoChanged(void);
+    /** Overridable: Called when requesting to cache values from decl to attributes. Call super function. */
+    virtual void UpdateFireInfoCache(void);
+    /** Overridable: Called when the active fireInfo changed. Call super function. */
+    virtual void FireInfoChanged(void);
 
-	/** Returns whether the weapon is being actively fired by the owner. */
-	nonvirtual bool WeaponIsFiring(void);
+    /** Returns whether the weapon is being actively fired by the owner. */
+    nonvirtual bool WeaponIsFiring(void);
 
-	/** Set the active fire Info of the weapon to this one. */
-	nonvirtual void SwitchFireInfo(string);
-	nonvirtual bool DetonateDef(string);
-	nonvirtual void Attack(string);
-	
-	nonvirtual int GetClip(void);
-	nonvirtual int GetClipSize(void);
-	nonvirtual bool RequiresAmmo(void);
-	nonvirtual int FireInfoSelected(void);
-	nonvirtual float OverheatingProgress(void);
-	nonvirtual float PlayerSpeedMod(void);
+    /** Set the active fire Info of the weapon to this one. */
+    nonvirtual void SwitchFireInfo(string);
+    nonvirtual bool DetonateDef(string);
+    nonvirtual void Attack(string);
 
-	/** Overriding this: Called to cache some entityDef values. */
-	virtual void ReloadCachedAttributes(void);
+    nonvirtual int GetClip(void);
+    nonvirtual int GetClipSize(void);
+    nonvirtual bool RequiresAmmo(void);
+    nonvirtual int FireInfoSelected(void);
+    nonvirtual float OverheatingProgress(void);
+    nonvirtual float PlayerSpeedMod(void);
+
+    /** Overriding this: Called to cache some entityDef values. */
+    virtual void ReloadCachedAttributes(void);
 
 private:
-	/** Internal use Sets/overrides the weapon state. Subclasses track your own state! */
-	nonvirtual void _SetWeaponState(nsweapon_state_t);
-	/** Called to signal that the owner switched to this weapon. */
-	nonvirtual void _SwitchedToCallback(void);
-	/** Called to signal that the owner switched from this weapon. */
-	nonvirtual void _SwitchedFromCallback(void);
-	nonvirtual void _WeaponStartedFiring(void);
-	nonvirtual void _WeaponStoppedFiring(void);
-	nonvirtual void _PrimaryAttack(void);
-	nonvirtual void _SecondaryAttack(void);
-	nonvirtual void _SwitchedWeaponMode(void);
-	virtual void _AddedCallback(void);
-	virtual void _RemovedCallback(void);
+    /** Internal use Sets/overrides the weapon state. Subclasses track your own state! */
+    nonvirtual void _SetWeaponState(nsweapon_state_t);
+    /** Called to signal that the owner switched to this weapon. */
+    nonvirtual void _SwitchedToCallback(void);
+    /** Called to signal that the owner switched from this weapon. */
+    nonvirtual void _SwitchedFromCallback(void);
+    nonvirtual void _WeaponStartedFiring(void);
+    nonvirtual void _WeaponStoppedFiring(void);
+    nonvirtual void _PrimaryAttack(void);
+    nonvirtual void _SecondaryAttack(void);
+    nonvirtual void _SwitchedWeaponMode(void);
+    virtual void _AddedCallback(void);
+    virtual void _RemovedCallback(void);
 
-	/** Returns the weapon in the next slot of the owners' inventory. */
-	nonvirtual ncWeapon GetNextWeapon(void);
-	/** Returns the weapon in the previous slot of the owners' inventory. */
-	nonvirtual ncWeapon GetPreviousWeapon(void);
-	/** Plays the weapon empty sound. */
-	nonvirtual void EmptySound(void);
-	/** Sets the viewzoom on its owner. */
-	nonvirtual void SetViewZoom(float);
+    /** Returns the weapon in the next slot of the owners' inventory. */
+    nonvirtual ncWeapon GetNextWeapon(void);
+    /** Returns the weapon in the previous slot of the owners' inventory. */
+    nonvirtual ncWeapon GetPreviousWeapon(void);
+    /** Plays the weapon empty sound. */
+    nonvirtual void EmptySound(void);
+    /** Sets the viewzoom on its owner. */
+    nonvirtual void SetViewZoom(float);
 
 #ifdef CLIENT
-	virtual void HandleAnimEvent(float, int, string);
+    virtual void HandleAnimEvent(float, int, string);
     entity m_uiRootWindow;
     entity m_uiInteractive;
 #endif
 
 #ifdef SERVER
-	nonvirtual void _ReloadFinished(void);
+    nonvirtual void _ReloadFinished(void);
 #endif
 
-	/* weapon related spawn keys */
-	string m_weaponTitle;
-	int m_weaponHUDSlot;
-	int m_weaponHUDSlotPos;
-	string m_weaponHUDIcon;
-	string m_weaponHUDIconSel;
-	string m_weaponViewModelPath;
-	string m_weaponPlayerModelPath;
-	string m_weaponScript;
-	string m_weaponAmmoType;
-	bool m_weaponRequiresAmmo;
-	int m_weaponClipStartSize;
-	string m_weaponDropsItem;
+    /* weapon related spawn keys */
+    string m_weaponTitle;
+    int m_weaponHUDSlot;
+    int m_weaponHUDSlotPos;
+    string m_weaponHUDIcon;
+    string m_weaponHUDIconSel;
+    string m_weaponViewModelPath;
+    string m_weaponPlayerModelPath;
+    string m_weaponScript;
+    string m_weaponAmmoType;
+    bool m_weaponRequiresAmmo;
+    int m_weaponClipStartSize;
+    string m_weaponDropsItem;
 
-	NETWORKED_INT(m_weaponClip)
-	NETWORKED_INT(m_weaponClipSize)
-	NETWORKED_FLOAT(m_weaponFireInfoValue)
-	NETWORKED_MODELINDEX(m_viewModel)
-	NETWORKED_MODELINDEX(m_worldModel)
-	NETWORKED_MODELINDEX(m_playerModel)
-	NETWORKED_FLOAT(m_weaponFireRate)
-	NETWORKED_FLOAT(m_weaponState)
-	NETWORKED_BOOL(m_weaponIsFiring)
-	NETWORKED_BOOL(m_weaponOverheating)
-	NETWORKED_FLOAT(m_burstCount)
+    NETWORKED_INT(m_weaponClip)
+    NETWORKED_INT(m_weaponClipSize)
+    NETWORKED_FLOAT(m_weaponFireInfoValue)
+    NETWORKED_MODELINDEX(m_viewModel)
+    NETWORKED_MODELINDEX(m_worldModel)
+    NETWORKED_MODELINDEX(m_playerModel)
+    NETWORKED_FLOAT(m_weaponFireRate)
+    NETWORKED_FLOAT(m_weaponState)
+    NETWORKED_BOOL(m_weaponIsFiring)
+    NETWORKED_BOOL(m_weaponOverheating)
+    NETWORKED_FLOAT(m_burstCount)
     NETWORKED_STRING(m_interfaceFile)
 
-	/* cached variables. don't save - recalculate! */
-	string m_weaponLastFireInfo;
-	string m_primaryFireInfo;
-	string m_secondaryFireInfo;
-	int m_primaryAmmoType;
-	int m_secondaryAmmoType;
-	float m_jointTrailWorld;
-	float m_jointTrailView;
-	float m_weaponAmmoRegenTime;
-	float m_weaponAmmoDepleteTime;
-	string m_animPrefix;
-	bool m_altAlternates;
+    /* cached variables. don't save - recalculate! */
+    string m_weaponLastFireInfo;
+    string m_primaryFireInfo;
+    string m_secondaryFireInfo;
+    int m_primaryAmmoType;
+    int m_secondaryAmmoType;
+    float m_jointTrailWorld;
+    float m_jointTrailView;
+    float m_weaponAmmoRegenTime;
+    float m_weaponAmmoDepleteTime;
+    string m_animPrefix;
+    bool m_altAlternates;
 
-	/* extra networking */
-	float m_nextWeapon_entnum;
-	float m_prevWeapon_entnum;
-	ncWeapon m_nextWeapon_net;
-	ncWeapon m_prevWeapon_net;
+    /* extra networking */
+    float m_nextWeapon_entnum;
+    float m_prevWeapon_entnum;
+    ncWeapon m_nextWeapon_net;
+    ncWeapon m_prevWeapon_net;
 
-	/* cached fireInfo */
-	string m_fiMuzzleFlashMaterial;
-	string m_fiMuzzleFlashModelPath;
-	vector m_fiMuzzleFlashColor;
-	float m_fiMuzzleFlashRadius;
-	string m_fiFXSmokeParticle;
-	bool m_fiFXSmokeContinous;
-	float m_fiFXTrail;
-	bool m_fiAmmoRequired;
-	bool m_fiCocks;
-	bool m_fiDrawAfterRelease;
-	bool m_fiFireUnderwater;
-	bool m_fiLoopingFire;
-	bool m_fiSemiAuto;
-	bool m_fiWillRelease;
-	float m_fiBrassDelay;
-	float m_fiCartridgeDelay;
-	float m_fiChargeTime;
-	float m_fiFireRate;
-	float m_fiOverheatLength;
-	float m_fiOverheatPoints;
-	float m_fiReloadTime;
-	int m_fiAmmoPerShot;
-	int m_fiAmmoType;
-	float m_fiPrimedFuse;
-	float m_fiZoomFOV;
-	bool m_fiPowerAmmo;
-	bool m_fiRemoveOnEmpty;
-	bool m_switchOnEmpty;
-	string m_fiBrassDef;
-	string m_fiCartridgeDef;
-	string m_fiDetonateOnFire;
-	string m_fiOnFire;
-	string m_fiOnRelease;
+    /* cached fireInfo */
+    string m_fiMuzzleFlashMaterial;
+    string m_fiMuzzleFlashModelPath;
+    vector m_fiMuzzleFlashColor;
+    float m_fiMuzzleFlashRadius;
+    string m_fiFXSmokeParticle;
+    bool m_fiFXSmokeContinous;
+    float m_fiFXTrail;
+    bool m_fiAmmoRequired;
+    bool m_fiCocks;
+    bool m_fiDrawAfterRelease;
+    bool m_fiFireUnderwater;
+    bool m_fiLoopingFire;
+    bool m_fiSemiAuto;
+    bool m_fiWillRelease;
+    float m_fiBrassDelay;
+    float m_fiCartridgeDelay;
+    float m_fiChargeTime;
+    float m_fiFireRate;
+    float m_fiOverheatLength;
+    float m_fiOverheatPoints;
+    float m_fiReloadTime;
+    int m_fiAmmoPerShot;
+    int m_fiAmmoType;
+    float m_fiPrimedFuse;
+    float m_fiZoomFOV;
+    bool m_fiPowerAmmo;
+    bool m_fiRemoveOnEmpty;
+    bool m_switchOnEmpty;
+    string m_fiBrassDef;
+    string m_fiCartridgeDef;
+    string m_fiDetonateOnFire;
+    string m_fiOnFire;
+    string m_fiOnRelease;
+    vector m_trailOffset;
 
-	ncSoundDict m_fiSndDraw;
-	ncSoundDict m_fiSndDelay;
-	ncSoundDict m_fiSndHolster;
-	ncSoundDict m_fiSndReload;
-	ncSoundDict m_fiSndReloadStart;
-	ncSoundDict m_fiSndReloadEnd;
-	ncSoundDict m_fiSndCock;
-	ncSoundDict m_fiSndEmpty;
-	ncSoundDict m_fiSndFailed;
-	ncSoundDict m_fiSndFire;
-	ncSoundDict m_fiSndFireLast;
-	ncSoundDict m_fiSndFireLoop;
-	ncSoundDict m_fiSndFireLoop;
-	ncSoundDict m_fiSndFireStart;
-	ncSoundDict m_fiSndFireStop;
-	ncSoundDict m_fiSndRelease;
-	ncSoundDict m_fiSndEjectBrass;
-	ncSoundDict m_fiSndEjectCartridge;
-	ncSoundDict m_sndRaiseScope;
-	ncSoundDict m_sndLowerScope;
-	ncSoundDict m_sndModeOn;
-	ncSoundDict m_sndModeOff;
+    ncSoundDict m_fiSndDraw;
+    ncSoundDict m_fiSndDelay;
+    ncSoundDict m_fiSndHolster;
+    ncSoundDict m_fiSndReload;
+    ncSoundDict m_fiSndReloadStart;
+    ncSoundDict m_fiSndReloadEnd;
+    ncSoundDict m_fiSndCock;
+    ncSoundDict m_fiSndEmpty;
+    ncSoundDict m_fiSndFailed;
+    ncSoundDict m_fiSndFire;
+    ncSoundDict m_fiSndFireLast;
+    ncSoundDict m_fiSndFireLoop;
+    ncSoundDict m_fiSndFireLoop;
+    ncSoundDict m_fiSndFireStart;
+    ncSoundDict m_fiSndFireStop;
+    ncSoundDict m_fiSndRelease;
+    ncSoundDict m_fiSndEjectBrass;
+    ncSoundDict m_fiSndEjectCartridge;
+    ncSoundDict m_sndRaiseScope;
+    ncSoundDict m_sndLowerScope;
+    ncSoundDict m_sndModeOn;
+    ncSoundDict m_sndModeOff;
 
-	vector m_fiPunchAngle;
-	vector m_fiPunchSpring;
-	float m_fiSpeedMod;
-	bool m_fiAltModeSwitch;
-	bool m_fiBuggyIdleAnim;
-	int m_fiRegenAmmo;
-	float m_fiRegenRate;
-	int m_fiDepleteAmmo;
-	float m_fiDepleteRate;
-	float m_fiMaxBurst;
-	float m_fiBurstTime;
-	float m_fiKnockBack;
-	float m_fiKnockBackRelease;
-	float m_fiTestDistance;
+    vector m_fiPunchAngle;
+    vector m_fiPunchSpring;
+    float m_fiSpeedMod;
+    bool m_fiAltModeSwitch;
+    bool m_fiBuggyIdleAnim;
+    int m_fiRegenAmmo;
+    float m_fiRegenRate;
+    int m_fiDepleteAmmo;
+    float m_fiDepleteRate;
+    float m_fiMaxBurst;
+    float m_fiBurstTime;
+    float m_fiKnockBack;
+    float m_fiKnockBackRelease;
+    float m_fiTestDistance;
 };
 
 .ncWeapon m_nextWeapon;

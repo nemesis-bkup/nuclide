@@ -25,30 +25,30 @@ class
 ncDecal
 {
 public:
-	void ncDecal(void);
+    void ncDecal(void);
 
 #ifdef SERVER
-	virtual float SendEntity(entity, float);
+    virtual float SendEntity(entity, float);
 #else
-	virtual void ReceiveEntity(void);
-	virtual float predraw(void);
-	virtual void BuildShader(void);
+    virtual void ReceiveEntity(void);
+    virtual float predraw(void);
+    virtual void BuildShader(void);
 #endif
 
-	/** Paint the given decal at the specified position. */
-	virtual void Place(vector, string);
-	virtual void PlaceAtScale(vector, string, float);
+    /** Paint the given decal at the specified position. */
+    virtual void Place(vector, string);
+    virtual void PlaceAtScale(vector, string, float);
 
 private:
-	string m_strShader;
-	string m_strTexture;
+    string m_strShader;
+    string m_strTexture;
 };
 
 typedef struct
 {
-	float fraction;
-	vector normal;
-	vector endpos;
+    float fraction;
+    vector normal;
+    vector endpos;
 } traced_t;
 
 traced_t g_tracedDecal;
@@ -56,49 +56,49 @@ traced_t g_tracedDecal;
 void
 decal_pickwall(entity dself, vector vpos)
 {
-	traced_t tmp[6];
-	float frac = 1.0f;
+    traced_t tmp[6];
+    float frac = 1.0f;
 
-	g_tracedDecal.fraction = 1.0f;
-	g_tracedDecal.endpos = [0,0,0];
-	g_tracedDecal.normal = [0,0,0];
+    g_tracedDecal.fraction = 1.0f;
+    g_tracedDecal.endpos = [0,0,0];
+    g_tracedDecal.normal = [0,0,0];
 
-	/* unrolled, trace against walls in all 6 directions */
-	makevectors([0, 0, 0]);
-	traceline(vpos + (v_forward * -1), vpos + (v_forward * 128), 0, dself);
-	tmp[0].fraction = trace_fraction;
-	tmp[0].normal = trace_plane_normal;
-	tmp[0].endpos = trace_endpos;
-	traceline(vpos + (v_forward * 1), vpos + (v_forward * -128), 0, dself);
-	tmp[1].fraction = trace_fraction;
-	tmp[1].normal = trace_plane_normal;
-	tmp[1].endpos = trace_endpos;
-	traceline(vpos + (v_right * -1), vpos + (v_right * 128), 0, dself);
-	tmp[2].fraction = trace_fraction;
-	tmp[2].normal = trace_plane_normal;
-	tmp[2].endpos = trace_endpos;
-	traceline(vpos + (v_right * 1), vpos + (v_right * -128), 0, dself);
-	tmp[3].fraction = trace_fraction;
-	tmp[3].normal = trace_plane_normal;
-	tmp[3].endpos = trace_endpos;
-	traceline(vpos + (v_up * -1), vpos + (v_up * 128), 0, dself);
-	tmp[4].fraction = trace_fraction;
-	tmp[4].normal = trace_plane_normal;
-	tmp[4].endpos = trace_endpos;
-	traceline(vpos + (v_up * 1), vpos + (v_up * -128), 0, dself);
-	tmp[5].fraction = trace_fraction;
-	tmp[5].normal = trace_plane_normal;
-	tmp[5].endpos = trace_endpos;
+    /* unrolled, trace against walls in all 6 directions */
+    makevectors([0, 0, 0]);
+    traceline(vpos + (v_forward * -1), vpos + (v_forward * 128), 0, dself);
+    tmp[0].fraction = trace_fraction;
+    tmp[0].normal = trace_plane_normal;
+    tmp[0].endpos = trace_endpos;
+    traceline(vpos + (v_forward * 1), vpos + (v_forward * -128), 0, dself);
+    tmp[1].fraction = trace_fraction;
+    tmp[1].normal = trace_plane_normal;
+    tmp[1].endpos = trace_endpos;
+    traceline(vpos + (v_right * -1), vpos + (v_right * 128), 0, dself);
+    tmp[2].fraction = trace_fraction;
+    tmp[2].normal = trace_plane_normal;
+    tmp[2].endpos = trace_endpos;
+    traceline(vpos + (v_right * 1), vpos + (v_right * -128), 0, dself);
+    tmp[3].fraction = trace_fraction;
+    tmp[3].normal = trace_plane_normal;
+    tmp[3].endpos = trace_endpos;
+    traceline(vpos + (v_up * -1), vpos + (v_up * 128), 0, dself);
+    tmp[4].fraction = trace_fraction;
+    tmp[4].normal = trace_plane_normal;
+    tmp[4].endpos = trace_endpos;
+    traceline(vpos + (v_up * 1), vpos + (v_up * -128), 0, dself);
+    tmp[5].fraction = trace_fraction;
+    tmp[5].normal = trace_plane_normal;
+    tmp[5].endpos = trace_endpos;
 
-	/* pick whatever wall is closest */
-	for (int i = 0; i < 6; i++) {
-		if (tmp[i].fraction < frac) {
-			frac = tmp[i].fraction;
-			g_tracedDecal.fraction = tmp[i].fraction;
-			g_tracedDecal.endpos = tmp[i].endpos;
-			g_tracedDecal.normal = tmp[i].normal;
-		}
-	}
+    /* pick whatever wall is closest */
+    for (int i = 0; i < 6; i++) {
+        if (tmp[i].fraction < frac) {
+            frac = tmp[i].fraction;
+            g_tracedDecal.fraction = tmp[i].fraction;
+            g_tracedDecal.endpos = tmp[i].endpos;
+            g_tracedDecal.normal = tmp[i].normal;
+        }
+    }
 }
 
 void Decals_Init(void);

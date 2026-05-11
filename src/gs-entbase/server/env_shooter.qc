@@ -49,309 +49,309 @@ class
 env_shooter:ncRenderableEntity
 {
 public:
-	void env_shooter(void);
+    void env_shooter(void);
 
-	virtual void Precache(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
-	nonvirtual void ShootGib(void);
-	nonvirtual void ShooterLoop(void);
+    virtual void Precache(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
+    nonvirtual void ShootGib(void);
+    nonvirtual void ShooterLoop(void);
 
 private:
-	int m_iGibs;
-	int m_iGibsLeft;
+    int m_iGibs;
+    int m_iGibsLeft;
 
-	float m_flDelay;
-	float m_flVelocity;
-	float m_flVariance;
-	float m_flGibLife;
-	string m_strShootModel;
-	float m_flShootSounds;
-	float m_flScale;
-	float m_flSkin;
-	bool m_bCanScale;
+    float m_flDelay;
+    float m_flVelocity;
+    float m_flVariance;
+    float m_flGibLife;
+    string m_strShootModel;
+    float m_flShootSounds;
+    float m_flScale;
+    float m_flSkin;
+    bool m_bCanScale;
 };
 
 void
 env_shooter::env_shooter(void)
 {
-	m_flVariance = 0.0f;
-	m_flDelay = 0.0f;
-	m_iGibs = 1;
-	m_iGibsLeft = 1;
-	m_flVelocity = 0;
-	m_flGibLife = 1.0f;
-	m_strShootModel = __NULL__;
-	m_flShootSounds = 0;
-	m_flScale = 1.0;
-	m_flSkin = 0;
-	m_bCanScale = false;
+    m_flVariance = 0.0f;
+    m_flDelay = 0.0f;
+    m_iGibs = 1;
+    m_iGibsLeft = 1;
+    m_flVelocity = 0;
+    m_flGibLife = 1.0f;
+    m_strShootModel = __NULL__;
+    m_flShootSounds = 0;
+    m_flScale = 1.0;
+    m_flSkin = 0;
+    m_bCanScale = false;
 }
 
 void
 env_shooter::Precache(void)
 {
-	if (STRING_SET(m_strShootModel)) {
-		precache.Model(m_strShootModel);
+    if (STRING_SET(m_strShootModel)) {
+        precache.Model(m_strShootModel);
 
-		/* figure out if we're a sprite... */
-		if (Util_ExtensionFromString(m_strShootModel) == "spr") {
-			m_bCanScale = true;
-		}
-	}
+        /* figure out if we're a sprite... */
+        if (Util_ExtensionFromString(m_strShootModel) == "spr") {
+            m_bCanScale = true;
+        }
+    }
 
-	/* There isn't a much more portable to do this, maybe this can be abstracted
-		through separate soundDef entries but I don't know if that'll be less annoying. */
-	switch (m_flShootSounds) {
-	case 0:	/* glass */
-		precache.Sound("sfx_impact.glass");
-		break;
-	case 1:	/* wood */
-		precache.Sound("sfx_impact.wood");
-		break;
-	case 2:	/* metal */
-		precache.Sound("sfx_impact.metal");
-		break;
-	case 3: /* flesh */
-		precache.Sound("sfx_impact.flesh");
-		break;
-	case 4:	/* concrete */
-		precache.Sound("sfx_impact.concrete");
-		break;
-	case -1: /* none */
-	default:
-		break;
-	}
+    /* There isn't a much more portable to do this, maybe this can be abstracted
+        through separate soundDef entries but I don't know if that'll be less annoying. */
+    switch (m_flShootSounds) {
+    case 0: /* glass */
+        precache.Sound("sfx_impact.glass");
+        break;
+    case 1: /* wood */
+        precache.Sound("sfx_impact.wood");
+        break;
+    case 2: /* metal */
+        precache.Sound("sfx_impact.metal");
+        break;
+    case 3: /* flesh */
+        precache.Sound("sfx_impact.flesh");
+        break;
+    case 4: /* concrete */
+        precache.Sound("sfx_impact.concrete");
+        break;
+    case -1: /* none */
+    default:
+        break;
+    }
 }
 
 void
 env_shooter::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flVariance", m_flVariance);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
-	SaveInt(handle, "m_iGibs", m_iGibs);
-	SaveInt(handle, "m_iGibsLeft", m_iGibsLeft);
-	SaveFloat(handle, "m_flVelocity", m_flVelocity);
-	SaveFloat(handle, "m_flGibLife", m_flGibLife);
-	SaveString(handle, "m_strShootModel", m_strShootModel);
-	SaveFloat(handle, "m_flShootSounds", m_flShootSounds);
-	SaveFloat(handle, "m_flScale", m_flScale);
-	SaveFloat(handle, "m_flSkin", m_flSkin);
-	SaveBool(handle, "m_bCanScale", m_bCanScale);
+    super::Save(handle);
+    SaveFloat(handle, "m_flVariance", m_flVariance);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
+    SaveInt(handle, "m_iGibs", m_iGibs);
+    SaveInt(handle, "m_iGibsLeft", m_iGibsLeft);
+    SaveFloat(handle, "m_flVelocity", m_flVelocity);
+    SaveFloat(handle, "m_flGibLife", m_flGibLife);
+    SaveString(handle, "m_strShootModel", m_strShootModel);
+    SaveFloat(handle, "m_flShootSounds", m_flShootSounds);
+    SaveFloat(handle, "m_flScale", m_flScale);
+    SaveFloat(handle, "m_flSkin", m_flSkin);
+    SaveBool(handle, "m_bCanScale", m_bCanScale);
 }
 
 void
 env_shooter::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flVariance":
-		m_flVariance = ReadFloat(setValue);
-		break;
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	case "m_iGibs":
-		m_iGibs = ReadInt(setValue);
-		break;
-	case "m_iGibsLeft":
-		m_iGibsLeft = ReadInt(setValue);
-		break;
-	case "m_flVelocity":
-		m_flVelocity = ReadFloat(setValue);
-		break;
-	case "m_flGibLife":
-		m_flGibLife = ReadFloat(setValue);
-		break;
-	case "m_strShootModel":
-		m_strShootModel = ReadString(setValue);
-		break;
-	case "m_flShootSounds":
-		m_flShootSounds = ReadFloat(setValue);
-		break;
-	case "m_flScale":
-		m_flScale = ReadFloat(setValue);
-		break;
-	case "m_flSkin":
-		m_flSkin = ReadFloat(setValue);
-		break;
-	case "m_bCanScale":
-		m_bCanScale = ReadBool(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flVariance":
+        m_flVariance = ReadFloat(setValue);
+        break;
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    case "m_iGibs":
+        m_iGibs = ReadInt(setValue);
+        break;
+    case "m_iGibsLeft":
+        m_iGibsLeft = ReadInt(setValue);
+        break;
+    case "m_flVelocity":
+        m_flVelocity = ReadFloat(setValue);
+        break;
+    case "m_flGibLife":
+        m_flGibLife = ReadFloat(setValue);
+        break;
+    case "m_strShootModel":
+        m_strShootModel = ReadString(setValue);
+        break;
+    case "m_flShootSounds":
+        m_flShootSounds = ReadFloat(setValue);
+        break;
+    case "m_flScale":
+        m_flScale = ReadFloat(setValue);
+        break;
+    case "m_flSkin":
+        m_flSkin = ReadFloat(setValue);
+        break;
+    case "m_bCanScale":
+        m_bCanScale = ReadBool(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_shooter::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "angle":
-		angles = [ReadFloat(setValue) * 90, 0, 0];
-		break;
-	case "m_iGibs":
-		m_iGibs = ReadInt(setValue);
-		break;
-	case "delay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	case "m_flVelocity":
-		m_flVelocity = ReadFloat(setValue);
-		break;
-	case "m_flVariance":
-		m_flVariance = ReadFloat(setValue);
-		break;
-	case "m_flGibLife":
-		m_flGibLife = ReadFloat(setValue);
-		break;
-	case "shootmodel":
-		m_strShootModel = ReadString(setValue);
-		break;
-	case "shootsounds":
-		m_flShootSounds = ReadFloat(setValue);
-		break;
-	case "scale":
-		m_flScale = ReadFloat(setValue);
-		break;
-	case "skin":
-		m_flSkin = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "angle":
+        angles = [ReadFloat(setValue) * 90, 0, 0];
+        break;
+    case "m_iGibs":
+        m_iGibs = ReadInt(setValue);
+        break;
+    case "delay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    case "m_flVelocity":
+        m_flVelocity = ReadFloat(setValue);
+        break;
+    case "m_flVariance":
+        m_flVariance = ReadFloat(setValue);
+        break;
+    case "m_flGibLife":
+        m_flGibLife = ReadFloat(setValue);
+        break;
+    case "shootmodel":
+        m_strShootModel = ReadString(setValue);
+        break;
+    case "shootsounds":
+        m_flShootSounds = ReadFloat(setValue);
+        break;
+    case "scale":
+        m_flScale = ReadFloat(setValue);
+        break;
+    case "skin":
+        m_flSkin = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_shooter::Respawn(void)
 {
-	if (!m_strShootModel) {
-		Destroy();
-		return;
-	}
+    if (!m_strShootModel) {
+        Destroy();
+        return;
+    }
 
-	m_iGibsLeft = m_iGibs;
-	ReleaseThink();
+    m_iGibsLeft = m_iGibs;
+    ReleaseThink();
 }
 
 void
 env_shooter::ShootGib(void)
 {
-	vector vecSpinVel = [0.0f, 0.0f, 0.0f];
-	vector vecThrowVel = [0.0f, 0.0f, 0.0f];
+    vector vecSpinVel = [0.0f, 0.0f, 0.0f];
+    vector vecThrowVel = [0.0f, 0.0f, 0.0f];
 
-	ncRenderableEntity eGib = spawn(ncRenderableEntity);
-	eGib.Spawn();
-	eGib.SetMovetype(MOVETYPE_BOUNCE);
-	eGib.SetModel(m_strShootModel);
-	eGib.SetSize([-8,-8,-8],[8,8,8]);
-	eGib.SetOrigin(GetOrigin());
-	eGib.SetAngles(GetAngles());
-	eGib.SetRenderColor(GetRenderColor());
-	eGib.SetRenderMode(GetRenderMode());
-	eGib.SetRenderFX(GetRenderFX());
-	eGib.SetRenderAmt(GetRenderAmt());
+    ncRenderableEntity eGib = spawn(ncRenderableEntity);
+    eGib.Spawn();
+    eGib.SetMovetype(MOVETYPE_BOUNCE);
+    eGib.SetModel(m_strShootModel);
+    eGib.SetSize([-8,-8,-8],[8,8,8]);
+    eGib.SetOrigin(GetOrigin());
+    eGib.SetAngles(GetAngles());
+    eGib.SetRenderColor(GetRenderColor());
+    eGib.SetRenderMode(GetRenderMode());
+    eGib.SetRenderFX(GetRenderFX());
+    eGib.SetRenderAmt(GetRenderAmt());
 
-	/* scale multiplier only works on sprites.
-	   the env_shooter entities in lambda_bunker.bsp rely
-	   on this exact behaviour. if Source added support
-	   for this you need to differentiate between the two. */
-	if (m_bCanScale == true) {
-		eGib.SetScale(m_flScale);
-	}
+    /* scale multiplier only works on sprites.
+       the env_shooter entities in lambda_bunker.bsp rely
+       on this exact behaviour. if Source added support
+       for this you need to differentiate between the two. */
+    if (m_bCanScale == true) {
+        eGib.SetScale(m_flScale);
+    }
 
-	eGib.SetSize([-8,-8,-8],[8,8,8]);
-	eGib.SetSkin(m_flSkin);
+    eGib.SetSize([-8,-8,-8],[8,8,8]);
+    eGib.SetSkin(m_flSkin);
 
-	switch (m_flShootSounds) {
-	case 0:	/* glass */
-		StartSoundDef("sfx_impact.glass", CHAN_VOICE, false);
-		break;
-	case 1:	/* wood */
-		StartSoundDef("sfx_impact.wood", CHAN_VOICE, false);
-		break;
-	case 2:	/* metal */
-		StartSoundDef("sfx_impact.metal", CHAN_VOICE, false);
-		break;
-	case 3: /* flesh */
-		StartSoundDef("sfx_impact.flesh", CHAN_VOICE, false);
-		break;
-	case 4:	/* concrete */
-		StartSoundDef("sfx_impact.concrete", CHAN_VOICE, false);
-		break;
-	case -1: /* none */
-	default:
-		break;
-	}
+    switch (m_flShootSounds) {
+    case 0: /* glass */
+        StartSoundDef("sfx_impact.glass", CHAN_VOICE, false);
+        break;
+    case 1: /* wood */
+        StartSoundDef("sfx_impact.wood", CHAN_VOICE, false);
+        break;
+    case 2: /* metal */
+        StartSoundDef("sfx_impact.metal", CHAN_VOICE, false);
+        break;
+    case 3: /* flesh */
+        StartSoundDef("sfx_impact.flesh", CHAN_VOICE, false);
+        break;
+    case 4: /* concrete */
+        StartSoundDef("sfx_impact.concrete", CHAN_VOICE, false);
+        break;
+    case -1: /* none */
+    default:
+        break;
+    }
 
-	if (m_flGibLife <= 0)
-		m_flGibLife = 1.0f;
+    if (m_flGibLife <= 0)
+        m_flGibLife = 1.0f;
 
-	makevectors(GetAngles());
-	vecThrowVel = v_forward;
-	vecThrowVel += (random(-1,1) * v_right) * m_flVariance;
-	vecThrowVel += (random(-1,1) * v_up) * m_flVariance;
-	vecThrowVel *= m_flVelocity;
+    makevectors(GetAngles());
+    vecThrowVel = v_forward;
+    vecThrowVel += (random(-1,1) * v_right) * m_flVariance;
+    vecThrowVel += (random(-1,1) * v_up) * m_flVariance;
+    vecThrowVel *= m_flVelocity;
 
-	vecSpinVel[0] = random(-1,1) * 32;
-	vecSpinVel[1] = random(-1,1) * 32;
-	vecSpinVel[2] = random(-1,1) * 32;
-	eGib.SetVelocity(vecThrowVel);
-	eGib.SetAngularVelocity(vecSpinVel);
-	eGib.ScheduleThink(Destroy, m_flGibLife);
+    vecSpinVel[0] = random(-1,1) * 32;
+    vecSpinVel[1] = random(-1,1) * 32;
+    vecSpinVel[2] = random(-1,1) * 32;
+    eGib.SetVelocity(vecThrowVel);
+    eGib.SetAngularVelocity(vecSpinVel);
+    eGib.ScheduleThink(Destroy, m_flGibLife);
 }
 
 void
 env_shooter::ShooterLoop(void)
 {
-	ShootGib();
-	m_iGibsLeft--;
+    ShootGib();
+    m_iGibsLeft--;
 
-	/* keep shooting til we're done */
-	if (m_iGibsLeft) {
-		ScheduleThink(ShooterLoop, m_flDelay);
-	} else {
-		/* no more gibs left, destroy if wanted */
-		if (HasSpawnFlags(EVSHOOTER_REPEATABLE) == false) {
-			ScheduleThink(Destroy, m_flDelay);
-		}
-	}
+    /* keep shooting til we're done */
+    if (m_iGibsLeft) {
+        ScheduleThink(ShooterLoop, m_flDelay);
+    } else {
+        /* no more gibs left, destroy if wanted */
+        if (HasSpawnFlags(EVSHOOTER_REPEATABLE) == false) {
+            ScheduleThink(Destroy, m_flDelay);
+        }
+    }
 }
 
 void
 env_shooter::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		ReleaseThink();
-		break;
-	case TRIG_ON:
-		/* reset gib count if repeatable. */
-		if (HasSpawnFlags(EVSHOOTER_REPEATABLE) == true) {
-			m_iGibsLeft = m_iGibs;
-		}
+    switch (state) {
+    case TRIG_OFF:
+        ReleaseThink();
+        break;
+    case TRIG_ON:
+        /* reset gib count if repeatable. */
+        if (HasSpawnFlags(EVSHOOTER_REPEATABLE) == true) {
+            m_iGibsLeft = m_iGibs;
+        }
 
-		ScheduleThink(ShooterLoop, m_flDelay);
-		break;
-	default:
-		if (IsThinking() == false)
-			Trigger(act, TRIG_ON);
-		else
-			Trigger(act, TRIG_OFF);
-	}
+        ScheduleThink(ShooterLoop, m_flDelay);
+        break;
+    default:
+        if (IsThinking() == false)
+            Trigger(act, TRIG_ON);
+        else
+            Trigger(act, TRIG_OFF);
+    }
 }
 
 void
 env_shooter::Input(entity entityActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "Shoot":
-		ShootGib();
-	default:
-		super::Input(entityActivator, inputName, dataField);
-	}
+    switch (inputName) {
+    case "shoot":
+        ShootGib();
+    default:
+        super::Input(entityActivator, inputName, dataField);
+    }
 }

@@ -33,11 +33,11 @@ Let's take a look at an example **MapTweak**:
 ```
 hldm_tweak
 {
-	when-cvar deathmatch equals 2
-	when-serverinfo *bspversion equals 30
+    when-cvar deathmatch equals 2
+    when-serverinfo *bspversion equals 30
 
-	replace weapon_gauss info_null
-	replace weapon_egon info_null
+    replace weapon_gauss info_null
+    replace weapon_egon info_null
 }
 ```
 
@@ -61,20 +61,25 @@ At this time, `when-cvar` and `when-serverinfo` only do comparisons on numbers. 
 /** Data holding MapTweak entries. */
 typedef struct
 {
-	string name;
-	string cvarCheck;
-	string serverinfoCheck;
-	string itemTable; /* replace, replaces one entity class with another */
-	string appendTable; /* append, spawn along with every instance of named entity class */
-	string spawnDataCheck;
+    string name;
+    string cvarCheck;
+    string serverinfoCheck;
+    string itemTable; /* replace, replaces one entity class with another */
+    string appendTable; /* append, spawn along with every instance of named entity class */
+    string spawnDataCheck;
 } mapTweak_t;
 
-/** Called upon server init, after all [EntityDef](@ref entitydef) have been initialized. */
-void MapTweaks_Init(void);
+class
+ncMapTweakManager
+{
+    /** Called upon server init, after all [EntityDef](@ref entitydef) have been initialized. */
+    nonvirtual void Init(void);
 
-/** Will take an existing entity, and apply the currently valid map tweaks to it. */
-bool MapTweak_EntitySpawn(entity);
+    /** Will take an existing entity, and apply the currently valid map tweaks to it. */
+    nonvirtual bool EntitySpawn(entity);
 
-void MapTweak_ListActive(void);
+    /** Called by `listMapTweaks`. */
+    nonvirtual void ListActive(void);
+};
 
 /** @} */ // end of maptweaks

@@ -27,23 +27,23 @@ class
 ncUserEntity_URL:ncUserEntity
 {
 public:
-	void ncUserEntity_URL(void);
+    void ncUserEntity_URL(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
 
-	nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL, string videoPreview);
+    nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL, string videoPreview);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual void ReceiveEntity(float flNew, float flChanged);
 #endif
 
 private:
-	string m_userPageURL;
+    string m_userPageURL;
 
 #ifdef CLIENT
-	entity m_videoPic;
+    entity m_videoPic;
 #endif
 };

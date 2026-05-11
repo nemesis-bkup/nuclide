@@ -17,72 +17,72 @@
 void
 Mapcycle_Load(string filename)
 {
-	filestream fs_mapcycle;
-	string temp;
-	int mapCount = 0i;
-	string lastMap = "";
-	int nextMapID = 0i;
+    filestream fs_mapcycle;
+    string temp;
+    int mapCount = 0i;
+    string lastMap = "";
+    int nextMapID = 0i;
 
-	fs_mapcycle = fopen(filename, FILE_READ);
+    fs_mapcycle = fopen(filename, FILE_READ);
 
-	if (fs_mapcycle < 0) {
-		ncError("Missing file %s", filename);
-		return;
-	}
+    if (fs_mapcycle < 0) {
+        ncError("Missing file %s", filename);
+        return;
+    }
 
-	/* read the lines in, see if the map exists and define an enumerated alias */
-	while ((temp = fgets(fs_mapcycle))) {
-		tokenize_console(temp);
-		string mapName = argv(0);
+    /* read the lines in, see if the map exists and define an enumerated alias */
+    while ((temp = fgets(fs_mapcycle))) {
+        tokenize_console(temp);
+        string mapName = argv(0);
 
-		if (fileExists(strcat("maps/", mapName, ".bsp")) == false) {
-			continue;
-		}
+        if (fileExists(strcat("maps/", mapName, ".bsp")) == false) {
+            continue;
+        }
 
-		localcmd(sprintf("alias mc_%i \"map %s;alias nextmap mc_%i\"\n", mapCount, mapName, mapCount + 1i));
+        localcmd(sprintf("alias mc_%i \"map %s;alias nextmap mc_%i\"\n", mapCount, mapName, mapCount + 1i));
 
-		if (mapname == lastMap) {
-			nextMapID = mapCount;
-		}
+        if (mapname == lastMap) {
+            nextMapID = mapCount;
+        }
 
-		lastMap = mapName;
-		mapCount++;
-	}
+        lastMap = mapName;
+        mapCount++;
+    }
 
-	fclose(fs_mapcycle);
+    fclose(fs_mapcycle);
 
-	if (mapCount <= 0i) {
-		return;
-	}
+    if (mapCount <= 0i) {
+        return;
+    }
 
-	/* override the last map so that it goes back to m0 */
-	localcmd(sprintf("alias mc_%i \"map %s;alias nextmap mc_0\"\n", mapCount - 1i, lastMap));
+    /* override the last map so that it goes back to m0 */
+    localcmd(sprintf("alias mc_%i \"map %s;alias nextmap mc_0\"\n", mapCount - 1i, lastMap));
 
-	/* the current map in the list will decide the nextmap */
-	localcmd(sprintf("alias nextmap mc_%i\n", nextMapID));
+    /* the current map in the list will decide the nextmap */
+    localcmd(sprintf("alias nextmap mc_%i\n", nextMapID));
 
-	ncLog("...MapCycle initialized with %i entries.", mapCount);
+    ncLog("...MapCycle initialized with %i entries.", mapCount);
 }
 
 void
 Mapcycle_Init(void)
 {
-	string cycleFile = autocvar(g_mapCycle, "mapcycle.txt");
+    string cycleFile = autocvar(g_mapCycle, "mapcycle.txt");
 
-	/* by default, this will be multiplayer only */
-	if (cvars.GetInteger("sv_playerslots") <= 1i) {
-		return;
-	}
+    /* by default, this will be multiplayer only */
+    if (cvars.GetInteger("sv_playerslots") <= 1i) {
+        return;
+    }
 
-	InitStart();
+    InitStart();
 
-	/* in case some server admin wants a map to continously loop */
-	if (!STRING_SET(cycleFile)) {
-		ncLog("MapCycle disabled via cvar. Skipping.");
-		localcmd("alias nextmap map_restart 0\n");
-		return;
-	}
+    /* in case some server admin wants a map to continously loop */
+    if (!STRING_SET(cycleFile)) {
+        ncLog("MapCycle disabled via cvar. Skipping.");
+        localcmd("alias nextmap map_restart 0\n");
+        return;
+    }
 
-	Mapcycle_Load(cycleFile);
-	InitEnd();
+    Mapcycle_Load(cycleFile);
+    InitEnd();
 }

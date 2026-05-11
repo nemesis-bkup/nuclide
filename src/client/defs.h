@@ -23,11 +23,11 @@
 #include "font.h"
 #include "fade.h"
 #include "cmd.h"
-#include "util.h"
 #include "View.h"
 #include "Radar.h"
 #include "crosshair.h"
 #include "hud.h"
+#include "draw.h"
 #include "InterfaceSpriteSheet.h"
 #include "UserInfo.h"
 #include "UserInfoManager.h"
@@ -57,96 +57,94 @@ var bool autocvar_net_showUpdates = false;
 var bool g_clientInitialized = false;
 
 #define PRINTFLAG(x) if (autocvar_net_showUpdates || g_net_debug) \
-	print(sprintf("%f %s read update %s\n", time, classname, #x));
+    print(sprintf("%f %s read update %s\n", time, classname, #x));
 
 #define READENTITY_BYTE(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readbyte();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readbyte();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_SHORT(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readshort();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readshort();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_FLOAT(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readfloat();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readfloat();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_INT(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readint();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readint();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_STRING(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readstring();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readstring();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_COORD(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readcoord();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readcoord();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_ANGLE(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readangle();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readangle();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_ENTITY(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = findentity(world, ::entnum, readentitynum());\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = findentity(world, ::entnum, readentitynum());\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_ENTNUM(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readentitynum();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readentitynum();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_COLOR(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readbyte() / 255;\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readbyte() / 255;\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 #define READENTITY_MODELINDEX(field, changedflag) {\
-	if (flChanged & changedflag) {\
-		field = readshort();\
-		PRINTFLAG(changedflag); \
-	}\
+    if (flChanged & changedflag) {\
+        field = readshort();\
+        PRINTFLAG(changedflag); \
+    }\
 }
 
 /* undocumented printcall types */
-#define PRINT_LOW		0
-#define PRINT_MEDIUM	1
-#define PRINT_HIGH		2
-#define PRINT_CHAT		3
+#define PRINT_LOW       0
+#define PRINT_MEDIUM    1
+#define PRINT_HIGH      2
+#define PRINT_CHAT      3
 
 var bool g_dlight_cached = false;
 var bool g_client_world_loaded = false;
 
-var bool g_focus;
-bool Util_IsFocused(void);
 
 /* fonts */
 font_s FONT_16;
@@ -192,8 +190,8 @@ void CSQC_UpdateSeat(void);
 void
 drawstring_r(vector p, string t, vector s, vector c, float a, float f)
 {
-	p[0] -= stringwidth(t, TRUE, s);
-	drawstring(p, t, s, c, a, f);
+    p[0] -= stringwidth(t, TRUE, s);
+    drawstring(p, t, s, c, a, f);
 }
 
 void GameMessage_Setup(string, int);
@@ -212,14 +210,14 @@ void View_SetViewmodelSkin(float);
 void
 drawrect(vector pos, vector sz, float thickness, vector rgb, float al, optional float dfl)
 {
-	/* top */
-	drawfill(pos, [sz[0], thickness], rgb, al, dfl);
-	/* bottom */
-	drawfill(pos + [0, sz[1] - thickness], [sz[0], thickness], rgb, al, dfl);
-	/* left */
-	drawfill(pos + [0, thickness], [thickness, sz[1] - (thickness * 2)], rgb, al, dfl);
-	/* right */
-	drawfill(pos + [sz[0] - thickness, thickness], [thickness, sz[1] - (thickness * 2)], rgb, al, dfl);
+    /* top */
+    drawfill(pos, [sz[0], thickness], rgb, al, dfl);
+    /* bottom */
+    drawfill(pos + [0, sz[1] - thickness], [sz[0], thickness], rgb, al, dfl);
+    /* left */
+    drawfill(pos + [0, thickness], [thickness, sz[1] - (thickness * 2)], rgb, al, dfl);
+    /* right */
+    drawfill(pos + [sz[0] - thickness, thickness], [thickness, sz[1] - (thickness * 2)], rgb, al, dfl);
 }
 
 /** Like drawpic, but instead of screen coords, it will take world coords.
@@ -228,73 +226,73 @@ rendering in (g_view). So it may only be called within certain contexts. */
 void
 drawpic3d(vector worldpos, string mat, vector sz, vector rgb, float alpha)
 {
-	static bool
-	drawpic3d_visible(vector p1) {
-		vector delta;
-		float fov;
-		vector p2 = g_view.GetCameraOrigin();
-		vector ang = g_view.GetCameraAngle();
+    static bool
+    drawpic3d_visible(vector p1) {
+        vector delta;
+        float fov;
+        vector p2 = g_view.GetCameraOrigin();
+        vector ang = g_view.GetCameraAngle();
 
-		makevectors(ang);
-		delta = normalize (p1 - p2);
-		fov = delta * v_forward;
+        makevectors(ang);
+        delta = normalize (p1 - p2);
+        fov = delta * v_forward;
 
-		if (fov > (g_view.GetAFOV()/180)) {
-			traceline(p2, p1, MOVE_WORLDONLY, self);
-			if (trace_fraction == 1.0) {
-				return (1);
-			}
-		}
-		return (0);
-	}
+        if (fov > (g_view.GetAFOV()/180)) {
+            traceline(p2, p1, MOVE_WORLDONLY, self);
+            if (trace_fraction == 1.0) {
+                return (1);
+            }
+        }
+        return (0);
+    }
 
-	if (drawpic3d_visible(worldpos) == true) {
-		vector vecProj = project(worldpos) - (sz/2);
-		drawpic(vecProj, mat, sz, rgb, alpha);
-	}
+    if (drawpic3d_visible(worldpos) == true) {
+        vector vecProj = project(worldpos) - (sz/2);
+        drawpic(vecProj, mat, sz, rgb, alpha);
+    }
 }
 
 /** Draws a (debug) cone in 3D space. */
 void
 drawcone(vector vecOrigin, vector vecAngle, int iDivisions, float flLength, float flRadius, vector vecColor, float flAlpha)
 {
-	vector c;
-	vector e0;
-	vector e1;
-	float angDelta;
+    vector c;
+    vector e0;
+    vector e1;
+    float angDelta;
 
-	static vector
-	perpendicularCross(vector v)
-	{
-		float min = fabs(v[0]);
-		vector ca = [1, 0, 0];
+    static vector
+    perpendicularCross(vector v)
+    {
+        float min = fabs(v[0]);
+        vector ca = [1, 0, 0];
 
-		if (fabs(v[1]) < min) {
-			min = fabs(v.y);
-			ca = [0, 1, 0];
-		}
+        if (fabs(v[1]) < min) {
+            min = fabs(v.y);
+            ca = [0, 1, 0];
+        }
 
-		if (fabs(v[2]) < min) {
-			ca = [0, 0, 1];
-		}
+        if (fabs(v[2]) < min) {
+            ca = [0, 0, 1];
+        }
 
-		return crossproduct(v, ca);
-	}
+        return crossproduct(v, ca);
+    }
 
-	makevectors(vecAngle + [0, 0, 0]);
-	vecAngle = v_forward * -1;
-	c = vecOrigin + (-vecAngle * flLength);
-	e0 = perpendicularCross(vecAngle);
-	e1 = crossproduct(e0, vecAngle);
-	angDelta = 360.0 / (iDivisions-1) * (M_PI / 180.0f);
+    makevectors(vecAngle + [0, 0, 0]);
+    vecAngle = v_forward * -1;
+    c = vecOrigin + (-vecAngle * flLength);
+    e0 = perpendicularCross(vecAngle);
+    e1 = crossproduct(e0, vecAngle);
+    angDelta = 360.0 / (iDivisions-1) * (M_PI / 180.0f);
 
     R_BeginPolygon("debugcone");
     R_PolygonVertex(vecOrigin, [0,0], vecColor, flAlpha);
     for (int i = 0; i < iDivisions; ++i) {
-		vector vecPoint;
-		float rad = angDelta * i;
-		vecPoint = c + (((e0 * cos(rad)) + (e1 * sin(rad))) * flRadius);
-		R_PolygonVertex(vecPoint, [0,0], vecColor, flAlpha);
+        vector vecPoint;
+        float rad = angDelta * i;
+        vecPoint = c + (((e0 * cos(rad)) + (e1 * sin(rad))) * flRadius);
+        R_PolygonVertex(vecPoint, [0,0], vecColor, flAlpha);
     }
     R_EndPolygon();
 }
@@ -303,134 +301,134 @@ drawcone(vector vecOrigin, vector vecAngle, int iDivisions, float flLength, floa
 void
 precache_cubemap(string path)
 {
-	precache_pic(strcat(path, "_bk"));
-	precache_pic(strcat(path, "_dn"));
-	precache_pic(strcat(path, "_ft"));
-	precache_pic(strcat(path, "_lf"));
-	precache_pic(strcat(path, "_rt"));
-	precache_pic(strcat(path, "_up"));
+    precache_pic(strcat(path, "_bk"));
+    precache_pic(strcat(path, "_dn"));
+    precache_pic(strcat(path, "_ft"));
+    precache_pic(strcat(path, "_lf"));
+    precache_pic(strcat(path, "_rt"));
+    precache_pic(strcat(path, "_up"));
 }
 
 typedef enum
 {
-	STANCE_DEFAULT = 0,
-	STANCE_CROUCH = 1,
-	STANCE_PRONE = 2,
+    STANCE_DEFAULT = 0,
+    STANCE_CROUCH = 1,
+    STANCE_PRONE = 2,
 } movementStance_t;
 
 struct
 {
-	/* viewmodel stuff */
-	entity m_eViewModel;
-	entity m_eMuzzleflash;
-	int m_iVMBones;
-	entity m_eViewModelL;
-	entity m_eMuzzleflashL;
-	int m_iVMBonesL;
+    /* viewmodel stuff */
+    entity m_eViewModel;
+    entity m_eMuzzleflash;
+    int m_iVMBones;
+    entity m_eViewModelL;
+    entity m_eMuzzleflashL;
+    int m_iVMBonesL;
 
-	void(void) m_pEventCall;
-	float m_flEventTime;
-	float m_flEventFrame;
-	float m_flEventMdl;
-	entity m_iEventEntity;
+    void(void) m_pEventCall;
+    float m_flEventTime;
+    float m_flEventFrame;
+    float m_flEventMdl;
+    entity m_iEventEntity;
 
-	int m_iLastWeapon;
-	int m_iOldWeapon;
+    int m_iLastWeapon;
+    int m_iOldWeapon;
 
-	/* damage overlay */
-	float m_flDamageAlpha;
-	vector m_vecDamagePos;
-	int m_iDamageFlags;
+    /* damage overlay */
+    float m_flDamageAlpha;
+    vector m_vecDamagePos;
+    int m_iDamageFlags;
 
-	/* +zoomin cmd */
-	int m_iZoomed;
-	float m_flZoomTime;
+    /* +zoomin cmd */
+    int m_iZoomed;
+    float m_flZoomTime;
 
-	/* player fields */
-	entity m_ePlayer;
-	vector m_vecPredictedOrigin;
-	vector m_vecPredictedOriginOld;
-	vector m_vecPredictedVelocity;
-	float m_flPredictedFlags;
+    /* player fields */
+    entity m_ePlayer;
+    vector m_vecPredictedOrigin;
+    vector m_vecPredictedOriginOld;
+    vector m_vecPredictedVelocity;
+    float m_flPredictedFlags;
 
-	/* camera fields */
-	vector m_vecCameraOrigin;
-	vector m_vecCameraAngle;
-	float m_flCameraTime;
+    /* camera fields */
+    vector m_vecCameraOrigin;
+    vector m_vecCameraAngle;
+    float m_flCameraTime;
 
-	int m_iHUDWeaponSelected;
-	float m_flHUDWeaponSelectTime;
+    int m_iHUDWeaponSelected;
+    float m_flHUDWeaponSelectTime;
 
-	int m_iScoresVisible;
-	bool m_showInterface;
+    int m_iScoresVisible;
+    bool m_showInterface;
 
-	/* saturn controller */
-	int m_iSaturnMenu;
+    /* saturn controller */
+    int m_iSaturnMenu;
 
-	/* centerprint related */
-	float m_flCenterprintAlpha;
-	float m_flCenterprintTime;
-	float m_iCenterprintLines;
-	string m_strCenterprintBuffer[18];
+    /* centerprint related */
+    float m_flCenterprintAlpha;
+    float m_flCenterprintTime;
+    float m_iCenterprintLines;
+    string m_strCenterprintBuffer[18];
 
-	/* chat related */
-	float m_flPrintTime;
-	string m_strPrintBuffer[5];
-	int m_iPrintLines;
+    /* chat related */
+    float m_flPrintTime;
+    string m_strPrintBuffer[5];
+    int m_iPrintLines;
 
-	bool m_iInputAttack;
-	bool m_iInputAttack2;
-	bool m_iInputReload;
-	bool m_iInputUse;
-	bool m_iInputDuck;
-	bool m_iInputSprint;
-	bool m_iInputProne;
-	bool m_iInputJump;
-	movementStance_t m_dForceStance;
-	float m_flInputBlockTime;
+    bool m_iInputAttack;
+    bool m_iInputAttack2;
+    bool m_iInputReload;
+    bool m_iInputUse;
+    bool m_iInputDuck;
+    bool m_iInputSprint;
+    bool m_iInputProne;
+    bool m_iInputJump;
+    movementStance_t m_dForceStance;
+    float m_flInputBlockTime;
 
-	/* fading */
-	float m_flFadeDuration;
-	float m_flFadeHold;
-	float m_flFadeMaxAlpha;
-	float m_flFadeStyle;
-	float m_flFadeAlpha;
-	float m_flFadeTime;
-	float m_flSprintLerp;
-	vector m_vecFadeColor;
-	int m_iFadeActive;
+    /* fading */
+    float m_flFadeDuration;
+    float m_flFadeHold;
+    float m_flFadeMaxAlpha;
+    float m_flFadeStyle;
+    float m_flFadeAlpha;
+    float m_flFadeTime;
+    float m_flSprintLerp;
+    vector m_vecFadeColor;
+    int m_iFadeActive;
 
-	/* shake */
-	float m_flShakeFreq;
-	float m_flShakeDuration;
-	float m_flShakeTime;
-	float m_flShakeAmp;
+    /* shake */
+    float m_flShakeFreq;
+    float m_flShakeDuration;
+    float m_flShakeTime;
+    float m_flShakeAmp;
 
-	vector m_vecLag;
+    vector m_vecLag;
 
-	/* vehicles */
-	float m_flVehTransition;
-	vector m_vecVehEntry;
+    /* vehicles */
+    float m_flVehTransition;
+    vector m_vecVehEntry;
 
-	/* new XR helpers */
-	bool m_bMoveForward;
+    /* new XR helpers */
+    bool m_bMoveForward;
 
-	bool m_bInterfaceFocused;
-	bool m_bSpecInput;
+    bool m_bInterfaceFocused;
+    bool m_bSpecInput;
 
-	int m_iLeanDir;
-	float m_flLeaning;
-	int m_iSprinting;
+    int m_iLeanDir;
+    float m_flLeaning;
+    int m_iSprinting;
 
-	int m_iSelectedWeapon;
-	bool m_bCommandMenu;
-	ncWeapon m_weaponRef;
+    int m_iSelectedWeapon;
+    bool m_bCommandMenu;
+    ncWeapon m_weaponRef;
 
-	float m_weaponAnimSequence;
-	float m_weaponAnimTime;
-	float m_weaponModel;
-	string m_weaponClass;
-	string m_weaponFireInfo;
+    float m_weaponAnimSequence;
+    float m_weaponAnimTime;
+    float m_weaponModel;
+    string m_weaponClass;
+    string m_weaponFireInfo;
     entity m_inputFocus;
 } g_seats[4], *pSeat;
 

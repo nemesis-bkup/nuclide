@@ -33,9 +33,9 @@ class
 func_monsterclip:ncEntity
 {
 public:
-	void func_monsterclip(void);
+    void func_monsterclip(void);
 
-	virtual void Respawn(void);
+    virtual void Respawn(void);
 };
 
 void
@@ -47,10 +47,10 @@ func_monsterclip::func_monsterclip(void)
 void
 func_monsterclip::Respawn(void)
 {
-	super::Respawn();
-	ClearAngles();
-	SetSolid(SOLID_BSP);
-	SetMovetype(MOVETYPE_NONE);
-	SetSkin(-17); /* undocumented MONSTERCLIP */
-	Hide();
+    super::Respawn();
+    ClearAngles();
+    SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_NONE);
+    SetSkin(-17); /* undocumented MONSTERCLIP */
+    Hide();
 }

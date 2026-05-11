@@ -22,108 +22,108 @@
 class vguiLabel:vguiWidget
 {
 public:
-	void vguiLabel(void);
+    void vguiLabel(void);
 
-	nonvirtual void SetTitle(string);
+    nonvirtual void SetTitle(string);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
-	virtual void SetTextSize(int);
-	virtual void SetAlignment(float);
-	virtual void SetShadow(bool);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
+    virtual void SetTextSize(int);
+    virtual void SetAlignment(float);
+    virtual void SetShadow(bool);
 
 private:
-	string m_strTitle;
-	int m_labelFlags;
-	int m_textSize;
-	bool m_castShadow;
-	vector m_titleColor;
+    string m_strTitle;
+    int m_labelFlags;
+    int m_textSize;
+    bool m_castShadow;
+    vector m_titleColor;
 };
 
 void
 vguiLabel::vguiLabel(void)
 {
-	m_strTitle = __NULL__;
-	m_labelFlags = AF_TOP | AF_LEFT;
-	m_castShadow = false;
-	m_titleColor = g_vec_null;
+    m_strTitle = __NULL__;
+    m_labelFlags = AF_TOP | AF_LEFT;
+    m_castShadow = false;
+    m_titleColor = g_vec_null;
 }
 
 void
 vguiLabel::SetShadow(bool newState)
 {
-	m_castShadow = newState;
+    m_castShadow = newState;
 }
 
 void
 vguiLabel::Spawned(void)
 {
-	SetSize([0,0]);
+    SetSize([0,0]);
 }
 
 void
 vguiLabel::SetTitle (string strName)
 {
-	m_strTitle = localize(strName);
-	drawfont = g_fntDefault.iID;
+    m_strTitle = localize(strName);
+    drawfont = g_fntDefault.iID;
 
-	if (GetSize() == [0,0]) {
-	/* hack, add 2 just to make sure it doesn't immediately wrap. bug
-	 * in engines' textfield thing in combo with ttf. */
-		SetSize([2 + stringwidth(m_strTitle, TRUE, [g_fntDefault.iScaleX, g_fntDefault.iScaleY]), 16]);
-	}
+    if (GetSize() == [0,0]) {
+    /* hack, add 2 just to make sure it doesn't immediately wrap. bug
+     * in engines' textfield thing in combo with ttf. */
+        SetSize([2 + stringwidth(m_strTitle, TRUE, [g_fntDefault.iScaleX, g_fntDefault.iScaleY]), 16]);
+    }
 }
 
 void
 vguiLabel::SetTextSize(int val)
 {
-	m_textSize = val;
+    m_textSize = val;
 }
 
 void
 vguiLabel::SetAlignment(float alignment)
 {
-	m_labelFlags &= ~AF_LEFT;
-	m_labelFlags &= ~AF_TOP;
-	m_labelFlags &= ~AF_RIGHT;
-	m_labelFlags &= ~AF_BOTTOM;
-	m_labelFlags |= alignment;
+    m_labelFlags &= ~AF_LEFT;
+    m_labelFlags &= ~AF_TOP;
+    m_labelFlags &= ~AF_RIGHT;
+    m_labelFlags &= ~AF_BOTTOM;
+    m_labelFlags |= alignment;
 }
 
 void
 vguiLabel::Draw(void)
 {
-	if (!STRING_SET(m_strTitle)) {
-		return;
-	}
+    if (!STRING_SET(m_strTitle)) {
+        return;
+    }
 
-	vguiTheme theme = GetTheme();
-	vector pos;
-	vector size;
+    vguiTheme theme = GetTheme();
+    vector pos;
+    vector size;
 
-	pos = m_parent.m_vecOrigin + m_vecOrigin;
-	size = m_vecSize;
+    pos = GetAbsPos();
+    size = GetSize();
 
-	if (m_castShadow) {
-		if (!m_textSize)
-			Font_DrawField(pos + [2,2], size, strcat("^x000", m_strTitle), g_fntDefault, m_labelFlags);
-		else
-			Font_DrawFieldAtHeight(pos + [2,2], size, m_textSize, strcat("^x000", m_strTitle), g_fntDefault, m_labelFlags);
-	}
+    if (m_castShadow) {
+        if (!m_textSize)
+            Font_DrawField(pos + [2,2], size, strcat("^x000", m_strTitle), g_fntDefault, m_labelFlags);
+        else
+            Font_DrawFieldAtHeight(pos + [2,2], size, m_textSize, strcat("^x000", m_strTitle), g_fntDefault, m_labelFlags);
+    }
 
-	if (!m_textSize)
-		Font_DrawField(pos, size, m_strTitle, g_fntDefault, m_labelFlags);
-	else
-		Font_DrawFieldAtHeight(pos, size, m_textSize, m_strTitle, g_fntDefault, m_labelFlags);
+    if (!m_textSize)
+        Font_DrawField(pos, size, m_strTitle, g_fntDefault, m_labelFlags);
+    else
+        Font_DrawFieldAtHeight(pos, size, m_textSize, m_strTitle, g_fntDefault, m_labelFlags);
 
 
 
-	theme.DrawLabel(pos, m_strTitle, m_labelFlags, m_textSize, size, VGUI_STATE_NORMAL);
+    theme.DrawLabel(pos, m_strTitle, m_labelFlags, m_textSize, size, VGUI_STATE_NORMAL);
 }
 
 bool
 vguiLabel::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	return false;
+    return false;
 }

@@ -1,3 +1,4 @@
+// progs/dog.mdl.framegroups
 #define DOG_ATTACK	0
 #define DOG_DEATH1	1
 #define DOG_DEATH2	2

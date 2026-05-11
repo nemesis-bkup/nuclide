@@ -32,19 +32,19 @@ class
 script_brushmodel:ncBrushTrigger
 {
 public:
-	void script_brushmodel(void);
-	virtual void Trigger(entity, triggermode_t);
+    void script_brushmodel(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
 script_brushmodel::script_brushmodel(void)
 {
-	
+    
 }
 
 void
 script_brushmodel::Trigger(entity entityActivator, triggermode_t state)
 {
-	
+    
 }
 

@@ -26,34 +26,34 @@ class
 ncUserInfoManager
 {
 public:
-	void ncUserInfoManager(void);
+    void ncUserInfoManager(void);
 
-	nonvirtual void InitWithSlots(int maxUserSlots);
-	nonvirtual void Shutdown(void);
+    nonvirtual void InitWithSlots(int maxUserSlots);
+    nonvirtual void Shutdown(void);
 
-	nonvirtual void UpdateRanking(void);
-	nonvirtual void UpdateCachedSlot(int cachedSlot);
+    nonvirtual void UpdateRanking(void);
+    nonvirtual void UpdateCachedSlot(int cachedSlot);
 
-	nonvirtual int NumSlots(void);
+    nonvirtual int NumSlots(void);
 
-	nonvirtual void DebugPrint(void);
+    nonvirtual void DebugPrint(void);
 
-	/* Returns the player info according to internal index. Invalid queries return -1. */
-	nonvirtual ncUserInfo InfoByIndex(int targetIndex);
+    /* Returns the player info according to internal index. Invalid queries return -1. */
+    nonvirtual ncUserInfo InfoByIndex(int targetIndex);
 
-	/* Returns the player info according to the server ranking. Invalid queries return -1. */
-	nonvirtual ncUserInfo InfoByRanking(int rankingIndex);
+    /* Returns the player info according to the server ranking. Invalid queries return -1. */
+    nonvirtual ncUserInfo InfoByRanking(int rankingIndex);
 
-	/* Return the local player info. */
-	nonvirtual ncUserInfo LocalPlayerInfo(void);
+    /* Return the local player info. */
+    nonvirtual ncUserInfo LocalPlayerInfo(void);
 
 private:
 
-	int m_numUsers;
-	ncUserInfo *m_users;
+    int m_numUsers;
+    ncUserInfo *m_users;
 
-	/* each index = id of a player slot */
-	int *m_serverRanking;
+    /* each index = id of a player slot */
+    int *m_serverRanking;
 };
 
 ncUserInfoManager g_userInfo;

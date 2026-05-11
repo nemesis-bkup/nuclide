@@ -36,126 +36,126 @@ class
 game_zone_player:ncBrushTrigger
 {
 public:
-	void game_zone_player(void);
+    void game_zone_player(void);
 
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void SpawnKey(string, string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	string m_strInTarget;
-	string m_strOutTarget;
-	string m_strInCount;
-	string m_strOutCount;
+    string m_strInTarget;
+    string m_strOutTarget;
+    string m_strInCount;
+    string m_strOutCount;
 };
 
 void
 game_zone_player::game_zone_player(void)
 {
-	m_strInTarget = __NULL__;
-	m_strOutTarget = __NULL__;
-	m_strInCount = __NULL__;
-	m_strOutCount = __NULL__;
+    m_strInTarget = __NULL__;
+    m_strOutTarget = __NULL__;
+    m_strInCount = __NULL__;
+    m_strOutCount = __NULL__;
 }
 
 void
 game_zone_player::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveString(handle, "m_strInTarget", m_strInTarget);
-	SaveString(handle, "m_strOutTarget", m_strOutTarget);
-	SaveString(handle, "m_strInCount", m_strInCount);
-	SaveString(handle, "m_strOutCount", m_strOutCount);
+    SaveString(handle, "m_strInTarget", m_strInTarget);
+    SaveString(handle, "m_strOutTarget", m_strOutTarget);
+    SaveString(handle, "m_strInCount", m_strInCount);
+    SaveString(handle, "m_strOutCount", m_strOutCount);
 }
 
 void
 game_zone_player::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strInTarget":
-		m_strInTarget = ReadString(setValue);
-		break;
-	case "m_strOutTarget":
-		m_strOutTarget = ReadString(setValue);
-		break;
-	case "m_strInCount":
-		m_strInCount = ReadString(setValue);
-		break;
-	case "m_strOutCount":
-		m_strOutCount = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strInTarget":
+        m_strInTarget = ReadString(setValue);
+        break;
+    case "m_strOutTarget":
+        m_strOutTarget = ReadString(setValue);
+        break;
+    case "m_strInCount":
+        m_strInCount = ReadString(setValue);
+        break;
+    case "m_strOutCount":
+        m_strOutCount = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 game_zone_player::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "intarget":
-		m_strInTarget = ReadString(setValue);
-		break;
-	case "incount":
-		m_strInCount = ReadString(setValue);
-		break;
-	case "outtarget":
-		m_strOutTarget = ReadString(setValue);
-		break;
-	case "outcount":
-		m_strOutCount = ReadString(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "intarget":
+        m_strInTarget = ReadString(setValue);
+        break;
+    case "incount":
+        m_strInCount = ReadString(setValue);
+        break;
+    case "outtarget":
+        m_strOutTarget = ReadString(setValue);
+        break;
+    case "outcount":
+        m_strOutCount = ReadString(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 game_zone_player::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 game_zone_player::Trigger(entity entityActivator, triggermode_t state)
 {
-	int playersIn = 0i;
-	int playersOut = 0i;
-	ncEntity inTarget = (ncEntity)find(world, ::targetname, m_strInTarget);
-	ncEntity outTarget = (ncEntity)find(world, ::targetname, m_strOutTarget);
+    int playersIn = 0i;
+    int playersOut = 0i;
+    ncEntity inTarget = (ncEntity)find(world, ::targetname, m_strInTarget);
+    ncEntity outTarget = (ncEntity)find(world, ::targetname, m_strOutTarget);
 
-	for (other = world; (other = next.Player(other));) {
-		if (IntersectsWith(other)) {
-			if (inTarget) {
-				inTarget.Trigger(other, state);
-			}
-			playersIn++;
-		} else {
-			if (outTarget) {
-				outTarget.Trigger(other, state);
-			}
-			playersOut++;
-		}
-	}
+    for (other = world; (other = next.Player(other));) {
+        if (IntersectsWith(other)) {
+            if (inTarget) {
+                inTarget.Trigger(other, state);
+            }
+            playersIn++;
+        } else {
+            if (outTarget) {
+                outTarget.Trigger(other, state);
+            }
+            playersOut++;
+        }
+    }
 
-	if (m_strInCount) {
-		game_counter inCounter = (game_counter)find(world, ::targetname, m_strInCount);
+    if (m_strInCount) {
+        game_counter inCounter = (game_counter)find(world, ::targetname, m_strInCount);
 
-		if (inCounter) {
-			inCounter.SetCount(playersIn);
-			inCounter.Trigger(entityActivator, TRIG_TOGGLE);
-		}
-	}
+        if (inCounter) {
+            inCounter.SetCount(playersIn);
+            inCounter.Trigger(entityActivator, TRIG_TOGGLE);
+        }
+    }
 
-	if (m_strOutCount) {
-		game_counter outCounter = (game_counter)find(world, ::targetname, m_strOutCount);
+    if (m_strOutCount) {
+        game_counter outCounter = (game_counter)find(world, ::targetname, m_strOutCount);
 
-		if (outCounter) {
-			outCounter.SetCount(playersIn);
-			outCounter.Trigger(entityActivator, TRIG_TOGGLE);
-		}
-	}
+        if (outCounter) {
+            outCounter.SetCount(playersIn);
+            outCounter.Trigger(entityActivator, TRIG_TOGGLE);
+        }
+    }
 }

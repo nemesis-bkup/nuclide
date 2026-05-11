@@ -16,17 +16,17 @@
 
 enumflags
 {
-	FR_STARTON,
-	FR_REVERSE,
-	FR_ZAXIS,
-	FR_XAXIS,
-	FR_ACCDCC,
-	FR_FANPAIN,
-	FR_NOTSOLID,
-	FR_SMALLRADIUS,
-	FR_MRADIUS,
-	FR_LRADIUS,
-	FR_TOGGLEDIR
+    FR_STARTON,
+    FR_REVERSE,
+    FR_ZAXIS,
+    FR_XAXIS,
+    FR_ACCDCC,
+    FR_FANPAIN,
+    FR_NOTSOLID,
+    FR_SMALLRADIUS,
+    FR_MRADIUS,
+    FR_LRADIUS,
+    FR_TOGGLEDIR
 };
 
 /*! \brief Server-Entity: Rotating Brush/Fan */
@@ -67,191 +67,191 @@ class
 func_rotating:ncRenderableEntity
 {
 public:
-	void func_rotating(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	
-	virtual void Rotate(void);
-	virtual void Blocked(entity);
-	virtual void Touch(entity);
-	virtual void SetMovementDirection(void);
+    void func_rotating(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    
+    virtual void Rotate(void);
+    virtual void Blocked(entity);
+    virtual void Touch(entity);
+    virtual void SetMovementDirection(void);
 
 private:
-	vector m_vecMoveDir;
-	float m_flSpeed;
-	float m_flDamage;
-	float m_flDir;
+    vector m_vecMoveDir;
+    float m_flSpeed;
+    float m_flDamage;
+    float m_flDir;
 };
 
 void
 func_rotating::func_rotating(void)
 {
-	m_vecMoveDir = [0.0f, 0.0f, 0.0f];
-	m_flSpeed = 100;
-	m_flDamage = 0.0f;
-	m_flDir = 0.0f;
+    m_vecMoveDir = [0.0f, 0.0f, 0.0f];
+    m_flSpeed = 100;
+    m_flDamage = 0.0f;
+    m_flDir = 0.0f;
 }
 
 void
 func_rotating::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveVector(handle, "m_vecMoveDir", m_vecMoveDir);
-	SaveFloat(handle, "m_flSpeed", m_flSpeed);
-	SaveFloat(handle, "m_flDamage", m_flDamage);
-	SaveFloat(handle, "m_flDir", m_flDir);
+    SaveVector(handle, "m_vecMoveDir", m_vecMoveDir);
+    SaveFloat(handle, "m_flSpeed", m_flSpeed);
+    SaveFloat(handle, "m_flDamage", m_flDamage);
+    SaveFloat(handle, "m_flDir", m_flDir);
 }
 
 void
 func_rotating::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_vecMoveDir":
-		m_vecMoveDir = ReadVector(setValue);
-		break;
-	case "m_flSpeed":
-		m_flSpeed = ReadFloat(setValue);
-		break;
-	case "m_flDamage":
-		m_flDamage = ReadFloat(setValue);
-		break;
-	case "m_flDir":
-		m_flDir = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_vecMoveDir":
+        m_vecMoveDir = ReadVector(setValue);
+        break;
+    case "m_flSpeed":
+        m_flSpeed = ReadFloat(setValue);
+        break;
+    case "m_flDamage":
+        m_flDamage = ReadFloat(setValue);
+        break;
+    case "m_flDir":
+        m_flDir = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_rotating::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "speed":
-		m_flSpeed = stof(setValue);
-		break;
-	case "dmg":
-		m_flDamage = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "speed":
+        m_flSpeed = stof(setValue);
+        break;
+    case "dmg":
+        m_flDamage = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_rotating::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	m_flDir = 0; /* Reset */
+    m_flDir = 0; /* Reset */
 
-	SetMovetype(MOVETYPE_PUSH);
-	SetSolid(HasSpawnFlags(FR_NOTSOLID) ? SOLID_NOT : SOLID_BSP);
+    SetMovetype(MOVETYPE_PUSH);
+    SetSolid(HasSpawnFlags(FR_NOTSOLID) ? SOLID_NOT : SOLID_BSP);
 
-	RestoreAngles();
-	SetMovementDirection();
-	ClearAngles();
+    RestoreAngles();
+    SetMovementDirection();
+    ClearAngles();
 
-	if (HasSpawnFlags(FR_STARTON)) {
-		SetAngularVelocity(m_vecMoveDir * m_flSpeed);
-		ScheduleThink(Rotate, 1.5f);
-	}
+    if (HasSpawnFlags(FR_STARTON)) {
+        SetAngularVelocity(m_vecMoveDir * m_flSpeed);
+        ScheduleThink(Rotate, 1.5f);
+    }
 }
 
 void
 func_rotating::Trigger(entity act, triggermode_t newState)
 {
-	float desiredSpeed = m_flSpeed;
-	bool isMoving = (lengthSquared(GetAngularVelocity()) > 0) ? (true) : (false);
-	bool shouldReverse = HasSpawnFlags(FR_TOGGLEDIR);
-	triggermode_t nextState = newState;
+    float desiredSpeed = m_flSpeed;
+    bool isMoving = (lengthSquared(GetAngularVelocity()) > 0) ? (true) : (false);
+    bool shouldReverse = HasSpawnFlags(FR_TOGGLEDIR);
+    triggermode_t nextState = newState;
 
-	if (newState == TRIG_TOGGLE) {
-		/* no toggle on reverse set */
-		if (shouldReverse == false && isMoving == true) {
-			nextState = TRIG_OFF;
-		}
-	}
+    if (newState == TRIG_TOGGLE) {
+        /* no toggle on reverse set */
+        if (shouldReverse == false && isMoving == true) {
+            nextState = TRIG_OFF;
+        }
+    }
 
-	if (nextState == TRIG_OFF) {
-		desiredSpeed = 0.0f;
-	}
+    if (nextState == TRIG_OFF) {
+        desiredSpeed = 0.0f;
+    }
 
-	if (shouldReverse == true && m_flDir) {
-		desiredSpeed *= -1;
-		m_flDir = 1 - m_flDir;
-	}
+    if (shouldReverse == true && m_flDir) {
+        desiredSpeed *= -1;
+        m_flDir = 1 - m_flDir;
+    }
 
-	if (desiredSpeed == 0.0f) {
-		ClearVelocity();
-		ReleaseThink();
-		return;
-	}
+    if (desiredSpeed == 0.0f) {
+        ClearVelocity();
+        ReleaseThink();
+        return;
+    }
 
-	SetAngularVelocity(m_vecMoveDir * desiredSpeed);
+    SetAngularVelocity(m_vecMoveDir * desiredSpeed);
 
-	/* HACK: The only way PUSH movetypes rotate */
-	ScheduleThink(Rotate, 99999.0f);
+    /* HACK: The only way PUSH movetypes rotate */
+    ScheduleThink(Rotate, 99999.0f);
 }
 
 void
 func_rotating::Rotate(void)
 {
-	SetNextThink(10.0f);
+    SetNextThink(10.0f);
 }
 
 void
 func_rotating::Blocked(entity eBlocker)
 {
-	if (lengthSquared(GetAngularVelocity()) <= 0) {
-		return;
-	}
+    if (lengthSquared(GetAngularVelocity()) <= 0) {
+        return;
+    }
 
-	/* can this be crushed? */
-	if (is.Sentient(eBlocker)) {
-		return;
-	}
+    /* can this be crushed? */
+    if (is.Sentient(eBlocker)) {
+        return;
+    }
 
-	/* this is to work around a rare Q1/HL BSP bug. don't attempt to damage our
-	 * target unless we're absolutely sure he's within the bounds of the entity */
-	if (WithinBounds(eBlocker) == false) {
-		return;
-	}
+    /* this is to work around a rare Q1/HL BSP bug. don't attempt to damage our
+     * target unless we're absolutely sure he's within the bounds of the entity */
+    if (WithinBounds(eBlocker) == false) {
+        return;
+    }
 
-	vector center = WorldSpaceCenter();
-	vector dmgDir = dirFromTarget(center, eBlocker.origin);
-	ncDict damageDecl = spawn(ncDict);
-	damageDecl.AddKey("damage", ftos(m_flDamage));
-	combat.Damage(eBlocker, this, eBlocker, damageDecl.GetDeclBody(), center, dmgDir, eBlocker.origin);
-	remove(damageDecl);
+    vector center = WorldSpaceCenter();
+    vector dmgDir = dirFromTarget(center, eBlocker.origin);
+    ncDict damageDecl = spawn(ncDict);
+    damageDecl.AddKey("damage", ftos(m_flDamage));
+    combat.Damage(eBlocker, this, eBlocker, damageDecl.GetDeclBody(), center, dmgDir, eBlocker.origin);
+    remove(damageDecl);
 }
 
 void
 func_rotating::Touch(entity eToucher)
 {
-	if (HasSpawnFlags(FR_FANPAIN)) {
-		Blocked(eToucher);
-	}
+    if (HasSpawnFlags(FR_FANPAIN)) {
+        Blocked(eToucher);
+    }
 }
 
 void
 func_rotating::SetMovementDirection(void)
 {
-	if (HasSpawnFlags(FR_ZAXIS)) {
-		m_vecMoveDir = [0,0,1];
-	} else if (HasSpawnFlags(FR_XAXIS)) {
-		m_vecMoveDir = [1,0,0];
-	} else {
-		m_vecMoveDir = [0,1,0];
-	}
+    if (HasSpawnFlags(FR_ZAXIS)) {
+        m_vecMoveDir = [0,0,1];
+    } else if (HasSpawnFlags(FR_XAXIS)) {
+        m_vecMoveDir = [1,0,0];
+    } else {
+        m_vecMoveDir = [0,1,0];
+    }
 
-	if (HasSpawnFlags(FR_REVERSE)) {
-		m_vecMoveDir *= -1;
-	}
+    if (HasSpawnFlags(FR_REVERSE)) {
+        m_vecMoveDir *= -1;
+    }
 }

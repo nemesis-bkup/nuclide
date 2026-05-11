@@ -19,10 +19,10 @@ var bool autocvar_ai_debugLogic = false;
 void
 _ncMonster_Log(string className, string functionName, float edictNum, string warnMessage)
 {
-	if (autocvar_g_logTimestamps)
-		printf("^9%f ^5%s (%d) ^7: %s\n", time, functionName, edictNum, warnMessage);
-	else
-		printf("^5%s (%d) ^7: %s\n", functionName, edictNum, warnMessage);
+    if (autocvar_g_logTimestamps)
+        printf("^9%f ^5%s (%d) ^7: %s\n", time, functionName, edictNum, warnMessage);
+    else
+        printf("^5%s (%d) ^7: %s\n", functionName, edictNum, warnMessage);
 }
 #define ncMonsterLog(...) if (autocvar_ai_debugLogic == true) _ncMonster_Log(classname, __FUNC__, num_for_edict(this), sprintf(__VA_ARGS__))
 
@@ -33,105 +33,105 @@ These give hint as to which internal fields get networked to the client.
 */
 typedef enumflags
 {
-	MONFL_CHANGED_ORIGIN_X,
-	MONFL_CHANGED_ORIGIN_Y,
-	MONFL_CHANGED_ORIGIN_Z,
-	MONFL_CHANGED_ANGLES_X,
-	MONFL_CHANGED_ANGLES_Y,
-	MONFL_CHANGED_ANGLES_Z,
-	MONFL_CHANGED_MODELINDEX,
-	MONFL_CHANGED_SIZE,
-	MONFL_CHANGED_FLAGS,
-	MONFL_CHANGED_SOLID,
-	MONFL_CHANGED_FRAME,
-	MONFL_CHANGED_SKINHEALTH,
-	MONFL_CHANGED_MOVETYPE,
-	MONFL_CHANGED_EFFECTS,
-	MONFL_CHANGED_BODY,
-	MONFL_CHANGED_SCALE,
-	MONFL_CHANGED_VELOCITY,
-	MONFL_CHANGED_RENDERCOLOR,
-	MONFL_CHANGED_RENDERAMT,
-	MONFL_CHANGED_RENDERMODE,
-	MONFL_CHANGED_HEADYAW
+    MONFL_CHANGED_ORIGIN_X,
+    MONFL_CHANGED_ORIGIN_Y,
+    MONFL_CHANGED_ORIGIN_Z,
+    MONFL_CHANGED_ANGLES_X,
+    MONFL_CHANGED_ANGLES_Y,
+    MONFL_CHANGED_ANGLES_Z,
+    MONFL_CHANGED_MODELINDEX,
+    MONFL_CHANGED_SIZE,
+    MONFL_CHANGED_FLAGS,
+    MONFL_CHANGED_SOLID,
+    MONFL_CHANGED_FRAME,
+    MONFL_CHANGED_SKINHEALTH,
+    MONFL_CHANGED_MOVETYPE,
+    MONFL_CHANGED_EFFECTS,
+    MONFL_CHANGED_BODY,
+    MONFL_CHANGED_SCALE,
+    MONFL_CHANGED_VELOCITY,
+    MONFL_CHANGED_RENDERCOLOR,
+    MONFL_CHANGED_RENDERAMT,
+    MONFL_CHANGED_RENDERMODE,
+    MONFL_CHANGED_HEADYAW
 } nsmonster_changed_t;
 
 
 /** Monster flags, these are defined by the level designers. */
 typedef enumflags
 {
-	MSF_WAITTILLSEEN,	/**< AI will be enabled once seen (1) */
-	MSF_GAG,			/**< Won't talk (2) */
-	MSF_MONSTERCLIP,	/**< Collides against func_monsterclip (4) */
-	MSF_RESERVED1,		/**< Reserved for entityDef (8) */
-	MSF_PRISONER,		/**< Only reacts to scripted sequences (16) */
-	MSF_RESERVED2,		/**< Reserved for entityDef (32) */
-	MSF_IGNOREPLAYER,	/**< Ignores players (64) */
-	MSF_WAITFORSCRIPT,	/**< AI waits for scripted_sequence to end (128) */
-	MSF_RESERVED3,		/**< Reserved for entityDef (256) */
-	MSF_FADECORPSE,		/**< Corpse fades instead of staying (512) */
-	MSF_MULTIPLAYER,	/**< Will spawn in multiplayer ncRuleDelegate (1024) */
-	MSF_FALLING,		/**< Is falling (2048) */
-	MSF_HORDE			/**< Part of a horde (4096) */
+    MSF_WAITTILLSEEN,   /**< AI will be enabled once seen (1) */
+    MSF_GAG,            /**< Won't talk (2) */
+    MSF_MONSTERCLIP,    /**< Collides against func_monsterclip (4) */
+    MSF_RESERVED1,      /**< Reserved for entityDef (8) */
+    MSF_PRISONER,       /**< Only reacts to scripted sequences (16) */
+    MSF_RESERVED2,      /**< Reserved for entityDef (32) */
+    MSF_IGNOREPLAYER,   /**< Ignores players (64) */
+    MSF_WAITFORSCRIPT,  /**< AI waits for scripted_sequence to end (128) */
+    MSF_RESERVED3,      /**< Reserved for entityDef (256) */
+    MSF_FADECORPSE,     /**< Corpse fades instead of staying (512) */
+    MSF_MULTIPLAYER,    /**< Will spawn in multiplayer ncRuleDelegate (1024) */
+    MSF_FALLING,        /**< Is falling (2048) */
+    MSF_HORDE           /**< Part of a horde (4096) */
 } monsterFlag_t;
 
 /** For future use: SpawnFlags used in Source */
 typedef enumflags
 {
-	SMSF_WAITTILLSEEN,		/**< AI will be enable once seen (1) */
-	SMSF_GAG,				/**< Won't talk (2) */
-	SMSF_FALLTOGROUND,		/**< Fall to ground, instead of dropping instantly (4) */
-	SMSF_DROPHEALTHKIT,		/**< Drops healthkit (8) */
-	SMSF_EFFICIENT,			/**< Walks direct paths (16) */
-	SMSF_RESERVED1,			/**< Reserved for entityDef (32) */
-	SMSF_RESERVED2,			/**< Reserved for entityDef (64) */
-	SMSF_WAITFORSCRIPT,		/**< AI waits for scripted_sequence to end (128) */
-	SMSF_LONGVISIBILITY,	/**< Long visibility and line of sight (256) */
-	SMSF_FADECORPSE,		/**< Corpse fades instead of staying (512) */
-	SMSF_THINKOUTPVS,		/**< Think outside the PVS (1024) */
-	SMSF_TEMPLATE,			/**< Will spawn through npc_maker (2048) */
-	SMSF_ALTCOLLISION,		/**< Alternative collision, avoiding players (4096) */
-	SMSF_NODROPWEAPONS,		/**< Don't drop weapons (8192) */
-	SMSF_IGNOREPLAYERPUSH	/**< Ignore pushing players (16384) */
+    SMSF_WAITTILLSEEN,      /**< AI will be enable once seen (1) */
+    SMSF_GAG,               /**< Won't talk (2) */
+    SMSF_FALLTOGROUND,      /**< Fall to ground, instead of dropping instantly (4) */
+    SMSF_DROPHEALTHKIT,     /**< Drops healthkit (8) */
+    SMSF_EFFICIENT,         /**< Walks direct paths (16) */
+    SMSF_RESERVED1,         /**< Reserved for entityDef (32) */
+    SMSF_RESERVED2,         /**< Reserved for entityDef (64) */
+    SMSF_WAITFORSCRIPT,     /**< AI waits for scripted_sequence to end (128) */
+    SMSF_LONGVISIBILITY,    /**< Long visibility and line of sight (256) */
+    SMSF_FADECORPSE,        /**< Corpse fades instead of staying (512) */
+    SMSF_THINKOUTPVS,       /**< Think outside the PVS (1024) */
+    SMSF_TEMPLATE,          /**< Will spawn through npc_maker (2048) */
+    SMSF_ALTCOLLISION,      /**< Alternative collision, avoiding players (4096) */
+    SMSF_NODROPWEAPONS,     /**< Don't drop weapons (8192) */
+    SMSF_IGNOREPLAYERPUSH   /**< Ignore pushing players (16384) */
 } sourceMonsterFlag_t;
 
 /** Behaviour states. */
 typedef enum
 {
-	MONSTER_IDLE,
-	MONSTER_ALERT,
-	MONSTER_FOLLOWING,
-	MONSTER_CHASING,
-	MONSTER_AIMING,
-	MONSTER_DEAD,
-	MONSTER_GIBBED
+    MONSTER_IDLE,
+    MONSTER_ALERT,
+    MONSTER_FOLLOWING,
+    MONSTER_CHASING,
+    MONSTER_AIMING,
+    MONSTER_DEAD,
+    MONSTER_GIBBED
 } monsterState_t;
 
 /** Scripted sequence states. */
 typedef enum
 {
-	SEQUENCESTATE_NONE,
-	SEQUENCESTATE_IDLE,
-	SEQUENCESTATE_ACTIVE,
-	SEQUENCESTATE_ENDING
+    SEQUENCESTATE_NONE,
+    SEQUENCESTATE_IDLE,
+    SEQUENCESTATE_ACTIVE,
+    SEQUENCESTATE_ENDING
 } sequenceState_t;
 
 /** Alliance states. */
 typedef enum
 {
-	MAL_FRIEND, /**< 1, friendly towards the player */
-	MAL_ENEMY,  /**< 2, unfriendly towards the player */
-	MAL_ALIEN,  /**< 3, unfriendly towards anyone but themselves */
-	MAL_ROGUE,   /**< 4, no allies, not even amongst themselves */
-	MAL_NEUTRAL	/**< 5, neutral - will not attack, will not be attacked */
+    MAL_FRIEND, /**< 1, friendly towards the player */
+    MAL_ENEMY,  /**< 2, unfriendly towards the player */
+    MAL_ALIEN,  /**< 3, unfriendly towards anyone but themselves */
+    MAL_ROGUE,   /**< 4, no allies, not even amongst themselves */
+    MAL_NEUTRAL /**< 5, neutral - will not attack, will not be attacked */
 } allianceState_t;
 
 /** Movement states */
 typedef enum
 {
-	MOVESTATE_IDLE,
-	MOVESTATE_WALK,
-	MOVESTATE_RUN
+    MOVESTATE_IDLE,
+    MOVESTATE_WALK,
+    MOVESTATE_RUN
 } movementState_t;
 
 /** These numerations involve the m_iTriggerCondition attribute.
@@ -140,18 +140,18 @@ it's set to. If any of those checks are successful, we trigger our target
 under the m_strTriggerTarget attribute. */
 typedef enum
 {
-	MTRIG_NONE,					/**< 1, nothing */
-	MTRIG_SEEPLAYER_ANGRY,		/**< 2, we see an enemy player, that we want to harm */
-	MTRIG_PAIN,					/**< 3, taken damage */ 
-	MTRIG_HALFHEALTH,			/**< 4, lost half of our base_health */
-	MTRIG_DEATH,				/**< 5, we have died. */
-	MTRIG_SQUADMEMBERDEAD,		/**< 6, a squad member died */
-	MTRIG_SQUADLEADERDEAD,		/**< 7, the squad leader died */
-	MTRIG_HEARNOISE,			/**< 8, we hear some noise around the world. */
-	MTRIG_HEARENEMYPLAYER,		/**< 9, we hear a player we are enemies with */
-	MTRIG_HEARWEAPONS,			/**< 10, we hear weapons being fired */
-	MTRIG_SEEPLAYER,			/**< 11, we see a player, don't have to be angry at him. */
-	MTRIG_SEEPLAYER_RELAXED,	/**< 12, we see a player and we're currently attacking anything */
+    MTRIG_NONE,                 /**< 1, nothing */
+    MTRIG_SEEPLAYER_ANGRY,      /**< 2, we see an enemy player, that we want to harm */
+    MTRIG_PAIN,                 /**< 3, taken damage */ 
+    MTRIG_HALFHEALTH,           /**< 4, lost half of our base_health */
+    MTRIG_DEATH,                /**< 5, we have died. */
+    MTRIG_SQUADMEMBERDEAD,      /**< 6, a squad member died */
+    MTRIG_SQUADLEADERDEAD,      /**< 7, the squad leader died */
+    MTRIG_HEARNOISE,            /**< 8, we hear some noise around the world. */
+    MTRIG_HEARENEMYPLAYER,      /**< 9, we hear a player we are enemies with */
+    MTRIG_HEARWEAPONS,          /**< 10, we hear weapons being fired */
+    MTRIG_SEEPLAYER,            /**< 11, we see a player, don't have to be angry at him. */
+    MTRIG_SEEPLAYER_RELAXED,    /**< 12, we see a player and we're currently attacking anything */
 } triggerCondition_t;
 
 /* FIXME: I'd like to move this into ncMonster, but our current IsFriend()
@@ -167,7 +167,7 @@ capable of fighting if prompted to.
 
 # KEYS
 - "targetname" : Name
-- "netname" :	Name used for obituaries and debug info.
+- "netname" :   Name used for obituaries and debug info.
 - "maxs" : Bounding box mins.
 - "mins" : Bounding box maxs.
 
@@ -273,325 +273,325 @@ capable of fighting if prompted to.
 class ncMonster:ncActor
 {
 public:
-	void ncMonster(void);
+    void ncMonster(void);
 
-#ifdef SERVER	
-	/* overrides */
-	virtual void DebugDraw(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Touch(entity);
-	//virtual void Hide(void);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Input(entity,string,string);
-	virtual void Pain(entity, entity, int, vector, vector, int);
-	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual void Physics(void);
-	virtual void Gib(int, vector);
-	virtual void Sound(string);
-	virtual void SpawnKey(string,string);
-	virtual void HandleAnimEvent(float, int, string);
+#ifdef SERVER   
+    /* overrides */
+    virtual void DebugDraw(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void Touch(entity);
+    //virtual void Hide(void);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Input(entity,string,string);
+    virtual void Pain(entity, entity, int, vector, vector, int);
+    virtual void Death(entity, entity, int, vector, vector, int);
+    virtual void Physics(void);
+    virtual void Gib(int, vector);
+    virtual void Sound(string);
+    virtual void SpawnKey(string,string);
+    virtual void HandleAnimEvent(float, int, string);
 
-	virtual void OnMapFinishedLoading(void);
+    virtual void OnMapFinishedLoading(void);
 
-	/** Internal use only.
-	Run every frame to go through the main AI loop. */
-	virtual void RunAI(void);
-	/** Overridable: Called after a while when they've got nothing to do. */
-	virtual void IdleNoise(void);
-	/** Overridable: Called when they start falling. */
-	virtual void FallNoise(void);
-	/** Overridable: Called when this monster gets 'alerted' to something new. */
-	virtual void AlertNoise(void);
+    /** Internal use only.
+    Run every frame to go through the main AI loop. */
+    virtual void RunAI(void);
+    /** Overridable: Called after a while when they've got nothing to do. */
+    virtual void IdleNoise(void);
+    /** Overridable: Called when they start falling. */
+    virtual void FallNoise(void);
+    /** Overridable: Called when this monster gets 'alerted' to something new. */
+    virtual void AlertNoise(void);
 
-	/** Returns if they're considered alive. */
-	virtual bool IsAlive(void);
-	/** Returns whether they are allied with the type in question */
-	virtual bool IsFriend(int);
-	/** Overridable: Called once, when the monster has died. */
-	virtual void HasBeenKilled(void);
-	/** Overridable: Called every time the monster is hurt, while still alive. */
-	virtual void HasBeenHit(void);
-	/* Overridable: Called when the monster was gibbed. */
-	virtual void HasBeenGibbed(void);
-	/* Overridable: Called when the monster has been alerted to threat. */
-	virtual void HasBeenAlerted(void);
+    /** Returns if they're considered alive. */
+    virtual bool IsAlive(void);
+    /** Returns whether they are allied with the type in question */
+    virtual bool IsFriend(int);
+    /** Overridable: Called once, when the monster has died. */
+    virtual void HasBeenKilled(void);
+    /** Overridable: Called every time the monster is hurt, while still alive. */
+    virtual void HasBeenHit(void);
+    /* Overridable: Called when the monster was gibbed. */
+    virtual void HasBeenGibbed(void);
+    /* Overridable: Called when the monster has been alerted to threat. */
+    virtual void HasBeenAlerted(void);
 
-	/* see/hear subsystem */
-	/** Internal use only. Called every frame to simulate vision. */
-	virtual void SeeThink(void);
-	/** Overridable: Returns the field of view in degrees. */
-	virtual float SeeFOV(void);
+    /* see/hear subsystem */
+    /** Internal use only. Called every frame to simulate vision. */
+    virtual void SeeThink(void);
+    /** Overridable: Returns the field of view in degrees. */
+    virtual float SeeFOV(void);
 
-	/** FIXME: Same as WarnAllies/StartleAllies? WTF? */
-	virtual void AlertNearby(void);
+    /** FIXME: Same as WarnAllies/StartleAllies? WTF? */
+    virtual void AlertNearby(void);
 
-	/* movement */
-	/** Overridable: Returns the walking speed in Quake units per second. */
-	virtual float GetWalkSpeed(void);
-	/** Overridable: Returns the chase speed in Quake units per second. */
-	virtual float GetChaseSpeed(void);
-	/** Overridable: Returns the running speed in Quake units per second. */
-	virtual float GetRunSpeed(void);
-	/** Overridable: Returns the turning speed in euler-angle units per second. */
-	virtual float GetYawSpeed(void);
+    /* movement */
+    /** Overridable: Returns the walking speed in Quake units per second. */
+    virtual float GetWalkSpeed(void);
+    /** Overridable: Returns the chase speed in Quake units per second. */
+    virtual float GetChaseSpeed(void);
+    /** Overridable: Returns the running speed in Quake units per second. */
+    virtual float GetRunSpeed(void);
+    /** Overridable: Returns the turning speed in euler-angle units per second. */
+    virtual float GetYawSpeed(void);
 
-	/* attack system */
-	/** Overridable: Called when they're drawing a weapon. */
-	virtual void AttackDraw(void);
-	/** Overridable: Called when they're holstering a weapon. */
-	virtual void AttackHolster(void);
-	/** Overridable: Called when aiming their weapon. */
-	virtual void AttackThink(void);
-	/** Overridable: Called when attempting to melee attack. Return 0 if impossible. */
-	virtual int AttackMelee(void);
-	/** Overridable: Called when attempting to attack from a distance. Return 0 if impossible. */
-	virtual int AttackRanged(void);
-	nonvirtual void PerformAttack(string);
+    /* attack system */
+    /** Overridable: Called when they're drawing a weapon. */
+    virtual void AttackDraw(void);
+    /** Overridable: Called when they're holstering a weapon. */
+    virtual void AttackHolster(void);
+    /** Overridable: Called when aiming their weapon. */
+    virtual void AttackThink(void);
+    /** Overridable: Called when attempting to melee attack. Return 0 if impossible. */
+    virtual int AttackMelee(void);
+    /** Overridable: Called when attempting to attack from a distance. Return 0 if impossible. */
+    virtual int AttackRanged(void);
+    nonvirtual void PerformAttack(string);
 
-	/** Overridable: Returns the distance in qu of what'll be a successfull melee attack. */
-	virtual float MeleeMaxDistance(void);
+    /** Overridable: Returns the distance in qu of what'll be a successfull melee attack. */
+    virtual float MeleeMaxDistance(void);
 
-	/** Returns whether or not we should attempt a melee attack.
-		FIXME: Should pass a parameter for the enemy in question instead! */
-	virtual bool MeleeCondition(void);
+    /** Returns whether or not we should attempt a melee attack.
+        FIXME: Should pass a parameter for the enemy in question instead! */
+    virtual bool MeleeCondition(void);
 
-	/** Returns TRUE if 'enemy' should be considered a valid target for killing */
-	nonvirtual bool IsValidEnemy(entity);
-	/** Returns TRUE if the monster is currently on route to a position. */
-	virtual bool IsOnRoute(void);
-	/** Override */
-	virtual void RouteClear(void);
+    /** Returns TRUE if 'enemy' should be considered a valid target for killing */
+    nonvirtual bool IsValidEnemy(entity);
+    /** Returns TRUE if the monster is currently on route to a position. */
+    virtual bool IsOnRoute(void);
+    /** Override */
+    virtual void RouteClear(void);
 
-	/* sequences */
-	/** Internal use only. Called when a sequence is done. */
-	virtual void ScriptedSequenceEnded(void);
-	/** Internal use only. Called when a sequence is done. */
-	virtual void ScriptedSequenceEnded_Moved(void);
-	/** Internal use only. Called when a sequence is done and we leave a corpse. */
-	virtual void ScriptedSequenceEnded_Dead(void);
-	/** Internal use only. Called when a movement route is done. */
-	virtual void RouteEnded(void);
-	/** Internal use only. Called every frame to progress through a route. */
-	virtual void WalkRoute(void);
+    /* sequences */
+    /** Internal use only. Called when a sequence is done. */
+    virtual void ScriptedSequenceEnded(void);
+    /** Internal use only. Called when a sequence is done. */
+    virtual void ScriptedSequenceEnded_Moved(void);
+    /** Internal use only. Called when a sequence is done and we leave a corpse. */
+    virtual void ScriptedSequenceEnded_Dead(void);
+    /** Internal use only. Called when a movement route is done. */
+    virtual void RouteEnded(void);
+    /** Internal use only. Called every frame to progress through a route. */
+    virtual void WalkRoute(void);
 
-	/* callbacks */
-	/** Called when a player is seen by the monster. */
-	virtual void SeenPlayer(ncActor);
-	/** Called when an enemy is seen by the monster. */
-	virtual void SeenEnemy(ncActor);
-	/** Called when a friend is seen by the monster. */
-	virtual void SeenFriend(ncActor);
-	
-	/** Returns the type of sequence they're currently in. */
-	nonvirtual int GetSequenceState(void);
-	/** Returns if they're currently in a scripted sequence. */
-	nonvirtual bool InScriptedSequence(void);
+    /* callbacks */
+    /** Called when a player is seen by the monster. */
+    virtual void SeenPlayer(ncActor);
+    /** Called when an enemy is seen by the monster. */
+    virtual void SeenEnemy(ncActor);
+    /** Called when a friend is seen by the monster. */
+    virtual void SeenFriend(ncActor);
+    
+    /** Returns the type of sequence they're currently in. */
+    nonvirtual int GetSequenceState(void);
+    /** Returns if they're currently in a scripted sequence. */
+    nonvirtual bool InScriptedSequence(void);
 
-	/* animation cycles */
-	/** DEPRECATED, Overridable: Called when we need to play a fresh idle framegroup. */
-	virtual int AnimIdle(void);
-	/** DEPRECATED, Overridable: Called when we need to play a fresh walking framegroup. */
-	virtual int AnimWalk(void);
-	/** DEPRECATED, Overridable: Called when we need to play a fresh running framegroup. */
-	virtual int AnimRun(void);
-	/** Call to play a single animation onto it, which cannot be interrupted by movement. */
-	virtual void AnimPlay(float);
-	/** Internal use only. Run every frame to update movement animation parameters. */
-	virtual void AnimationUpdate(void);
-	/** Returns if we're currently in a forced animation sequence. */
-	nonvirtual bool InForcedAnimation(void);
-	/** Starts the animation sequence from the beginning */
-	nonvirtual void AnimationRewind(void);
+    /* animation cycles */
+    /** DEPRECATED, Overridable: Called when we need to play a fresh idle framegroup. */
+    virtual int AnimIdle(void);
+    /** DEPRECATED, Overridable: Called when we need to play a fresh walking framegroup. */
+    virtual int AnimWalk(void);
+    /** DEPRECATED, Overridable: Called when we need to play a fresh running framegroup. */
+    virtual int AnimRun(void);
+    /** Call to play a single animation onto it, which cannot be interrupted by movement. */
+    virtual void AnimPlay(float);
+    /** Internal use only. Run every frame to update movement animation parameters. */
+    virtual void AnimationUpdate(void);
+    /** Returns if we're currently in a forced animation sequence. */
+    nonvirtual bool InForcedAnimation(void);
+    /** Starts the animation sequence from the beginning */
+    nonvirtual void AnimationRewind(void);
 
-	/* states */
-	/** Called whenever the state of this ncMonster changes. */
-	virtual void StateChanged(monsterState_t,monsterState_t);
-	/** Sets the current state of this ncMonster. */
-	nonvirtual void SetState(monsterState_t);
-	/** Returns the current state of this ncMonster. */
-	nonvirtual monsterState_t GetState(void);
+    /* states */
+    /** Called whenever the state of this ncMonster changes. */
+    virtual void StateChanged(monsterState_t,monsterState_t);
+    /** Sets the current state of this ncMonster. */
+    nonvirtual void SetState(monsterState_t);
+    /** Returns the current state of this ncMonster. */
+    nonvirtual monsterState_t GetState(void);
 
-	/* TriggerTarget/Condition */
-	/** Returns the condition under which they'll trigger their targets. */
-	nonvirtual int GetTriggerCondition(void);
-	/** Call to trigger their targets manually. */
-	virtual void TriggerTargets(void);
+    /* TriggerTarget/Condition */
+    /** Returns the condition under which they'll trigger their targets. */
+    nonvirtual int GetTriggerCondition(void);
+    /** Call to trigger their targets manually. */
+    virtual void TriggerTargets(void);
 
-	virtual void Trigger(entity, triggermode_t);
-	nonvirtual void AlertNearbyToSchedule(string scheduleType);
-	nonvirtual void AlertNearbyClassWithMindset(string scheduleType);
-	nonvirtual bool ShouldTurn(void);
+    virtual void Trigger(entity, triggermode_t);
+    nonvirtual void AlertNearbyToSchedule(string scheduleType);
+    nonvirtual void AlertNearbyClassWithMindset(string scheduleType);
+    nonvirtual bool ShouldTurn(void);
 #endif
 
-	nonvirtual vector GetHeadAngles(void);
+    nonvirtual vector GetHeadAngles(void);
 
-	virtual void DebugDraw(void);
+    virtual void DebugDraw(void);
 
 #ifdef CLIENT
 
-	/** overrides */
-	virtual void customphysics(void);
-	virtual float predraw(void);
-	virtual void ReceiveEntity(float,float);
+    /** overrides */
+    virtual void customphysics(void);
+    virtual float predraw(void);
+    virtual void ReceiveEntity(float,float);
 #endif
 
 private:
 
-	vector v_angle_net;
+    vector v_angle_net;
 
 #ifdef CLIENT
-	nonvirtual void _RenderDebugViewCone();
+    nonvirtual void _RenderDebugViewCone();
 #endif
 
-	NETWORKED_FLOAT(m_flHeadYaw)
-	NETWORKED_FLOAT_N(subblendfrac)
-	NETWORKED_FLOAT_N(bonecontrol1)
+    NETWORKED_FLOAT(m_flHeadYaw)
+    NETWORKED_FLOAT_N(subblendfrac)
+    NETWORKED_FLOAT_N(bonecontrol1)
 
 #ifdef SERVER
-	entity m_eLookAt;
-	entity m_ssLast;
-	vector oldnet_velocity;
-	float m_sentencePitch;
-	int m_iFlags;
-	vector base_mins;
-	vector base_maxs;
-	float base_health;
+    entity m_eLookAt;
+    entity m_ssLast;
+    vector oldnet_velocity;
+    float m_sentencePitch;
+    int m_iFlags;
+    vector base_mins;
+    vector base_maxs;
+    float base_health;
     float m_turnRate;
 
-	/* I/O */
-	string m_outputOnDamaged;
-	string m_outputOnDeath;
-	string m_outputOnHalfHealth;
-	string m_outputOnHearPlayer;
-	string m_outputOnFoundEnemy;
-	string m_outputOnLostEnemy;
-	string m_outputOnLostEnemyLOS;
-	string m_outputOnFoundPlayer;
-	string m_outputOnLostPlayer;
-	string m_outputOnLostPlayerLOS;
-	string m_outputOnDamagedByPlayer;
-	string m_outputOnGreetPlayer;
-	bool m_bMetPlayer;
+    /* I/O */
+    string m_outputOnDamaged;
+    string m_outputOnDeath;
+    string m_outputOnHalfHealth;
+    string m_outputOnHearPlayer;
+    string m_outputOnFoundEnemy;
+    string m_outputOnLostEnemy;
+    string m_outputOnLostEnemyLOS;
+    string m_outputOnFoundPlayer;
+    string m_outputOnLostPlayer;
+    string m_outputOnLostPlayerLOS;
+    string m_outputOnDamagedByPlayer;
+    string m_outputOnGreetPlayer;
+    bool m_bMetPlayer;
 
-	/* sequences */
-	string m_strRouteEnded;
-	int m_iSequenceRemove;
-	int m_iSequenceState;
-	float m_flSequenceEnd;
-	float m_flSequenceSpeed;
-	vector m_vecSequenceAngle;
-	int m_iSequenceFlags;
-	movementState_t m_iMoveState;
-	string m_strSequenceKillTarget;
+    /* sequences */
+    string m_strRouteEnded;
+    int m_iSequenceRemove;
+    int m_iSequenceState;
+    float m_flSequenceEnd;
+    float m_flSequenceSpeed;
+    vector m_vecSequenceAngle;
+    int m_iSequenceFlags;
+    movementState_t m_iMoveState;
+    string m_strSequenceKillTarget;
 
-	int m_iTriggerCondition;
-	string m_strTriggerTarget;
+    int m_iTriggerCondition;
+    string m_strTriggerTarget;
 
-	/* model events */
-	float m_modelEventTime;
+    /* model events */
+    float m_modelEventTime;
 
-	/* attack/alliance system */
-	entity m_eEnemy;
-	float m_flAttackThink;
-	monsterState_t m_iMState;
-	monsterState_t m_iOldMState;
-	vector m_vecLKPos; /* last-known pos */
+    /* attack/alliance system */
+    entity m_eEnemy;
+    float m_flAttackThink;
+    monsterState_t m_iMState;
+    monsterState_t m_iOldMState;
+    vector m_vecLKPos; /* last-known pos */
 
-	/* see/hear subsystem */
-	float m_flSeeTime;
-	/* animation cycles */
-	float m_flAnimTime;
+    /* see/hear subsystem */
+    float m_flSeeTime;
+    /* animation cycles */
+    float m_flAnimTime;
 
-	/* timer for keeping track of the target */
-	float m_flTrackingTime;
+    /* timer for keeping track of the target */
+    float m_flTrackingTime;
 
-	NETWORKED_VECTOR_N(view_ofs)
+    NETWORKED_VECTOR_N(view_ofs)
 
-	/* save these please */
-	float _m_flReloadTracker;
-	bool m_bWeaponDrawn;
+    /* save these please */
+    float _m_flReloadTracker;
+    bool m_bWeaponDrawn;
 
-	/* caching variables, don't save these */
-	float m_actIdle;
-	bool m_bTurning;
-	float m_flIdleNext;
-	float _m_flMeleeAttempts;
-	float _m_flMeleeDelay;
-	float _m_flBurstCount;
-	bool _m_bShouldThrow;
-	bool _m_bStartDead;
-	float _m_flFrame;
+    /* caching variables, don't save these */
+    float m_actIdle;
+    bool m_bTurning;
+    float m_flIdleNext;
+    float _m_flMeleeAttempts;
+    float _m_flMeleeDelay;
+    float _m_flBurstCount;
+    bool _m_bShouldThrow;
+    bool _m_bStartDead;
+    float _m_flFrame;
 
-	/* entityDef related, no save */
-	float m_flEyeHeight;
-	string m_sndSight;
-	string m_sndIdle;
-	float m_flIdleMin;
-	float m_flIdleMax;
-	string m_sndFootstep;
-	string m_sndChatter;
-	string m_sndChatterCombat;
-	string m_sndPain;
-	string m_sndMeleeAttack;
-	string m_sndMeleeAttackHit;
-	string m_sndMeleeAttackMiss;
-	string m_sndDeath;
-	string m_sndThud;
+    /* entityDef related, no save */
+    float m_flEyeHeight;
+    string m_sndSight;
+    string m_sndIdle;
+    float m_flIdleMin;
+    float m_flIdleMax;
+    string m_sndFootstep;
+    string m_sndChatter;
+    string m_sndChatterCombat;
+    string m_sndPain;
+    string m_sndMeleeAttack;
+    string m_sndMeleeAttackHit;
+    string m_sndMeleeAttackMiss;
+    string m_sndDeath;
+    string m_sndThud;
 
-	/* attack definitions, if defined will fire projectiles */
-	string m_defSpecial1;
-	float m_flSpecial1Range;
-	string m_defSpecial2;
-	float m_flSpecial2Range;
-	string m_defRanged1;
-	float m_flRanged1Range;
-	string m_defRanged2;
-	float m_flRanged2Range;
+    /* attack definitions, if defined will fire projectiles */
+    string m_defSpecial1;
+    float m_flSpecial1Range;
+    string m_defSpecial2;
+    float m_flSpecial2Range;
+    string m_defRanged1;
+    float m_flRanged1Range;
+    string m_defRanged2;
+    float m_flRanged2Range;
 
-	/* ranged1 only */
-	int m_iNumProjectiles;
-	float m_flProjectileDelay;
-	float m_flProjectileSpread;
+    /* ranged1 only */
+    int m_iNumProjectiles;
+    float m_flProjectileDelay;
+    float m_flProjectileSpread;
 
-	/* general */
-	float m_flAttackCone;
-	float m_flAttackAccuracy;
+    /* general */
+    float m_flAttackCone;
+    float m_flAttackAccuracy;
 
-	/* melee attack */
-	string m_defMelee;
-	float m_flMeleeRange;
+    /* melee attack */
+    string m_defMelee;
+    float m_flMeleeRange;
 
-	string m_sndRangedAttack;
-	float m_flReloadCount;
-	float m_flReloadDelay;
-	string m_sndReload;
-	float m_flReserveAmmo;
-	string m_sndRangedAttack2;
-	bool m_bWeaponStartsDrawn;
-	string m_strBodyOnDraw;
-	float m_flWalkSpeed;
-	float m_flRunSpeed;
-	float m_flLeapDamage;
-	bool m_bLeapAttacked;
-	float m_flForceSequence;
-	float m_flSkin;
-	bool m_bGagged;
-	float m_flStopTime;
-	float m_flyOffset;
-	bool m_usesNav;
-	bool m_fireFromHead;
-	bool m_bCanAttack;
-	bool m_freezeDuringPain;
-	bool m_flinchDuringMovement;
+    string m_sndRangedAttack;
+    float m_flReloadCount;
+    float m_flReloadDelay;
+    string m_sndReload;
+    float m_flReserveAmmo;
+    string m_sndRangedAttack2;
+    bool m_bWeaponStartsDrawn;
+    string m_strBodyOnDraw;
+    float m_flWalkSpeed;
+    float m_flRunSpeed;
+    float m_flLeapDamage;
+    bool m_bLeapAttacked;
+    float m_flForceSequence;
+    float m_flSkin;
+    bool m_bGagged;
+    float m_flStopTime;
+    float m_flyOffset;
+    bool m_usesNav;
+    bool m_fireFromHead;
+    bool m_bCanAttack;
+    bool m_freezeDuringPain;
+    bool m_flinchDuringMovement;
 
-	nonvirtual void _LerpTurnToPos(vector);
-	nonvirtual void _LerpTurnToYaw(float);
-	virtual void _Alerted(void);
-	nonvirtual void _ChaseAfterSpawn(void);
+    nonvirtual void _LerpTurnToPos(vector);
+    nonvirtual void _LerpTurnToYaw(float);
+    virtual void _Alerted(void);
+    nonvirtual void _ChaseAfterSpawn(void);
 #endif
 };
 

@@ -21,25 +21,25 @@
 class vguiFrame:vguiWidget
 {
 public:
-	void vguiFrame(void);
+    void vguiFrame(void);
 
-	/* overrides */
-	virtual void Draw(void);
+    /* overrides */
+    virtual void Draw(void);
 
 private:
-	vguiColor m_frameColor;
+    vguiColor m_frameColor;
 };
 
 void
 vguiFrame::vguiFrame(void)
 {
-	m_frameColor = spawn(vguiColor);
-	m_frameColor.SetColorWithAlpha([0,0,0], 0.0f);
+    m_frameColor = spawn(vguiColor);
+    m_frameColor.SetColorWithAlpha([0,0,0], 0.0f);
 }
 
 void vguiFrame::Draw(void)
 {
-	vguiTheme ourTheme = GetTheme();
-	ourTheme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, m_frameColor);
+    vguiTheme ourTheme = GetTheme();
+    ourTheme.DrawBorder(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_BORDER_INSET, m_frameColor);
 }
 

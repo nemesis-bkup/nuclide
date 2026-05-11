@@ -56,16 +56,16 @@ class
 ncAuthManager
 {
 public:
-	void ncAuthManager(void);
+    void ncAuthManager(void);
 
-	nonvirtual bool Connect(ncClient targetClient);
-	nonvirtual void Disconnect(ncClient targetClient);
-	nonvirtual bool AllowRespawn(ncClient targetClient);
+    nonvirtual bool Connect(ncClient targetClient);
+    nonvirtual void Disconnect(ncClient targetClient);
+    nonvirtual bool AllowRespawn(ncClient targetClient);
 
 private:
-	nonvirtual void PassClient(ncClient targetClient);
-	nonvirtual void FailClient(ncClient targetClient);
-	nonvirtual void VerifyFingerprint(float requestID, string dataString);
+    nonvirtual void PassClient(ncClient targetClient);
+    nonvirtual void FailClient(ncClient targetClient);
+    nonvirtual void VerifyFingerprint(float requestID, string dataString);
 };
 
 var bool autocvar_auth_enabled = false;

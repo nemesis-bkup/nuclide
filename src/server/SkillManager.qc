@@ -29,13 +29,13 @@ This will almost always result in them using default values, or (worst case) 0.
 void
 Skill_Init(void)
 {
-	string mapSkillFile = sprintf("maps/%s_skl.cfg", serverinfo.GetString("mapname"));
+    string mapSkillFile = sprintf("maps/%s_skl.cfg", serverinfo.GetString("mapname"));
 
-	Skill_ParseConfig(autocvar_skill_manifest);
+    Skill_ParseConfig(autocvar_skill_manifest);
 
-	if (fileExists(mapSkillFile)) {
-		Skill_ParseConfig(mapSkillFile);
-	}
+    if (fileExists(mapSkillFile)) {
+        Skill_ParseConfig(mapSkillFile);
+    }
 }
 
 /*
@@ -48,69 +48,69 @@ Return a skill variable's value or return a defaultValue if it's undefined.
 float
 Skill_GetValue(string variable, float defaultValue)
 {
-	float skill = cvars.GetFloat("skill");
+    float skill = cvars.GetFloat("skill");
 
-	if (skill == 0) {
-		skill = 2; /* default to medium */
-	}
+    if (skill == 0) {
+        skill = 2; /* default to medium */
+    }
 
-	float val = fabs(cvars.GetFloat(sprintf("sk_%s%d", variable, skill)));
+    float val = fabs(cvars.GetFloat(sprintf("sk_%s%d", variable, skill)));
 
-	/* specific skill variable doesn't exist? */
-	if (val == 0) {
-		val = fabs(cvars.GetFloat(sprintf("sk_%s", variable)));
-	}
+    /* specific skill variable doesn't exist? */
+    if (val == 0) {
+        val = fabs(cvars.GetFloat(sprintf("sk_%s", variable)));
+    }
 
-	return (val == 0) ? defaultValue : val;
+    return (val == 0) ? defaultValue : val;
 }
 
 string
 Skill_GetStringValue(string variable, string defaultValue)
 {
-	float skill = cvar("skill");
+    float skill = cvar("skill");
 
-	if (skill == 0) {
-		skill = 2; /* default to medium */
-	}
+    if (skill == 0) {
+        skill = 2; /* default to medium */
+    }
 
-	string val = cvars.GetString(sprintf("sk_%s%d", variable, skill));
+    string val = cvars.GetString(sprintf("sk_%s%d", variable, skill));
 
-	/* specific skill variable doesn't exist? */
-	if (val == 0) {
-		val = cvars.GetString(sprintf("sk_%s", variable));
-	}
+    /* specific skill variable doesn't exist? */
+    if (val == 0) {
+        val = cvars.GetString(sprintf("sk_%s", variable));
+    }
 
-	return (val == "") ? defaultValue : val;
+    return (val == "") ? defaultValue : val;
 }
 
 bool
 Skill_ParseConfig(string fileName)
 {
-	string tempString;
-	filestream configFile = fopen(fileName, FILE_READ);
+    string tempString;
+    filestream configFile = fopen(fileName, FILE_READ);
 
-	if (configFile < 0) {
-		ncWarning("Unable to exec %S for parsing.", fileName);
-		return (false);
-	}
+    if (configFile < 0) {
+        ncWarning("Unable to exec %S for parsing.", fileName);
+        return (false);
+    }
 
-	while ((tempString = fgets(configFile))) {
-		int argCount = (int)tokenize_console(tempString);
-		string firstArg = argv(0);
+    while ((tempString = fgets(configFile))) {
+        int argCount = (int)tokenize_console(tempString);
+        string firstArg = argv(0);
 
-		if (argCount == 2i) {
-			if (firstArg == "exec") {
-				Skill_ParseConfig(sprintf("cfg/%s", argv(1)));
-			} else {
-				/* some games, like Source, don't use set/seta */
-				cvars.SetString(argv(0), argv(1));
-			}
-		} else if (argCount == 3i) {
-			if (firstArg == "set" || firstArg == "seta")
-				cvars.SetString(argv(1), argv(2));
-		}
-	}
+        if (argCount == 2i) {
+            if (firstArg == "exec") {
+                Skill_ParseConfig(sprintf("cfg/%s", argv(1)));
+            } else {
+                /* some games, like Source, don't use set/seta */
+                cvars.SetString(argv(0), argv(1));
+            }
+        } else if (argCount == 3i) {
+            if (firstArg == "set" || firstArg == "seta")
+                cvars.SetString(argv(1), argv(2));
+        }
+    }
 
-	fclose(configFile);
-	return (true);
+    fclose(configFile);
+    return (true);
 }

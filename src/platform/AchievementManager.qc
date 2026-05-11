@@ -30,21 +30,21 @@ Achievement_Clear(string strName)
 bool
 Achievement_Get(string strName)
 {
-	return 0;
+    return 0;
 }
 
 /* get the icon of an achievement */
 string
 Achievement_GetIcon(string strName)
 {
-	return __NULL__;
+    return __NULL__;
 }
 
 /* STUB, returns how many other users achieved this */
 float
 Achievement_GetPercentage(string strName)
 {
-	return 0.0f;
+    return 0.0f;
 }
 
 /* called when you want to show a pop-up indicating progress */
@@ -57,5 +57,5 @@ Achievement_IndicateProgress(string strName, int iCurrent, int iMax)
 bool
 Achievement_RequestStats(achievement_t *ptr, int count)
 {
-	return false;
+    return false;
 }

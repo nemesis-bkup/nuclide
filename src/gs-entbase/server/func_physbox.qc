@@ -36,10 +36,10 @@ class
 func_physbox:ncPhysicsEntity
 {
 public:
-	void func_physbox(void);
+    void func_physbox(void);
 
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
 
 };
 
@@ -51,29 +51,29 @@ func_physbox::func_physbox(void)
 void
 func_physbox::Respawn(void)
 {
-	ncPhysicsEntity::Respawn();
+    ncPhysicsEntity::Respawn();
 
-	if (HasSpawnFlags(FNCPHYBX_ASLEEP))
-		Sleep();
-	else
-		Wake();
+    if (HasSpawnFlags(FNCPHYBX_ASLEEP))
+        Sleep();
+    else
+        Wake();
 }
 
 void
 func_physbox::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	default:
-		ncPhysicsEntity::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    default:
+        ncPhysicsEntity::SpawnKey(strKey, setValue);
+    }
 }
 #else
 class func_physbox:ncSurfacePropEntity
 {
-	void(void) func_physbox;
+    void(void) func_physbox;
 
-	virtual void(void) Respawn;
-	virtual void(void) Death;
+    virtual void(void) Respawn;
+    virtual void(void) Death;
 };
 
 void
@@ -84,15 +84,15 @@ func_physbox::func_physbox(void)
 void
 func_physbox::Death(void)
 {
-	Disappear();
+    Disappear();
 }
 
 void
 func_physbox::Respawn(void)
 {
-	super::Respawn();
-	SetHealth(GetSpawnFloat("health"));
-	MakeVulnerable();
-	SetSolid(SOLID_BBOX);
+    super::Respawn();
+    SetHealth(GetSpawnFloat("health"));
+    MakeVulnerable();
+    SetSolid(SOLID_BBOX);
 }
 #endif

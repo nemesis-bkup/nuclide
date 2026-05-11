@@ -17,12 +17,12 @@
 /* TODO: Implement these */
 enumflags
 {
-	FNCTANK_ACTIVE,
-	FNCTANK_UNUSED1,
-	FNCTANK_UNUSED2,
-	FNCTANK_UNUSED3,
-	FNCTANK_DIRECTONLY,
-	FNCTANK_CONTROLLABLE
+    FNCTANK_ACTIVE,
+    FNCTANK_UNUSED1,
+    FNCTANK_UNUSED2,
+    FNCTANK_UNUSED3,
+    FNCTANK_DIRECTONLY,
+    FNCTANK_CONTROLLABLE
 };
 
 /*! \brief Shared-Entity: Mountable Mortar Turret */
@@ -68,51 +68,51 @@ This entity was introduced in Half-Life (1998).
 class func_tankmortar:ncVehicle
 {
 public:
-	void func_tankmortar(void);
-	
-	virtual void Spawned(void);
-	virtual void PlayerInput(void);
-	virtual void SpriteSmoke(vector);
-	virtual void SpriteFlash(vector);
-	
+    void func_tankmortar(void);
+    
+    virtual void Spawned(void);
+    virtual void PlayerInput(void);
+    virtual void SpriteSmoke(vector);
+    virtual void SpriteFlash(vector);
+    
 #ifdef CLIENT
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void UpdateView(void);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void UpdateView(void);
 #endif
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
 #endif
 
 private:
-	/* attributes */
-	float m_flYawRate;
-	float m_flPitchRate;
-	vector m_vecTipPos;
-	float m_flFireRate;
-	int m_iDamage;
-	string m_strSpriteSmoke;
-	string m_strSpriteFlash;
-	float m_flSpriteScale;
-	vector m_vecSpread; /* TODO: Needs checking */
-	string m_strSndRotate; /* TODO */
-	float m_flPersistance; /* TODO */
-	float m_flMinRange; /* TODO */
-	float m_flMaxRange; /* TODO */
-	float m_flYawRange; /* TODO */
-	float m_flPitchRange; /* TODO */
-	float m_flFireTime;
+    /* attributes */
+    float m_flYawRate;
+    float m_flPitchRate;
+    vector m_vecTipPos;
+    float m_flFireRate;
+    int m_iDamage;
+    string m_strSpriteSmoke;
+    string m_strSpriteFlash;
+    float m_flSpriteScale;
+    vector m_vecSpread; /* TODO: Needs checking */
+    string m_strSndRotate; /* TODO */
+    float m_flPersistance; /* TODO */
+    float m_flMinRange; /* TODO */
+    float m_flMaxRange; /* TODO */
+    float m_flYawRange; /* TODO */
+    float m_flPitchRange; /* TODO */
+    float m_flFireTime;
 };
 
 void
 func_tankmortar::func_tankmortar(void)
 {
-	m_iVehicleFlags |= VHF_FROZEN | VHF_NOATTACK;
+    m_iVehicleFlags |= VHF_FROZEN | VHF_NOATTACK;
 }
 
 #ifdef CLIENT
@@ -124,67 +124,67 @@ func_tankmortar::UpdateView(void)
 void
 func_tankmortar::PredictPreFrame(void)
 {
-	SAVE_STATE(angles)
-	SAVE_STATE(origin)
-	SAVE_STATE(velocity)
+    SAVE_STATE(angles)
+    SAVE_STATE(origin)
+    SAVE_STATE(velocity)
 }
 
 void
 func_tankmortar::PredictPostFrame(void)
 {
-	ROLL_BACK(angles)
-	ROLL_BACK(origin)
-	ROLL_BACK(velocity)
+    ROLL_BACK(angles)
+    ROLL_BACK(origin)
+    ROLL_BACK(velocity)
 }
 
 void
 func_tankmortar::ReceiveEntity(float new, float fChanged)
 {
-	if (fChanged & VEHFL_CHANGED_ORIGIN) {
-		origin[0] = readcoord();
-		origin[1] = readcoord();
-		origin[2] = readcoord();
-	}
+    if (fChanged & VEHFL_CHANGED_ORIGIN) {
+        origin[0] = readcoord();
+        origin[1] = readcoord();
+        origin[2] = readcoord();
+    }
 
-	if (fChanged & VEHFL_CHANGED_ANGLES) {
-		angles[0] = readshort() / (32767 / 360);
-		angles[1] = readshort() / (32767 / 360);
-		angles[2] = readshort() / (32767 / 360);
-	}
+    if (fChanged & VEHFL_CHANGED_ANGLES) {
+        angles[0] = readshort() / (32767 / 360);
+        angles[1] = readshort() / (32767 / 360);
+        angles[2] = readshort() / (32767 / 360);
+    }
 
-	if (fChanged & VEHFL_CHANGED_MODELINDEX) {
-		setmodelindex(this, readshort());
-	}
+    if (fChanged & VEHFL_CHANGED_MODELINDEX) {
+        setmodelindex(this, readshort());
+    }
 
-	if (fChanged & VEHFL_CHANGED_SOLID) {
-		solid = readbyte();
-	}
+    if (fChanged & VEHFL_CHANGED_SOLID) {
+        solid = readbyte();
+    }
 
-	if (fChanged & VEHFL_CHANGED_MOVETYPE) {
-		movetype = readbyte();
-	}
+    if (fChanged & VEHFL_CHANGED_MOVETYPE) {
+        movetype = readbyte();
+    }
 
-	if (fChanged & VEHFL_CHANGED_SIZE) {
-		mins[0] = readcoord();
-		mins[1] = readcoord();
-		mins[2] = readcoord();
-		maxs[0] = readcoord();
-		maxs[1] = readcoord();
-		maxs[2] = readcoord();
-	}
+    if (fChanged & VEHFL_CHANGED_SIZE) {
+        mins[0] = readcoord();
+        mins[1] = readcoord();
+        mins[2] = readcoord();
+        maxs[0] = readcoord();
+        maxs[1] = readcoord();
+        maxs[2] = readcoord();
+    }
 
-	if (fChanged & VEHFL_CHANGED_VELOCITY) {
-		velocity[0] = readfloat();
-		velocity[1] = readfloat();
-		velocity[2] = readfloat();
-	}
+    if (fChanged & VEHFL_CHANGED_VELOCITY) {
+        velocity[0] = readfloat();
+        velocity[1] = readfloat();
+        velocity[2] = readfloat();
+    }
 
-	if (fChanged & VEHFL_CHANGED_DRIVER) {
-		m_eDriver = (ncEntity)findfloat(world, ::entnum, readentitynum());
-	}
+    if (fChanged & VEHFL_CHANGED_DRIVER) {
+        m_eDriver = (ncEntity)findfloat(world, ::entnum, readentitynum());
+    }
 
-	if (new)
-		drawmask = MASK_ENGINE;
+    if (new)
+        drawmask = MASK_ENGINE;
 }
 #endif
 
@@ -192,75 +192,75 @@ func_tankmortar::ReceiveEntity(float new, float fChanged)
 void
 func_tankmortar::EvaluateEntity(void)
 {
-	/* while the engine is still handling physics for these, we can't
-	 * predict when origin/angle might change */
-	if (ATTR_CHANGED(origin)) {
-		SetSendFlags(VEHFL_CHANGED_ORIGIN);
-	}
-	if (ATTR_CHANGED(angles)) {
-		angles = fixAngle(angles);
-		SetSendFlags(VEHFL_CHANGED_ANGLES);
-	}
-	if (ATTR_CHANGED(velocity)) {
-		SetSendFlags(VEHFL_CHANGED_VELOCITY);
-	}
+    /* while the engine is still handling physics for these, we can't
+     * predict when origin/angle might change */
+    if (ATTR_CHANGED(origin)) {
+        SetSendFlags(VEHFL_CHANGED_ORIGIN);
+    }
+    if (ATTR_CHANGED(angles)) {
+        angles = fixAngle(angles);
+        SetSendFlags(VEHFL_CHANGED_ANGLES);
+    }
+    if (ATTR_CHANGED(velocity)) {
+        SetSendFlags(VEHFL_CHANGED_VELOCITY);
+    }
 
-	SAVE_STATE(origin)
-	SAVE_STATE(angles)
-	SAVE_STATE(velocity)
+    SAVE_STATE(origin)
+    SAVE_STATE(angles)
+    SAVE_STATE(velocity)
 }
 
 float
 func_tankmortar::SendEntity(entity ePEnt, float fChanged)
 {
-	WriteByte(MSG_ENTITY, ENT_VEH_TANKMORTAR);
-	WriteFloat(MSG_ENTITY, fChanged);
+    WriteByte(MSG_ENTITY, ENT_VEH_TANKMORTAR);
+    WriteFloat(MSG_ENTITY, fChanged);
 
-	/* really trying to get our moneys worth with 23 bits of mantissa */
-	if (fChanged & VEHFL_CHANGED_ORIGIN) {
-		WriteCoord(MSG_ENTITY, origin[0]);
-		WriteCoord(MSG_ENTITY, origin[1]);
-		WriteCoord(MSG_ENTITY, origin[2]);
-	}
+    /* really trying to get our moneys worth with 23 bits of mantissa */
+    if (fChanged & VEHFL_CHANGED_ORIGIN) {
+        WriteCoord(MSG_ENTITY, origin[0]);
+        WriteCoord(MSG_ENTITY, origin[1]);
+        WriteCoord(MSG_ENTITY, origin[2]);
+    }
 
-	if (fChanged & VEHFL_CHANGED_ANGLES) {
-		WriteShort(MSG_ENTITY, angles[0] * 32767 / 360);
-		WriteShort(MSG_ENTITY, angles[1] * 32767 / 360);
-		WriteShort(MSG_ENTITY, angles[2] * 32767 / 360);
-	}
+    if (fChanged & VEHFL_CHANGED_ANGLES) {
+        WriteShort(MSG_ENTITY, angles[0] * 32767 / 360);
+        WriteShort(MSG_ENTITY, angles[1] * 32767 / 360);
+        WriteShort(MSG_ENTITY, angles[2] * 32767 / 360);
+    }
 
-	if (fChanged & VEHFL_CHANGED_MODELINDEX) {
-		WriteShort(MSG_ENTITY, modelindex);
-	}
+    if (fChanged & VEHFL_CHANGED_MODELINDEX) {
+        WriteShort(MSG_ENTITY, modelindex);
+    }
 
-	if (fChanged & VEHFL_CHANGED_SOLID) {
-		WriteByte(MSG_ENTITY, solid);
-	}
+    if (fChanged & VEHFL_CHANGED_SOLID) {
+        WriteByte(MSG_ENTITY, solid);
+    }
 
-	if (fChanged & VEHFL_CHANGED_MOVETYPE) {
-		WriteByte(MSG_ENTITY, movetype);
-	}
+    if (fChanged & VEHFL_CHANGED_MOVETYPE) {
+        WriteByte(MSG_ENTITY, movetype);
+    }
 
-	if (fChanged & VEHFL_CHANGED_SIZE) {
-		WriteCoord(MSG_ENTITY, mins[0]);
-		WriteCoord(MSG_ENTITY, mins[1]);
-		WriteCoord(MSG_ENTITY, mins[2]);
-		WriteCoord(MSG_ENTITY, maxs[0]);
-		WriteCoord(MSG_ENTITY, maxs[1]);
-		WriteCoord(MSG_ENTITY, maxs[2]);
-	}
+    if (fChanged & VEHFL_CHANGED_SIZE) {
+        WriteCoord(MSG_ENTITY, mins[0]);
+        WriteCoord(MSG_ENTITY, mins[1]);
+        WriteCoord(MSG_ENTITY, mins[2]);
+        WriteCoord(MSG_ENTITY, maxs[0]);
+        WriteCoord(MSG_ENTITY, maxs[1]);
+        WriteCoord(MSG_ENTITY, maxs[2]);
+    }
 
-	if (fChanged & VEHFL_CHANGED_VELOCITY) {
-		WriteFloat(MSG_ENTITY, velocity[0]);
-		WriteFloat(MSG_ENTITY, velocity[1]);
-		WriteFloat(MSG_ENTITY, velocity[2]);
-	}
+    if (fChanged & VEHFL_CHANGED_VELOCITY) {
+        WriteFloat(MSG_ENTITY, velocity[0]);
+        WriteFloat(MSG_ENTITY, velocity[1]);
+        WriteFloat(MSG_ENTITY, velocity[2]);
+    }
 
-	if (fChanged & VEHFL_CHANGED_DRIVER) {
-		WriteEntity(MSG_ENTITY, m_eDriver);
-	}
+    if (fChanged & VEHFL_CHANGED_DRIVER) {
+        WriteEntity(MSG_ENTITY, m_eDriver);
+    }
 
-	return (1);
+    return (1);
 }
 #endif
 
@@ -268,22 +268,22 @@ void
 func_tankmortar::SpriteSmoke(vector org)
 {
 #ifdef SERVER
-	static void Die(void) {
-		remove(self);
-	}
+    static void Die(void) {
+        remove(self);
+    }
 
-	if (!m_strSpriteSmoke)
-		return;
+    if (!m_strSpriteSmoke)
+        return;
 
-	ncRenderableEntity smoke = spawn(ncRenderableEntity);
-	smoke.SetModel(m_strSpriteSmoke);
-	smoke.SetOrigin(org);
-	smoke.think = Die;
-	smoke.nextthink = time + 0.1f;
-	smoke.scale = m_flSpriteScale;
-	smoke.SetRenderMode(RM_ADDITIVE);
-	smoke.SetRenderColor([255,255,255]);
-	smoke.SetRenderAmt(255);
+    ncRenderableEntity smoke = spawn(ncRenderableEntity);
+    smoke.SetModel(m_strSpriteSmoke);
+    smoke.SetOrigin(org);
+    smoke.think = Die;
+    smoke.nextthink = time + 0.1f;
+    smoke.scale = m_flSpriteScale;
+    smoke.SetRenderMode(RM_ADDITIVE);
+    smoke.SetRenderColor([255,255,255]);
+    smoke.SetRenderAmt(255);
 #endif
 }
 
@@ -291,22 +291,22 @@ void
 func_tankmortar::SpriteFlash(vector org)
 {
 #ifdef SERVER
-	static void Die(void) {
-		remove(self);
-	}
+    static void Die(void) {
+        remove(self);
+    }
 
-	if (!m_strSpriteFlash)
-		return;
+    if (!m_strSpriteFlash)
+        return;
 
-	ncRenderableEntity flash = spawn(ncRenderableEntity);
-	flash.SetModel(m_strSpriteFlash);
-	flash.SetOrigin(org);
-	flash.think = Die;
-	flash.nextthink = time + 0.1f;
-	flash.scale = m_flSpriteScale;
-	flash.SetRenderMode(RM_ADDITIVE);
-	flash.SetRenderColor([255,255,255]);
-	flash.SetRenderAmt(255);
+    ncRenderableEntity flash = spawn(ncRenderableEntity);
+    flash.SetModel(m_strSpriteFlash);
+    flash.SetOrigin(org);
+    flash.think = Die;
+    flash.nextthink = time + 0.1f;
+    flash.scale = m_flSpriteScale;
+    flash.SetRenderMode(RM_ADDITIVE);
+    flash.SetRenderColor([255,255,255]);
+    flash.SetRenderAmt(255);
 #endif
 }
 
@@ -314,64 +314,64 @@ void
 func_tankmortar::PlayerInput(void)
 {
 #ifdef SERVER
-	if (m_eDriver && m_eDriver.health <= 0)
-		PlayerLeave((ncPlayer)m_eDriver);
+    if (m_eDriver && m_eDriver.health <= 0)
+        PlayerLeave((ncPlayer)m_eDriver);
 #endif
 
 #ifdef CLIENT
-	//print("foooo\n");
+    //print("foooo\n");
 #endif
 
-	if (m_eDriver) {
-		vector wantang, endang;
-		vector aimorg;
+    if (m_eDriver) {
+        vector wantang, endang;
+        vector aimorg;
 
-		makevectors(input_angles);
-		aimorg = m_eDriver.origin + v_forward * 4086;
+        makevectors(input_angles);
+        aimorg = m_eDriver.origin + v_forward * 4086;
 
-		/* lerp */
-		makevectors(vectoangles(aimorg - origin));
-		wantang = v_forward;
-		makevectors(angles);
+        /* lerp */
+        makevectors(vectoangles(aimorg - origin));
+        wantang = v_forward;
+        makevectors(angles);
 
-		endang = vectorLerp(v_forward, wantang, input_timelength);
-		angles = vectorToAngles(endang);
-		PlayerUpdateFlags();
-	}
+        endang = vectorLerp(v_forward, wantang, input_timelength);
+        angles = vectorToAngles(endang);
+        PlayerUpdateFlags();
+    }
 
 #ifdef SERVER
-	if (m_flFireTime < time)
-	if (input_buttons & INPUT_BUTTON0) {
-		vector spos;
-		vector dir;
-		float damageRange;
+    if (m_flFireTime < time)
+    if (input_buttons & INPUT_BUTTON0) {
+        vector spos;
+        vector dir;
+        float damageRange;
 
-		/* barrel tip offset */
-		makevectors(angles);
-		spos = origin + (v_forward * m_vecTipPos[0]);
-		spos += v_right * m_vecTipPos[1];
-		spos += v_up * m_vecTipPos[2];
+        /* barrel tip offset */
+        makevectors(angles);
+        spos = origin + (v_forward * m_vecTipPos[0]);
+        spos += v_right * m_vecTipPos[1];
+        spos += v_up * m_vecTipPos[2];
 
-		/* spread */
-		dir = v_forward;
-		dir += random(-1,1) * m_vecSpread[0] * v_right;
-		dir += random(-1,1) * m_vecSpread[1] * v_up;
-		traceline(spos, spos + (dir * 4096), MOVE_NORMAL, this);
-		
-		damageRange = (float)m_iDamage * 2.5f;
-		combat.RadiusDamage(trace_endpos, damageRange, 0i, m_iDamage, m_eDriver, "");
+        /* spread */
+        dir = v_forward;
+        dir += random(-1,1) * m_vecSpread[0] * v_right;
+        dir += random(-1,1) * m_vecSpread[1] * v_up;
+        traceline(spos, spos + (dir * 4096), MOVE_NORMAL, this);
+        
+        damageRange = (float)m_iDamage * 2.5f;
+        combat.RadiusDamage(trace_endpos, damageRange, 0i, m_iDamage, m_eDriver, "");
 
-		/* fx */
-		pointparticles(particleeffectnum("fx_explosion.main"), trace_endpos, [0,0,0], 1);
-		SpriteSmoke(spos);
-		SpriteFlash(spos);
+        /* fx */
+        pointparticles(particleeffectnum("fx_explosion.main"), trace_endpos, [0,0,0], 1);
+        SpriteSmoke(spos);
+        SpriteFlash(spos);
 
-		UseTargets(this, TRIG_ON, GetTriggerDelay());
+        UseTargets(this, TRIG_ON, GetTriggerDelay());
 
-		m_flFireTime = time + m_flFireRate;
-	}
+        m_flFireTime = time + m_flFireRate;
+    }
 
-	input_buttons &= ~INPUT_BUTTON0;
+    input_buttons &= ~INPUT_BUTTON0;
 #endif
 }
 
@@ -379,83 +379,83 @@ func_tankmortar::PlayerInput(void)
 void
 func_tankmortar::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetMovetype(MOVETYPE_PUSH);
-	SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_PUSH);
+    SetSolid(SOLID_BSP);
 
-	if (m_eDriver)
-		PlayerLeave((ncPlayer)m_eDriver);
+    if (m_eDriver)
+        PlayerLeave((ncPlayer)m_eDriver);
 }
 
 void
 func_tankmortar::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "yawrate":
-		m_flYawRate = stof(setValue) * 0.01f;
-		break;
-	case "yawrange":
-		m_flYawRange = stof(setValue);
-		break;
-	case "pitchrate":
-		m_flPitchRate = stof(setValue) * 0.01f;
-		break;
-	case "pitchrange":
-		m_flPitchRange = stof(setValue);
-		break;
-	case "barrel":
-		m_vecTipPos[0] = stof(setValue);
-		break;
-	case "barrely":
-		m_vecTipPos[1] = stof(setValue);
-		break;
-	case "barrelz":
-		m_vecTipPos[2] = stof(setValue);
-		break;
-	case "firerate":
-		m_flFireRate = 1.0f / stof(setValue);
-		break;
-	case "iMagnitude":
-		m_iDamage = stoi(setValue);
-		break;
-	case "firespread":
-		m_vecSpread = [0.10, 0.10, 0] * stof(setValue);
-		break;
-	case "persistance":
-		m_flPersistance = stof(setValue);
-		break;
-	case "minRange":
-		m_flMinRange = stof(setValue);
-		break;
-	case "maxRange":
-		m_flMaxRange = stof(setValue);
-		break;
-	case "spritesmoke":
-		m_strSpriteSmoke = setValue;
-		break;
-	case "spriteflash":
-		m_strSpriteFlash = setValue;
-		break;
-	case "spritescale":
-		m_flSpriteScale = stof(setValue);
-		break;
-	case "rotatesound":
-		m_strSndRotate = setValue;
-		break;
-	default:
-		super::SpawnKey(setValue, strKey);
-	}
+    switch (strKey) {
+    case "yawrate":
+        m_flYawRate = stof(setValue) * 0.01f;
+        break;
+    case "yawrange":
+        m_flYawRange = stof(setValue);
+        break;
+    case "pitchrate":
+        m_flPitchRate = stof(setValue) * 0.01f;
+        break;
+    case "pitchrange":
+        m_flPitchRange = stof(setValue);
+        break;
+    case "barrel":
+        m_vecTipPos[0] = stof(setValue);
+        break;
+    case "barrely":
+        m_vecTipPos[1] = stof(setValue);
+        break;
+    case "barrelz":
+        m_vecTipPos[2] = stof(setValue);
+        break;
+    case "firerate":
+        m_flFireRate = 1.0f / stof(setValue);
+        break;
+    case "iMagnitude":
+        m_iDamage = stoi(setValue);
+        break;
+    case "firespread":
+        m_vecSpread = [0.10, 0.10, 0] * stof(setValue);
+        break;
+    case "persistance":
+        m_flPersistance = stof(setValue);
+        break;
+    case "minRange":
+        m_flMinRange = stof(setValue);
+        break;
+    case "maxRange":
+        m_flMaxRange = stof(setValue);
+        break;
+    case "spritesmoke":
+        m_strSpriteSmoke = setValue;
+        break;
+    case "spriteflash":
+        m_strSpriteFlash = setValue;
+        break;
+    case "spritescale":
+        m_flSpriteScale = stof(setValue);
+        break;
+    case "rotatesound":
+        m_strSndRotate = setValue;
+        break;
+    default:
+        super::SpawnKey(setValue, strKey);
+    }
 }
 #endif
 
 void
 func_tankmortar::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
 #ifdef SERVER
-	precache.Model(m_strSpriteFlash);
-	precache.Model(m_strSpriteSmoke);
+    precache.Model(m_strSpriteFlash);
+    precache.Model(m_strSpriteSmoke);
 #endif
 }

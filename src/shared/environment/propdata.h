@@ -37,34 +37,34 @@ Prop data is defined in Valve's VDF format, under `scripts/propdata.txt`:
 
 ```
 "PropData.txt"
-	{
+    {
 
-	"sometype"
-	{
-		// .. key/field attributes
-		// e.g.
-		"health" "10"
-		"breakable_model" "somematerial"
-	}
+    "sometype"
+    {
+        // .. key/field attributes
+        // e.g.
+        "health" "10"
+        "breakable_model" "somematerial"
+    }
 
-	"BreakableModels"
-	{
-		// completely unrelated to types defined in propdata.txt
-		// but somehow still part of it?
+    "BreakableModels"
+    {
+        // completely unrelated to types defined in propdata.txt
+        // but somehow still part of it?
 
-		"somematerial"
-		{
-			// model path / fadeout time pair
-			// e.g.
-			"foo.vvm" "2.5"
+        "somematerial"
+        {
+            // model path / fadeout time pair
+            // e.g.
+            "foo.vvm" "2.5"
 
-			// but I also added
-			"foo.mdl#submodels=9" "5.0"
-			// where the # symbol notes that >9< submodels of the first
-			// submodel group will be chosen at random to represent 1 unit
-			// of the breakmodel collective
-		}
-	}
+            // but I also added
+            "foo.mdl#submodels=9" "5.0"
+            // where the # symbol notes that >9< submodels of the first
+            // submodel group will be chosen at random to represent 1 unit
+            // of the breakmodel collective
+        }
+    }
 }
 ```
 
@@ -160,64 +160,64 @@ var string g_curPropData;
 
 typedef enumflags
 {
-	PDFL_BLOCKLOS,		/* Does this block an AIs light of sight? */
-	PDFL_AIWALKABLE,	/* can AI walk on this? */
-	PDFL_ALLOWSTATIC	/* static simulation possible? */
+    PDFL_BLOCKLOS,      /* Does this block an AIs light of sight? */
+    PDFL_AIWALKABLE,    /* can AI walk on this? */
+    PDFL_ALLOWSTATIC    /* static simulation possible? */
 } propdataFlag_t;
 
 typedef struct
 {
-	int parent;
-	int child;
-	float xmin;
-	float xmax;
-	float xfriction;
-	float ymin;
-	float ymax;
-	float yfriction;
-	float zmin;
-	float zmax;
-	float zfriction;
+    int parent;
+    int child;
+    float xmin;
+    float xmax;
+    float xfriction;
+    float ymin;
+    float ymax;
+    float yfriction;
+    float zmin;
+    float zmax;
+    float zfriction;
 } propdata_constraint_t;
 
 typedef struct
 {
-	int index;
-	string name;
-	string parent;
-	float mass;
-	string surfaceprop;
-	float damping;
-	float rotdamping;
-	float inertia;
-	float volume;
+    int index;
+    string name;
+    string parent;
+    float mass;
+    string surfaceprop;
+    float damping;
+    float rotdamping;
+    float inertia;
+    float volume;
 } propdata_solids_t;
 
 /** Data holding PropData entries. */
 typedef struct
 {
-	string name;
-	string base;
-	float health;		/* health until break */
-	propdataFlag_t flags;
-	float damage_bullets;	/* dmg multipliers */
-	float damage_melee;
-	float damage_explosive;
-	float explosive_damage;	/* once the damage/radius keys are set, make explosion upon break */
-	float explosive_radius;
-	string breakable_particle;	/* name of BreakableModels entry in PropData.txt */
-	string breakable_model;	/* name of BreakableModels entry in PropData.txt */
-	int breakable_count;
-	float breakable_skin;
-	float mass;
-	float damping_linear;
-	float damping_angular;
-	float inertia;
-	float volume;
-	string surfaceprop;
-	int solids;
-	propdata_solids_t *solidInfo;
-	string doll;
+    string name;
+    string base;
+    float health;       /* health until break */
+    propdataFlag_t flags;
+    float damage_bullets;   /* dmg multipliers */
+    float damage_melee;
+    float damage_explosive;
+    float explosive_damage; /* once the damage/radius keys are set, make explosion upon break */
+    float explosive_radius;
+    string breakable_particle;  /* name of BreakableModels entry in PropData.txt */
+    string breakable_model; /* name of BreakableModels entry in PropData.txt */
+    int breakable_count;
+    float breakable_skin;
+    float mass;
+    float damping_linear;
+    float damping_angular;
+    float inertia;
+    float volume;
+    string surfaceprop;
+    int solids;
+    propdata_solids_t *solidInfo;
+    string doll;
 } propdata_t;
 
 /* entity will have to have a .propdata field pointing to a propdata id */
@@ -229,9 +229,9 @@ var hashtable g_hashpropdata;
 void PropData_Init(void);
 void PropData_Shutdown(void);
 
-int PropData_Load(string);	/* called when we read entity data, returns -1 when not found */
-int PropData_ForModel(string);	/* called when we set a model, returns -1 when not found */
-//int PropData_Read(string);	/* this just handles the contents of a prop_data model string */
+int PropData_Load(string);  /* called when we read entity data, returns -1 when not found */
+int PropData_ForModel(string);  /* called when we set a model, returns -1 when not found */
+//int PropData_Read(string);    /* this just handles the contents of a prop_data model string */
 
 void PropData_SetStage(string);
 int PropData_Finish(void);
@@ -239,34 +239,34 @@ int PropData_Finish(void);
 /* querying API */
 typedef enum
 {
-	PROPINFO_HEALTH,
-	PROPINFO_FLAGS,
-	PROPINFO_DMG_BULLET,
-	PROPINFO_DMG_MELEE,
-	PROPINFO_DMG_EXPLOSIVE,
-	PROPINFO_EXPLOSIVE_DMG,
-	PROPINFO_EXPLOSIVE_RADIUS,
-	PROPINFO_BREAKMODEL,
-	PROPINFO_BREAKCOUNT,
-	PROPINFO_SKIN,
-	/* physics related variables. */
-	PROPINFO_MASS,
-	PROPINFO_DAMPING_LINEAR,
-	PROPINFO_DAMPING_ANGULAR,
-	PROPINFO_INERTIA,
-	PROPINFO_VOLUME,
-	PROPINFO_SURFACEPROP,
-	PROPINFO_DOLL
+    PROPINFO_HEALTH,
+    PROPINFO_FLAGS,
+    PROPINFO_DMG_BULLET,
+    PROPINFO_DMG_MELEE,
+    PROPINFO_DMG_EXPLOSIVE,
+    PROPINFO_EXPLOSIVE_DMG,
+    PROPINFO_EXPLOSIVE_RADIUS,
+    PROPINFO_BREAKMODEL,
+    PROPINFO_BREAKCOUNT,
+    PROPINFO_SKIN,
+    /* physics related variables. */
+    PROPINFO_MASS,
+    PROPINFO_DAMPING_LINEAR,
+    PROPINFO_DAMPING_ANGULAR,
+    PROPINFO_INERTIA,
+    PROPINFO_VOLUME,
+    PROPINFO_SURFACEPROP,
+    PROPINFO_DOLL
 } propinfo_t;
 __variant Prop_GetInfo(int, int);
 
 /** Data holding BreakModel entries. */
 typedef struct
 {
-	string name;
-	string data;
-	float modelindex; /* only used for networking */
-	bool physics; /* differentiate between Source and GS */
+    string name;
+    string data;
+    float modelindex; /* only used for networking */
+    bool physics; /* differentiate between Source and GS */
 } breakModel_t;
 
 /* entity will have a .breakmodel field pointing to a breakmodel id */
@@ -295,5 +295,5 @@ void BreakModel_SendClientData(entity);
 //void BreakModel_Init(void);
 //void BreakModel_Shutdown(void);
 
-//int BreakModel_Load(string);	/* called when we precache a model, returns -1 when not found */
-//int BreakModel_Read(string);	/* this just handles the contents of a prop_data model string */
+//int BreakModel_Load(string);  /* called when we precache a model, returns -1 when not found */
+//int BreakModel_Read(string);  /* this just handles the contents of a prop_data model string */

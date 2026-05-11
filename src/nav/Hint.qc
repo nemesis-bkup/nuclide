@@ -20,105 +20,105 @@ var bool autocvar_ai_noNodes = false;
 void
 ncHint::ncHint(void)
 {
-	m_hintType = __NULL__;
-	m_hintActivity = __NULL__;
-	m_nodeFieldOfView = 360;
-	m_hintGroup = __NULL__;
-	m_ignoreFacing = IGNORE_DEFAULT;
-	m_mindsetFilter = __NULL__;
+    m_hintType = __NULL__;
+    m_hintActivity = __NULL__;
+    m_nodeFieldOfView = 360;
+    m_hintGroup = __NULL__;
+    m_ignoreFacing = IGNORE_DEFAULT;
+    m_mindsetFilter = __NULL__;
 };
 
 void
 ncHint::Save(float handle)
 {
-	ncIO::Save(handle);
-	SaveString(handle, "hintType", m_hintType);
-	SaveString(handle, "hintActivity", m_hintActivity);
-	SaveFloat(handle, "nodeFieldOfView", m_nodeFieldOfView);
-	SaveString(handle, "hintGroup", m_hintGroup);
-	SaveFloat(handle, "ignoreFacing", m_ignoreFacing);
-	SaveString(handle, "mindsetFilter", m_mindsetFilter);
+    ncIO::Save(handle);
+    SaveString(handle, "hintType", m_hintType);
+    SaveString(handle, "hintActivity", m_hintActivity);
+    SaveFloat(handle, "nodeFieldOfView", m_nodeFieldOfView);
+    SaveString(handle, "hintGroup", m_hintGroup);
+    SaveFloat(handle, "ignoreFacing", m_ignoreFacing);
+    SaveString(handle, "mindsetFilter", m_mindsetFilter);
 }
 
 void
 ncHint::Restore(string strKey, string strValue)
 {
-	switch (strKey) {
-	case "hintType":
-		m_hintType = ReadString(strValue);
-		break;
-	case "hintActivity":
-		m_hintActivity = ReadString(strValue);
-		break;
-	case "nodeFieldOfView":
-		m_nodeFieldOfView = ReadFloat(strValue);
-		break;
-	case "hintGroup":
-		m_hintGroup = ReadString(strValue);
-		break;
-	case "ignoreFacing":
-		m_ignoreFacing = ReadFloat(strValue);
-		break;
-	case "mindsetFilter":
-		m_mindsetFilter = ReadString(strValue);
-		break;
-	default:
-		super::Restore(strKey, strValue);
-	}
+    switch (strKey) {
+    case "hintType":
+        m_hintType = ReadString(strValue);
+        break;
+    case "hintActivity":
+        m_hintActivity = ReadString(strValue);
+        break;
+    case "nodeFieldOfView":
+        m_nodeFieldOfView = ReadFloat(strValue);
+        break;
+    case "hintGroup":
+        m_hintGroup = ReadString(strValue);
+        break;
+    case "ignoreFacing":
+        m_ignoreFacing = ReadFloat(strValue);
+        break;
+    case "mindsetFilter":
+        m_mindsetFilter = ReadString(strValue);
+        break;
+    default:
+        super::Restore(strKey, strValue);
+    }
 }
 
 void
 ncHint::SpawnKey(string strKey, string strValue)
 {
-	switch (strKey) {
-	case "hinttype":
-		m_hintType = ReadString(strValue);
-		break;
-	case "hintactivity":
-		m_hintActivity = ReadString(strValue);
-		break;
-	case "nodeFOV":
-		m_nodeFieldOfView = ReadFloat(strValue);
-		break;
-	case "Group":
-		m_hintGroup = ReadString(strValue);
-		break;
-	case "IgnoreFacing":
-		m_ignoreFacing = ReadFloat(strValue);
-		break;
-	case "MinimumState":
-		m_mindsetFilter = ReadString(strValue);
-		break;
-	default:
-		super::SpawnKey(strKey, strValue);
-	}
+    switch (strKey) {
+    case "hinttype":
+        m_hintType = ReadString(strValue);
+        break;
+    case "hintactivity":
+        m_hintActivity = ReadString(strValue);
+        break;
+    case "nodeFOV":
+        m_nodeFieldOfView = ReadFloat(strValue);
+        break;
+    case "Group":
+        m_hintGroup = ReadString(strValue);
+        break;
+    case "IgnoreFacing":
+        m_ignoreFacing = ReadFloat(strValue);
+        break;
+    case "MinimumState":
+        m_mindsetFilter = ReadString(strValue);
+        break;
+    default:
+        super::SpawnKey(strKey, strValue);
+    }
 }
 
 void
 ncHint::Spawned(void)
 {
-	if (autocvar_ai_noHints) {
-		Destroy();
-		return;
-	}
+    if (autocvar_ai_noHints) {
+        Destroy();
+        return;
+    }
 
-	super::Spawned();
+    super::Spawned();
 }
 
 
 ncHint
 ncHint::PlaceEntityHint(entity owningEntity, string hintType)
 {
-	if (!owningEntity) {
-		ncError("can't place EntityHint without owner");
-		return (__NULL__);
-	}
+    if (!owningEntity) {
+        ncError("can't place EntityHint without owner");
+        return (__NULL__);
+    }
 
-	/* be lax for now */
-	ncHint newHint = spawn(ncHint);
-	newHint.Spawn();
-	newHint.SetOrigin(owningEntity.origin);
-	newHint.SetOwner(owningEntity);
-	newHint.m_hintType = hintType;
-	return (newHint);
+    /* be lax for now */
+    ncHint newHint = spawn(ncHint);
+    newHint.Spawn();
+    newHint.SetOrigin(owningEntity.origin);
+    newHint.SetOwner(owningEntity);
+    newHint.m_hintType = hintType;
+    return (newHint);
 }

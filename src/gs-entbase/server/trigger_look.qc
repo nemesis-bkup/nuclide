@@ -43,157 +43,157 @@ class
 trigger_look:ncBrushTrigger
 {
 public:
-	void trigger_look(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
+    void trigger_look(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
 
 private:
-	float m_targetViewCone;
-	float m_minimumLookTime;
-	float m_timeSpentLooking;
-	string m_lookTarget;
+    float m_targetViewCone;
+    float m_minimumLookTime;
+    float m_timeSpentLooking;
+    string m_lookTarget;
 
-	/* Input/Output */
-	string m_outputOnTrigger;
+    /* Input/Output */
+    string m_outputOnTrigger;
 };
 
 void
 trigger_look::trigger_look(void)
 {
-	m_targetViewCone = 0.9f;
-	m_minimumLookTime = 0.5f;
-	m_timeSpentLooking = 0.0f;
-	m_lookTarget = __NULL__;
-	m_outputOnTrigger = __NULL__;
+    m_targetViewCone = 0.9f;
+    m_minimumLookTime = 0.5f;
+    m_timeSpentLooking = 0.0f;
+    m_lookTarget = __NULL__;
+    m_outputOnTrigger = __NULL__;
 }
 
 void
 trigger_look::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "targetViewCone", m_targetViewCone);
-	SaveFloat(handle, "minimumLookTime", m_minimumLookTime);
-	SaveFloat(handle, "timeSpentLooking", m_timeSpentLooking);
-	SaveString(handle, "lookTarget", m_lookTarget);
-	SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
+    super::Save(handle);
+    SaveFloat(handle, "targetViewCone", m_targetViewCone);
+    SaveFloat(handle, "minimumLookTime", m_minimumLookTime);
+    SaveFloat(handle, "timeSpentLooking", m_timeSpentLooking);
+    SaveString(handle, "lookTarget", m_lookTarget);
+    SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
 }
 
 void
 trigger_look::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "targetViewCone":
-		m_targetViewCone = ReadFloat(setValue);
-		break;
-	case "minimumLookTime":
-		m_minimumLookTime = ReadFloat(setValue);
-		break;
-	case "timeSpentLooking":
-		m_timeSpentLooking = ReadFloat(setValue);
-		break;
-	case "lookTarget":
-		m_lookTarget = ReadString(setValue);
-		break;
-	case "outputOnTrigger":
-		m_outputOnTrigger = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "targetViewCone":
+        m_targetViewCone = ReadFloat(setValue);
+        break;
+    case "minimumLookTime":
+        m_minimumLookTime = ReadFloat(setValue);
+        break;
+    case "timeSpentLooking":
+        m_timeSpentLooking = ReadFloat(setValue);
+        break;
+    case "lookTarget":
+        m_lookTarget = ReadString(setValue);
+        break;
+    case "outputOnTrigger":
+        m_outputOnTrigger = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_look::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "looktarget":
-	case "target_destination":
-		m_lookTarget = setValue;
-		break;
-	case "fov":
-	case "FieldOfView":
-		m_targetViewCone = stof(setValue);
-		break;
-	case "looktime":
-	case "LookTime":
-		m_minimumLookTime = stof(setValue);
-		break;
-	case "OnTrigger":
-		m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    case "looktarget":
+    case "target_destination":
+        m_lookTarget = setValue;
+        break;
+    case "fov":
+    case "FieldOfView":
+        m_targetViewCone = stof(setValue);
+        break;
+    case "looktime":
+    case "LookTime":
+        m_minimumLookTime = stof(setValue);
+        break;
+    case "OnTrigger":
+        m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 trigger_look::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnTrigger)
-		m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
+    if (m_outputOnTrigger)
+        m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
 }
 
 void
 trigger_look::Respawn(void)
 {
-	/* reset */
-	InitBrushTrigger();
-	m_timeSpentLooking = 0.0f;
+    /* reset */
+    InitBrushTrigger();
+    m_timeSpentLooking = 0.0f;
 }
 
 void
 trigger_look::Touch(entity eToucher)
 {
-	float dot;
-	entity lt;
+    float dot;
+    entity lt;
 
-	if (GetMaster(eToucher) == FALSE)
-		return;
+    if (GetMaster(eToucher) == FALSE)
+        return;
 
-	if (is.Player(eToucher) == false) {
-		/* FIXME: could this conflict with other entities? probably. */
-		m_timeSpentLooking = 0.0f;
-		return;
-	}
+    if (is.Player(eToucher) == false) {
+        /* FIXME: could this conflict with other entities? probably. */
+        m_timeSpentLooking = 0.0f;
+        return;
+    }
 
-	/* find the looktarget */
-	lt = find(world, ::targetname, m_lookTarget);
-	if (!lt) {
-		EntLog("^1trigger_look:Touch^7: Invalid m_lookTarget %s!", m_lookTarget);
-		Destroy();
-		return;
-	}
+    /* find the looktarget */
+    lt = find(world, ::targetname, m_lookTarget);
+    if (!lt) {
+        EntLog("^1trigger_look:Touch^7: Invalid m_lookTarget %s!", m_lookTarget);
+        Destroy();
+        return;
+    }
 
-	/* test against the looktarget position */
-	makevectors(eToucher.v_angle);
-	vector v = normalize (lt.origin - other.origin);
-	dot = v * v_forward;
+    /* test against the looktarget position */
+    makevectors(eToucher.v_angle);
+    vector v = normalize (lt.origin - other.origin);
+    dot = v * v_forward;
 
-	/* field of view check */
-	if (dot < m_targetViewCone) {
-		m_timeSpentLooking = 0.0f;
-		return;
-	}
+    /* field of view check */
+    if (dot < m_targetViewCone) {
+        m_timeSpentLooking = 0.0f;
+        return;
+    }
 
-	/* increment the 'looked-time' a little bit one frame after another */
-	if (m_timeSpentLooking < m_minimumLookTime) {
-		m_timeSpentLooking += frametime;
-		return;
-	}
+    /* increment the 'looked-time' a little bit one frame after another */
+    if (m_timeSpentLooking < m_minimumLookTime) {
+        m_timeSpentLooking += frametime;
+        return;
+    }
 
-	/* trigger and disable entity, for now */
-	SetSolid(SOLID_NOT);
+    /* trigger and disable entity, for now */
+    SetSolid(SOLID_NOT);
 
-	if (!target)
-		UseOutput(eToucher, m_outputOnTrigger);
-	else
-		UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
+    if (!target)
+        UseOutput(eToucher, m_outputOnTrigger);
+    else
+        UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
 }

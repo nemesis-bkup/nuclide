@@ -35,103 +35,103 @@ class
 item_food:ncRenderableEntity
 {
 public:
-	void item_food(void);
+    void item_food(void);
 
-	virtual void Respawn(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	nonvirtual void Setup(void);
-	virtual void Touch(entity);
-	virtual void Precaches(void);
+    virtual void Respawn(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    nonvirtual void Setup(void);
+    virtual void Touch(entity);
+    virtual void Precaches(void);
 
 private:
-	int m_iIsCan;
-	string m_spawnSound;
+    int m_iIsCan;
+    string m_spawnSound;
 };
 
 void
 item_food::item_food(void)
 {
-	// TODO: differentiate between item_sodacan and item_food
-	m_iIsCan = 1;
-	m_spawnSound = "weapons/g_bounce3.wav";
+    // TODO: differentiate between item_sodacan and item_food
+    m_iIsCan = 1;
+    m_spawnSound = "weapons/g_bounce3.wav";
 }
 
 void
 item_food::Precaches(void)
 {
-	precache.Sound(m_spawnSound);
+    precache.Sound(m_spawnSound);
 }
 
 void
 item_food::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iIsCan", m_iIsCan);
+    super::Save(handle);
+    SaveInt(handle, "m_iIsCan", m_iIsCan);
 }
 
 void
 item_food::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iIsCan":
-		m_iIsCan = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iIsCan":
+        m_iIsCan = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 item_food::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_TOSS);
+    super::Respawn();
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_TOSS);
 
-	//if (m_iIsCan) {
-		SetModel("models/can.mdl");
-	//}
+    //if (m_iIsCan) {
+        SetModel("models/can.mdl");
+    //}
 
-	SetSize([0,0,0], [0,0,0]);
-	ScheduleThink(Setup, 1.0f);
+    SetSize([0,0,0], [0,0,0]);
+    ScheduleThink(Setup, 1.0f);
 }
 
 void
 item_food::Setup(void)
 {
     EntLog("Dispensed");
-	SetSolid(SOLID_TRIGGER);
-	SetSize([-16,-16,-16], [16,16,16]);
+    SetSolid(SOLID_TRIGGER);
+    SetSize([-16,-16,-16], [16,16,16]);
 
-	//if (m_iIsCan) {
-		sound(this, CHAN_ITEM, m_spawnSound, 1.0f, ATTN_NORM);
-	//}
+    //if (m_iIsCan) {
+        sound(this, CHAN_ITEM, m_spawnSound, 1.0f, ATTN_NORM);
+    //}
 }
 
 void
 item_food::Touch(entity eToucher)
 {
-	if (!is.Player(eToucher)) {
-		return;
-	}
+    if (!is.Player(eToucher)) {
+        return;
+    }
 
-	if (owner) {
+    if (owner) {
         if (owner.classname == "env_beverage") {
             env_beverage bevOwner = (env_beverage)owner;
             bevOwner.SetValue(1i);
         }
-	}
+    }
 
-	eToucher.health = bound(0, eToucher.health + 1, eToucher.max_health);
-	Disappear();
-	Destroy();
+    eToucher.health = bound(0, eToucher.health + 1, eToucher.max_health);
+    Disappear();
+    Destroy();
 }
 
 class
 item_sodacan:item_food
 {
-	void item_sodacan(void);
+    void item_sodacan(void);
 };
 
 void
