@@ -31,9 +31,9 @@ var int autocvar_bot_minClients = -1i;
 
 typedef enum
 {
-	BOTSKILL_EASY = 1,
-	BOTSKILL_MEDIUM,
-	BOTSKILL_HARD
+    BOTSKILL_EASY = 1,
+    BOTSKILL_MEDIUM,
+    BOTSKILL_HARD
 } botskill_t;
 
 var botskill_t autocvar_bot_skill = BOTSKILL_MEDIUM;

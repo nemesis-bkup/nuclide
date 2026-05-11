@@ -94,3 +94,9 @@ Player.Gib
 {
 	sample player/udeath.wav
 }
+
+
+Player.PickupWeapon
+{
+	sample weapons/pkup.wav
+}

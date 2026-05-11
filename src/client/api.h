@@ -25,6 +25,6 @@
 void
 main(void)
 {
-	_client_main();
-	_shared_main();
+    _client_main();
+    _shared_main();
 }

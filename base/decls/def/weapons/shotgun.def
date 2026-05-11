@@ -6,11 +6,9 @@ entityDef weapon_shotgun
 	"editor_usage"		"Shotgun"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model"				"progs/g_shot1.mdl"
 	"model_view"		"progs/v_shot.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 
@@ -39,6 +37,8 @@ entityDef weapon_shotgun
 	"icon"				"weapon_shotgun.weapon"
 	"iconSelected"		"weapon_shotgun.weapon_s"
 	"gui"               "ui/weapon_shotgun.menu"
+    "muzzleRelativeOffset"  "18 0 -2"
+	"smoke_muzzle"		"muzzle.smoke"
 }
 
 entityDef projectile_shotgun

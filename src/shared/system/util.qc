@@ -18,37 +18,37 @@ bool
 Util_IsPaused(void)
 {
 #ifdef CLIENT
-	return serverkeyfloat(SERVERKEY_PAUSESTATE) == 1 ? true : false;
+    return serverkeyfloat(SERVERKEY_PAUSESTATE) == 1 ? true : false;
 #else
-	return false;
+    return false;
 #endif
 }
 
 void
 Util_Destroy(void)
 {
-	remove(self);
+    remove(self);
 }
 
 string
 Util_TimeToString(float fTime)
 {
-	fTime = rint(fTime);
+    fTime = rint(fTime);
 
-	switch (fTime) {
-		case 0: return "less than one";
-		case 1: return "one";
-		case 2: return "two";
-		case 3: return "three";
-		case 4: return "four";
-		case 5: return "five";
-		case 6: return "six";
-		case 7: return "seven";
-		case 8: return "eight";
-		case 9: return "nine";
-		case 10: return "ten";
-		default: return "over ten";
-	}
+    switch (fTime) {
+        case 0: return "less than one";
+        case 1: return "one";
+        case 2: return "two";
+        case 3: return "three";
+        case 4: return "four";
+        case 5: return "five";
+        case 6: return "six";
+        case 7: return "seven";
+        case 8: return "eight";
+        case 9: return "nine";
+        case 10: return "ten";
+        default: return "over ten";
+    }
 }
 
 /* returns whether or not the mode we're playing is a team game */
@@ -56,86 +56,86 @@ bool
 Util_IsTeamplay(void)
 {
 #ifdef SERVER
-	return g_grMode.IsTeamplay();
+    return g_grMode.IsTeamplay();
 #else
-	return (serverkeyfloat("teams") > 0) ? (true) : (false);
+    return (serverkeyfloat("teams") > 0) ? (true) : (false);
 #endif
 }
 
 void
 Util_ChangeClass(entity objectID, string className)
 {
-	entity oldSelf = self;
-	self = objectID;
-	callfunction(strcat("spawnfunc_", className));
-	self = oldSelf;
+    entity oldSelf = self;
+    self = objectID;
+    callfunction(strcat("spawnfunc_", className));
+    self = oldSelf;
 }
 
 string
 Util_ChatFormat(float playerNum, float teamNum, string chatMessage)
 {
-	vector teamColor = stov(serverkey(sprintf("teamcolor_%d", teamNum)));
-	string teamColorString = sprintf("^x%x%x%x", teamColor[0] * 15,teamColor[1] * 15,teamColor[2] * 15);
-	string teamName = serverkey(sprintf("team_%d", teamNum));
+    vector teamColor = stov(serverkey(sprintf("teamcolor_%d", teamNum)));
+    string teamColorString = sprintf("^x%x%x%x", teamColor[0] * 15,teamColor[1] * 15,teamColor[2] * 15);
+    string teamName = serverkey(sprintf("team_%d", teamNum));
 
 #ifdef CLIENT
-	string playerName = getplayerkeyvalue(playerNum, "name");
+    string playerName = getplayerkeyvalue(playerNum, "name");
 #else
-	string playerName = infokey(edict_num(playerNum+1), "name");
+    string playerName = infokey(edict_num(playerNum+1), "name");
 #endif
 
-	if (teamNum == 0) {
-		return sprintf("%s^7: %s", playerName, chatMessage);
-	} else {
-		return sprintf("%s %s(%s)^7: %s", playerName, teamColorString, teamName, chatMessage);
-	}
+    if (teamNum == 0) {
+        return sprintf("%s^7: %s", playerName, chatMessage);
+    } else {
+        return sprintf("%s %s(%s)^7: %s", playerName, teamColorString, teamName, chatMessage);
+    }
 }
 
 int
 Util_GetMaxPlayers(void)
 {
-	return g_numplayerslots;
+    return g_numplayerslots;
 }
 
 string
 Util_GetTime( void )
 {
-	static int iS, iM, iT, iMS;
-	float timeLimit = stof( serverkey( "timelimit" ) ) * 60;
+    static int iS, iM, iT, iMS;
+    float timeLimit = stof( serverkey( "timelimit" ) ) * 60;
 
-	/* display a count-down timer if we've got a time limit */
-	if (timeLimit <= 0)
-		iMS = (int)time;
-	else
-		iMS = timeLimit - time;
+    /* display a count-down timer if we've got a time limit */
+    if (timeLimit <= 0)
+        iMS = (int)time;
+    else
+        iMS = timeLimit - time;
 
-	if ( iMS < 0 ) {
-		iMS = 0;
-	}
-	
-	iS = iMS;
-	iM = iS / 60;
-	iS -= iM * 60;
-	iT = iS / 10;
-	iS -= iT * 10;
-	
-	return sprintf( "%i:%i%i", iM, iT, iS );
+    if ( iMS < 0 ) {
+        iMS = 0;
+    }
+    
+    iS = iMS;
+    iM = iS / 60;
+    iS -= iM * 60;
+    iT = iS / 10;
+    iS -= iT * 10;
+    
+    return sprintf( "%i:%i%i", iM, iT, iS );
 }
 
 float
 Util_GetTimeLeft(void)
 {
-	float timeLimit = stof( serverkey( "timelimit" ) ) * 60;
-	return timeLimit - time;
+    float timeLimit = stof( serverkey( "timelimit" ) ) * 60;
+    return timeLimit - time;
 }
 
 string
 Util_GetAddress(void)
 {
-	string host = serverkey("ip");
+    string host = serverkey("ip");
 
-	if (host == "QLoopBack:0")
-		return "localhost";
-	else
-		return host;
+    if (host == "QLoopBack:0")
+        return "localhost";
+    else
+        return host;
 }

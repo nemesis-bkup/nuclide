@@ -42,138 +42,138 @@ class
 trigger_auto:ncPointTrigger
 {
 public:
-	void trigger_auto(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void RestoreComplete(void);
-	
-	nonvirtual void Processing(void);
+    void trigger_auto(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void RestoreComplete(void);
+    
+    nonvirtual void Processing(void);
 
 private:
-	triggermode_t m_iTriggerState;
-	float m_flDelay;
+    triggermode_t m_iTriggerState;
+    float m_flDelay;
 };
 
 void
 trigger_auto::trigger_auto(void)
 {
-	/* default is always toggle */
-	m_iTriggerState = TRIG_TOGGLE;
-	m_flDelay = 0.0f;
+    /* default is always toggle */
+    m_iTriggerState = TRIG_TOGGLE;
+    m_flDelay = 0.0f;
 }
 
 void
 trigger_auto::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_iTriggerState", m_iTriggerState);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
+    super::Save(handle);
+    SaveFloat(handle, "m_iTriggerState", m_iTriggerState);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
 }
 
 void
 trigger_auto::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iTriggerState":
-		m_iTriggerState = ReadFloat(setValue);
-		break;
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iTriggerState":
+        m_iTriggerState = ReadFloat(setValue);
+        break;
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_auto::RestoreComplete(void)
 {
-	//ScheduleThink(Processing, 0.0f);
+    //ScheduleThink(Processing, 0.0f);
 }
 
 void
 trigger_auto::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "triggerstate":
-		m_iTriggerState = stof(setValue);
-		break;
-	case "delay":
-		m_flDelay = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "triggerstate":
+        m_iTriggerState = stof(setValue);
+        break;
+    case "delay":
+        m_flDelay = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_auto::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	/* needs to be set here, as game invoked respawns
-	   generally should not affect trigger_auto */
-	SetValue(1);
+    /* needs to be set here, as game invoked respawns
+       generally should not affect trigger_auto */
+    SetValue(1);
 }
 
 void
 trigger_auto::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (GetValue(this) == 1) {
-		return;
-	}
+    if (GetValue(this) == 1) {
+        return;
+    }
 
-	if (IsThinking() == true) {
-		return;
-	}
+    if (IsThinking() == true) {
+        return;
+    }
 
-	/* deliberately add a bit more time in case we're first in the ent-lump
-		also we'll only do this in multiplayer games. SP games will call
-	    trigger_auto_trigger() for when one player has fully joined */
-	if (cvar("sv_playerslots") > 1) {
-		ScheduleThink(Processing, 0.25f);
-	}
+    /* deliberately add a bit more time in case we're first in the ent-lump
+        also we'll only do this in multiplayer games. SP games will call
+        trigger_auto_trigger() for when one player has fully joined */
+    if (cvar("sv_playerslots") > 1) {
+        ScheduleThink(Processing, 0.25f);
+    }
 }
 
 void
 trigger_auto::Processing(void)
 {
-	if (STRING_SET(m_globalState)) {
-		if (GetGlobalValue(m_globalState) == 0) {
-			return;
-		}
-	}
+    if (STRING_SET(m_globalState)) {
+        if (GetGlobalValue(m_globalState) == 0) {
+            return;
+        }
+    }
 
-	UseTargets(this, m_iTriggerState, m_flDelay);
-	//print(sprintf("%S %d %f %f\n", target, m_iTriggerState, m_flDelay, time));
+    UseTargets(this, m_iTriggerState, m_flDelay);
+    //print(sprintf("%S %d %f %f\n", target, m_iTriggerState, m_flDelay, time));
 
-	if (HasSpawnFlags(1)) {
-		EntLog("Trigger instructed to destroy itself.");
-		SetValue(0);
-	}
+    if (HasSpawnFlags(1)) {
+        EntLog("Trigger instructed to destroy itself.");
+        SetValue(0);
+    }
 }
 
 void
 trigger_auto_trigger(void)
 {
-	static bool called = false;
-	trigger_auto loop;
+    static bool called = false;
+    trigger_auto loop;
 
-	/* don't do it more than once */
-	if (called) {
-		return;
-	}
+    /* don't do it more than once */
+    if (called) {
+        return;
+    }
 
-	for (loop = __NULL__; (loop = (trigger_auto)find(loop, ::classname, "trigger_auto"));) {
-		loop.ScheduleThink(trigger_auto::Processing, 0.0f);
-	}
+    for (loop = __NULL__; (loop = (trigger_auto)find(loop, ::classname, "trigger_auto"));) {
+        loop.ScheduleThink(trigger_auto::Processing, 0.0f);
+    }
 
-	called = true;
+    called = true;
 }

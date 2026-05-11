@@ -34,11 +34,11 @@ class
 ncAudioDict:ncDict
 {
 public:
-	void ncAudioDict(void);
+    void ncAudioDict(void);
 
 private:
-	string m_audioName;
-	string m_audioInfo;
-	string m_audioPreview;
-	string m_audioTrack;
+    string m_audioName;
+    string m_audioInfo;
+    string m_audioPreview;
+    string m_audioTrack;
 };

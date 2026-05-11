@@ -17,86 +17,86 @@
 void
 Bot_PickName(entity target)
 {
-	int n = 0;
-	entity pbot = world;
+    int n = 0;
+    entity pbot = world;
 
-	for (int i = 1; (pbot = edict_num(i)); i++)
-		if (clienttype(pbot) == CLIENTTYPE_BOT)
-			n++;
+    for (int i = 1; (pbot = edict_num(i)); i++)
+        if (clienttype(pbot) == CLIENTTYPE_BOT)
+            n++;
 
-	if (autocvar_bot_prefix)
-		forceinfokey(target, "name", sprintf("%s Bot %i", autocvar_bot_prefix, n));
-	else
-		forceinfokey(target, "name", sprintf("Bot %i", n));
+    if (autocvar_bot_prefix)
+        forceinfokey(target, "name", sprintf("%s Bot %i", autocvar_bot_prefix, n));
+    else
+        forceinfokey(target, "name", sprintf("Bot %i", n));
 
-	forceinfokey(target, "model", "robo");
+    forceinfokey(target, "model", "robo");
 }
 
 entity
 Bot_AddQuick(void)
 {
-	/* we've got no nodes, so generate some fake waypoints */
-	if (!Nodes_Available()) {
-		print("^1Bot_AddQuick^7: Can't add bot. No waypoints.\n");
-		return (__NULL__);
-	}
+    /* we've got no nodes, so generate some fake waypoints */
+    if (!Nodes_Available()) {
+        print("^1Bot_AddQuick^7: Can't add bot. No waypoints.\n");
+        return (__NULL__);
+    }
 
-	entity newbot;
-	entity oself;
+    entity newbot;
+    entity oself;
 
-	oself = self;
-	self = spawnclient();
+    oself = self;
+    self = spawnclient();
 
-	if (!self) {
-		print("^1Bot_AddQuick^7: Can't add bot. Server is full\n");
-		self = oself;
-		return (__NULL__);
-	}
+    if (!self) {
+        print("^1Bot_AddQuick^7: Can't add bot. Server is full\n");
+        self = oself;
+        return (__NULL__);
+    }
 
-	Bot_PickName(self);
-	ClientConnect();
-	PutClientInServer();
+    Bot_PickName(self);
+    ClientConnect();
+    PutClientInServer();
 
-	newbot = self;
-	self = oself;
-	return (newbot);
+    newbot = self;
+    self = oself;
+    return (newbot);
 }
 
 void
 Bot_KillAllBots(void)
 {
-	entity oldSelf = self;
+    entity oldSelf = self;
 
-	for ( other = world; ( other = next.Player(other) ); ) {
-		if ( clienttype( other ) == CLIENTTYPE_BOT ) {
-			self = other;
-			ClientKill();
-		}
-	}
+    for ( other = world; ( other = next.Player(other) ); ) {
+        if ( clienttype( other ) == CLIENTTYPE_BOT ) {
+            self = other;
+            ClientKill();
+        }
+    }
 
-	self = oldSelf;
+    self = oldSelf;
 }
 
 void
 Bot_KickAllBots(void)
 {
-	entity botIterator;
+    entity botIterator;
 
-	for ( botIterator = world; ( botIterator = next.Player(botIterator) ); ) {
-		if ( clienttype( botIterator ) == CLIENTTYPE_BOT ) {
-			dropclient( botIterator );
-		}
-	}
+    for ( botIterator = world; ( botIterator = next.Player(botIterator) ); ) {
+        if ( clienttype( botIterator ) == CLIENTTYPE_BOT ) {
+            dropclient( botIterator );
+        }
+    }
 }
 
 void
 Bot_ResetAllBotsGoals(void)
 {
-	for ( other = world; ( other = next.Player(other) ); ) {
-		if ( clienttype( other ) == CLIENTTYPE_BOT ) {
-			ncBot theBot = (ncBot)other;
-			theBot.SetEnemy(__NULL__);
-			theBot.RouteClear();
-		}
-	}
+    for ( other = world; ( other = next.Player(other) ); ) {
+        if ( clienttype( other ) == CLIENTTYPE_BOT ) {
+            ncBot theBot = (ncBot)other;
+            theBot.SetEnemy(__NULL__);
+            theBot.RouteClear();
+        }
+    }
 }

@@ -42,12 +42,12 @@ class
 point_devshot_camera:ncPointTrigger
 {
 public:
-	void point_devshot_camera(void);
+    void point_devshot_camera(void);
     virtual void Spawned(void);
-	virtual void Respawn(void);
-	
-	/* overrides */
-	virtual void Input(entity,string,string);
+    virtual void Respawn(void);
+    
+    /* overrides */
+    virtual void Input(entity,string,string);
 };
 
 void
@@ -59,30 +59,30 @@ point_devshot_camera::point_devshot_camera(void)
 void
 point_devshot_camera::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (HasTargetname() == false) {
-		targetname = (sprintf("DevCam_%i", num_for_edict(this)));
-	}
+    if (HasTargetname() == false) {
+        targetname = (sprintf("DevCam_%i", num_for_edict(this)));
+    }
 }
 
 void
 point_devshot_camera::Respawn(void)
 {
-	SetOrigin(GetSpawnVector("origin"));
-	SetAngles(GetSpawnVector("angles"));
+    SetOrigin(GetSpawnVector("origin"));
+    SetAngles(GetSpawnVector("angles"));
 }
 
 void
 point_devshot_camera::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "TakeScreenshot":
-		if (is.Player(eAct)) {
-			stuffcmd(eAct, sprintf("screenshot maps/%s/%s;wait;wait;bf\n", mapname, Name()));
-		}
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "takescreenshot":
+        if (is.Player(eAct)) {
+            stuffcmd(eAct, sprintf("screenshot maps/%s/%s;wait;wait;bf\n", mapname, Name()));
+        }
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }

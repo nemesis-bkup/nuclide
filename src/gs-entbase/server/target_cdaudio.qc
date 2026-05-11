@@ -39,88 +39,88 @@ class
 target_cdaudio:ncPointTrigger
 {
 public:
-	void target_cdaudio(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
+    void target_cdaudio(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
 
 private:
-	float m_flRadius;
-	int m_iCDTrack;
+    float m_flRadius;
+    int m_iCDTrack;
 };
 
 void
 target_cdaudio::target_cdaudio(void)
 {
-	m_flRadius = 0.0f;
-	m_iCDTrack = 0i;
+    m_flRadius = 0.0f;
+    m_iCDTrack = 0i;
 }
 
 void
 target_cdaudio::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flRadius", m_flRadius);
-	SaveInt(handle, "m_iCDTrack", m_iCDTrack);
+    super::Save(handle);
+    SaveFloat(handle, "m_flRadius", m_flRadius);
+    SaveInt(handle, "m_iCDTrack", m_iCDTrack);
 }
 
 void
 target_cdaudio::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flRadius":
-		m_flRadius = ReadFloat(setValue);
-		break;
-	case "m_iCDTrack":
-		m_iCDTrack = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flRadius":
+        m_flRadius = ReadFloat(setValue);
+        break;
+    case "m_iCDTrack":
+        m_iCDTrack = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 target_cdaudio::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "health":
-		m_iCDTrack = stoi(setValue);
-		break;
-	case "radius":
-		m_flRadius = stof(setValue) / 2;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "health":
+        m_iCDTrack = stoi(setValue);
+        break;
+    case "radius":
+        m_flRadius = stof(setValue) / 2;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 target_cdaudio::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	geomtype = GEOMTYPE_SPHERE;
-	mins = [-m_flRadius, -m_flRadius, -m_flRadius];
-	maxs = [m_flRadius, m_flRadius, m_flRadius];
-	SetSolid(SOLID_TRIGGER);
-	SetSize(mins, maxs);
+    geomtype = GEOMTYPE_SPHERE;
+    mins = [-m_flRadius, -m_flRadius, -m_flRadius];
+    maxs = [m_flRadius, m_flRadius, m_flRadius];
+    SetSolid(SOLID_TRIGGER);
+    SetSize(mins, maxs);
 }
 
 void
 target_cdaudio::Touch(entity eToucher)
 {
-	if (!(eToucher.flags & FL_CLIENT)) {
-		return;
-	}
+    if (!(eToucher.flags & FL_CLIENT)) {
+        return;
+    }
 
-	EntLog(" CD Track %i requested", m_iCDTrack);
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_MUSICTRACK);
-	WriteByte(MSG_MULTICAST, m_iCDTrack);
-	msg_entity = world;
-	multicast([0,0,0], MULTICAST_ALL_R);
-	SetSolid(SOLID_NOT);
+    EntLog(" CD Track %i requested", m_iCDTrack);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_MUSICTRACK);
+    WriteByte(MSG_MULTICAST, m_iCDTrack);
+    msg_entity = world;
+    multicast([0,0,0], MULTICAST_ALL_R);
+    SetSolid(SOLID_NOT);
 }

@@ -35,12 +35,12 @@ class
 ncMailDict:ncDict
 {
 public:
-	void ncMailDict(void);
+    void ncMailDict(void);
 
 private:
-	string m_mailDate;
-	string m_mailTo;
-	string m_mailFrom;
-	string m_mailSubject;
-	string m_mailText;
+    string m_mailDate;
+    string m_mailTo;
+    string m_mailFrom;
+    string m_mailSubject;
+    string m_mailText;
 };

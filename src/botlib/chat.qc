@@ -17,11 +17,11 @@
 void
 ncBot::ChatSay(string msg)
 {
-	g_grMode.ChatMessageAll((ncClient)this, msg);
+    g_grMode.ChatMessageAll((ncClient)this, msg);
 }
 
 void
 ncBot::ChatSayTeam(string msg)
 {
-	g_grMode.ChatMessageTeam((ncClient)this, msg);
+    g_grMode.ChatMessageTeam((ncClient)this, msg);
 }

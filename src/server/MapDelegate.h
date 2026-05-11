@@ -20,7 +20,7 @@
     Everything regarding MapC multi-progs on the server.
 */
 
-/** This class delegates active MapC logic. 
+/** This class delegates active MapC logic.
 
 The ncMapDelegate class is for any set of active level specific logic.
 It can be accessed in QuakeC via the global `g_grMap` from the server-side.
@@ -55,48 +55,49 @@ The underlying return values and parameters are inherited from its class counter
 class ncMapDelegate:ncIO
 {
 public:
-	void ncMapDelegate(void);
+    void ncMapDelegate(void);
 
-	virtual void Input(entity, string, string);
+    virtual void Input(entity, string, string);
 
-	/** Overridable: Called from initents(). */
-	virtual void Precache(void);
+    /** Overridable: Called from initents(). */
+    virtual void Precache(void);
 
-	/** Overridable: Called from initents(). */
-	virtual void InitPostEnts(void);
+    /** Overridable: Called from initents(). */
+    virtual void InitPostEnts(void);
 
-	/** Overridable: Called from shutdown(). */
-	virtual void Shutdown(void);
-	
-	/* logic */
-	/** Overridable: Called every server frame. */
-	virtual void FrameStart(void);
-	
-	/* client */
-	/** Overridable: Called when a ncPlayer joins the server. */
-	virtual void PlayerConnect(ncPlayer);
-	/** Overridable: Called when a ncPlayer leaves the server. */
-	virtual void PlayerDisconnect(ncPlayer);
-	/** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
-	virtual void PlayerSpawn(ncPlayer);
-	/** Overridable: Called when a ncPlayer dies in the game. */
-	virtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
-	/** Overridable: Called when a ncPlayer feels pain. */
-	virtual void PlayerPain(ncPlayer, ncActor, ncDict);
-	/** Overridable:: Called when an NPC gets killed. */
-	virtual void NPCDeath(ncActor, ncEntity, ncEntity);
+    /** Overridable: Called from shutdown(). */
+    virtual void Shutdown(void);
 
-	/* Imports new entities from the named file. */
-	nonvirtual bool AppendEntitiesFromFile(string fileName);
-	/* Imports restored/saved entities from the named file. */
-	nonvirtual bool RestoreEntitiesFromFile( string fileName );
+    /* logic */
+    /** Overridable: Called every server frame. */
+    virtual void FrameStart(void);
+
+    /* client */
+    /** Overridable: Called when a ncPlayer joins the server. */
+    virtual void PlayerConnect(ncPlayer);
+    /** Overridable: Called when a ncPlayer leaves the server. */
+    virtual void PlayerDisconnect(ncPlayer);
+    /** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
+    virtual void PlayerSpawn(ncPlayer);
+    /** Overridable: Called when a ncPlayer dies in the game. */
+    virtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
+    /** Overridable: Called when a ncPlayer feels pain. */
+    virtual void PlayerPain(ncPlayer, ncActor, ncDict);
+    /** Overridable:: Called when an NPC gets killed. */
+    virtual void NPCDeath(ncActor, ncEntity, ncEntity);
+
+    /* Imports new entities from the named file. */
+    nonvirtual bool AppendEntitiesFromFile(string fileName);
+    /* Imports restored/saved entities from the named file. */
+    nonvirtual bool RestoreEntitiesFromFile( string fileName );
 
     nonvirtual ncEntity SpawnEntityWithSpawnData(string desiredClass, string spawnData, entity entRef, void() spawnfunc);
-	
-	nonvirtual void InitialRespawn(void);
 
-	nonvirtual void LinkProgs(void);
-	nonvirtual ncMapDelegate ActiveInstance(void);
+    nonvirtual void InitialRespawn(void);
+
+    nonvirtual void Init(void);
+    nonvirtual void LinkProgs(void);
+    nonvirtual ncMapDelegate ActiveInstance(void);
 };
 
 /* our currently running mode */
@@ -104,5 +105,3 @@ ncMapDelegate g_grMap;
 var float g_mapCProgs;
 
 #define MAPLINK(x, y, z) x.y = externvalue(g_mapCProgs, z); if (!x.y) { x.y = ncMapDelegate::y; }
-
-void MapC_Init(void);

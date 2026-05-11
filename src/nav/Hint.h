@@ -16,9 +16,9 @@
 
 typedef enum
 {
-	IGNORE_NO,
-	IGNORE_YES,
-	IGNORE_DEFAULT
+    IGNORE_NO,
+    IGNORE_YES,
+    IGNORE_DEFAULT
 } ignorefacing_t;
 
 /*! \brief Nav Hint */
@@ -47,23 +47,23 @@ class
 ncHint:ncPointTrigger
 {
 public:
-	void ncHint(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
+    void ncHint(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
 
-	nonvirtual ncHint PlaceEntityHint(entity owningEntity, string hintType);
+    nonvirtual ncHint PlaceEntityHint(entity owningEntity, string hintType);
 
 private:
-	//string m_hintType;
-	string m_hintActivity;
-	float m_nodeFieldOfView;
-	string m_hintGroup;
-	ignorefacing_t m_ignoreFacing;
-	string m_mindsetFilter;
+    //string m_hintType;
+    string m_hintActivity;
+    float m_nodeFieldOfView;
+    string m_hintGroup;
+    ignorefacing_t m_ignoreFacing;
+    string m_mindsetFilter;
 };
 
 .string m_hintType;

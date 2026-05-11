@@ -16,9 +16,9 @@
 
 enumflags
 {
-	TM_MONSTERS,
-	TM_NOCLIENTS,
-	TM_PUSHABLES
+    TM_MONSTERS,
+    TM_NOCLIENTS,
+    TM_PUSHABLES
 };
 
 /*! \brief Server-Entity: Multi Use Trigger Volume */
@@ -76,164 +76,164 @@ class
 trigger_multiple:ncBrushTrigger
 {
 public:
-	void trigger_multiple(void);
-	
-	virtual void Spawned(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Touch(entity);
-	virtual void SpawnKey(string,string);
-	virtual void Input(entity,string,string);
-	virtual void EndTouch(entity);
+    void trigger_multiple(void);
+    
+    virtual void Spawned(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Touch(entity);
+    virtual void SpawnKey(string,string);
+    virtual void Input(entity,string,string);
+    virtual void EndTouch(entity);
 
 private:
-	float m_delayBetween;
+    float m_delayBetween;
 
-	/* Input/Output */
-	string m_outputOnStartTouch;
-	string m_outputOnEndTouchAll;
-	string m_outputOnTrigger;
+    /* Input/Output */
+    string m_outputOnStartTouch;
+    string m_outputOnEndTouchAll;
+    string m_outputOnTrigger;
 };
 
 void
 trigger_multiple::trigger_multiple(void)
 {
-	m_delayBetween = 0.0f;
+    m_delayBetween = 0.0f;
 
-	/* Input/Output */
-	m_outputOnStartTouch =
-	m_outputOnEndTouchAll =
-	m_outputOnTrigger =  __NULL__;
+    /* Input/Output */
+    m_outputOnStartTouch =
+    m_outputOnEndTouchAll =
+    m_outputOnTrigger =  __NULL__;
 }
 
 void
 trigger_multiple::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "delayBetween", m_delayBetween);
-	SaveString(handle, "outputOnStartTouch", m_outputOnStartTouch);
-	SaveString(handle, "outputOnEndTouchAll", m_outputOnEndTouchAll);
-	SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
+    super::Save(handle);
+    SaveFloat(handle, "delayBetween", m_delayBetween);
+    SaveString(handle, "outputOnStartTouch", m_outputOnStartTouch);
+    SaveString(handle, "outputOnEndTouchAll", m_outputOnEndTouchAll);
+    SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
 }
 
 void
 trigger_multiple::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "delayBetween":
-		m_delayBetween = ReadFloat(setValue);
-		break;
-	case "outputOnStartTouch":
-		m_outputOnStartTouch = ReadString(setValue);
-		break;
-	case "outputOnEndTouchAll":
-		m_outputOnEndTouchAll = ReadString(setValue);
-		break;
-	case "outputOnTrigger":
-		m_outputOnTrigger = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "delayBetween":
+        m_delayBetween = ReadFloat(setValue);
+        break;
+    case "outputOnStartTouch":
+        m_outputOnStartTouch = ReadString(setValue);
+        break;
+    case "outputOnEndTouchAll":
+        m_outputOnEndTouchAll = ReadString(setValue);
+        break;
+    case "outputOnTrigger":
+        m_outputOnTrigger = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_multiple::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "wait":
-		m_delayBetween = ReadFloat(setValue);
-		break;
-	case "OnStartTouch":
-	case "OnStartTouchAll":
-		m_outputOnStartTouch = PrepareOutput(m_outputOnStartTouch, setValue);
-		break;
-	case "OnEndTouchAll":
-		m_outputOnEndTouchAll = PrepareOutput(m_outputOnEndTouchAll, setValue);
-		break;
-	case "OnTrigger":
-		m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "wait":
+        m_delayBetween = ReadFloat(setValue);
+        break;
+    case "OnStartTouch":
+    case "OnStartTouchAll":
+        m_outputOnStartTouch = PrepareOutput(m_outputOnStartTouch, setValue);
+        break;
+    case "OnEndTouchAll":
+        m_outputOnEndTouchAll = PrepareOutput(m_outputOnEndTouchAll, setValue);
+        break;
+    case "OnTrigger":
+        m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_multiple::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnTrigger)
-		m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
-	if (m_outputOnStartTouch)
-		m_outputOnStartTouch = CreateOutput(m_outputOnStartTouch);
-	if (m_outputOnEndTouchAll)
-		m_outputOnEndTouchAll = CreateOutput(m_outputOnEndTouchAll);
+    if (m_outputOnTrigger)
+        m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
+    if (m_outputOnStartTouch)
+        m_outputOnStartTouch = CreateOutput(m_outputOnStartTouch);
+    if (m_outputOnEndTouchAll)
+        m_outputOnEndTouchAll = CreateOutput(m_outputOnEndTouchAll);
 }
 
 void
 trigger_multiple::Input(entity entityActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "TouchTest":
-		Touch(entityActivator);
-		break;
-	case "StartTouch":
-		StartTouch(entityActivator);
-		break;
-	case "EndTouch":
-		EndTouch(entityActivator);
-		break;
-	default:
-		super::Input(entityActivator, inputName, dataField);
-		break;
-	}
+    switch (inputName) {
+    case "touchtest":
+        Touch(entityActivator);
+        break;
+    case "starttouch":
+        StartTouch(entityActivator);
+        break;
+    case "endtouch":
+        EndTouch(entityActivator);
+        break;
+    default:
+        super::Input(entityActivator, inputName, dataField);
+        break;
+    }
 }
 
 void
 trigger_multiple::Touch(entity eToucher)
 {
-	if (IsThinking() == true)
-		return;
+    if (IsThinking() == true)
+        return;
 
-	if (GetMaster(eToucher) == false)
-		return;
+    if (GetMaster(eToucher) == false)
+        return;
 
-	if (TriggerEnabled() == false)
-		return;
+    if (TriggerEnabled() == false)
+        return;
 
-	/* legacy entity check */
-	if (m_triggerSpawnflagFilter == false) {
-		if (HasSpawnFlags(TM_NOCLIENTS) && eToucher.flags & FL_CLIENT)
-			return;
-		if (!HasSpawnFlags(TM_MONSTERS) && eToucher.flags & FL_MONSTER)
-			return;
-		if (!HasSpawnFlags(TM_PUSHABLES) && eToucher.classname == "func_pushable")
-			return;
-		if (eToucher.solid == SOLID_TRIGGER)
-			return;
-	} else if (CanBeTriggeredBy(eToucher) == false) {
-		return;
-	}
+    /* legacy entity check */
+    if (m_triggerSpawnflagFilter == false) {
+        if (HasSpawnFlags(TM_NOCLIENTS) && eToucher.flags & FL_CLIENT)
+            return;
+        if (!HasSpawnFlags(TM_MONSTERS) && eToucher.flags & FL_MONSTER)
+            return;
+        if (!HasSpawnFlags(TM_PUSHABLES) && eToucher.classname == "func_pushable")
+            return;
+        if (eToucher.solid == SOLID_TRIGGER)
+            return;
+    } else if (CanBeTriggeredBy(eToucher) == false) {
+        return;
+    }
 
-	/* if the target key isn't used, assume we're using the new I/O system */
-	if (HasTriggerTarget() == false)
-		UseOutput(eToucher, m_outputOnStartTouch);
-	else
-		UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
+    /* if the target key isn't used, assume we're using the new I/O system */
+    if (HasTriggerTarget() == false)
+        UseOutput(eToucher, m_outputOnStartTouch);
+    else
+        UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
 
-	/* This is effectively a trigger_once...*/
-	if (m_delayBetween != -1) {
-		ScheduleThink(Respawn, m_delayBetween);
-	}
+    /* This is effectively a trigger_once...*/
+    if (m_delayBetween != -1) {
+        ScheduleThink(Respawn, m_delayBetween);
+    }
 
-	SetSolid(SOLID_NOT);
+    SetSolid(SOLID_NOT);
 }
 
 void
 trigger_multiple::EndTouch(entity eToucher)
 {
-	if (m_outputOnEndTouchAll)
-		UseOutput(eToucher, m_outputOnEndTouchAll);
+    if (m_outputOnEndTouchAll)
+        UseOutput(eToucher, m_outputOnEndTouchAll);
 }

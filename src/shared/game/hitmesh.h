@@ -19,12 +19,12 @@ out on any model as long as you cast a traceline with the MOVE_HITMODEL
 flag. The result will be stored inside the global `trace_surface_id`. */
 typedef enum
 {
-	BODY_DEFAULT,	/**< No specific body part. */
-	BODY_HEAD,	/**< trace hit the head */
-	BODY_CHEST,	/**< trace hit the chest */
-	BODY_STOMACH,	/**< trace hit the stomach */
-	BODY_ARMLEFT,	/**< trace hit the left arm */
-	BODY_ARMRIGHT,	/**< trace hit the right arm */
-	BODY_LEGLEFT,	/**< trace hit the left leg */
-	BODY_LEGRIGHT	/**< trace hit the right leg */
+    BODY_DEFAULT,   /**< No specific body part. */
+    BODY_HEAD,  /**< trace hit the head */
+    BODY_CHEST, /**< trace hit the chest */
+    BODY_STOMACH,   /**< trace hit the stomach */
+    BODY_ARMLEFT,   /**< trace hit the left arm */
+    BODY_ARMRIGHT,  /**< trace hit the right arm */
+    BODY_LEGLEFT,   /**< trace hit the left leg */
+    BODY_LEGRIGHT   /**< trace hit the right leg */
 } bodyType_t;

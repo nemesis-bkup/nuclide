@@ -15,125 +15,125 @@
 */
 
 class
-vguiTool_Measure:vguiWindow
+vguiTool_Measure:vguiApplication
 {
-	void vguiTool_Measure(void);
+    void vguiTool_Measure(void);
 
-	virtual void Spawned(void);
+    virtual void Spawned(void);
 
-	nonvirtual void Measure_Add(void);
-	nonvirtual void Measure_Clear(void);
-	nonvirtual void Measure_ScrollUpdate(void);
-	nonvirtual void Measure_ListUpdate(void);
+    nonvirtual void Measure_Add(void);
+    nonvirtual void Measure_Clear(void);
+    nonvirtual void Measure_ScrollUpdate(void);
+    nonvirtual void Measure_ListUpdate(void);
 
 private:
 
-	vguiList lsbEntries;
-	vguiScrollBar scrlSong;
-	vguiButton btnGo;
-	vguiButton btnClear;
-	bool m_isConnected;
+    vguiList lsbEntries;
+    vguiScrollBar scrlSong;
+    vguiButton btnGo;
+    vguiButton btnClear;
+    bool m_isConnected;
 };
 
 void
 vguiTool_Measure::vguiTool_Measure(void)
 {
-	m_isConnected = false;
+    m_isConnected = false;
 }
 
 void
 vguiTool_Measure::Measure_Add(void)
 {
-	lsbEntries.AddItem( sprintf("%v", pSeat->m_vecPredictedOrigin) );
+    lsbEntries.AddItem( sprintf("%v", pSeat->m_vecPredictedOrigin) );
 
-	int itemCount = lsbEntries.GetItemCount();
+    int itemCount = lsbEntries.GetItemCount();
 
-	vector lastPos = stov(lsbEntries.GetItem(0));
-	float totalDist = 0.0f;
+    vector lastPos = stov(lsbEntries.GetItem(0));
+    float totalDist = 0.0f;
 
-	for (int i = 0; i < itemCount; i++) {
-		string positionValue = lsbEntries.GetItem(i);
-		vector positionVector = stov(positionValue);
-		totalDist += vlen(positionVector - lastPos);
-		lastPos = positionVector;
-	}
+    for (int i = 0; i < itemCount; i++) {
+        string positionValue = lsbEntries.GetItem(i);
+        vector positionVector = stov(positionValue);
+        totalDist += vlen(positionVector - lastPos);
+        lastPos = positionVector;
+    }
 
-	SetTitle(sprintf("Measure: %d u (%ix)", totalDist, itemCount));
+    SetTitle(sprintf("Measure: %d u (%ix)", totalDist, itemCount));
 }
 
 void
 vguiTool_Measure::Measure_Clear(void)
 {
-	lsbEntries.RemoveAllItems();
+    lsbEntries.RemoveAllItems();
 }
 
 void
 vguiTool_Measure::Measure_ScrollUpdate(void)
 {
-	scrlSong.SetValue( lsbEntries.GetOffset() );
+    scrlSong.SetValue( lsbEntries.GetOffset() );
 }
 
 void
 vguiTool_Measure::Measure_ListUpdate(void)
 {
-	lsbEntries.SetOffset( scrlSong.GetValue(), FALSE );
+    lsbEntries.SetOffset( scrlSong.GetValue(), FALSE );
 }
 
 void
 vguiTool_Measure::Measure_Resized(void)
 {
-	vector windowSize = GetSize();
-	lsbEntries.SetSize( [windowSize[0]-16-21, windowSize[1]-64] );
-	scrlSong.SetLength( windowSize[1]-64 );
-	scrlSong.SetPos( [windowSize[0]-21,32] );
+    vector windowSize = GetSize();
+    lsbEntries.SetSize( [windowSize[0]-16-21, windowSize[1]-64] );
+    scrlSong.SetLength( windowSize[1]-64 );
+    scrlSong.SetPos( [windowSize[0]-21,32] );
 
-	btnGo.SetPos( [8,windowSize[1]-28] );
-	btnClear.SetPos( [8+64,windowSize[1]-28] );
+    btnGo.SetPos( [8,windowSize[1]-28] );
+    btnClear.SetPos( [8+64,windowSize[1]-28] );
 }
 
 void
 vguiTool_Measure::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	classname = "vguiWindow";
-	SetTitle( "Measure" );
-	SetSize( [178,320] );
-	SetIcon( "gfx/icon16/vcard" );
-	SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
-	CallOnResize(Measure_Resized);
+    classname = "vguiWindow";
+    SetTitle( "Measure" );
+    SetSize( [178,320] );
+    SetIcon( "gfx/icon16/vcard" );
+    SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
+    CallOnResize(Measure_Resized);
 
-	lsbEntries = spawn( vguiList );
-	lsbEntries.SetSize( [480-16-21, 320-64] );
-	lsbEntries.SetPos( [8, 32] );
-	lsbEntries.CallOnScrollWithDelegate( Measure_ScrollUpdate, this );
+    lsbEntries = spawn( vguiList );
+    lsbEntries.SetSize( [480-16-21, 320-64] );
+    lsbEntries.SetPos( [8, 32] );
+    lsbEntries.CallOnScrollWithDelegate( Measure_ScrollUpdate, this );
 
-	scrlSong = spawn( vguiScrollBar );
-	scrlSong.SetLength( 320-64 );
-	scrlSong.SetPos( [480-21,32] );
-	scrlSong.SetMin( 0 );
-	scrlSong.SetStep( 1 );
-	scrlSong.CallOnChangeWithDelegate( Measure_ListUpdate, this );
-	btnGo = spawn( vguiButton );
-	btnGo.SetTitle( "Add" );
-	btnGo.SetIcon( "gfx/icon16/add" );
-	btnGo.SetPos( [8,320-28] );
-	btnGo.SetSize([64,24]);
-	btnGo.SetFuncWithDelegate( Measure_Add, this );
+    scrlSong = spawn( vguiScrollBar );
+    scrlSong.SetLength( 320-64 );
+    scrlSong.SetPos( [480-21,32] );
+    scrlSong.SetMin( 0 );
+    scrlSong.SetStep( 1 );
+    scrlSong.CallOnChangeWithDelegate( Measure_ListUpdate, this );
+    btnGo = spawn( vguiButton );
+    btnGo.SetTitle( "Add" );
+    btnGo.SetIcon( "gfx/icon16/add" );
+    btnGo.SetPos( [8,320-28] );
+    btnGo.SetSize([64,24]);
+    btnGo.SetFuncWithDelegate( Measure_Add, this );
 
-	btnClear = spawn( vguiButton );
-	btnClear.SetTitle( "Clear" );
-	btnClear.SetIcon( "gfx/icon16/cross" );
-	btnClear.SetPos( [8,320-28] );
-	btnClear.SetSize([64,24]);
-	btnClear.SetFuncWithDelegate( Measure_Clear, this );
+    btnClear = spawn( vguiButton );
+    btnClear.SetTitle( "Clear" );
+    btnClear.SetIcon( "gfx/icon16/cross" );
+    btnClear.SetPos( [8,320-28] );
+    btnClear.SetSize([64,24]);
+    btnClear.SetFuncWithDelegate( Measure_Clear, this );
 
-	lsbEntries.SetItemCount( 90 );
-	scrlSong.SetMax( 90 );
+    lsbEntries.SetItemCount( 90 );
+    scrlSong.SetMax( 90 );
 
-	Add( lsbEntries );
-	Add( scrlSong );
-	Add( btnGo );
-	Add( btnClear );
-	Measure_Resized();
+    Add( lsbEntries );
+    Add( scrlSong );
+    Add( btnGo );
+    Add( btnClear );
+    Measure_Resized();
 }

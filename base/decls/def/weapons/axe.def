@@ -1,9 +1,7 @@
 entityDef weapon_axe
 {
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model_view"		"progs/v_axe.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 	"animPrefix"		"axe"

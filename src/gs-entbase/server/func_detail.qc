@@ -38,7 +38,7 @@ class
 func_detail:info_null
 {
 public:
-	void func_detail(void);
+    void func_detail(void);
 };
 
 void

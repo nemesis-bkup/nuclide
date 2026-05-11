@@ -16,13 +16,13 @@
 
 enumflags
 {
-	FNCTRACKCHANGE_UNUSED1,
-	FNCTRACKCHANGE_UNUSED2,
-	FNCTRACKCHANGE_BOTTOM,
-	FNCTRACKCHANGE_NOMOVE,
-	FNCTRACKCHANGE_UNUSED3,
-	FNCTRACKCHANGE_XAXIS,
-	FNCTRACKCHANGE_YAXIS,
+    FNCTRACKCHANGE_UNUSED1,
+    FNCTRACKCHANGE_UNUSED2,
+    FNCTRACKCHANGE_BOTTOM,
+    FNCTRACKCHANGE_NOMOVE,
+    FNCTRACKCHANGE_UNUSED3,
+    FNCTRACKCHANGE_XAXIS,
+    FNCTRACKCHANGE_YAXIS,
 };
 
 /*! \brief Server-Entity: func_tracktrain Track Controller */
@@ -59,117 +59,117 @@ class
 func_trackchange:func_platrot
 {
 public:
-	void func_trackchange(void);
+    void func_trackchange(void);
 
-	/* overrides */
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void MoverFinishesMoving(void);
-	virtual void MoverStartsMoving(void);
+    /* overrides */
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void MoverFinishesMoving(void);
+    virtual void MoverStartsMoving(void);
 
 private:
-	string m_strTrainName;
-	string m_strTopTrack;
-	string m_strBottomTrack;
+    string m_strTrainName;
+    string m_strTopTrack;
+    string m_strBottomTrack;
 };
 
 void
 func_trackchange::func_trackchange(void)
 {
-	m_strTrainName = __NULL__;
-	m_strTopTrack = __NULL__;
-	m_strBottomTrack = __NULL__;
+    m_strTrainName = __NULL__;
+    m_strTopTrack = __NULL__;
+    m_strBottomTrack = __NULL__;
 }
 
 void
 func_trackchange::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "train":
-		m_strTrainName = ReadString(setValue);
-		break;
-	case "toptrack":
-		m_strTopTrack = ReadString(setValue);
-		break;
-	case "bottomtrack":
-		m_strBottomTrack = ReadString(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "train":
+        m_strTrainName = ReadString(setValue);
+        break;
+    case "toptrack":
+        m_strTopTrack = ReadString(setValue);
+        break;
+    case "bottomtrack":
+        m_strBottomTrack = ReadString(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 func_trackchange::Spawned(void)
 {
-	spawnflags |= 1;
-	super::Spawned();
+    spawnflags |= 1;
+    super::Spawned();
 }
 
 void
 func_trackchange::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strTrainName", m_strTrainName);
-	SaveString(handle, "m_strTopTrack", m_strTopTrack);
-	SaveString(handle, "m_strBottomTrack", m_strBottomTrack);
+    super::Save(handle);
+    SaveString(handle, "m_strTrainName", m_strTrainName);
+    SaveString(handle, "m_strTopTrack", m_strTopTrack);
+    SaveString(handle, "m_strBottomTrack", m_strBottomTrack);
 }
 
 void
 func_trackchange::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_strTrainName":
-		m_strTrainName = ReadString(setValue);
-		break;
-	case "m_strTopTrack":
-		m_strTopTrack = ReadString(setValue);
-		break;
-	case "m_strBottomTrack":
-		m_strBottomTrack = ReadString(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_strTrainName":
+        m_strTrainName = ReadString(setValue);
+        break;
+    case "m_strTopTrack":
+        m_strTopTrack = ReadString(setValue);
+        break;
+    case "m_strBottomTrack":
+        m_strBottomTrack = ReadString(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+    }
 }
 
 void
 func_trackchange::MoverStartsMoving(void)
 {
-	ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
-	super::MoverStartsMoving();
+    ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
+    super::MoverStartsMoving();
 
-	if (ourTrain) {
-		ourTrain.target = __NULL__;
-		ourTrain.SetVelocity(GetVelocity());
-		ourTrain.SetAngularVelocity(GetAngularVelocity());
-		ourTrain.ScheduleThink(ClearVelocity, 100.0f);
-		EntLog("Changing %s to have no target.", m_strTrainName);
-		EntLog("Velocity: %v; Angular Velocity: %v", GetVelocity(), GetAngularVelocity());
-	} else {
-		EntLog("No train to go with trackchange %S", targetname);
-	}
+    if (ourTrain) {
+        ourTrain.target = __NULL__;
+        ourTrain.SetVelocity(GetVelocity());
+        ourTrain.SetAngularVelocity(GetAngularVelocity());
+        ourTrain.ScheduleThink(ClearVelocity, 100.0f);
+        EntLog("Changing %s to have no target.", m_strTrainName);
+        EntLog("Velocity: %v; Angular Velocity: %v", GetVelocity(), GetAngularVelocity());
+    } else {
+        EntLog("No train to go with trackchange %S", targetname);
+    }
 }
 
 void
 func_trackchange::MoverFinishesMoving(void)
 {
-	ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
-	super::MoverFinishesMoving();
+    ncEntity ourTrain = (ncEntity)find(world, ::targetname, m_strTrainName);
+    super::MoverFinishesMoving();
 
-	if (ourTrain) {
-		ourTrain.ClearVelocity();
+    if (ourTrain) {
+        ourTrain.ClearVelocity();
 
-		if (GetMoverState() == MOVER_POS1) {
-			EntLog("Changing %S from %S to %S", m_strTrainName, m_strBottomTrack, m_strTopTrack);
-			ourTrain.target = m_strTopTrack;
-		} else {
-			EntLog("Changing %S from %S to %S", m_strTrainName, m_strBottomTrack, m_strBottomTrack);
-			ourTrain.target = m_strBottomTrack;
-		}
-	} else {
-		EntLog("No train to go with trackchange %S", targetname);
-	}
+        if (GetMoverState() == MOVER_POS1) {
+            EntLog("Changing %S from %S to %S", m_strTrainName, m_strBottomTrack, m_strTopTrack);
+            ourTrain.target = m_strTopTrack;
+        } else {
+            EntLog("Changing %S from %S to %S", m_strTrainName, m_strBottomTrack, m_strBottomTrack);
+            ourTrain.target = m_strBottomTrack;
+        }
+    } else {
+        EntLog("No train to go with trackchange %S", targetname);
+    }
 }

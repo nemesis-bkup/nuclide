@@ -39,113 +39,113 @@ class
 game_team_master:multisource
 {
 public:
-	void game_team_master(void);
+    void game_team_master(void);
 
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual int GetValue(entity);
-	nonvirtual void SetTeamIndex(int);
-	nonvirtual int GetTeamIndex(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual int GetValue(entity);
+    nonvirtual void SetTeamIndex(int);
+    nonvirtual int GetTeamIndex(void);
 
 private:
-	int m_iTeamIndex;
-	triggermode_t m_iTriggerState;
+    int m_iTeamIndex;
+    triggermode_t m_iTriggerState;
 };
 
 void
 game_team_master::game_team_master(void)
 {
-	m_iTeamIndex = 0i;
-	m_iTriggerState = TRIG_TOGGLE;
+    m_iTeamIndex = 0i;
+    m_iTriggerState = TRIG_TOGGLE;
 }
 
 void
 game_team_master::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_iTriggerState", m_iTriggerState);
-	SaveInt(handle, "m_iTeamIndex", m_iTeamIndex);
+    super::Save(handle);
+    SaveFloat(handle, "m_iTriggerState", m_iTriggerState);
+    SaveInt(handle, "m_iTeamIndex", m_iTeamIndex);
 }
 
 void
 game_team_master::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_iTriggerState":
-		m_iTriggerState = ReadFloat(setValue);
-		break;
-	case "m_iTeamIndex":
-		m_iTeamIndex = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_iTriggerState":
+        m_iTriggerState = ReadFloat(setValue);
+        break;
+    case "m_iTeamIndex":
+        m_iTeamIndex = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+    }
 }
 
 void
 game_team_master::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "triggerstate":
-		m_iTriggerState = ReadInt(setValue);
-		break;
-	case "teamindex":
-		m_iTeamIndex = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "triggerstate":
+        m_iTriggerState = ReadInt(setValue);
+        break;
+    case "teamindex":
+        m_iTeamIndex = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 game_team_master::Trigger(entity entityActivator, triggermode_t state)
 {
-	if (GetMaster(entityActivator) == FALSE) {
-		return;
-	}
+    if (GetMaster(entityActivator) == FALSE) {
+        return;
+    }
 
-	if (m_iTeamIndex != -1i) {
-		if (entityActivator.team != (float)m_iTeamIndex) {
-			return;
-		}
-	}
+    if (m_iTeamIndex != -1i) {
+        if (entityActivator.team != (float)m_iTeamIndex) {
+            return;
+        }
+    }
 
-	super::Trigger(entityActivator, state);
+    super::Trigger(entityActivator, state);
 }
 
 void
 game_team_master::Input(entity entityActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "SetTeamIndex":
-		SetTeamIndex(ReadInt(dataField));
-		break;
-	default:
-		super::Input(entityActivator, inputName, dataField);
-		break;
-	}
+    switch (inputName) {
+    case "setteamindex":
+        SetTeamIndex(ReadInt(dataField));
+        break;
+    default:
+        super::Input(entityActivator, inputName, dataField);
+        break;
+    }
 }
 
 int
 game_team_master::GetValue(entity queryingEntity)
 {
-	if (queryingEntity.team == (float)m_iTeamIndex)
-		return TRUE;
+    if (queryingEntity.team == (float)m_iTeamIndex)
+        return TRUE;
 
-	return FALSE;
+    return FALSE;
 }
 
 void
 game_team_master::SetTeamIndex(int newIndex)
 {
-	m_iTeamIndex = newIndex;
+    m_iTeamIndex = newIndex;
 }
 
 int
 game_team_master::GetTeamIndex(void)
 {
-	return m_iTeamIndex;
+    return m_iTeamIndex;
 }

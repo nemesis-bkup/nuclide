@@ -17,5 +17,5 @@
 void
 ncVideoDict::ncVideoDict(void)
 {
-	m_videoTrack = g_string_null;
+    m_videoTrack = g_string_null;
 }

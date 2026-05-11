@@ -40,23 +40,23 @@ This entity was introduced in Half-Life 2 (2004).
 class func_lod:ncRenderableEntity
 {
 public:
-	void func_lod(void);
-	virtual void SpawnKey(string,string);
+    void func_lod(void);
+    virtual void SpawnKey(string,string);
 
 #ifdef CLIENT
-	virtual void Spawned(void);
-	virtual float predraw(void);
-	virtual bool CanSpawn(bool);
+    virtual void Spawned(void);
+    virtual float predraw(void);
+    virtual bool CanSpawn(bool);
 #endif
 
 #ifdef SERVER
-	virtual void Respawn(void);
-	virtual float SendEntity(entity,float);
+    virtual void Respawn(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 #ifdef CLIENT
 private:
-	int m_iDisappearDist;
+    int m_iDisappearDist;
 #endif
 
 };
@@ -65,9 +65,9 @@ void
 func_lod::func_lod(void)
 {
 #ifdef CLIENT
-	m_iDisappearDist = 2000;
-	solid = SOLID_BSP;
-	isCSQC = true;
+    m_iDisappearDist = 2000;
+    solid = SOLID_BSP;
+    isCSQC = true;
 #endif
 }
 
@@ -75,83 +75,83 @@ func_lod::func_lod(void)
 bool
 func_lod::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 func_lod::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	setmodel(this, model);
-	setorigin(this, origin);
-	movetype = MOVETYPE_NONE;
-	drawmask = MASK_ENGINE;
+    setmodel(this, model);
+    setorigin(this, origin);
+    movetype = MOVETYPE_NONE;
+    drawmask = MASK_ENGINE;
 }
 
 float
 func_lod::predraw(void)
 {
-	vector vecPlayer;
+    vector vecPlayer;
 
-	int s = (float)getproperty(VF_ACTIVESEAT);
-	pSeat = &g_seats[s];
-	vecPlayer = pSeat->m_vecPredictedOrigin;
+    int s = (float)getproperty(VF_ACTIVESEAT);
+    pSeat = &g_seats[s];
+    vecPlayer = pSeat->m_vecPredictedOrigin;
 
-	if (checkpvs(vecPlayer, this) == FALSE) {
-		return (PREDRAW_NEXT);
-	}
+    if (checkpvs(vecPlayer, this) == FALSE) {
+        return (PREDRAW_NEXT);
+    }
 
 #ifdef DEVELOPER
-	if (autocvar_dev_loddistance != 0) {
-		if (vlen(vecPlayer - WorldSpaceCenter()) > autocvar_dev_loddistance) {
-			return (PREDRAW_NEXT);
-		}
-	} else {
-		if (vlen(vecPlayer - WorldSpaceCenter()) > m_iDisappearDist) {
-			return (PREDRAW_NEXT);
-		}
-	}
+    if (autocvar_dev_loddistance != 0) {
+        if (vlen(vecPlayer - WorldSpaceCenter()) > autocvar_dev_loddistance) {
+            return (PREDRAW_NEXT);
+        }
+    } else {
+        if (vlen(vecPlayer - WorldSpaceCenter()) > m_iDisappearDist) {
+            return (PREDRAW_NEXT);
+        }
+    }
 #else
-	if (vlen(vecPlayer - WorldSpaceCenter()) > m_iDisappearDist) {
-		return (PREDRAW_NEXT);
-	}
+    if (vlen(vecPlayer - WorldSpaceCenter()) > m_iDisappearDist) {
+        return (PREDRAW_NEXT);
+    }
 #endif
 
-	addentity(self);
-	return (PREDRAW_NEXT);
+    addentity(self);
+    return (PREDRAW_NEXT);
 }
 #endif
 
 void
 func_lod::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "DisappearDist":
+    switch (strField) {
+    case "DisappearDist":
 #ifdef CLIENT
-		m_iDisappearDist = stoi(strKey);
+        m_iDisappearDist = stoi(strKey);
 #endif
-		break;
-	case "Solid":
-	case "solid":
-		solid = stoi(strKey) == 1 ? SOLID_NOT : SOLID_BSP;
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+        break;
+    case "Solid":
+    case "solid":
+        solid = stoi(strKey) == 1 ? SOLID_NOT : SOLID_BSP;
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 #ifdef SERVER
 void
 func_lod::Respawn(void)
 {
-	super::Respawn();
-	SetMovetype(MOVETYPE_PUSH);
+    super::Respawn();
+    SetMovetype(MOVETYPE_PUSH);
 }
 
 float
 func_lod::SendEntity(entity a, float b)
 {
-	return (0);
+    return (0);
 }
 #endif

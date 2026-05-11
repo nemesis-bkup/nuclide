@@ -22,7 +22,7 @@
 string
 Colors_RGB8_to_HEX(vector color)
 {
-	return sprintf("^x%x%x%x", color[0] * 15, color[1] * 15, color[2] * 15);
+    return sprintf("^x%x%x%x", color[0] * 15, color[1] * 15, color[2] * 15);
 }
 
 /** Takes a 0-255 based color vector and returns the hexadecimal equivalent
@@ -33,5 +33,5 @@ Colors_RGB8_to_HEX(vector color)
 string
 Colors_RGB255_to_HEX(vector color)
 {
-	return Colors_RGB8_to_HEX(color / 255);
+    return Colors_RGB8_to_HEX(color / 255);
 }

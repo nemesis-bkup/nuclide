@@ -16,23 +16,23 @@
 
 enumflags
 {
-	SF_TRIGGER,
-	SF_TOUCH,
-	SF_PRESSURE
+    SF_TRIGGER,
+    SF_TOUCH,
+    SF_PRESSURE
 };
 
 enum
 {
-	BREAKMT_GLASS = 0,
-	BREAKMT_WOOD,
-	BREAKMT_METAL,
-	BREAKMT_FLESH,
-	BREAKMT_CINDER,
-	BREAKMT_TILE,
-	BREAKMT_COMPUTER,
-	BREAKMT_GLASS_UNBREAKABLE,
-	BREAKMT_ROCK,
-	BREAKMT_NONE
+    BREAKMT_GLASS = 0,
+    BREAKMT_WOOD,
+    BREAKMT_METAL,
+    BREAKMT_FLESH,
+    BREAKMT_CINDER,
+    BREAKMT_TILE,
+    BREAKMT_COMPUTER,
+    BREAKMT_GLASS_UNBREAKABLE,
+    BREAKMT_ROCK,
+    BREAKMT_NONE
 };
 
 ncDict g_func_breakable_objects;
@@ -65,16 +65,16 @@ The strength of the explosion decides the radius (magnitude * 2.5) and the
 maximum damage the explosion will do in the center. It has a linear fall-off.
 
 Material-list:
-	- 0 : Glass
-	- 1 : Wood
-	- 2 : Metal
-	- 3 : Flesh
-	- 4 : Cinder
-	- 5 : Tile
-	- 6 ; Computer
-	- 7 : Glass (Unbreakable)
-	- 8 : Rock
-	- 9 : None
+    - 0 : Glass
+    - 1 : Wood
+    - 2 : Metal
+    - 3 : Flesh
+    - 4 : Cinder
+    - 5 : Tile
+    - 6 ; Computer
+    - 7 : Glass (Unbreakable)
+    - 8 : Rock
+    - 9 : None
 
 # TRIVIA
 This entity was introduced in Half-Life (1998).
@@ -86,354 +86,354 @@ class
 func_breakable:ncSurfacePropEntity
 {
 public:
-	void func_breakable(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Pain(entity, entity, int, vector, vector, int);
-	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual void Trigger(entity, triggermode_t);
-	
-	virtual void Explode(void);
-	virtual void Touch(entity);
+    void func_breakable(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Pain(entity, entity, int, vector, vector, int);
+    virtual void Death(entity, entity, int, vector, vector, int);
+    virtual void Trigger(entity, triggermode_t);
+    
+    virtual void Explode(void);
+    virtual void Touch(entity);
 
-	/*virtual void(void) PressureDeath;*/
+    /*virtual void(void) PressureDeath;*/
 
 private:
-	float m_flDelay;
-	float m_flExplodeMag;
-	float m_flExplodeRad;
-	string m_strBreakSpawn;
-	bool m_bCanTouch;
-	int _m_iExplosionParticle;
-	vector m_explodeDir;
+    float m_flDelay;
+    float m_flExplodeMag;
+    float m_flExplodeRad;
+    string m_strBreakSpawn;
+    bool m_bCanTouch;
+    int _m_iExplosionParticle;
+    vector m_explodeDir;
 
-	int m_breakablePropData;
-	string m_breakableGibModel;
+    int m_breakablePropData;
+    string m_breakableGibModel;
 
-	/*entity m_pressAttacker;
-	int m_pressType;
-	int m_pressDamage;*/
+    /*entity m_pressAttacker;
+    int m_pressType;
+    int m_pressDamage;*/
 };
 
 void
 func_breakable::func_breakable(void)
 {
-	m_flDelay = 0.0f;
-	m_flExplodeMag = 0.0f;
-	m_flExplodeRad = 0.0f;
-	m_strBreakSpawn = __NULL__;
-	m_bCanTouch = false;
-	_m_iExplosionParticle = 0i;
-	m_breakableGibModel = __NULL__;
+    m_flDelay = 0.0f;
+    m_flExplodeMag = 0.0f;
+    m_flExplodeRad = 0.0f;
+    m_strBreakSpawn = __NULL__;
+    m_bCanTouch = false;
+    _m_iExplosionParticle = 0i;
+    m_breakableGibModel = __NULL__;
 
-	/* func_breakable defaults to glass */
-	if (classname == "func_breakable") {
-		material = BREAKMT_GLASS;
-	} else {
-		material = BREAKMT_WOOD;
-	}
+    /* func_breakable defaults to glass */
+    if (classname == "func_breakable") {
+        material = BREAKMT_GLASS;
+    } else {
+        material = BREAKMT_WOOD;
+    }
 }
 
 void
 func_breakable::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
-	SaveFloat(handle, "m_flExplodeMag", m_flExplodeMag);
-	SaveFloat(handle, "m_flExplodeRad", m_flExplodeRad);
-	SaveString(handle, "m_strBreakSpawn", m_strBreakSpawn);
-	SaveBool(handle, "m_bCanTouch", m_bCanTouch);
-	SaveFloat(handle, "material", material);
+    super::Save(handle);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
+    SaveFloat(handle, "m_flExplodeMag", m_flExplodeMag);
+    SaveFloat(handle, "m_flExplodeRad", m_flExplodeRad);
+    SaveString(handle, "m_strBreakSpawn", m_strBreakSpawn);
+    SaveBool(handle, "m_bCanTouch", m_bCanTouch);
+    SaveFloat(handle, "material", material);
 }
 
 void
 func_breakable::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	case "m_flExplodeMag":
-		m_flExplodeMag = ReadFloat(setValue);
-		break;
-	case "m_flExplodeRad":
-		m_flExplodeRad = ReadFloat(setValue);
-		break;
-	case "m_strBreakSpawn":
-		m_strBreakSpawn = ReadString(setValue);
-		break;
-	case "m_bCanTouch":
-		m_bCanTouch = ReadBool(setValue);
-		break;
-	case "material":
-		material = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    case "m_flExplodeMag":
+        m_flExplodeMag = ReadFloat(setValue);
+        break;
+    case "m_flExplodeRad":
+        m_flExplodeRad = ReadFloat(setValue);
+        break;
+    case "m_strBreakSpawn":
+        m_strBreakSpawn = ReadString(setValue);
+        break;
+    case "m_bCanTouch":
+        m_bCanTouch = ReadBool(setValue);
+        break;
+    case "material":
+        material = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_breakable::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "propdata":
-		m_breakablePropData = ReadInt(setValue);
-		break;
-	case "material":
-		material = ReadFloat(setValue);
-		break;
-	case "explodemagnitude":
-		m_flExplodeMag = ReadFloat(setValue);
-		m_flExplodeRad = m_flExplodeMag * 2.5f;
-		break;
-	case "spawnobject":
-		int oid = ReadInt(setValue);
-		m_strBreakSpawn = g_func_breakable_objects.GetString(itos(oid));
-		break;
-	case "spawnonbreak":
-		m_strBreakSpawn = ReadString(setValue);
-		break;
-	case "gibmodel":
-		m_breakableGibModel = ReadString(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    case "propdata":
+        m_breakablePropData = ReadInt(setValue);
+        break;
+    case "material":
+        material = ReadFloat(setValue);
+        break;
+    case "explodemagnitude":
+        m_flExplodeMag = ReadFloat(setValue);
+        m_flExplodeRad = m_flExplodeMag * 2.5f;
+        break;
+    case "spawnobject":
+        int oid = ReadInt(setValue);
+        m_strBreakSpawn = g_func_breakable_objects.GetString(itos(oid));
+        break;
+    case "spawnonbreak":
+        m_strBreakSpawn = ReadString(setValue);
+        break;
+    case "gibmodel":
+        m_breakableGibModel = ReadString(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 func_breakable::Spawned(void)
 {
-	_m_iExplosionParticle = particleeffectnum("fx_explosion.main");
-	super::Spawned();
+    _m_iExplosionParticle = particleeffectnum("fx_explosion.main");
+    super::Spawned();
 
-	if (!g_func_breakable_objects) {
-		g_func_breakable_objects = ncDict::LoadDeclFromFile("objects", "typeinfo/func_breakable.decl");
-	}
-	if (!g_func_breakable_props) {
-		g_func_breakable_props = ncDict::LoadDeclFromFile("props", "typeinfo/func_breakable.decl");
-	}
-	if (!g_func_breakable_surfaces) {
-		g_func_breakable_surfaces = ncDict::LoadDeclFromFile("surfaces", "typeinfo/func_breakable.decl");
-	}
+    if (!g_func_breakable_objects) {
+        g_func_breakable_objects = ncDict::LoadDeclFromFile("objects", "typeinfo/func_breakable.decl");
+    }
+    if (!g_func_breakable_props) {
+        g_func_breakable_props = ncDict::LoadDeclFromFile("props", "typeinfo/func_breakable.decl");
+    }
+    if (!g_func_breakable_surfaces) {
+        g_func_breakable_surfaces = ncDict::LoadDeclFromFile("surfaces", "typeinfo/func_breakable.decl");
+    }
 
-	string breakSurface = "";
-	string breakProp = "";
+    string breakSurface = "";
+    string breakProp = "";
 
-	/* needs to be called before super function */
-	if (HasSurfaceData() == false) {
-		breakSurface = g_func_breakable_surfaces.GetString(itos(material));
-		
-		if (STRING_SET(breakSurface)) {
-			SetSurfaceData(breakSurface);
-		}
-	}
-	
-	
-	if (HasPropData() == false) {
-		if (m_breakablePropData > 0i) {
-			breakProp = g_func_breakable_props.GetString(itos(m_breakablePropData));
-			SetPropData(breakProp);
-		} else if (STRING_SET(breakSurface)) {
-			SetPropData(breakSurface);
-		}
-	}
+    /* needs to be called before super function */
+    if (HasSurfaceData() == false) {
+        breakSurface = g_func_breakable_surfaces.GetString(itos(material));
+        
+        if (STRING_SET(breakSurface)) {
+            SetSurfaceData(breakSurface);
+        }
+    }
+    
+    
+    if (HasPropData() == false) {
+        if (m_breakablePropData > 0i) {
+            breakProp = g_func_breakable_props.GetString(itos(m_breakablePropData));
+            SetPropData(breakProp);
+        } else if (STRING_SET(breakSurface)) {
+            SetPropData(breakSurface);
+        }
+    }
 }
 
 void
 func_breakable::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetMovetype(MOVETYPE_NONE);
-	SetSolid(SOLID_BSP);
-	ClearAngles();
-	ReleaseThink();
-	m_bCanTouch = true;
+    SetMovetype(MOVETYPE_NONE);
+    SetSolid(SOLID_BSP);
+    ClearAngles();
+    ReleaseThink();
+    m_bCanTouch = true;
 
-	if (HasSpawnFlags(SF_TRIGGER)) {
-		MakeInvulnerable();
-	} else {
-		MakeVulnerable();
-	}
+    if (HasSpawnFlags(SF_TRIGGER)) {
+        MakeInvulnerable();
+    } else {
+        MakeVulnerable();
+    }
 
-	/* initially set the health to that of the ent-data */
-	float spawnhealth = GetSpawnFloat("health");
+    /* initially set the health to that of the ent-data */
+    float spawnhealth = GetSpawnFloat("health");
 
-	if (HasPropData() == true && spawnhealth <= 0) {
-		/* assign propdata health */
-		SetHealth(GetPropData(PROPINFO_HEALTH));
-		m_flExplodeMag = GetPropData(PROPINFO_EXPLOSIVE_DMG);
-		m_flExplodeRad = GetPropData(PROPINFO_EXPLOSIVE_RADIUS);
-	} else {
-		SetHealth(spawnhealth);
-	}
+    if (HasPropData() == true && spawnhealth <= 0) {
+        /* assign propdata health */
+        SetHealth(GetPropData(PROPINFO_HEALTH));
+        m_flExplodeMag = GetPropData(PROPINFO_EXPLOSIVE_DMG);
+        m_flExplodeRad = GetPropData(PROPINFO_EXPLOSIVE_RADIUS);
+    } else {
+        SetHealth(spawnhealth);
+    }
 
-	/* unassigned health isn't valid */
-	if (GetHealth() <= 0)
-		SetHealth(15);
+    /* unassigned health isn't valid */
+    if (GetHealth() <= 0)
+        SetHealth(15);
 }
 
 void
 func_breakable::Pain(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	string painSound;
+    string painSound;
 
-	if (HasSpawnFlags(SF_TRIGGER)) {
-		return;
-	}
+    if (HasSpawnFlags(SF_TRIGGER)) {
+        return;
+    }
 
-	painSound = GetSurfaceData(SURFDATA_SND_BULLETIMPACT);
+    painSound = GetSurfaceData(SURFDATA_SND_BULLETIMPACT);
 
-	if (painSound) {
-		StartSoundDef(painSound, CHAN_VOICE, true);
-	}
+    if (painSound) {
+        StartSoundDef(painSound, CHAN_VOICE, true);
+    }
 }
 
 
 void
 func_breakable::Explode(void)
 {
-	if (IsHidden() == true) {
-		return;
-	}
+    if (IsHidden() == true) {
+        return;
+    }
 
-	vector rp = WorldSpaceCenter();
-	pointparticles(_m_iExplosionParticle, rp, [0,0,0], 1);
-	combat.RadiusDamage(rp, m_flExplodeMag, 0i, m_flExplodeRad, this, "");
+    vector rp = WorldSpaceCenter();
+    pointparticles(_m_iExplosionParticle, rp, [0,0,0], 1);
+    combat.RadiusDamage(rp, m_flExplodeMag, 0i, m_flExplodeRad, this, "");
 }
 
 void
 func_breakable::Death(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	static void break_spawnobject(void) {
-		/* become the classname assigned */
-		ncEntity t = (ncEntity)self;
-		callfunction(self.classname);
+    static void break_spawnobject(void) {
+        /* become the classname assigned */
+        ncEntity t = (ncEntity)self;
+        callfunction(self.classname);
 
-		/* spawn anew */
-		if (t.Spawn)
-			t.Spawn();
-	}
+        /* spawn anew */
+        if (t.Spawn)
+            t.Spawn();
+    }
 
-	if (material == BREAKMT_GLASS_UNBREAKABLE) {
-		return;
-	}
+    if (material == BREAKMT_GLASS_UNBREAKABLE) {
+        return;
+    }
 
-	eActivator = (ncEntity)attacker;
-	m_explodeDir = dir;
+    eActivator = (ncEntity)attacker;
+    m_explodeDir = dir;
 
-	if (STRING_SET(m_strBreakSpawn)) {
-		if (isfunction(m_strBreakSpawn)) {
-			entity unit = spawn();
-			unit.classname = m_strBreakSpawn;
-			unit.think = break_spawnobject;
-			unit.nextthink = time;
-			unit.real_owner = this;
-			setorigin(unit, WorldSpaceCenter());
-		}
-	}
+    if (STRING_SET(m_strBreakSpawn)) {
+        if (isfunction(m_strBreakSpawn)) {
+            entity unit = spawn();
+            unit.classname = m_strBreakSpawn;
+            unit.think = break_spawnobject;
+            unit.nextthink = time;
+            unit.real_owner = this;
+            setorigin(unit, WorldSpaceCenter());
+        }
+    }
 
-	string sndBreak = GetSurfaceData(SURFDATA_SND_BREAK);
-	string breakModel = __NULL__;
-	int gibCount = (int)bound(5, vlen(size) / 10, 32);
-		
- 	if (HasPropData()) {
- 		breakModel = GetPropData(PROPINFO_BREAKMODEL);
- 	}
+    string sndBreak = GetSurfaceData(SURFDATA_SND_BREAK);
+    string breakModel = __NULL__;
+    int gibCount = (int)bound(5, vlen(size) / 10, 32);
+        
+    if (HasPropData()) {
+        breakModel = GetPropData(PROPINFO_BREAKMODEL);
+    }
 
-	//breakModel = g_func_breakable_surfaces.GetString(itos(material));
+    //breakModel = g_func_breakable_surfaces.GetString(itos(material));
 
-	if (STRING_SET(m_breakableGibModel)) {
-		EntLog("Custom Gib Model: %S", m_breakableGibModel);
-		BreakModel_SpawnModelindex(absmin, absmax, dir, damage * 2.5, gibCount, getmodelindex(m_breakableGibModel));
-	} else if (STRING_SET(breakModel)) {
-		BreakModel_Spawn(absmin, absmax, dir, damage * 2.5, gibCount, breakModel);
-	} else {
-		EntError("No BreakModel set for \"material\" \"%d\"", material);
-	}
+    if (STRING_SET(m_breakableGibModel)) {
+        EntLog("Custom Gib Model: %S", m_breakableGibModel);
+        BreakModel_SpawnModelindex(absmin, absmax, dir, damage * 2.5, gibCount, getmodelindex(m_breakableGibModel));
+    } else if (STRING_SET(breakModel)) {
+        BreakModel_Spawn(absmin, absmax, dir, damage * 2.5, gibCount, breakModel);
+    } else {
+        EntError("No BreakModel set for \"material\" \"%d\"", material);
+    }
 
-	StartSoundDef(sndBreak, CHAN_BODY, true);
-	Disappear();
-	MakeInvulnerable();
-	UseTargets(eActivator, TRIG_TOGGLE, 0.0f);
-	UseOutput(this, m_outputOnBreak);
+    StartSoundDef(sndBreak, CHAN_BODY, true);
+    Disappear();
+    MakeInvulnerable();
+    UseTargets(eActivator, TRIG_TOGGLE, 0.0f);
+    UseOutput(this, m_outputOnBreak);
 
-	/* This may seem totally absurd. That's because it is. It's very
-	 * unreliable but exploding breakables in close proximity it WILL cause
-	 * an OVERFLOW because we'll be busy running through thousands
-	 * of entities in total when one breakable damages another in a frame. 
-	 * The only way around this is to set a hard-coded limit of loops per
-	 * frame and that would break functionality. */
-	if (m_flExplodeMag > 0.0f) {
-		ScheduleThink(Explode, random(0.1f, 0.25f));
-	}
+    /* This may seem totally absurd. That's because it is. It's very
+     * unreliable but exploding breakables in close proximity it WILL cause
+     * an OVERFLOW because we'll be busy running through thousands
+     * of entities in total when one breakable damages another in a frame. 
+     * The only way around this is to set a hard-coded limit of loops per
+     * frame and that would break functionality. */
+    if (m_flExplodeMag > 0.0f) {
+        ScheduleThink(Explode, random(0.1f, 0.25f));
+    }
 }
 
 void
 func_breakable::Trigger(entity act, triggermode_t state)
 {
-	if (GetHealth() > 0) {
-		Death(act, act, 0i, g_vec_null, origin, 0i);
-	}
+    if (GetHealth() > 0) {
+        Death(act, act, 0i, g_vec_null, origin, 0i);
+    }
 }
 
 void
 func_breakable::Touch(entity eToucher)
 {
-	static void TriggerWrap(void) {
-		/* TODO: 'this' should be the person who touched the ent instead */
-		Trigger(this, TRIG_TOGGLE);
-	}
+    static void TriggerWrap(void) {
+        /* TODO: 'this' should be the person who touched the ent instead */
+        Trigger(this, TRIG_TOGGLE);
+    }
 
-	if (m_bCanTouch == false) {
-		return;
-	}
+    if (m_bCanTouch == false) {
+        return;
+    }
 
-	if (eToucher.classname == classname) {
-		return;
-	}
+    if (eToucher.classname == classname) {
+        return;
+    }
 
-	/* grenades need to be able to break stuff */
-	if (eToucher.solid == SOLID_CORPSE) {
-		if (length(eToucher.velocity) > 100) {
-			Trigger(this, TRIG_ON);
-		}
-	}
+    /* grenades need to be able to break stuff */
+    if (eToucher.solid == SOLID_CORPSE) {
+        if (length(eToucher.velocity) > 100) {
+            Trigger(this, TRIG_ON);
+        }
+    }
 
-	/* break on touch */
-	if (HasSpawnFlags(SF_TOUCH)) {
-		int dmgAmount = (float)(vlen(eToucher.velocity) * 0.01f);
+    /* break on touch */
+    if (HasSpawnFlags(SF_TOUCH)) {
+        int dmgAmount = (float)(vlen(eToucher.velocity) * 0.01f);
 
-		if (dmgAmount >= GetHealth()) {
-			vector dmgDir = dirFromTarget(eToucher.origin, WorldSpaceCenter());
-			ncDict damageDecl = spawn(ncDict);
-			damageDecl.AddKey("damage", itos(dmgAmount));
-			damageDecl.AddKey("location", vtos(eToucher.origin));
-			m_bCanTouch = false;
-			Damage(eToucher, eToucher, damageDecl, 1.0f, dmgDir, eToucher.origin);
+        if (dmgAmount >= GetHealth()) {
+            vector dmgDir = dirFromTarget(eToucher.origin, WorldSpaceCenter());
+            ncDict damageDecl = spawn(ncDict);
+            damageDecl.AddKey("damage", itos(dmgAmount));
+            damageDecl.AddKey("location", vtos(eToucher.origin));
+            m_bCanTouch = false;
+            Damage(eToucher, eToucher, damageDecl, 1.0f, dmgDir, eToucher.origin);
 
-			if ((GetSurfaceData(SURFDATA_MATERIAL) == GSMATERIAL_GLASS) || (GetSurfaceData(SURFDATA_MATERIAL) == GSMATERIAL_COMPUTER)) {
-				Damage(eToucher, eToucher, damageDecl, 0.25f, dmgDir, eToucher.origin);
-			}
-			remove(damageDecl);
-		}
-	}
+            if ((GetSurfaceData(SURFDATA_MATERIAL) == GSMATERIAL_GLASS) || (GetSurfaceData(SURFDATA_MATERIAL) == GSMATERIAL_COMPUTER)) {
+                Damage(eToucher, eToucher, damageDecl, 0.25f, dmgDir, eToucher.origin);
+            }
+            remove(damageDecl);
+        }
+    }
 
-	if (HasSpawnFlags(SF_PRESSURE) && (eToucher.absmin[2] >= maxs[2] - 2)) {
-		m_bCanTouch = false;
+    if (HasSpawnFlags(SF_PRESSURE) && (eToucher.absmin[2] >= maxs[2] - 2)) {
+        m_bCanTouch = false;
 
-		if (m_flDelay <= 0) {
-			m_flDelay = 0.1f;
-		}
+        if (m_flDelay <= 0) {
+            m_flDelay = 0.1f;
+        }
 
-		ScheduleThink(TriggerWrap, m_flDelay);
-	}
+        ScheduleThink(TriggerWrap, m_flDelay);
+    }
 }

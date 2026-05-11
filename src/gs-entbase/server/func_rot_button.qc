@@ -16,23 +16,23 @@
 
 enumflags
 {
-	FNCROTBUT_NONSOLID,
-	FNCROTBUT_REVERSE,
-	FNCROTBUT_UNUSED1,
-	FNCROTBUT_UNUSED2,
-	FNCROTBUT_UNUSED3,
-	FNCROTBUT_NOAUTORETURN,
-	FNCROTBUT_XAXIS,
-	FNCROTBUT_YAXIS,
-	FNCROTBUT_TOUCHABLE
+    FNCROTBUT_NONSOLID,
+    FNCROTBUT_REVERSE,
+    FNCROTBUT_UNUSED1,
+    FNCROTBUT_UNUSED2,
+    FNCROTBUT_UNUSED3,
+    FNCROTBUT_NOAUTORETURN,
+    FNCROTBUT_XAXIS,
+    FNCROTBUT_YAXIS,
+    FNCROTBUT_TOUCHABLE
 };
 
 enum
 {
-	ROTBTNSTATE_OPENED,
-	ROTBTNSTATE_CLOSED,
-	ROTBTNSTATE_OPENING,
-	ROTBTNSTATE_CLOSING
+    ROTBTNSTATE_OPENED,
+    ROTBTNSTATE_CLOSED,
+    ROTBTNSTATE_OPENING,
+    ROTBTNSTATE_CLOSING
 };
 
 /*! \brief Server-Entity: Valve, Lever, Rotating Button */
@@ -68,236 +68,236 @@ class
 func_rot_button:ncSurfacePropEntity
 {
 public:
-	void func_rot_button(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
-	virtual void Death(entity, entity, int, vector, vector, int);
-	virtual void OnPlayerUse(void);
-	virtual void Trigger(entity, triggermode_t);
-	
-	nonvirtual void ArrivedClosed(void);
-	nonvirtual void ArrivedOpened(void);
-	nonvirtual void TriggerTargets(void);
-	nonvirtual void Rotate(vector, void());
-	nonvirtual void TurnToggle(void);
+    void func_rot_button(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
+    virtual void Death(entity, entity, int, vector, vector, int);
+    virtual void OnPlayerUse(void);
+    virtual void Trigger(entity, triggermode_t);
+    
+    nonvirtual void ArrivedClosed(void);
+    nonvirtual void ArrivedOpened(void);
+    nonvirtual void TriggerTargets(void);
+    nonvirtual void Rotate(vector, void());
+    nonvirtual void TurnToggle(void);
 
 private:
-	vector m_rotatingButtonDestination;
-	int m_rotatingButtonState;
-	float m_rotatingButtonSpeed;
-	float m_rotatingButtonDistance;
-	float m_timeUntilReturn;
+    vector m_rotatingButtonDestination;
+    int m_rotatingButtonState;
+    float m_rotatingButtonSpeed;
+    float m_rotatingButtonDistance;
+    float m_timeUntilReturn;
 };
 
 void
 func_rot_button::func_rot_button(void)
 {
-	m_rotatingButtonDestination = [0.0f, 0.0f, 0.0f];
-	m_rotatingButtonState = 0i;
-	m_rotatingButtonSpeed = 0.0f;
-	m_rotatingButtonDistance = 0.0f;
-	m_timeUntilReturn = 0.0f;
+    m_rotatingButtonDestination = [0.0f, 0.0f, 0.0f];
+    m_rotatingButtonState = 0i;
+    m_rotatingButtonSpeed = 0.0f;
+    m_rotatingButtonDistance = 0.0f;
+    m_timeUntilReturn = 0.0f;
 }
 
 void
 func_rot_button::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveVector(handle, "rotatingButtonDestination", m_rotatingButtonDestination);
-	SaveInt(handle, "rotatingButtonState", m_rotatingButtonState);
-	SaveFloat(handle, "rotatingButtonSpeed", m_rotatingButtonSpeed);
-	SaveFloat(handle, "rotatingButtonDistance", m_rotatingButtonDistance);
-	SaveFloat(handle, "timeUntilReturn", m_timeUntilReturn);
+    SaveVector(handle, "rotatingButtonDestination", m_rotatingButtonDestination);
+    SaveInt(handle, "rotatingButtonState", m_rotatingButtonState);
+    SaveFloat(handle, "rotatingButtonSpeed", m_rotatingButtonSpeed);
+    SaveFloat(handle, "rotatingButtonDistance", m_rotatingButtonDistance);
+    SaveFloat(handle, "timeUntilReturn", m_timeUntilReturn);
 }
 
 void
 func_rot_button::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "rotatingButtonDestination":
-		m_rotatingButtonDestination = ReadVector(setValue);
-		break;
-	case "rotatingButtonState":
-		m_rotatingButtonState = ReadInt(setValue);
-		break;
-	case "rotatingButtonSpeed":
-		m_rotatingButtonSpeed = ReadFloat(setValue);
-		break;
-	case "rotatingButtonDistance":
-		m_rotatingButtonDistance = ReadFloat(setValue);
-		break;
-	case "timeUntilReturn":
-		m_timeUntilReturn = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "rotatingButtonDestination":
+        m_rotatingButtonDestination = ReadVector(setValue);
+        break;
+    case "rotatingButtonState":
+        m_rotatingButtonState = ReadInt(setValue);
+        break;
+    case "rotatingButtonSpeed":
+        m_rotatingButtonSpeed = ReadFloat(setValue);
+        break;
+    case "rotatingButtonDistance":
+        m_rotatingButtonDistance = ReadFloat(setValue);
+        break;
+    case "timeUntilReturn":
+        m_timeUntilReturn = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_rot_button::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "distance":
-		m_rotatingButtonDistance = stof(setValue);
-		break;
-	case "speed":
-		m_rotatingButtonSpeed = stof(setValue);
-		break;
-	case "wait":
-		m_timeUntilReturn = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "distance":
+        m_rotatingButtonDistance = stof(setValue);
+        break;
+    case "speed":
+        m_rotatingButtonSpeed = stof(setValue);
+        break;
+    case "wait":
+        m_timeUntilReturn = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_rot_button::Respawn(void)
 {
-	vector movementDir;
+    vector movementDir;
 
-	super::Respawn();
+    super::Respawn();
 
-	SetMovetype(MOVETYPE_PUSH);
-	SetSolid(SOLID_BSP);
-	AddFlags(FL_FINDABLE_NONSOLID);
-	MakeInvulnerable();
-	PlayerUse = OnPlayerUse;
-	ReleaseThink();
+    SetMovetype(MOVETYPE_PUSH);
+    SetSolid(SOLID_BSP);
+    AddFlags(FL_FINDABLE_NONSOLID);
+    MakeInvulnerable();
+    PlayerUse = OnPlayerUse;
+    ReleaseThink();
 
-	m_rotatingButtonState = ROTBTNSTATE_OPENED;
+    m_rotatingButtonState = ROTBTNSTATE_OPENED;
 
-	if (HasSpawnFlags(FNCROTBUT_NONSOLID)) {
-		SetSolid(SOLID_NOT);
-	} else {
-		SetHealth(GetSpawnFloat("health"));
+    if (HasSpawnFlags(FNCROTBUT_NONSOLID)) {
+        SetSolid(SOLID_NOT);
+    } else {
+        SetHealth(GetSpawnFloat("health"));
 
-		if (GetHealth() > 0) {
-			MakeVulnerable();
-		}
-	}
+        if (GetHealth() > 0) {
+            MakeVulnerable();
+        }
+    }
 
-	if (HasSpawnFlags(FNCROTBUT_XAXIS)) {
-		movementDir = [0,0,1];
-	} else if (HasSpawnFlags(FNCROTBUT_YAXIS)) {
-		movementDir = [0,1,0];
-	} else {
-		movementDir = [1,0,0];
-	}
+    if (HasSpawnFlags(FNCROTBUT_XAXIS)) {
+        movementDir = [0,0,1];
+    } else if (HasSpawnFlags(FNCROTBUT_YAXIS)) {
+        movementDir = [0,1,0];
+    } else {
+        movementDir = [1,0,0];
+    }
 
-	if (HasSpawnFlags(FNCROTBUT_REVERSE)) {
-		movementDir *= -1;
-	}
+    if (HasSpawnFlags(FNCROTBUT_REVERSE)) {
+        movementDir *= -1;
+    }
 
-	m_rotatingButtonDestination = movementDir * m_rotatingButtonDistance;
+    m_rotatingButtonDestination = movementDir * m_rotatingButtonDistance;
 }
 
 void
 func_rot_button::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
+    switch (state) {
+    case TRIG_OFF:
         ArrivedClosed();
-		break;
-	case TRIG_ON:
+        break;
+    case TRIG_ON:
         ArrivedOpened();
-		break;
-	default:
+        break;
+    default:
         TurnToggle();
-	}
+    }
 }
 
 void
 func_rot_button::TriggerTargets(void)
 {
-	UseTargets(this, TRIG_TOGGLE, GetTriggerDelay());
+    UseTargets(this, TRIG_TOGGLE, GetTriggerDelay());
 }
 
 void
 func_rot_button::ArrivedClosed(void)
 {
-	m_rotatingButtonState = ROTBTNSTATE_CLOSED;
+    m_rotatingButtonState = ROTBTNSTATE_CLOSED;
 
-	ClearVelocity();
-	ReleaseThink();
-	TriggerTargets();
+    ClearVelocity();
+    ReleaseThink();
+    TriggerTargets();
 
-	if (HasSpawnFlags(FNCROTBUT_NOAUTORETURN) == true) {
-		return;
-	}
+    if (HasSpawnFlags(FNCROTBUT_NOAUTORETURN) == true) {
+        return;
+    }
 
-	if (m_timeUntilReturn > 0.0f) {
-		ScheduleThink(TurnToggle, m_timeUntilReturn);
-	}
+    if (m_timeUntilReturn > 0.0f) {
+        ScheduleThink(TurnToggle, m_timeUntilReturn);
+    }
 }
 
 void
 func_rot_button::ArrivedOpened(void)
 {
-	ClearVelocity();
-	ReleaseThink();
-	m_rotatingButtonState = ROTBTNSTATE_OPENED;
+    ClearVelocity();
+    ReleaseThink();
+    m_rotatingButtonState = ROTBTNSTATE_OPENED;
 }
 
 void
 func_rot_button::Rotate(vector vecDest, void(void) vFunc)
 {
-	vector vecAngleDifference;
-	float flTravelLength, flTravelTime;
+    vector vecAngleDifference;
+    float flTravelLength, flTravelTime;
 
-	vecAngleDifference = (vecDest - angles);
-	flTravelLength = vlen(vecAngleDifference);
-	flTravelTime = (flTravelLength / m_rotatingButtonSpeed);
+    vecAngleDifference = (vecDest - angles);
+    flTravelLength = vlen(vecAngleDifference);
+    flTravelTime = (flTravelLength / m_rotatingButtonSpeed);
 
-	SetAngularVelocity(vecAngleDifference * (1 / flTravelTime));
-	ScheduleThink(vFunc, flTravelTime);
+    SetAngularVelocity(vecAngleDifference * (1 / flTravelTime));
+    ScheduleThink(vFunc, flTravelTime);
 }
 
 void
 func_rot_button::OnPlayerUse(void)
 {
-	TurnToggle();
+    TurnToggle();
 }
 
 void
 func_rot_button::Touch(entity eToucher)
 {
-	eActivator = (ncEntity)eToucher;
+    eActivator = (ncEntity)eToucher;
 
-	if (HasSpawnFlags(FNCROTBUT_TOUCHABLE)) {
-		TurnToggle();
-	}
+    if (HasSpawnFlags(FNCROTBUT_TOUCHABLE)) {
+        TurnToggle();
+    }
 }
 
 void
 func_rot_button::TurnToggle(void)
 {
-	if (m_rotatingButtonState == ROTBTNSTATE_OPENED) {
-		Rotate(m_rotatingButtonDestination, ArrivedClosed);
-	} else if (m_rotatingButtonState == ROTBTNSTATE_CLOSED) {
-		if (m_timeUntilReturn == -1) {
-			return;
-		}
+    if (m_rotatingButtonState == ROTBTNSTATE_OPENED) {
+        Rotate(m_rotatingButtonDestination, ArrivedClosed);
+    } else if (m_rotatingButtonState == ROTBTNSTATE_CLOSED) {
+        if (m_timeUntilReturn == -1) {
+            return;
+        }
 
-		Rotate(GetSpawnVector("angles"), ArrivedOpened);
+        Rotate(GetSpawnVector("angles"), ArrivedOpened);
 
-		/* in toggle mode, we trigger our targets every turn */
-		if (HasSpawnFlags(FNCROTBUT_NOAUTORETURN)) {
-			TriggerTargets();
-		}
-	}
+        /* in toggle mode, we trigger our targets every turn */
+        if (HasSpawnFlags(FNCROTBUT_NOAUTORETURN)) {
+            TriggerTargets();
+        }
+    }
 }
 
 void
 func_rot_button::Death(entity inflictor, entity attacker, int damage, vector dir, vector absImpactPos, int hitBody)
 {
-	MakeInvulnerable();
-	TurnToggle();
+    MakeInvulnerable();
+    TurnToggle();
 }

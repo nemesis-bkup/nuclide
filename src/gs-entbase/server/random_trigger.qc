@@ -39,99 +39,99 @@ class
 random_trigger:ncPointTrigger
 {
 public:
-	void random_trigger(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    void random_trigger(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	float m_flMinTime;
-	float m_flRandMin;
-	float m_flRandMax;
-	int m_iStartState;
+    float m_flMinTime;
+    float m_flRandMin;
+    float m_flRandMax;
+    int m_iStartState;
 };
 
 void
 random_trigger::random_trigger(void)
 {
-	m_flMinTime = 0.0f;
-	m_flRandMin = 0.0f;
-	m_flRandMax = 0.0f;
-	m_iStartState = 0i;
+    m_flMinTime = 0.0f;
+    m_flRandMin = 0.0f;
+    m_flRandMax = 0.0f;
+    m_iStartState = 0i;
 }
 
 void
 random_trigger::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flMinTime", m_flMinTime);
-	SaveFloat(handle, "m_flRandMin", m_flRandMin);
-	SaveFloat(handle, "m_flRandMax", m_flRandMax);
-	SaveInt(handle, "m_iStartState", m_iStartState);
+    super::Save(handle);
+    SaveFloat(handle, "m_flMinTime", m_flMinTime);
+    SaveFloat(handle, "m_flRandMin", m_flRandMin);
+    SaveFloat(handle, "m_flRandMax", m_flRandMax);
+    SaveInt(handle, "m_iStartState", m_iStartState);
 }
 
 void
 random_trigger::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flMinTime":
-		m_flMinTime = ReadFloat(setValue);
-		break;
-	case "m_flRandMin":
-		m_flRandMin = ReadFloat(setValue);
-		break;
-	case "m_flRandMax":
-		m_flRandMax = ReadFloat(setValue);
-		break;
-	case "m_iStartState":
-		m_iStartState = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flMinTime":
+        m_flMinTime = ReadFloat(setValue);
+        break;
+    case "m_flRandMin":
+        m_flRandMin = ReadFloat(setValue);
+        break;
+    case "m_flRandMax":
+        m_flRandMax = ReadFloat(setValue);
+        break;
+    case "m_iStartState":
+        m_iStartState = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 random_trigger::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "start_state":
-		m_iStartState = stoi(setValue);
-		break;
-	case "wait":
-		m_flMinTime = stof(setValue);
-		break;
-	case "random_min":
-		m_flRandMin = stof(setValue);
-		break;
-	case "random_max":
-		m_flRandMax = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "start_state":
+        m_iStartState = stoi(setValue);
+        break;
+    case "wait":
+        m_flMinTime = stof(setValue);
+        break;
+    case "random_min":
+        m_flRandMin = stof(setValue);
+        break;
+    case "random_max":
+        m_flRandMax = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 random_trigger::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (m_iStartState == 1)
-		Trigger(this, TRIG_ON);
+    if (m_iStartState == 1)
+        Trigger(this, TRIG_ON);
 }
 
 void
 random_trigger::Trigger(entity act, triggermode_t state)
 {
-	float r;
+    float r;
 
-	if (GetMaster(act) == FALSE)
-		return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	r = time + m_flMinTime + random(m_flRandMin, m_flRandMax);
-	UseTargets(other, TRIG_TOGGLE, r);
+    r = time + m_flMinTime + random(m_flRandMin, m_flRandMax);
+    UseTargets(other, TRIG_TOGGLE, r);
 }

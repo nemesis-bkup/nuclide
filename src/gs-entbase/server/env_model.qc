@@ -42,89 +42,89 @@ class
 env_model:ncRenderableEntity
 {
 public:
-	void env_model(void);
-	virtual void SpawnKey(string, string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    void env_model(void);
+    virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	bool m_modelState;
-	int m_iOnSequence;
-	int m_iOffSequence;
-	int m_iOnAction;
-	int m_iOffAction;
+    bool m_modelState;
+    int m_iOnSequence;
+    int m_iOffSequence;
+    int m_iOnAction;
+    int m_iOffAction;
 };
 
 void
 env_model::env_model(void)
 {
-	m_modelState = true;
-	m_iOnSequence = 0i;
-	m_iOffSequence = 0i;
-	m_iOnAction = 0i;
-	m_iOffAction = 0i;
+    m_modelState = true;
+    m_iOnSequence = 0i;
+    m_iOffSequence = 0i;
+    m_iOnAction = 0i;
+    m_iOffAction = 0i;
 }
 
 void
 env_model::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_iszSequence_On":
-		m_iOnSequence = ReadInt(setValue);
-		break;
-	case "m_iszSequence_Off":
-		m_iOffSequence = ReadInt(setValue);
-		break;
-	case "m_iAction_On":
-		m_iOnAction = ReadInt(setValue);
-		break;
-	case "m_iAction_Off":
-		m_iOffAction = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_iszSequence_On":
+        m_iOnSequence = ReadInt(setValue);
+        break;
+    case "m_iszSequence_Off":
+        m_iOffSequence = ReadInt(setValue);
+        break;
+    case "m_iAction_On":
+        m_iOnAction = ReadInt(setValue);
+        break;
+    case "m_iAction_Off":
+        m_iOffAction = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 env_model::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	/* solid */
-	if (HasSpawnFlags(4)) {
-		SetSolid(SOLID_BBOX);
-	} else {
-		SetSolid(SOLID_NOT);
-	}
+    /* solid */
+    if (HasSpawnFlags(4)) {
+        SetSolid(SOLID_BBOX);
+    } else {
+        SetSolid(SOLID_NOT);
+    }
 
-	/* droptofloor */
-	if (HasSpawnFlags(2)) {
-		DropToFloor();
-	}
+    /* droptofloor */
+    if (HasSpawnFlags(2)) {
+        DropToFloor();
+    }
 
-	/* start off */
-	if (HasSpawnFlags(1)) {
-		Trigger(this, TRIG_OFF);
-	} else {
-		Trigger(this, TRIG_ON);
-	}
+    /* start off */
+    if (HasSpawnFlags(1)) {
+        Trigger(this, TRIG_OFF);
+    } else {
+        Trigger(this, TRIG_ON);
+    }
 }
 
 void
 env_model::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		m_modelState = false;
-		break;
-	case TRIG_ON:
-		m_modelState = true;
-		break;
-	default:
-		m_modelState = true - m_modelState;
-		break;
-	}
+    switch (state) {
+    case TRIG_OFF:
+        m_modelState = false;
+        break;
+    case TRIG_ON:
+        m_modelState = true;
+        break;
+    default:
+        m_modelState = true - m_modelState;
+        break;
+    }
 
-	SetFrame(m_modelState == true ? m_iOnSequence : m_iOffSequence);
+    SetFrame(m_modelState == true ? m_iOnSequence : m_iOffSequence);
 }

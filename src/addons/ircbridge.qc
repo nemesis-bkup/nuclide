@@ -33,120 +33,120 @@ var string g_bridge_nick;
 void
 irc_send(string msg)
 {
-	TCP_Send(&tcp_irc, msg);
+    TCP_Send(&tcp_irc, msg);
 }
 
 void
 irc_autoname(void)
 {
-	string nick;
-	nick = sprintf("Server%d", rint(random(0,9999)));
-	irc_send(sprintf("NICK %s\n", nick));
+    string nick;
+    nick = sprintf("Server%d", rint(random(0,9999)));
+    irc_send(sprintf("NICK %s\n", nick));
 }
 
 void
 irc_receive(string buffer)
 {
-	int l;
-	string src;
+    int l;
+    string src;
 
-	if (!buffer)
-		return;
+    if (!buffer)
+        return;
 
-	l = tokenize(buffer);
+    l = tokenize(buffer);
 
-	if (substring(buffer, 0, 4) == "PING") {
-		irc_send(sprintf("PONG :%s\n", substring(buffer, 6, -1)));
-		return;
-	}
+    if (substring(buffer, 0, 4) == "PING") {
+        irc_send(sprintf("PONG :%s\n", substring(buffer, 6, -1)));
+        return;
+    }
 
-	/* define the source */
-	src = substring(argv(1), 0, strstrofs(argv(1), "!"));
+    /* define the source */
+    src = substring(argv(1), 0, strstrofs(argv(1), "!"));
 
-	if (src == "")
-		src = "Server";
+    if (src == "")
+        src = "Server";
 
-	/* process the code */
-	switch (argv(2)) {
-	case "PRIVMSG": /* a message */
-		break;
-	case "321":
-	case "322":
-	case "323":
-	case "332": /* topic upon joining channel */
-	case "TOPIC": /* topic change */
-	case "NOTICE": /* server notice */
-	case "JOIN": /* a player joined */
-	case "QUIT": /* a player quit */
-	case "PART": /* a player left the channel */
-	case "353": /* channel user list */
-	case "366": /* end of user list */
-		break;
-	case "431": /* no nickname given */
-	case "432": /* erroneus nickname */
-	case "433": /* nick already in use */
-		irc_autoname();
-		break;
-	case "475": /* password protected/wrong */
-		print(sprintf("%s is a password protected channel. Access denied.", g_irc_channeltarget));
-		break;
-	case "376": /* logging done */
-		irc_send(sprintf("JOIN %s\n", g_irc_channeltarget));
-		break;
-	case "NICK": /* nick changed */
-		tokenizebyseparator(buffer, ":");
-		g_bridge_nick = argv(2);
-		break;
-	default:
-	}
+    /* process the code */
+    switch (argv(2)) {
+    case "PRIVMSG": /* a message */
+        break;
+    case "321":
+    case "322":
+    case "323":
+    case "332": /* topic upon joining channel */
+    case "TOPIC": /* topic change */
+    case "NOTICE": /* server notice */
+    case "JOIN": /* a player joined */
+    case "QUIT": /* a player quit */
+    case "PART": /* a player left the channel */
+    case "353": /* channel user list */
+    case "366": /* end of user list */
+        break;
+    case "431": /* no nickname given */
+    case "432": /* erroneus nickname */
+    case "433": /* nick already in use */
+        irc_autoname();
+        break;
+    case "475": /* password protected/wrong */
+        print(sprintf("%s is a password protected channel. Access denied.", g_irc_channeltarget));
+        break;
+    case "376": /* logging done */
+        irc_send(sprintf("JOIN %s\n", g_irc_channeltarget));
+        break;
+    case "NICK": /* nick changed */
+        tokenizebyseparator(buffer, ":");
+        g_bridge_nick = argv(2);
+        break;
+    default:
+    }
 }
 
 void
 IRCBridge_Frame(void)
 {
-	TCP_Frame(&tcp_irc);
-	irc_receive(TCP_Receive(&tcp_irc));
-	self.nextthink = time;
+    TCP_Frame(&tcp_irc);
+    irc_receive(TCP_Receive(&tcp_irc));
+    self.nextthink = time;
 }
 
 void
 IRCBridge_ServerConnect(void)
 {
-	int i;
-	i = TCP_Connect(&tcp_irc, "tcp://irc.frag-net.com:6667");
-	irc_send(sprintf("USER guest fn irc.won.net :%s\n", cvar_string("hostname")));
-	irc_autoname();
-	self.think = IRCBridge_Frame;
-	self.nextthink = time;
+    int i;
+    i = TCP_Connect(&tcp_irc, "tcp://irc.frag-net.com:6667");
+    irc_send(sprintf("USER guest fn irc.won.net :%s\n", cvar_string("hostname")));
+    irc_autoname();
+    self.think = IRCBridge_Frame;
+    self.nextthink = time;
 }
 
 void
 Plug_ClientObituary(entity attk, entity targ, int weapon, int body, int dmg)
 {
-	irc_send(sprintf("PRIVMSG %s :%s whooped %s\n", g_irc_channeltarget, attk.netname, targ.netname));
+    irc_send(sprintf("PRIVMSG %s :%s whooped %s\n", g_irc_channeltarget, attk.netname, targ.netname));
 }
 
 string
 Plug_ClientCommand(entity clientEntity, string commandString)
 {
-	tokenize(commandString);
-	switch (argv(0)) {
-	case "say":
-		irc_send(sprintf("PRIVMSG %s :<%s> %s\n", g_irc_channeltarget, clientEntity.netname, argv(1)));
-		break;
-	}
-	return (commandString);
+    tokenize(commandString);
+    switch (argv(0)) {
+    case "say":
+        irc_send(sprintf("PRIVMSG %s :<%s> %s\n", g_irc_channeltarget, clientEntity.netname, argv(1)));
+        break;
+    }
+    return (commandString);
 }
 
 void
 Plug_ServerActivate(void)
 {
-	g_ircbridge = spawn();
-	g_ircbridge.think = IRCBridge_ServerConnect;
-	g_ircbridge.nextthink = time + 1.0f;
+    g_ircbridge = spawn();
+    g_ircbridge.think = IRCBridge_ServerConnect;
+    g_ircbridge.nextthink = time + 1.0f;
 
-	/* join a channel other than lobby if the chatroom is set */
-	if (cvar_string("gameinfo_chatroom")) {
-		g_irc_channeltarget = strcat("#", cvar_string("gameinfo_chatroom"));
-	}
+    /* join a channel other than lobby if the chatroom is set */
+    if (cvar_string("gameinfo_chatroom")) {
+        g_irc_channeltarget = strcat("#", cvar_string("gameinfo_chatroom"));
+    }
 }

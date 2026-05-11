@@ -35,19 +35,19 @@ ncAttack is currently the main spot for various miscallanous attack types that d
 class ncAttack:ncSurfacePropEntity
 {
 public:
-	void ncAttack(void);
+    void ncAttack(void);
 
 #ifdef SERVER
-	/* launch the attack into the world */
-	virtual void Launch(vector, vector, float, float, float);
+    /* launch the attack into the world */
+    virtual void Launch(vector, vector, float, float, float);
 
-	nonvirtual void SetWeaponOwner(ncWeapon);
-	nonvirtual ncWeapon GetWeaponOwner(void);
+    nonvirtual void SetWeaponOwner(ncWeapon);
+    nonvirtual ncWeapon GetWeaponOwner(void);
 #endif
 
 #ifdef SERVER
 private:
-	ncWeapon m_weaponOwner;
+    ncWeapon m_weaponOwner;
 #endif
 };
 

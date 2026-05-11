@@ -43,7 +43,7 @@ This entity was introduced in Half-Life (1998).
 class point_viewcontrol:trigger_camera
 {
 public:
-	void point_viewcontrol(void);
+    void point_viewcontrol(void);
 
 };
 

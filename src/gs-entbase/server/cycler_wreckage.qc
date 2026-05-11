@@ -34,40 +34,40 @@ class
 cycler_wreckage:ncRenderableEntity
 {
 public:
-	void cycler_wreckage(void);
+    void cycler_wreckage(void);
 
-	virtual void Spawned(void);
-	virtual void OnRemoveEntity(void);
+    virtual void Spawned(void);
+    virtual void OnRemoveEntity(void);
 
 private:
-	ncEntity m_eSmoke;
+    ncEntity m_eSmoke;
 };
 
 void
 cycler_wreckage::cycler_wreckage(void)
 {
-	m_eSmoke = __NULL__;
+    m_eSmoke = __NULL__;
 }
 
 void
 cycler_wreckage::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (!m_eSmoke) {
-		m_eSmoke = spawnClass("env_smoker", GetOrigin());
-		m_eSmoke.Input(this, "SetScale", "128");
-		m_eSmoke.Input(this, "SetAngle", vtos([-90.0f, 0.0f, 0.0f]));
-		m_eSmoke.Input(this, "SetDispersion", "4");
-		m_eSmoke.Input(this, "SetDuration", "-1");
-		m_eSmoke.Respawn();
-		m_eSmoke.ReleaseThink();
-	}
+    if (!m_eSmoke) {
+        m_eSmoke = spawnClass("env_smoker", GetOrigin());
+        m_eSmoke.Input(this, "setscale", "128");
+        m_eSmoke.Input(this, "setangle", vtos([-90.0f, 0.0f, 0.0f]));
+        m_eSmoke.Input(this, "setdispersion", "4");
+        m_eSmoke.Input(this, "setduration", "-1");
+        m_eSmoke.Respawn();
+        m_eSmoke.ReleaseThink();
+    }
 }
 void
 cycler_wreckage::OnRemoveEntity(void)
 {
-	if (m_eSmoke) {
-		m_eSmoke.Destroy();
-	}
+    if (m_eSmoke) {
+        m_eSmoke.Destroy();
+    }
 }

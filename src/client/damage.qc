@@ -28,20 +28,20 @@ Currently will always return 1.
 float
 CSQC_Parse_Damage_New(vector abs_pos, int take, int flags)
 {
-	int s = (float)getproperty(VF_ACTIVESEAT);
-	pSeat = &g_seats[s];
+    int s = (float)getproperty(VF_ACTIVESEAT);
+    pSeat = &g_seats[s];
 
-	/* FIXME: while a player shooting you from [0,0,0] is unlikely, it's
-	 * not impossible. we only do this to lazily seperate players from
-	 * entities belonging to world
-	 */
-	if (abs_pos) {
-		pSeat->m_vecDamagePos = abs_pos;
-		pSeat->m_flDamageAlpha = 1.0f;
-		pSeat->m_iDamageFlags |= flags;
-	}
+    /* FIXME: while a player shooting you from [0,0,0] is unlikely, it's
+     * not impossible. we only do this to lazily seperate players from
+     * entities belonging to world
+     */
+    if (abs_pos) {
+        pSeat->m_vecDamagePos = abs_pos;
+        pSeat->m_flDamageAlpha = 1.0f;
+        pSeat->m_iDamageFlags |= flags;
+    }
 
-	HUD_DamageReceived(abs_pos, take, flags);
+    HUD_DamageReceived(abs_pos, take, flags);
 
-	return (true);
+    return (true);
 }

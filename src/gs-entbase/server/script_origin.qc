@@ -32,19 +32,19 @@ class
 script_origin:ncBrushTrigger
 {
 public:
-	void script_origin(void);
-	virtual void Trigger(entity, triggermode_t);
+    void script_origin(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
 script_origin::script_origin(void)
 {
-	
+    
 }
 
 void
 script_origin::Trigger(entity entityActivator, triggermode_t state)
 {
-	
+    
 }
 

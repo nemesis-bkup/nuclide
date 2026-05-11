@@ -37,12 +37,12 @@ class
 multisource:ncPointTrigger
 {
 public:
-	void multisource(void);
-	
-	virtual void Respawn(void);
-	virtual int QueryTargets(void);
-	virtual int GetValue(entity);
-	virtual void Trigger(entity, triggermode_t);
+    void multisource(void);
+    
+    virtual void Respawn(void);
+    virtual int QueryTargets(void);
+    virtual int GetValue(entity);
+    virtual void Trigger(entity, triggermode_t);
 
 };
 
@@ -54,64 +54,64 @@ multisource::multisource(void)
 void
 multisource::Respawn(void)
 {
-	InitPointTrigger();
-	SetValue(0i);
+    InitPointTrigger();
+    SetValue(0i);
 }
 
 void
 multisource::Trigger(entity act, triggermode_t unused)
 {
-	if (QueryTargets() == FALSE) {
-		EntLog("[^1MULTISOURCE^7] %s is inactive.", targetname);
-		SetValue(0i);
-		return;
-	}
+    if (QueryTargets() == FALSE) {
+        EntLog("[^1MULTISOURCE^7] %s is inactive.", targetname);
+        SetValue(0i);
+        return;
+    }
 
-	EntLog("[^1MULTISOURCE^7] %s is now active.", targetname);
-	SetValue(1i);
-	UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
+    EntLog("[^1MULTISOURCE^7] %s is now active.", targetname);
+    SetValue(1i);
+    UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
 }
 
 int
 multisource::GetValue(entity queryingEntity)
 {
-	return QueryTargets();
+    return QueryTargets();
 }
 
 int
 multisource::QueryTargets(void)
 {
-	entity a;
-	int out = TRUE;
+    entity a;
+    int out = TRUE;
 
-	/* ENV_GLOBAL QUERY */
-	if (STRING_SET(m_globalState))
-		if (GetGlobalValue(m_globalState) == 0)
-			return FALSE;
-		else
-			return TRUE;
+    /* ENV_GLOBAL QUERY */
+    if (STRING_SET(m_globalState))
+        if (GetGlobalValue(m_globalState) == 0)
+            return FALSE;
+        else
+            return TRUE;
 
-	/* normal triggers */
-	for (a = world; (a = find(a, ::target, targetname));) {
-		ncEntity tTemp = (ncEntity) a;
-		if (cvar("developer") == 1) {
-			dprint("[^1MULTISOURCE^7] ");
-			dprint(tTemp.classname);
-			if (tTemp.GetValue(this) == FALSE) {
-				dprint(" is ^1OFF^7, name: ");
-				out = FALSE;
-			} else {
-				dprint(" is ^2ON^7, name: ");
-			}
-			dprint(tTemp.target);
-			dprint("\n");
-		} else {
-			/* exit out immediately as there's no point unless in-dev */
-			if (tTemp.GetValue(this) == FALSE) {
-				return (0);
-			}
-		}
-	}
+    /* normal triggers */
+    for (a = world; (a = find(a, ::target, targetname));) {
+        ncEntity tTemp = (ncEntity) a;
+        if (cvar("developer") == 1) {
+            dprint("[^1MULTISOURCE^7] ");
+            dprint(tTemp.classname);
+            if (tTemp.GetValue(this) == FALSE) {
+                dprint(" is ^1OFF^7, name: ");
+                out = FALSE;
+            } else {
+                dprint(" is ^2ON^7, name: ");
+            }
+            dprint(tTemp.target);
+            dprint("\n");
+        } else {
+            /* exit out immediately as there's no point unless in-dev */
+            if (tTemp.GetValue(this) == FALSE) {
+                return (0);
+            }
+        }
+    }
 
-	return out;
+    return out;
 }

@@ -41,11 +41,11 @@ var int autocvar_nav_radius = 8;
 void
 _BotLog(string functionName, string msg)
 {
-	print(sprintf("%f ^xF05%s ^7: %s\n", time, functionName, msg));
+    print(sprintf("%f ^xF05%s ^7: %s\n", time, functionName, msg));
 }
 
 /** Logs an bot system specific log message.
-	 The console variable `bot_developer` has to be `1` for them to be visible.
+     The console variable `bot_developer` has to be `1` for them to be visible.
 
 @param ... contains a formatted string containing a description. */
 #define BotLog(...) if (autocvar_bot_developer) _BotLog(__FUNC__, sprintf(__VA_ARGS__))
@@ -53,11 +53,11 @@ _BotLog(string functionName, string msg)
 void
 _BotEntLog(string className, string functionName, float edictNum, string warnMessage)
 {
-	print(sprintf("%f ^xF05%s (id: %d) ^7: %s\n", time, functionName, edictNum, warnMessage));
+    print(sprintf("%f ^xF05%s (id: %d) ^7: %s\n", time, functionName, edictNum, warnMessage));
 }
 
 /** Logs an bot specific entity class log message.
-	 The console variable `bot_developer` has to be `1` for them to be visible.
+     The console variable `bot_developer` has to be `1` for them to be visible.
 
 @param ... contains a formatted string containing a description. */
 #define BotEntLog(...) if (autocvar_bot_developer) _BotEntLog(classname, __FUNC__, num_for_edict(this), sprintf(__VA_ARGS__))

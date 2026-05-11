@@ -1,0 +1,6 @@
+picture background
+{
+    "name"      "Menu Background"
+    "picture"   "gfx/background"
+    "preview"   "gfx/background"
+}

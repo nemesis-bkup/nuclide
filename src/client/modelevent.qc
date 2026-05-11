@@ -26,39 +26,39 @@ events based on time passed on the viewmodel.
 void
 Event_Callback(float mtime, __inout float btime)
 {
-	/* don't bother if no valid function is set */
-	if (pSeat->m_pEventCall == __NULL__) {
-		return;
-	}
+    /* don't bother if no valid function is set */
+    if (pSeat->m_pEventCall == __NULL__) {
+        return;
+    }
 
-	/* if the sequence ain't the same anymore... */
-	if (pSeat->m_flEventFrame != pSeat->m_eViewModel.frame) {
-		return;
-	}
+    /* if the sequence ain't the same anymore... */
+    if (pSeat->m_flEventFrame != pSeat->m_eViewModel.frame) {
+        return;
+    }
 
-	/* if the model changed... */
-	if (pSeat->m_flEventMdl != pSeat->m_eViewModel.modelindex) {
-		return;
-	}
+    /* if the model changed... */
+    if (pSeat->m_flEventMdl != pSeat->m_eViewModel.modelindex) {
+        return;
+    }
 
-	/* weapon changed */
-	ncPlayer pl = (ncPlayer)(pSeat->m_ePlayer);
+    /* weapon changed */
+    ncPlayer pl = (ncPlayer)(pSeat->m_ePlayer);
 
-	/* only play once */
-	if (mtime == btime) {
-		return;
-	}
+    /* only play once */
+    if (mtime == btime) {
+        return;
+    }
 
-	/* call when we've passed the keyframe the first time */
-	if (btime <= pSeat->m_flEventTime && (mtime > pSeat->m_flEventTime)) {
-		entity oldSelf = self;
-		self = pSeat->m_iEventEntity;
-		pSeat->m_pEventCall();
-		pSeat->m_pEventCall = __NULL__;
-		pSeat->m_flEventMdl = 0;
-		pSeat->m_flEventFrame = -1;
-		self = oldSelf;
-	}
+    /* call when we've passed the keyframe the first time */
+    if (btime <= pSeat->m_flEventTime && (mtime > pSeat->m_flEventTime)) {
+        entity oldSelf = self;
+        self = pSeat->m_iEventEntity;
+        pSeat->m_pEventCall();
+        pSeat->m_pEventCall = __NULL__;
+        pSeat->m_flEventMdl = 0;
+        pSeat->m_flEventFrame = -1;
+        self = oldSelf;
+    }
 
-	btime = mtime;
+    btime = mtime;
 }

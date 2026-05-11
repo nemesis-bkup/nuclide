@@ -16,10 +16,10 @@
 
 enumflags
 {
-	MMF_STARTON,
-	MMF_UNUSED1,
-	MMF_NONTOGGLE,
-	MMF_MONSTERCLIP
+    MMF_STARTON,
+    MMF_UNUSED1,
+    MMF_NONTOGGLE,
+    MMF_MONSTERCLIP
 };
 
 /*! \brief Server-Entity: Monster Spawner */
@@ -53,212 +53,212 @@ class
 monstermaker:ncPointTrigger
 {
 public:
-	void monstermaker(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	
-	nonvirtual void Spawner(void);
-	nonvirtual void TurnOn(void);
-	nonvirtual void TurnOff(void);
+    void monstermaker(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    
+    nonvirtual void Spawner(void);
+    nonvirtual void TurnOn(void);
+    nonvirtual void TurnOff(void);
 
 private:
-	string m_strMonster;
-	string m_strChildName;
-	int m_iMonsterSpawned;
-	int m_iTotalMonsters;
-	int m_iMaxChildren;
-	float m_flDelay;
+    string m_strMonster;
+    string m_strChildName;
+    int m_iMonsterSpawned;
+    int m_iTotalMonsters;
+    int m_iMaxChildren;
+    float m_flDelay;
 };
 
 void
 monstermaker::monstermaker(void)
 {
-	m_strMonster = __NULL__;
-	m_strChildName = __NULL__;
-	m_iMonsterSpawned = 0i;
-	m_iTotalMonsters = 0i;
-	m_iMaxChildren = 0i;
-	m_flDelay = 1.0f;
+    m_strMonster = __NULL__;
+    m_strChildName = __NULL__;
+    m_iMonsterSpawned = 0i;
+    m_iTotalMonsters = 0i;
+    m_iMaxChildren = 0i;
+    m_flDelay = 1.0f;
 }
 
 void
 monstermaker::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strMonster", m_strMonster);
-	SaveString(handle, "m_strChildName", m_strChildName);
-	SaveInt(handle, "m_iMonsterSpawned", m_iMonsterSpawned);
-	SaveInt(handle, "m_iTotalMonsters", m_iTotalMonsters);
-	SaveInt(handle, "m_iMaxChildren", m_iMaxChildren);
-	SaveFloat(handle, "m_flDelay", m_flDelay);
+    super::Save(handle);
+    SaveString(handle, "m_strMonster", m_strMonster);
+    SaveString(handle, "m_strChildName", m_strChildName);
+    SaveInt(handle, "m_iMonsterSpawned", m_iMonsterSpawned);
+    SaveInt(handle, "m_iTotalMonsters", m_iTotalMonsters);
+    SaveInt(handle, "m_iMaxChildren", m_iMaxChildren);
+    SaveFloat(handle, "m_flDelay", m_flDelay);
 }
 
 void
 monstermaker::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strMonster":
-		m_strMonster = ReadString(setValue);
-		break;
-	case "m_strChildName":
-		m_strChildName = ReadString(setValue);
-		break;
-	case "m_iMonsterSpawned":
-		m_iMonsterSpawned = ReadInt(setValue);
-		break;
-	case "m_iTotalMonsters":
-		m_iTotalMonsters = ReadInt(setValue);
-		break;
-	case "m_iMaxChildren":
-		m_iMaxChildren = ReadInt(setValue);
-		break;
-	case "m_flDelay":
-		m_flDelay = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strMonster":
+        m_strMonster = ReadString(setValue);
+        break;
+    case "m_strChildName":
+        m_strChildName = ReadString(setValue);
+        break;
+    case "m_iMonsterSpawned":
+        m_iMonsterSpawned = ReadInt(setValue);
+        break;
+    case "m_iTotalMonsters":
+        m_iTotalMonsters = ReadInt(setValue);
+        break;
+    case "m_iMaxChildren":
+        m_iMaxChildren = ReadInt(setValue);
+        break;
+    case "m_flDelay":
+        m_flDelay = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 monstermaker::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "monstertype":
-		m_strMonster = setValue;
-		break;
-	case "monstercount":
-		m_iTotalMonsters = stoi(setValue);
-		break;
-	case "child_alivemax":
-	case "m_imaxlivechildren":
-		m_iMaxChildren = stoi(setValue);
-		break;
-	case "child_name":
-	case "netname":
-		m_strChildName = setValue;
-		netname = __NULL__;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "monstertype":
+        m_strMonster = setValue;
+        break;
+    case "monstercount":
+        m_iTotalMonsters = stoi(setValue);
+        break;
+    case "child_alivemax":
+    case "m_imaxlivechildren":
+        m_iMaxChildren = stoi(setValue);
+        break;
+    case "child_name":
+    case "netname":
+        m_strChildName = setValue;
+        netname = __NULL__;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 monstermaker::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (HasSpawnFlags(MMF_STARTON)) {
-		TurnOn();
-	} else {
-		TurnOff();
-	}
+    if (HasSpawnFlags(MMF_STARTON)) {
+        TurnOn();
+    } else {
+        TurnOff();
+    }
 
-	m_iMonsterSpawned = 0;
+    m_iMonsterSpawned = 0;
 }
 
 void
 monstermaker::TurnOff(void)
 {
-	ReleaseThink();
-	SetValue(0i);
+    ReleaseThink();
+    SetValue(0i);
 }
 
 void
 monstermaker::TurnOn(void)
 {
-	ScheduleThink(Spawner, 0.0f);
-	SetValue(1i);
+    ScheduleThink(Spawner, 0.0f);
+    SetValue(1i);
 }
 
 void
 monstermaker::Spawner(void)
 {
-	int c = 0;
+    int c = 0;
 
-	/* look and count the buggers that are still around */
-	for (entity l = world; (l = find(l, ::classname, m_strMonster));) {
-		if (l.real_owner == this) {
-			/* may be a corpse? */
-			if (l.movetype == MOVETYPE_WALK) {
-				c++;
-			}
-		}
-	}
+    /* look and count the buggers that are still around */
+    for (entity l = world; (l = find(l, ::classname, m_strMonster));) {
+        if (l.real_owner == this) {
+            /* may be a corpse? */
+            if (l.movetype == MOVETYPE_WALK) {
+                c++;
+            }
+        }
+    }
 
-	/* too many alive at a time */
-	if ((m_iMaxChildren > 0 && c >= m_iMaxChildren) || (m_flDelay <= 0 && c >= 1)) {
-		ScheduleThink(Spawner, m_flDelay);
-		return;
-	}
+    /* too many alive at a time */
+    if ((m_iMaxChildren > 0 && c >= m_iMaxChildren) || (m_flDelay <= 0 && c >= 1)) {
+        ScheduleThink(Spawner, m_flDelay);
+        return;
+    }
 
-	tracebox(origin, [-16,-16,-16], [16,16,16], origin, FALSE, this);
+    tracebox(origin, [-16,-16,-16], [16,16,16], origin, FALSE, this);
 
-	if (trace_startsolid == TRUE) {
-		ScheduleThink(Spawner, m_flDelay);
-		return;
-	}
+    if (trace_startsolid == TRUE) {
+        ScheduleThink(Spawner, m_flDelay);
+        return;
+    }
 
-	ncEntity unit = Entity_CreateClass(m_strMonster);
+    ncEntity unit = Entity_CreateClass(m_strMonster);
 
-	if (!unit) {
-		EntError("Cannot call spawnfunction for %s", m_strMonster);
-		Destroy();
-		return;
-	}
+    if (!unit) {
+        EntError("Cannot call spawnfunction for %s", m_strMonster);
+        Destroy();
+        return;
+    }
 
-	unit.real_owner = this;
-	EntLog("Spawning %s", m_strMonster);
-	unit.SetOrigin(GetOrigin());
-	unit.SetAngles(GetAngles());
-	unit.targetname = (m_strChildName);
-	unit.ReleaseThink();
+    unit.real_owner = this;
+    EntLog("Spawning %s", m_strMonster);
+    unit.SetOrigin(GetOrigin());
+    unit.SetAngles(GetAngles());
+    unit.targetname = (m_strChildName);
+    unit.ReleaseThink();
 
-	m_iMonsterSpawned++;
+    m_iMonsterSpawned++;
 
-	if (target) {
-		UseTargets(this, TRIG_TOGGLE, 0.0f);
-	}
+    if (target) {
+        UseTargets(this, TRIG_TOGGLE, 0.0f);
+    }
 
-	/* inherit the monsterclip flag */
-	if (HasSpawnFlags(MMF_MONSTERCLIP)) {
-		unit.spawnflags |= MSF_MONSTERCLIP;
-	}
+    /* inherit the monsterclip flag */
+    if (HasSpawnFlags(MMF_MONSTERCLIP)) {
+        unit.spawnflags |= MSF_MONSTERCLIP;
+    }
 
-	/* shut off for good when we've spawned all we ever wanted */
-	if ((m_iTotalMonsters > 0) && m_iMonsterSpawned >= m_iTotalMonsters) {
-		ReleaseThink();
-		return;
-	}
+    /* shut off for good when we've spawned all we ever wanted */
+    if ((m_iTotalMonsters > 0) && m_iMonsterSpawned >= m_iTotalMonsters) {
+        ReleaseThink();
+        return;
+    }
 
-	/* sometimes all we do is just spawn a single monster at a time */
-	if (HasSpawnFlags(MMF_NONTOGGLE)) {
-		TurnOff();
-	} else {
-		ScheduleThink(Spawner, m_flDelay);
-	}
+    /* sometimes all we do is just spawn a single monster at a time */
+    if (HasSpawnFlags(MMF_NONTOGGLE)) {
+        TurnOff();
+    } else {
+        ScheduleThink(Spawner, m_flDelay);
+    }
 }
 
 void
 monstermaker::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		TurnOff();
-		break;
-	case TRIG_ON:
-		TurnOn();
-		break;
-	default:
-		if (GetValue(this))
-			TurnOff();
-		else
-			TurnOn();
-	}
+    switch (state) {
+    case TRIG_OFF:
+        TurnOff();
+        break;
+    case TRIG_ON:
+        TurnOn();
+        break;
+    default:
+        if (GetValue(this))
+            TurnOff();
+        else
+            TurnOn();
+    }
 }

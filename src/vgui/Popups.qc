@@ -45,18 +45,18 @@ void
 vguiPopupWindow::Choice_First ( vguiWidget sender ) {
     vguiWindow sendingWindow = (vguiWindow)this;
     sendingWindow.m_choiceFirst();
-	sendingWindow.Close();
+    sendingWindow.Close();
 }
 void
 vguiPopupWindow::Choice_Second ( vguiWidget sender ) {
     vguiWindow sendingWindow = (vguiWindow)this;
     sendingWindow.m_choiceSecond();
-	sendingWindow.Close();
+    sendingWindow.Close();
 }
 void
 vguiPopupWindow::QuitGame_No ( vguiWidget sender ) {
     vguiWindow sendingWindow = (vguiWindow)this;
-	sendingWindow.Close();
+    sendingWindow.Close();
 }
 
 vguiWindow
@@ -136,8 +136,8 @@ vguiPopups::NewAlertPanel(string windowTitle, string windowText)
     winQuitGame.Add( lblSure );
 
     vguiTheme::PlaySound("dialog-error");
-	winQuitGame.Show();
-	winQuitGame.SetPos( ( g_vidsize / 2 ) - ( winQuitGame.GetSize() / 2 ) );
+    winQuitGame.Show();
+    winQuitGame.SetPos( ( g_vidsize / 2 ) - ( winQuitGame.GetSize() / 2 ) );
     return (winQuitGame);
 }
 

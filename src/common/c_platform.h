@@ -16,12 +16,12 @@
 
 typedef enum
 {
-	PLATFORM_UNINITIALIZED = -1,
-	PLATFORM_UNKNOWN = 0,
-	PLATFORM_PC,
-	PLATFORM_CONSOLE,
-	PLATFORM_TOUCH,
-	PLATFORM_WEB
+    PLATFORM_UNINITIALIZED = -1,
+    PLATFORM_UNKNOWN = 0,
+    PLATFORM_PC,
+    PLATFORM_CONSOLE,
+    PLATFORM_TOUCH,
+    PLATFORM_WEB
 } platform;
 
 var platform g_platform = PLATFORM_UNINITIALIZED;
@@ -30,88 +30,88 @@ var platform g_platform = PLATFORM_UNINITIALIZED;
 platform
 Platform_GetPlatform(void)
 {
-	if (g_platform == PLATFORM_UNINITIALIZED) {
-		string osname = cvar_string("sys_platform");
-		g_platform = PLATFORM_UNKNOWN;
+    if (g_platform == PLATFORM_UNINITIALIZED) {
+        string osname = cvar_string("sys_platform");
+        g_platform = PLATFORM_UNKNOWN;
 
-		switch (osname) {
-		case "Web":
-			g_platform = PLATFORM_WEB;
-			break;
-		case "WinCE":
-		case "Xbox":
-			g_platform = PLATFORM_CONSOLE;
-			break;
-		case "WinRT":
-		case "iOSSim":
-		case "iOS":
-		case "Android":
-			g_platform = PLATFORM_TOUCH;
-			break;
-		case "Unknown":
-		case "Nacl":
-		case "Win":
-		case "Win16":
-		case "Cygwin":
-		case "Linux":
-		case "Mac":
-		case "Apple":
-		case "FreeBSD":
-		case "OpenBSD":
-		case "NetBSD":
-		case "BSD":
-		case "MorphOS":
-		case "AmigaOS":
-		case "MacOS X":
-		case "Dos":
-		default:
-			g_platform = PLATFORM_PC;
-			break;
-		}
-	}
+        switch (osname) {
+        case "Web":
+            g_platform = PLATFORM_WEB;
+            break;
+        case "WinCE":
+        case "Xbox":
+            g_platform = PLATFORM_CONSOLE;
+            break;
+        case "WinRT":
+        case "iOSSim":
+        case "iOS":
+        case "Android":
+            g_platform = PLATFORM_TOUCH;
+            break;
+        case "Unknown":
+        case "Nacl":
+        case "Win":
+        case "Win16":
+        case "Cygwin":
+        case "Linux":
+        case "Mac":
+        case "Apple":
+        case "FreeBSD":
+        case "OpenBSD":
+        case "NetBSD":
+        case "BSD":
+        case "MorphOS":
+        case "AmigaOS":
+        case "MacOS X":
+        case "Dos":
+        default:
+            g_platform = PLATFORM_PC;
+            break;
+        }
+    }
 
-	return g_platform;
+    return g_platform;
 }
 
 bool
 Platform_FileInGamedir(string fileName, string gameDir)
 {
-	searchhandle fileSearch;
-	int fileCount = 0i;
+    searchhandle fileSearch;
+    int fileCount = 0i;
 
-	fileSearch = search_begin(fileName, SEARCH_FULLPACKAGE, TRUE);
-	fileCount = search_getsize(fileSearch);
+    fileSearch = search_begin(fileName, SEARCH_FULLPACKAGE, TRUE);
+    fileCount = search_getsize(fileSearch);
 
-	ncLog("Looking for %S in %S", fileName, gameDir);
+    ncLog("Looking for %S in %S", fileName, gameDir);
 
-	/* doesn't exist */
-	if (fileCount <= 0) {
-		search_end(fileSearch);
-		return false;
-	}
+    /* doesn't exist */
+    if (fileCount <= 0) {
+        search_end(fileSearch);
+        return false;
+    }
 
-	for (int i = 0; i < fileCount; i++) {
-		string fileDir;
-		string fullPath = search_getpackagename(fileSearch, i);
-		fileDir = substring(fullPath, 0, strlen(gameDir)); /* only need to check same-ness */
+    for (int i = 0; i < fileCount; i++) {
+        string fileDir;
+        string fullPath = search_getpackagename(fileSearch, i);
+        fileDir = substring(fullPath, 0, strlen(gameDir)); /* only need to check same-ness */
 
-		if (fileDir == gameDir) {
-			ncLog("Found %S in %S", fileName, gameDir);
-			search_end(fileSearch);
-			return true;
-		}
-	}
+        if (fileDir == gameDir) {
+            ncLog("Found %S in %S", fileName, gameDir);
+            search_end(fileSearch);
+            return true;
+        }
+    }
 
-	ncError("Did not find %S in %S", fileName, gameDir);
-	search_end(fileSearch);
+    ncError("Did not find %S in %S", fileName, gameDir);
+    search_end(fileSearch);
 
-	/* file exists but is in a different gamedir */
-	return false;
+    /* file exists but is in a different gamedir */
+    return false;
 }
 
 bool
 Platform_FileInCurrentGamedir(string fileName)
 {
-	string gameDir = cvar_string("game");
-	return Platform_FileInGamedir(fileName, gameDir);
+    string gameDir = cvar_string("game");
+    return Platform_FileInGamedir(fileName, gameDir);
 }

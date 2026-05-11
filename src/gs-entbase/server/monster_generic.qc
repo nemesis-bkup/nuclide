@@ -39,42 +39,42 @@ class
 monster_generic:ncTalkMonster
 {
 public:
-	void monster_generic(void);
-	
-	virtual void Respawn(void);
+    void monster_generic(void);
+    
+    virtual void Respawn(void);
 
 };
 
 void
 monster_generic::monster_generic(void)
 {
-	if (serverkeyfloat("*bspversion") == BSPVER_HL) {
-		/* hackhackhackhackack */
-		if (model == "models/player.mdl" || model == "models/holo.mdl") {
-			base_mins = VEC_HULL_MIN;
-			base_maxs = VEC_HULL_MAX;
-		} else {
-			base_mins = [-16,-16,0];
-			base_maxs = [16,16,72];
-		}
-	} else {
-		SetSize(GetModelMins(), GetModelMaxs());
-	}
+    if (serverkeyfloat("*bspversion") == BSPVER_HL) {
+        /* hackhackhackhackack */
+        if (model == "models/player.mdl" || model == "models/holo.mdl") {
+            base_mins = VEC_HULL_MIN;
+            base_maxs = VEC_HULL_MAX;
+        } else {
+            base_mins = [-16,-16,0];
+            base_maxs = [16,16,72];
+        }
+    } else {
+        SetSize(GetModelMins(), GetModelMaxs());
+    }
 
-	base_health = 100;
-	m_iAlliance = MAL_NEUTRAL;
+    base_health = 100;
+    m_iAlliance = MAL_NEUTRAL;
 
-	spawnflags |= MSF_MULTIPLAYER;
+    spawnflags |= MSF_MULTIPLAYER;
 }
 
 void
 monster_generic::Respawn(void)
 {
-	super::Respawn();
-	SetSize(base_mins, base_maxs);
+    super::Respawn();
+    SetSize(base_mins, base_maxs);
 
-	if (HasSpawnFlags(MGF_NONSOLID)) {
-		MakeInvulnerable();
-		SetSolid(SOLID_NOT);
-	}
+    if (HasSpawnFlags(MGF_NONSOLID)) {
+        MakeInvulnerable();
+        SetSolid(SOLID_NOT);
+    }
 }

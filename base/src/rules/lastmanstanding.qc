@@ -19,11 +19,13 @@
    a server-controlled number of lives (cvar: lms_lifeCounter)
    which when fully reached 0, will prevent the player from
    spawning again on that map.
-   
+
    When only one player is left 'standing', the intermission/scores
    pop up and the match is over.
 */
 var int autocvar_lms_lifeCounter = 3;
+var string autocvar_lms_spawnPoint = "info_player_deathmatch";
+var string autocvar_lms_playerClass = "player_mp";
 
 entity lms_outMessage;
 entity lms_endMessage;
@@ -32,21 +34,23 @@ bool lms_gameOver;
 void
 LMS_SpawnPlayer(entity playerTarget)
 {
-	ents.ChangeToClass(playerTarget, "player_mp");
+	ents.ChangeToClass(playerTarget, autocvar_lms_playerClass);
 	game.TeleportToSpawn(playerTarget);
 }
 
 void
 CodeCallback_Precaches(void)
 {
-	Util_SharedPrecaches();
+    Util_SharedPrecaches();
+    precache.Entity(autocvar_lms_spawnPoint);
+    precache.Entity(autocvar_lms_playerClass);
 }
 
 void
 CodeCallback_StartGameType(void)
 {
 	motd.LoadDefault();
-	game.SetSpawnPoint("info_player_deathmatch");
+	game.SetSpawnPoint(autocvar_lms_spawnPoint);
 
 	/* from shared.qc */
 	Util_RemoveAllMonsters();

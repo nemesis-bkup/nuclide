@@ -1,10 +1,10 @@
 
 typedef enum
 {
-	STATE_OFFLINE,
-	STATE_SIGNON,
-	STATE_AUTHORIZING,
-	STATE_ONLINE
+    STATE_OFFLINE,
+    STATE_SIGNON,
+    STATE_AUTHORIZING,
+    STATE_ONLINE
 } fnState_t;
 
 void FragNet_SendMessage(string toUser, string messageString);

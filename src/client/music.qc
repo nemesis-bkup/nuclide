@@ -28,9 +28,9 @@ Handles EV_MUSICTRACK, a type of music track that only plays once.
 void
 Music_ParseTrack(void)
 {
-	int track;
-	track = readbyte();
-	localcmd(sprintf("menu_musictrack %i\n", track));
+    int track;
+    track = readbyte();
+    ncCommand("menu_musictrack %i", track);
 }
 
 /*
@@ -43,29 +43,29 @@ Handles EV_MUSICLOOP, a type of music track that loops continously.
 void
 Music_ParseLoop(void)
 {
-	int track;
-	track = readbyte();
-	localcmd(sprintf("menu_musicloop %i\n", track));
+    int track;
+    track = readbyte();
+    ncCommand("menu_musicloop %i", track);
 }
 
 void
 Music_ReadLoop(void)
 {
-	float trackID = readfloat();
-	string musicTrack = substring(modelnameforindex(trackID), 3, -1);
-	localcmd(strcat("music ", musicTrack, " 1\n"));
+    float trackID = readfloat();
+    string musicTrack = substring(modelnameforindex(trackID), 3, -1);
+    localcmd(strcat("music ", musicTrack, " 1\n"));
 }
 
 void
 Music_ReadOnce(void)
 {
-	float trackID = readfloat();
-	string musicTrack = substring(modelnameforindex(trackID), 3, -1);
-	localcmd(strcat("music ", musicTrack, " 0\n"));
+    float trackID = readfloat();
+    string musicTrack = substring(modelnameforindex(trackID), 3, -1);
+    localcmd(strcat("music ", musicTrack, " 0\n"));
 }
 
 void
 Music_Stop(void)
 {
-	localcmd("stopmusic\n");
+    localcmd("stopmusic\n");
 }

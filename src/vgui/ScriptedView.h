@@ -75,37 +75,37 @@ class
 vguiScriptedView:vguiView
 {
 public:
-	void vguiScriptedView(void);
-	nonvirtual vguiScriptedView CreateFromMenuFile(vguiWidget parent, string filePath);
-	nonvirtual void CloseAll(void);
-	nonvirtual int InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPerLine);
-	nonvirtual void InterpretCommand(vguiWidget originWidget, string commandString);
-	virtual void Reposition(void);
-	nonvirtual vguiScriptedView CreateFromBase64(vguiWidget parent, string base64String);
+    void vguiScriptedView(void);
+    nonvirtual vguiScriptedView CreateFromMenuFile(vguiWidget parent, string filePath);
+    nonvirtual void CloseAll(void);
+    nonvirtual int InterpretLine(vguiWidget parent, int i, int lineNr, float wordsPerLine);
+    nonvirtual void InterpretCommand(vguiWidget originWidget, string commandString);
+    virtual void Reposition(void);
+    nonvirtual vguiScriptedView CreateFromBase64(vguiWidget parent, string base64String);
 
 private:
-	/* assetGlobalDef */
-	string m_trGlobalCursor;
-	string m_trGlobalGradientBar;
-	float m_trGlobalFadeClamp;
-	float m_trGlobalFadeCycle;
-	float m_trGlobalFadeAmount;
-	float m_trGlobalShadowX;
-	float m_trGlobalShadowY;
-	vector m_trGlobalShadowColor;
-	float m_trGlobalShadowAlpha;
-	vguiFont m_trGlobalConsoleFont;
-	vguiFont m_trGlobalSmallFont;
-	vguiFont m_trGlobalFont;
-	vguiFont m_trGlobalBigFont;
-	vguiFont m_trGlobalExtraBigFont;
-	vguiFont m_trGlobalBoldFont;
+    /* assetGlobalDef */
+    string m_trGlobalCursor;
+    string m_trGlobalGradientBar;
+    float m_trGlobalFadeClamp;
+    float m_trGlobalFadeCycle;
+    float m_trGlobalFadeAmount;
+    float m_trGlobalShadowX;
+    float m_trGlobalShadowY;
+    vector m_trGlobalShadowColor;
+    float m_trGlobalShadowAlpha;
+    vguiFont m_trGlobalConsoleFont;
+    vguiFont m_trGlobalSmallFont;
+    vguiFont m_trGlobalFont;
+    vguiFont m_trGlobalBigFont;
+    vguiFont m_trGlobalExtraBigFont;
+    vguiFont m_trGlobalBoldFont;
 
-	string lastWord;
-	float incrementToken;
-	bool inEvent;
-	int braceDepth;
-	string focusLevel;
+    string lastWord;
+    float incrementToken;
+    bool inEvent;
+    int braceDepth;
+    string focusLevel;
 };
 
 .float m_serverSideNum;
@@ -113,25 +113,25 @@ private:
 void
 vguiScriptedView::vguiScriptedView(void)
 {
-	m_trGlobalCursor = "gfx/icon16/cursor";
-	m_trGlobalGradientBar = g_string_null;
-	m_trGlobalFadeClamp = g_float_null;
-	m_trGlobalFadeCycle = g_float_null;
-	m_trGlobalFadeAmount = g_float_null;
-	m_trGlobalShadowX = g_float_null;
-	m_trGlobalShadowY = g_float_null;
-	m_trGlobalShadowColor = g_vec_null;
-	m_trGlobalShadowAlpha = g_float_null;
-	m_trGlobalConsoleFont = __NULL__;
-	m_trGlobalSmallFont = __NULL__;
-	m_trGlobalFont = __NULL__;
-	m_trGlobalBigFont = __NULL__;
-	m_trGlobalExtraBigFont = __NULL__;
-	m_trGlobalBoldFont = __NULL__;
-	lastWord = g_string_null;
-	incrementToken = g_float_null;
-	inEvent = false;
-	braceDepth = 0i;
-	focusLevel = g_string_null;
+    m_trGlobalCursor = "gfx/icon16/cursor";
+    m_trGlobalGradientBar = g_string_null;
+    m_trGlobalFadeClamp = g_float_null;
+    m_trGlobalFadeCycle = g_float_null;
+    m_trGlobalFadeAmount = g_float_null;
+    m_trGlobalShadowX = g_float_null;
+    m_trGlobalShadowY = g_float_null;
+    m_trGlobalShadowColor = g_vec_null;
+    m_trGlobalShadowAlpha = g_float_null;
+    m_trGlobalConsoleFont = __NULL__;
+    m_trGlobalSmallFont = __NULL__;
+    m_trGlobalFont = __NULL__;
+    m_trGlobalBigFont = __NULL__;
+    m_trGlobalExtraBigFont = __NULL__;
+    m_trGlobalBoldFont = __NULL__;
+    lastWord = g_string_null;
+    incrementToken = g_float_null;
+    inEvent = false;
+    braceDepth = 0i;
+    focusLevel = g_string_null;
 }
 

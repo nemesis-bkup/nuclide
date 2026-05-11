@@ -16,100 +16,100 @@
 
 class CLabel:CWidget
 {
-	string m_label;
-	vector m_color;
-	int m_sx;
-	int m_sy;
-	float m_alpha;
-	int m_font;
+    string m_label;
+    vector m_color;
+    int m_sx;
+    int m_sy;
+    float m_alpha;
+    int m_font;
 
-	void CLabel(void);
-	virtual void Draw(void);
-	virtual void SetText(string, font_s);
-	virtual void SetTextHeight(int);
+    void CLabel(void);
+    virtual void Draw(void);
+    virtual void SetText(string, font_s);
+    virtual void SetTextHeight(int);
 };
 
 void
 CLabel::CLabel(void)
 {
-	m_label = "Label";
-	m_color = [1,1,1];
-	m_alpha = 1.0f;
-	m_sx = m_sy = 8;
+    m_label = "Label";
+    m_color = [1,1,1];
+    m_alpha = 1.0f;
+    m_sx = m_sy = 8;
 }
 
 void
 CLabel::SetText(string txt, font_s font)
 {
-	m_label = txt;
-	m_font = Font_GetID(font);
-	m_sx = m_sy = Font_GetHeight(font);
+    m_label = txt;
+    m_font = Font_GetID(font);
+    m_sx = m_sy = Font_GetHeight(font);
 }
 
 void
 CLabel::SetTextHeight(int val)
 {
-	m_sx = m_sy = val;
+    m_sx = m_sy = val;
 }
 
 void
 CLabel::Draw(void)
 {
-	drawfont = m_font;
-	drawstring([g_menuofs[0] + m_x, g_menuofs[1] + m_y], m_label, [m_sx,m_sy], m_color, m_alpha, 0);
+    drawfont = m_font;
+    drawstring([g_menuofs[0] + m_x, g_menuofs[1] + m_y], m_label, [m_sx,m_sy], m_color, m_alpha, 0);
 }
 
 /* Sometimes all you need is a static label */
 void
 WLabel_Static(int x, int y, string msg, int sx, int sy, vector col,
-				float alpha, float flags, font_s font)
+                float alpha, float flags, font_s font)
 {
-	drawfont = Font_GetID(font);
-	x += g_menuofs[0];
-	y += g_menuofs[1];
-	drawstring([x,y], msg, [sx,sy], col, alpha, flags);
+    drawfont = Font_GetID(font);
+    x += g_menuofs[0];
+    y += g_menuofs[1];
+    drawstring([x,y], msg, [sx,sy], col, alpha, flags);
 }
 void
 WLabel_AtHeight(int x, int y, string msg, int sy, vector col,
-				float alpha, float flags, font_s font)
+                float alpha, float flags, font_s font)
 {
-	float fontAspect = ((float)font.iScaleX/(float)font.iScaleY);
-	drawfont = Font_GetID(font);
-	int sx = (int)rint((float)sy * fontAspect);
-	x += g_menuofs[0];
-	y += g_menuofs[1];
-	drawstring([x,y], msg, [sx, sy], col, alpha, flags);
+    float fontAspect = ((float)font.iScaleX/(float)font.iScaleY);
+    drawfont = Font_GetID(font);
+    int sx = (int)rint((float)sy * fontAspect);
+    x += g_menuofs[0];
+    y += g_menuofs[1];
+    drawstring([x,y], msg, [sx, sy], col, alpha, flags);
 }
 
 void
 WLabel_AtHeightR(int x, int y, string msg, int sy, vector col,
-				float alpha, float flags, font_s font)
+                float alpha, float flags, font_s font)
 {
-	float fontAspect = ((float)font.iScaleX/(float)font.iScaleY);
-	int sx = (int)rint((float)sy * fontAspect);
-	drawfont = Font_GetID(font);
-	x += g_menuofs[0] - stringwidth(msg, true,[font.iScaleX,sy]);
-	y += g_menuofs[1];
-	drawstring([x,y], msg, [sx, sy], col, alpha, flags);
-	drawfont = 0;
+    float fontAspect = ((float)font.iScaleX/(float)font.iScaleY);
+    int sx = (int)rint((float)sy * fontAspect);
+    drawfont = Font_GetID(font);
+    x += g_menuofs[0] - stringwidth(msg, true,[font.iScaleX,sy]);
+    y += g_menuofs[1];
+    drawstring([x,y], msg, [sx, sy], col, alpha, flags);
+    drawfont = 0;
 }
 
 void
 WLabel_StaticR(int x, int y, string msg, int sx, int sy, vector col,
-				float alpha, float flags, font_s font)
+                float alpha, float flags, font_s font)
 {
-	drawfont = Font_GetID(font);
-	x += g_menuofs[0] - stringwidth(msg, TRUE,[sx,sy]);
-	y += g_menuofs[1];
-	drawstring([x,y], msg, [sx,sy], col, alpha, flags);
-	drawfont = 0;
+    drawfont = Font_GetID(font);
+    x += g_menuofs[0] - stringwidth(msg, TRUE,[sx,sy]);
+    y += g_menuofs[1];
+    drawstring([x,y], msg, [sx,sy], col, alpha, flags);
+    drawfont = 0;
 }
 
 void
 WField_Static(int x, int y, string msg, int sx, int sy, vector col,
-				float alpha, float flags, font_s font)
+                float alpha, float flags, font_s font)
 {
-	x += g_menuofs[0];
-	y += g_menuofs[1];
-	Font_DrawField([x,y], [sx,sy], sprintf("%s%s", Colors_RGB8_to_HEX(col), msg), font, (int)flags);
+    x += g_menuofs[0];
+    y += g_menuofs[1];
+    Font_DrawField([x,y], [sx,sy], sprintf("%s%s", Colors_RGB8_to_HEX(col), msg), font, (int)flags);
 }

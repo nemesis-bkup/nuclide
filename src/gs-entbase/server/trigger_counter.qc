@@ -44,95 +44,95 @@ class
 trigger_counter:ncBrushTrigger
 {
 public:
-	void trigger_counter(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Touch(entity);
+    void trigger_counter(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Touch(entity);
 
 private:
-	int m_iCounted;
-	int m_iMaxCount;
+    int m_iCounted;
+    int m_iMaxCount;
 };
 
 void
 trigger_counter::trigger_counter(void)
 {
-	m_iCounted = 0;
-	m_iMaxCount = 0;
+    m_iCounted = 0;
+    m_iMaxCount = 0;
 }
 
 void
 trigger_counter::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iCounted", m_iCounted);
-	SaveInt(handle, "m_iMaxCount", m_iMaxCount);
+    super::Save(handle);
+    SaveInt(handle, "m_iCounted", m_iCounted);
+    SaveInt(handle, "m_iMaxCount", m_iMaxCount);
 }
 
 void
 trigger_counter::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iCounted":
-		m_iCounted = ReadInt(setValue);
-		break;
-	case "m_iMaxCount":
-		m_iMaxCount = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iCounted":
+        m_iCounted = ReadInt(setValue);
+        break;
+    case "m_iMaxCount":
+        m_iMaxCount = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_counter::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "count":
-		m_iMaxCount = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "count":
+        m_iMaxCount = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_counter::Respawn(void)
 {
-	InitBrushTrigger();
-	SetValue(0i);
-	m_iCounted = 0;
+    InitBrushTrigger();
+    SetValue(0i);
+    m_iCounted = 0;
 }
 
 void
 trigger_counter::Trigger(entity act, triggermode_t state)
 {
-	if (act.classname == "func_pushable" && !HasSpawnFlags(TRCNT_PUSHABLES))
-		return;
-	if (HasSpawnFlags(TRCNT_NOCLIENTS) && act.flags & FL_CLIENT)
-		return;
-	if (GetMaster(act) == FALSE)
-		return;
+    if (act.classname == "func_pushable" && !HasSpawnFlags(TRCNT_PUSHABLES))
+        return;
+    if (HasSpawnFlags(TRCNT_NOCLIENTS) && act.flags & FL_CLIENT)
+        return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	m_iCounted++;
+    m_iCounted++;
 
-	EntLog("Incremented '%s' by 1 (%i/%i)\n", targetname, m_iCounted, m_iMaxCount);
+    EntLog("Incremented '%s' by 1 (%i/%i)\n", targetname, m_iCounted, m_iMaxCount);
 
-	if (m_iCounted < m_iMaxCount)
-		return;
+    if (m_iCounted < m_iMaxCount)
+        return;
 
-	SetSolid(SOLID_NOT); /* make inactive */
-	SetValue(1i);
+    SetSolid(SOLID_NOT); /* make inactive */
+    SetValue(1i);
 
-	UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
+    UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
 }
 
 void
 trigger_counter::Touch(entity eToucher)
 {
-	Trigger(eToucher, TRIG_TOGGLE);
+    Trigger(eToucher, TRIG_TOGGLE);
 }

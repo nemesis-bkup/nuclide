@@ -11,24 +11,24 @@ The path can have a prefix, defined by the cvar `material_pathPrefix`.
 string
 precache_material(string materialName)
 {
-	string newPath = "";
+    string newPath = "";
 
-	if (STRING_SET(autocvar_material_pathPrefix)) {
-		float prefixLength = strlen(autocvar_material_pathPrefix);
+    if (STRING_SET(autocvar_material_pathPrefix)) {
+        float prefixLength = strlen(autocvar_material_pathPrefix);
 
-		/* avoid recursion! */
-		if (substring(materialName, 0, prefixLength) != autocvar_material_pathPrefix) {
-			newPath = strcat(autocvar_material_pathPrefix, "/", materialName);
-		} else {
-			newPath = materialName;
-		}
-	} else {
-		newPath = materialName;
-	}
+        /* avoid recursion! */
+        if (substring(materialName, 0, prefixLength) != autocvar_material_pathPrefix) {
+            newPath = strcat(autocvar_material_pathPrefix, "/", materialName);
+        } else {
+            newPath = materialName;
+        }
+    } else {
+        newPath = materialName;
+    }
 
 #ifndef CLIENT
-	return newPath;
+    return newPath;
 #else
-	return precache_pic(newPath, 0);
+    return precache_pic(newPath, 0);
 #endif
 }

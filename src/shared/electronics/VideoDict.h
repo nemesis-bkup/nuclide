@@ -30,8 +30,8 @@ class
 ncVideoDict:ncAudioDict
 {
 public:
-	void ncVideoDict(void);
+    void ncVideoDict(void);
 
 private:
-	string m_videoTrack;
+    string m_videoTrack;
 };

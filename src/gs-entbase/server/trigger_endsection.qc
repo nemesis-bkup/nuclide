@@ -33,10 +33,10 @@ class
 trigger_endsection:ncBrushTrigger
 {
 public:
-	void trigger_endsection(void);
-	
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
+    void trigger_endsection(void);
+    
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
 
 };
 
@@ -48,14 +48,14 @@ trigger_endsection::trigger_endsection(void)
 void
 trigger_endsection::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 trigger_endsection::Trigger(entity act, triggermode_t state)
 {
-	if (GetMaster(act) == FALSE)
-		return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	localcmd("disconnect\n");
+    localcmd("disconnect\n");
 }

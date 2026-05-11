@@ -1,5 +1,156 @@
 q1_entity_compat
 {
-	replace trigger_teleport mayhem_trigger_teleport
-	replace func_button mayhem_func_button
+    when-serverinfo "*bspversion" equals "29"
+    when-serverinfo "mode" equals "singleplayer"
+    replace func_button mayhem_func_button
+}
+
+
+q3a_entities
+{
+	when-serverinfo *bspversion equals 46
+
+	replace ammo_belt item_nails
+	replace ammo_mines item_rockets
+
+	replace item_quad item_artifact_super_damage
+	replace item_enviro item_artifact_envirosuit
+	replace item_invis item_artifact_invisibility
+
+	replace item_health q3_item_health_medium
+	replace item_health_large q3_item_health_large
+	replace item_health_mega q3_item_health_mega
+	replace item_health_small q3_item_health_small
+
+	replace team_CTF_blueflag item_flag_team2
+	replace team_CTF_blueplayer info_player_team2
+	replace team_CTF_bluespawn info_player_team2
+
+	replace team_CTF_redflag item_flag_team1
+	replace team_CTF_redplayer info_player_team1
+	replace team_CTF_redspawn info_player_team1
+
+	replace weapon_bfg weapon_lightning
+	replace weapon_plasmagun weapon_supershotgun
+
+	replace dom_controlpoint domination_area
+}
+
+oneflagctf
+{
+    when-serverinfo mode equals oneflagctf
+    replace team_CTF_blueflag team_CTF_blueflag_point
+    replace team_CTF_redflag team_CTF_redflag_point
+}
+
+chair_replace1
+{
+    when-spawnkey "model" "models/simivalley/furniture/chair1.mdl"
+    replace ts_model env_chair
+}
+
+chair_replace3
+{
+    when-spawnkey "model" "models/simivalley/furniture/chair2.mdl"
+    replace ts_model env_chair
+}
+
+chair_replace3
+{
+    when-spawnkey "model" "models/simivalley/furniture/chair3.mdl"
+    replace ts_model env_chair2
+}
+
+seat_replace
+{
+    when-spawnkey "model" "models/mecklenburg/seat1.mdl"
+    replace ts_model env_chair
+}
+
+toilette_replace1
+{
+    when-spawnkey "model" "models/mecklenburg/toilette.mdl"
+    replace ts_model env_chair
+}
+
+toilette_replace2
+{
+    when-spawnkey "model" "models/dark_phoenix/toilette.mdl"
+    replace ts_model env_chair
+}
+
+couch_replace1
+{
+    when-spawnkey "model" "models/mecklenburg/couch1.mdl"
+    replace ts_model env_chair
+}
+
+couch_replace2
+{
+    when-spawnkey "model" "models/mecklenburg/couch3.mdl"
+    replace ts_model env_chair
+}
+
+bed_replace1
+{
+    when-spawnkey "model" "models/simivalley/furniture/bed1.mdl"
+    replace ts_model env_chair
+}
+
+bed_replace2
+{
+    when-spawnkey "model" "models/simivalley/furniture/bed2.mdl"
+    replace ts_model env_chair
+}
+
+bed_replace3
+{
+    when-spawnkey "model" "models/simivalley/furniture/bed3.mdl"
+    replace ts_model env_chair
+}
+
+computer_replace
+{
+    when-spawnkey "model" "models/simivalley/misc/computer1.mdl"
+    when-cvar "home_computers" equals "1"
+    replace ts_model func_computer
+    append ts_model computerDisplay "13 0 18" "-9 0 0"
+}
+
+computer_replace2
+{
+    when-spawnkey "model" "models/iburg/qk_3dm_pc3.mdl"
+    when-cvar "home_computers" equals "1"
+    replace ts_model func_computer
+    append ts_model computerDisplay "26 1 16" "-18 180 0"
+}
+
+computer_replace3
+{
+    when-spawnkey "model" "models/iburg/qk_3dm_pc4.mdl"
+    when-cvar "home_computers" equals "1"
+    replace ts_model func_computer
+    append ts_model computerDisplay "26 1 16" "-18 180 0"
+}
+
+computer_replace4
+{
+    when-spawnkey "model" "models/iburg/3dm_pc4.mdl"
+    when-cvar "home_computers" equals "1"
+    replace ts_model func_computer
+    append ts_model computerDisplay "26 1 16" "-18 180 0"
+}
+
+computer_replace5
+{
+    when-spawnkey "model" "models/3dm_pc2.mdl"
+    when-cvar "home_computers" equals "1"
+    replace ts_model func_computer
+    append ts_model computerDisplay "26 1 16" "-18 180 0"
+}
+
+plant_replace
+{
+    when-spawnkey "model" "models/simivalley/plants/potplanet1.mdl"
+    replace ts_model prop_dynamic
 }

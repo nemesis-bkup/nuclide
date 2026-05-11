@@ -6,11 +6,9 @@ entityDef weapon_rocketlauncher
 	"editor_usage"		"Rocket Launcher"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model"				"progs/g_rock2.mdl"
 	"model_view"		"progs/v_rock2.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 
@@ -75,7 +73,7 @@ entityDef projectile_rocket
 	"detonate_offset"			"24"
 	"snd_explode"				"weapon_rocketlauncher.explode"
 
-//	"range"						"5000" 
+//	"range"						"5000"
 
 	"def_damage"				"damage_rocketDirect"
 	"def_splash_damage"			"damage_rocketSplash"

@@ -68,12 +68,12 @@ class
 env_sound:ncSoundScape
 {
 public:
-	void env_sound(void);
+    void env_sound(void);
 
-	virtual void SpawnKey(string, string);
+    virtual void SpawnKey(string, string);
 
-	/** Sets the reverb parameters to that of a legacy room type. */
-	nonvirtual void SetRoomType(int);
+    /** Sets the reverb parameters to that of a legacy room type. */
+    nonvirtual void SetRoomType(int);
 };
 
 void
@@ -85,104 +85,104 @@ env_sound::env_sound(void)
 void
 env_sound::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "roomtype":
-		SetRoomType(ReadInt(setValue));
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "roomtype":
+        SetRoomType(ReadInt(setValue));
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 env_sound::SetRoomType(int roomType)
 {
-	switch (roomType) {
-	case 1i:
-		LoadFromEFX("gs_generic");
-		break;
-	case 2i:
-		LoadFromEFX("gs_metal_s");
-		break;
-	case 3i:
-		LoadFromEFX("gs_metal_m");
-		break;
-	case 4i:
-		LoadFromEFX("gs_metal_l");
-		break;
-	case 5i:
-		LoadFromEFX("gs_tunnel_s");
-		break;
-	case 6i:
-		LoadFromEFX("gs_tunnel_m");
-		break;
-	case 7i:
-		LoadFromEFX("gs_tunnel_l");
-		break;
-	case 8i:
-		LoadFromEFX("gs_chamber_s");
-		break;
-	case 9i:
-		LoadFromEFX("gs_chamber_m");
-		break;
-	case 10i:
-		LoadFromEFX("gs_chamber_l");
-		break;
-	case 11i:
-		LoadFromEFX("gs_bright_s");
-		break;
-	case 12i:
-		LoadFromEFX("gs_bright_m");
-		break;
-	case 13i:
-		LoadFromEFX("gs_bright_l");
-		break;
-	case 14i:
-		LoadFromEFX("gs_water1");
-		break;
-	case 15i:
-		LoadFromEFX("gs_water2");
-		break;
-	case 16i:
-		LoadFromEFX("gs_water3");
-		break;
-	case 17i:
-		LoadFromEFX("gs_concrete_s");
-		break;
-	case 18i:
-		LoadFromEFX("gs_concrete_m");
-		break;
-	case 19i:
-		LoadFromEFX("gs_concrete_l");
-		break;
-	case 20i:
-		LoadFromEFX("gs_big1");
-		break;
-	case 21i:
-		LoadFromEFX("gs_big2");
-		break;
-	case 22i:
-		LoadFromEFX("gs_big3");
-		break;
-	case 23i:
-		LoadFromEFX("gs_cavern_s");
-		break;
-	case 24i:
-		LoadFromEFX("gs_cavern_m");
-		break;
-	case 25i:
-		LoadFromEFX("gs_cavern_l");
-		break;
-	case 26i:
-		LoadFromEFX("gs_weirdo1");
-		break;
-	case 27i:
-		LoadFromEFX("gs_weirdo2");
-		break;
-	case 28i:
-		LoadFromEFX("gs_weirdo3");
-		break;
-	default:
-		LoadFromEFX("default");
-	}
+    switch (roomType) {
+    case 1i:
+        LoadFromEFX("gs_generic");
+        break;
+    case 2i:
+        LoadFromEFX("gs_metal_s");
+        break;
+    case 3i:
+        LoadFromEFX("gs_metal_m");
+        break;
+    case 4i:
+        LoadFromEFX("gs_metal_l");
+        break;
+    case 5i:
+        LoadFromEFX("gs_tunnel_s");
+        break;
+    case 6i:
+        LoadFromEFX("gs_tunnel_m");
+        break;
+    case 7i:
+        LoadFromEFX("gs_tunnel_l");
+        break;
+    case 8i:
+        LoadFromEFX("gs_chamber_s");
+        break;
+    case 9i:
+        LoadFromEFX("gs_chamber_m");
+        break;
+    case 10i:
+        LoadFromEFX("gs_chamber_l");
+        break;
+    case 11i:
+        LoadFromEFX("gs_bright_s");
+        break;
+    case 12i:
+        LoadFromEFX("gs_bright_m");
+        break;
+    case 13i:
+        LoadFromEFX("gs_bright_l");
+        break;
+    case 14i:
+        LoadFromEFX("gs_water1");
+        break;
+    case 15i:
+        LoadFromEFX("gs_water2");
+        break;
+    case 16i:
+        LoadFromEFX("gs_water3");
+        break;
+    case 17i:
+        LoadFromEFX("gs_concrete_s");
+        break;
+    case 18i:
+        LoadFromEFX("gs_concrete_m");
+        break;
+    case 19i:
+        LoadFromEFX("gs_concrete_l");
+        break;
+    case 20i:
+        LoadFromEFX("gs_big1");
+        break;
+    case 21i:
+        LoadFromEFX("gs_big2");
+        break;
+    case 22i:
+        LoadFromEFX("gs_big3");
+        break;
+    case 23i:
+        LoadFromEFX("gs_cavern_s");
+        break;
+    case 24i:
+        LoadFromEFX("gs_cavern_m");
+        break;
+    case 25i:
+        LoadFromEFX("gs_cavern_l");
+        break;
+    case 26i:
+        LoadFromEFX("gs_weirdo1");
+        break;
+    case 27i:
+        LoadFromEFX("gs_weirdo2");
+        break;
+    case 28i:
+        LoadFromEFX("gs_weirdo3");
+        break;
+    default:
+        LoadFromEFX("default");
+    }
 }

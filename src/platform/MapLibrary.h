@@ -36,35 +36,35 @@ You can then iterate over the individual entries with MapLibrary_GetInfo().
 /** Options querying Map Library entries using `MapLibrary_GetInfo()`. */
 typedef enum
 {
-	MAPINFO_NAME,		/**< (string) Name of the map. E.g. e1m1 */
-	MAPINFO_TITLE,		/**< (string) Title of the map. E.g. "Abyss of Cake" */
-	MAPINFO_AUTHOR,		/**< (string) Author of the map. E.g. "John Doe" */
-	MAPINFO_TYPE,		/**< (string) Type of map.*/
-	MAPINFO_PREVIEW		/**< (string) URL to a preview of the map. __NULL__ if not available. Will look for level previews inside levelshots/ and maps/ with any file extensions supported by the engine and whitelisted within the cvar 'r_imageextensions'.*/
+    MAPINFO_NAME,       /**< (string) Name of the map. E.g. e1m1 */
+    MAPINFO_TITLE,      /**< (string) Title of the map. E.g. "Abyss of Cake" */
+    MAPINFO_AUTHOR,     /**< (string) Author of the map. E.g. "John Doe" */
+    MAPINFO_TYPE,       /**< (string) Type of map.*/
+    MAPINFO_PREVIEW     /**< (string) URL to a preview of the map. __NULL__ if not available. Will look for level previews inside levelshots/ and maps/ with any file extensions supported by the engine and whitelisted within the cvar 'r_imageextensions'.*/
 } mapType_t;
 
 /** Options querying Mode Library entries using `ModeLibrary_GetInfo()`. */
 typedef enum
 {
-	MODEINFO_NAME,		/**< (string) Name of the mode. E.g. deathmatch */
-	MODEINFO_TITLE,		/**< (string) Title of the map. E.g. "Deathmatch" */
+    MODEINFO_NAME,      /**< (string) Name of the mode. E.g. deathmatch */
+    MODEINFO_TITLE,     /**< (string) Title of the map. E.g. "Deathmatch" */
 } modeType_t;
 
 /** Data holding Map Library entries. */
 typedef struct
 {
-	string name;
-	string title;
-	string author;
-	string type;
-	string preview;
+    string name;
+    string title;
+    string author;
+    string type;
+    string preview;
 } mapLibrary_t;
 
 /** Data holding Mode Library entries. */
 typedef struct
 {
-	string name;
-	string title;
+    string name;
+    string title;
 } modeLibrary_t;
 
 /** Initialize the map library, MapLibrary_GetMapCount() will return the amount of maps available. */

@@ -35,8 +35,11 @@ vgui/Tool_Measure.qc
 vgui/Tool_MPDCon.qc
 vgui/Tool_EntityDefList.qc
 vgui/App_WebSurf.qc
+vgui/App_ModelViewer.qc
 vgui/Tool_XTerminal.qc
 vgui/Tool_UIEditor.qc
+vgui/BrushWizard.qc
+vgui/App_WorldSpawn.qc
 vgui/Vote_Map.qc
 vgui/Vote_Players.qc
 vgui/App_WebDelegate.qc
@@ -52,7 +55,6 @@ vgui/vgui_changeclass.qc
 vgui/vgui_chooseteam.qc
 vgui/vgui_motd.qc
 vgui/vgui_menumaker.qc
-vgui/vgui_modelspawner.qc
 vgui/vgui_playerlist.qc
 vgui/vgui_serverinfo.qc
 vgui/Editor.qc
@@ -68,7 +70,6 @@ WadIndexer.qc
 entry.qc
 crosshair.qc
 ClientDataFeed.qc
-util.qc
 api.qc
 ../platform/Locale.qc
 #endlist

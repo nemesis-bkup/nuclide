@@ -16,8 +16,8 @@
 
 enumflags
 {
-	GMCNT_REMOVE,
-	GMCNT_RESET
+    GMCNT_REMOVE,
+    GMCNT_RESET
 };
 
 /*! \brief Server-Entity: Activation Count Based Trigger */
@@ -48,117 +48,117 @@ class
 game_counter:ncPointTrigger
 {
 public:
-	void game_counter(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	
-	nonvirtual int GetCount(void);
-	nonvirtual void SetCount(int);
+    void game_counter(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    
+    nonvirtual int GetCount(void);
+    nonvirtual void SetCount(int);
 
 private:
-	int m_iStartCount;
-	int m_iCounted;
-	int m_iMaxCount;
+    int m_iStartCount;
+    int m_iCounted;
+    int m_iMaxCount;
 };
 
 void
 game_counter::game_counter(void)
 {
-	m_iStartCount = 0i;
-	m_iCounted = 0i;
-	m_iMaxCount = 0i;
+    m_iStartCount = 0i;
+    m_iCounted = 0i;
+    m_iMaxCount = 0i;
 }
 
 void
 game_counter::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iCounted", m_iCounted);
-	SaveInt(handle, "m_iMaxCount", m_iMaxCount);
-	SaveInt(handle, "m_iStartCount", m_iStartCount);
+    super::Save(handle);
+    SaveInt(handle, "m_iCounted", m_iCounted);
+    SaveInt(handle, "m_iMaxCount", m_iMaxCount);
+    SaveInt(handle, "m_iStartCount", m_iStartCount);
 }
 
 void
 game_counter::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iCounted":
-		m_iCounted = ReadInt(setValue);
-		break;
-	case "m_iMaxCount":
-		m_iMaxCount = ReadInt(setValue);
-		break;
-	case "m_iStartCount":
-		m_iStartCount = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iCounted":
+        m_iCounted = ReadInt(setValue);
+        break;
+    case "m_iMaxCount":
+        m_iMaxCount = ReadInt(setValue);
+        break;
+    case "m_iStartCount":
+        m_iStartCount = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 game_counter::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "health":
-		m_iMaxCount = stoi(setValue);
-		break;
-	case "frags":
-		m_iStartCount = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "health":
+        m_iMaxCount = stoi(setValue);
+        break;
+    case "frags":
+        m_iStartCount = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 game_counter::Respawn(void)
 {
-	SetValue(0i);
-	m_iCounted = m_iStartCount;
-	InitPointTrigger();
+    SetValue(0i);
+    m_iCounted = m_iStartCount;
+    InitPointTrigger();
 }
 
 void
 game_counter::SetCount(int value)
 {
-	EntLog("%s's count set to %i", targetname, value);
-	m_iCounted = value;
+    EntLog("%s's count set to %i", targetname, value);
+    m_iCounted = value;
 }
 
 int
 game_counter::GetCount(void)
 {
-	return m_iCounted;
+    return m_iCounted;
 }
 
 void
 game_counter::Trigger(entity act, triggermode_t state)
 {
-	if (GetMaster(act) == FALSE)
-		return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	EntLog("%s's incremented by 1", targetname);
-	m_iCounted++;
+    EntLog("%s's incremented by 1", targetname);
+    m_iCounted++;
 
-	if (m_iCounted < m_iMaxCount)
-		return;
+    if (m_iCounted < m_iMaxCount)
+        return;
 
-	EntLog("%s's triggering %s", targetname, target);
-	//print(sprintf("%s %s %i %i\n", classname, targetname, m_iCounted, m_iMaxCount ));
-	//error(sprintf("%s %i %i\n", act.classname, m_iCounted, m_iMaxCount ));
-	UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
+    EntLog("%s's triggering %s", targetname, target);
+    //print(sprintf("%s %s %i %i\n", classname, targetname, m_iCounted, m_iMaxCount ));
+    //error(sprintf("%s %i %i\n", act.classname, m_iCounted, m_iMaxCount ));
+    UseTargets(act, TRIG_TOGGLE, GetTriggerDelay());
 
-	if (HasSpawnFlags(GMCNT_REMOVE))
-		Destroy();
-	else if (HasSpawnFlags(GMCNT_RESET))
-		Respawn();
-	else
-		SetValue(1i);
+    if (HasSpawnFlags(GMCNT_REMOVE))
+        Destroy();
+    else if (HasSpawnFlags(GMCNT_RESET))
+        Respawn();
+    else
+        SetValue(1i);
 
 }

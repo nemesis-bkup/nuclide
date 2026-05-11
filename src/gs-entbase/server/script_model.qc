@@ -39,31 +39,31 @@ class
 script_model:ncRenderableEntity
 {
 public:
-	void script_model(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
+    void script_model(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
 };
 
 void
 script_model::script_model(void)
 {
-	
+    
 }
 
 void
 script_model::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	if (HasSpawnFlags(2)) {
-		AddEffects(EF_NOSHADOW);
-	} else {
-		RemoveEffects(EF_NOSHADOW);
-	}
+    if (HasSpawnFlags(2)) {
+        AddEffects(EF_NOSHADOW);
+    } else {
+        RemoveEffects(EF_NOSHADOW);
+    }
 }
 
 void
 script_model::Trigger(entity entityActivator, triggermode_t state)
 {
-	
+    
 }

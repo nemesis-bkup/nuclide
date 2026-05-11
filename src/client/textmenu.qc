@@ -25,91 +25,91 @@ Textmenu_IsActive(void)
 void
 Textmenu_Hide(void)
 {
-	g_textmenu = "";
-	g_textchannels[5].m_flTime = 0.0f;
-	g_textmenucheck = 0.0f;
-	g_textMenuDict = __NULL__;
+    g_textmenu = "";
+    g_textchannels[5].m_flTime = 0.0f;
+    g_textmenucheck = 0.0f;
+    g_textMenuDict = __NULL__;
 }
 
 void
 Textmenu_Call(string menu)
 {
-	g_textmenu = menu;
-	g_textchannels[5].m_flTime = 0.0f;
-	g_textmenucheck = 0.0f;
+    g_textmenu = menu;
+    g_textchannels[5].m_flTime = 0.0f;
+    g_textmenucheck = 0.0f;
 }
 void
 Textmenu_Toggle(string menu)
 {
-	if (Textmenu_IsActive())
-		Textmenu_Hide();
-	else
-		Textmenu_Call(menu);
+    if (Textmenu_IsActive())
+        Textmenu_Hide();
+    else
+        Textmenu_Call(menu);
 }
 
 void
 Textmenu_Draw(void)
 {
-	if (g_textmenucheck > cltime) {
-		return;
-	}
+    if (g_textmenucheck > cltime) {
+        return;
+    }
 
-	if (STRING_SET(g_textmenu)) {
-		GameMessage_Setup(g_textmenu, 5);
-		g_textchannels[5].m_flTime = 0.0f;
-		g_textchannels[5].m_flPosX = 0.1;
-		g_textchannels[5].m_flPosY = -1;
-		g_textchannels[5].m_flFadeIn =
-		g_textchannels[5].m_flFadeOut = 0.0f;
-		g_textchannels[5].m_flHoldTime = 0.5;
-		g_textchannels[5].m_vecColor1 = [1,1,1];
-		g_textchannels[5].m_vecColor2 = [0,0,0];
-		g_textchannels[5].m_iEffect = 0;
-		g_textmenucheck = cltime + 0.25;
-	}
+    if (STRING_SET(g_textmenu)) {
+        GameMessage_Setup(g_textmenu, 5);
+        g_textchannels[5].m_flTime = 0.0f;
+        g_textchannels[5].m_flPosX = 0.1;
+        g_textchannels[5].m_flPosY = -1;
+        g_textchannels[5].m_flFadeIn =
+        g_textchannels[5].m_flFadeOut = 0.0f;
+        g_textchannels[5].m_flHoldTime = 0.5;
+        g_textchannels[5].m_vecColor1 = [1,1,1];
+        g_textchannels[5].m_vecColor2 = [0,0,0];
+        g_textchannels[5].m_iEffect = 0;
+        g_textmenucheck = cltime + 0.25;
+    }
 }
 
 void
 Textmenu_Input(int nr)
 {
-	/* dictionary based menus */
-	if (g_textMenuDict) {
-		g_textMenuDict.Input(nr);
-		return;
-	}
+    /* dictionary based menus */
+    if (g_textMenuDict) {
+        g_textMenuDict.Input(nr);
+        return;
+    }
 
-	if (!STRING_SET(g_textmenu)) {
-		return;
-	}
+    if (!STRING_SET(g_textmenu)) {
+        return;
+    }
 
-	/* internal menus */
-	void(int) vFunc = externvalue(-1, g_textmenu);
+    /* internal menus */
+    void(int) vFunc = externvalue(-1, g_textmenu);
 
-	if (vFunc) {
-		vFunc(nr+1);
-		return;
-	}
+    if (vFunc) {
+        vFunc(nr+1);
+        return;
+    }
 
-	print(sprintf("Warning! %s not implemented!\n", g_textmenu));
+    ncWarning("Warning! %s not implemented!", g_textmenu);
 }
 
 bool
 Textmenu_Open(string textMenuName)
 {
-	string declName = sprintf("textmenu/%s.decl", textMenuName);
-	ncTextMenuDict newMenu = ncTextMenuDict::LoadDeclFromFile("commands", declName);
+    string declName = sprintf("textmenu/%s.decl", textMenuName);
+    ncTextMenuDict newMenu = ncTextMenuDict::LoadDeclFromFile("commands", declName);
 
-	if (newMenu) {
-		/* assign the input dictionary */
-		g_textMenuDict = newMenu;
-	} else {
-		g_textMenuDict = __NULL__;
-	}
+    if (newMenu) {
+        /* assign the input dictionary */
+        g_textMenuDict = newMenu;
+    } else {
+        g_textMenuDict = __NULL__;
+    }
 
-	/* look the titles up */
-	g_textmenu = textMenuName;
+    /* look the titles up */
+    g_textmenu = textMenuName;
 
-	return (true);
+    return (true);
 }
 
 
@@ -122,7 +122,6 @@ ncTextMenuDict::ncTextMenuDict(void)
 void
 ncTextMenuDict::Input(int inputNum)
 {
-	string commandString = GetString(itos(inputNum+1));
-	localcmd(commandString);
-	localcmd("\n");
+    string commandString = GetString(itos(inputNum+1));
+    ncCommand(commandString);
 }

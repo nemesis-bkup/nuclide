@@ -16,11 +16,11 @@
 
 typedef enum
 {
-	PUSHABLESIZE_POINT,
-	PUSHABLESIZE_PLAYER,
-	PUSHABLESIZE_BIG,
-	PUSHABLESIZE_DUCKING,
-	PUSHABLESIZE_CUSTOM,
+    PUSHABLESIZE_POINT,
+    PUSHABLESIZE_PLAYER,
+    PUSHABLESIZE_BIG,
+    PUSHABLESIZE_DUCKING,
+    PUSHABLESIZE_CUSTOM,
 } pushSize_t;
 
 
@@ -72,251 +72,251 @@ class
 func_pushable:func_breakable
 {
 public:
-	void func_pushable(void);
+    void func_pushable(void);
 
-	virtual void Spawned(void);
-	virtual void SpawnKey(string, string);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void customphysics(void);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
-	virtual void OnPlayerUse(void);
-	virtual void OnRemoveEntity(void);
+    virtual void Spawned(void);
+    virtual void SpawnKey(string, string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void customphysics(void);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
+    virtual void OnPlayerUse(void);
+    virtual void OnRemoveEntity(void);
 
 private:
-	entity m_pPuller;
-	entity m_eCollBox;
-	pushSize_t m_dHullSize;
-	float m_flPushFriction;
-	bool m_bIsMoving;
+    entity m_pPuller;
+    entity m_eCollBox;
+    pushSize_t m_dHullSize;
+    float m_flPushFriction;
+    bool m_bIsMoving;
 };
 
 void
 func_pushable::func_pushable(void)
 {
-	m_pPuller = __NULL__;
-	m_eCollBox = __NULL__;
-	m_dHullSize = PUSHABLESIZE_CUSTOM;
-	m_flPushFriction = 0.5;
+    m_pPuller = __NULL__;
+    m_eCollBox = __NULL__;
+    m_dHullSize = PUSHABLESIZE_CUSTOM;
+    m_flPushFriction = 0.5;
 }
 
 void
 func_pushable::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 }
 
 void
 func_pushable::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "size":
-		switch (ReadFloat(setValue)) {
-		case 1:
-			m_dHullSize = PUSHABLESIZE_PLAYER;
-			break;
-		case 2:
-			m_dHullSize = PUSHABLESIZE_BIG;
-			break;
-		case 3:
-			m_dHullSize = PUSHABLESIZE_DUCKING;
-			break;
-		default:
-			m_dHullSize = PUSHABLESIZE_POINT;
-			break;
-		}
-		break;
-	case "friction":
-		m_flPushFriction = ReadFloat(setValue) / 100;
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "size":
+        switch (ReadFloat(setValue)) {
+        case 1:
+            m_dHullSize = PUSHABLESIZE_PLAYER;
+            break;
+        case 2:
+            m_dHullSize = PUSHABLESIZE_BIG;
+            break;
+        case 3:
+            m_dHullSize = PUSHABLESIZE_DUCKING;
+            break;
+        default:
+            m_dHullSize = PUSHABLESIZE_POINT;
+            break;
+        }
+        break;
+    case "friction":
+        m_flPushFriction = ReadFloat(setValue) / 100;
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 func_pushable::Save(float saveHandle)
 {
-	super::Save(saveHandle);
+    super::Save(saveHandle);
 
-	SaveEntity(saveHandle, "m_pPuller", m_pPuller);
-	SaveEntity(saveHandle, "m_eCollBox", m_eCollBox);
-	SaveFloat(saveHandle, "m_dHullSize", m_dHullSize);
-	SaveFloat(saveHandle, "m_flPushFriction", m_flPushFriction);
+    SaveEntity(saveHandle, "m_pPuller", m_pPuller);
+    SaveEntity(saveHandle, "m_eCollBox", m_eCollBox);
+    SaveFloat(saveHandle, "m_dHullSize", m_dHullSize);
+    SaveFloat(saveHandle, "m_flPushFriction", m_flPushFriction);
 }
 
 void
 func_pushable::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_pPuller":
-		m_pPuller = ReadEntity(setValue);
-		break;
-	case "m_eCollBox":
-		m_eCollBox = ReadEntity(setValue);
-		break;
-	case "m_dHullSize":
-		m_dHullSize = ReadFloat(setValue);
-		break;
-	case "m_flPushFriction":
-		m_flPushFriction = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_pPuller":
+        m_pPuller = ReadEntity(setValue);
+        break;
+    case "m_eCollBox":
+        m_eCollBox = ReadEntity(setValue);
+        break;
+    case "m_dHullSize":
+        m_dHullSize = ReadFloat(setValue);
+        break;
+    case "m_flPushFriction":
+        m_flPushFriction = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+    }
 }
 
 void
 func_pushable::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_BSP);
-	SetMovetype(MOVETYPE_STEP);
-	PlayerUse = OnPlayerUse;
+    super::Respawn();
+    SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_STEP);
+    PlayerUse = OnPlayerUse;
 
-	if (HasSpawnFlags(FNCPUSHABLE_BREAKABLE) == true) {
-		MakeVulnerable();
-	} else {
-		MakeInvulnerable();
-	}
+    if (HasSpawnFlags(FNCPUSHABLE_BREAKABLE) == true) {
+        MakeVulnerable();
+    } else {
+        MakeInvulnerable();
+    }
 
-	if (!m_eCollBox) {
-		m_eCollBox = spawn();
-		m_eCollBox.classname = "func_pushable_bbox";
-		m_eCollBox.solid = SOLID_TRIGGER;
-		m_eCollBox.owner = this;
-		setsize(m_eCollBox, -(size/2) * 0.9f, (size/2) * 0.9f);
-		setorigin(m_eCollBox, WorldSpaceCenter());
-	}
+    if (!m_eCollBox) {
+        m_eCollBox = spawn();
+        m_eCollBox.classname = "func_pushable_bbox";
+        m_eCollBox.solid = SOLID_TRIGGER;
+        m_eCollBox.owner = this;
+        setsize(m_eCollBox, -(size/2) * 0.9f, (size/2) * 0.9f);
+        setorigin(m_eCollBox, WorldSpaceCenter());
+    }
 
-	/* size overrides for Q1 BSP */
-	if (m_dHullSize != PUSHABLESIZE_CUSTOM) {
-		switch (m_dHullSize) {
-		case PUSHABLESIZE_PLAYER:
-			setsize(m_eCollBox, PUSH_SIZE_PLAYER_MIN, PUSH_SIZE_PLAYER_MAX);
-			break;
-		case PUSHABLESIZE_BIG:
-			setsize(m_eCollBox, PUSH_SIZE_BIG_MIN, PUSH_SIZE_BIG_MAX);
-			break;
-		case PUSHABLESIZE_DUCKING:
-			setsize(m_eCollBox, PUSH_SIZE_DUCKING_MIN, PUSH_SIZE_DUCKING_MAX);
-			break;
-		default:
-			setsize(m_eCollBox, PUSH_SIZE_POINT_MIN, PUSH_SIZE_POINT_MAX);
-		}
-	}
+    /* size overrides for Q1 BSP */
+    if (m_dHullSize != PUSHABLESIZE_CUSTOM) {
+        switch (m_dHullSize) {
+        case PUSHABLESIZE_PLAYER:
+            setsize(m_eCollBox, PUSH_SIZE_PLAYER_MIN, PUSH_SIZE_PLAYER_MAX);
+            break;
+        case PUSHABLESIZE_BIG:
+            setsize(m_eCollBox, PUSH_SIZE_BIG_MIN, PUSH_SIZE_BIG_MAX);
+            break;
+        case PUSHABLESIZE_DUCKING:
+            setsize(m_eCollBox, PUSH_SIZE_DUCKING_MIN, PUSH_SIZE_DUCKING_MAX);
+            break;
+        default:
+            setsize(m_eCollBox, PUSH_SIZE_POINT_MIN, PUSH_SIZE_POINT_MAX);
+        }
+    }
 
-	/* force it to move around abit by the next frame */
-	SetVelocity([0,0,1]);
+    /* force it to move around abit by the next frame */
+    SetVelocity([0,0,1]);
 }
 
 void
 func_pushable::OnRemoveEntity(void)
 {
-	if (m_eCollBox) {
-		remove(m_eCollBox);
-	}
+    if (m_eCollBox) {
+        remove(m_eCollBox);
+    }
 }
 
 void
 func_pushable::customphysics(void)
 {
-	bool wasMoving;
+    bool wasMoving;
 
-	input_movevalues = [0,0,0];
-	input_impulse = 0;
-	input_buttons = 0;
-	input_angles = [0,0,0];
-	input_timelength = frametime;
+    input_movevalues = [0,0,0];
+    input_impulse = 0;
+    input_buttons = 0;
+    input_angles = [0,0,0];
+    input_timelength = frametime;
 
-	/* we're destroyed, most likely */
-	if (m_eCollBox)
-	if (modelindex == 0) {
-		m_eCollBox.solid = SOLID_NOT;
-	} else {
-		m_eCollBox.solid = SOLID_TRIGGER;
-	}
+    /* we're destroyed, most likely */
+    if (m_eCollBox)
+    if (modelindex == 0) {
+        m_eCollBox.solid = SOLID_NOT;
+    } else {
+        m_eCollBox.solid = SOLID_TRIGGER;
+    }
 
-	wasMoving = m_bIsMoving;
+    wasMoving = m_bIsMoving;
 
-	if (lengthSquared(velocity) <= 0.0) {
-		m_bIsMoving = false;
-	} else {
-		m_bIsMoving = true;
-	}
+    if (lengthSquared(velocity) <= 0.0) {
+        m_bIsMoving = false;
+    } else {
+        m_bIsMoving = true;
+    }
 
-	if (m_bIsMoving != wasMoving && m_bIsMoving == true) {
-		StartSoundDef(GetSurfaceData(SURFDATA_SND_SCRAPESOFT), CHAN_BODY, true);
-	}
+    if (m_bIsMoving != wasMoving && m_bIsMoving == true) {
+        StartSoundDef(GetSurfaceData(SURFDATA_SND_SCRAPESOFT), CHAN_BODY, true);
+    }
 
-	/* when we pull the box, it'll follow us whereever we go, just not too fast so it doesn't clip into us! */
-	if (!m_pPuller.button5) {
-		m_pPuller = world;
-	} else {
-		/* drag us, make sure we don't collide */
-		velocity[0] = m_pPuller.velocity[0];// * 0.9f;
-		velocity[1] = m_pPuller.velocity[1];// * 0.9f;
-	}
+    /* when we pull the box, it'll follow us whereever we go, just not too fast so it doesn't clip into us! */
+    if (!m_pPuller.button5) {
+        m_pPuller = world;
+    } else {
+        /* drag us, make sure we don't collide */
+        velocity[0] = m_pPuller.velocity[0];// * 0.9f;
+        velocity[1] = m_pPuller.velocity[1];// * 0.9f;
+    }
 
-	/* see if we're clipping against entities or other func_pushable_bbox helper entities */
-	vector position = WorldSpaceCenter();
+    /* see if we're clipping against entities or other func_pushable_bbox helper entities */
+    vector position = WorldSpaceCenter();
 
-	/* if we're too far away from our box, split */
-	if ((length(m_pPuller.origin - position) - length(size)) > 64)
-		m_pPuller = world;
+    /* if we're too far away from our box, split */
+    if ((length(m_pPuller.origin - position) - length(size)) > 64)
+        m_pPuller = world;
 
-	tracebox(position, m_eCollBox.mins, m_eCollBox.maxs, \
-		position + (velocity * input_timelength), MOVE_NORMAL, this);
+    tracebox(position, m_eCollBox.mins, m_eCollBox.maxs, \
+        position + (velocity * input_timelength), MOVE_NORMAL, this);
 
-	if (trace_fraction < 1.0f) {
-		return;
-	}
+    if (trace_fraction < 1.0f) {
+        return;
+    }
 
-	/* run the physics, then fix our helper bbox! */
-	friction = m_flPushFriction;
+    /* run the physics, then fix our helper bbox! */
+    friction = m_flPushFriction;
 
-	if (lengthSquared(GetVelocity()) > 0) {
-		runstandardplayerphysics(this);
-	}
+    if (lengthSquared(GetVelocity()) > 0) {
+        runstandardplayerphysics(this);
+    }
 
-	if (m_eCollBox) {
-		setorigin(m_eCollBox, position);
-	}
+    if (m_eCollBox) {
+        setorigin(m_eCollBox, position);
+    }
 }
 
 void
 func_pushable::Touch(entity eToucher)
 {
-	vector pusherPosition = eToucher.origin;
-	vector pushableOrigin;
-	vector pushDirection;
+    vector pusherPosition = eToucher.origin;
+    vector pushableOrigin;
+    vector pushDirection;
 
-	/* don't cause bounces */
-	if (eToucher.movetype == MOVETYPE_NONE) {
-		return;
-	}
+    /* don't cause bounces */
+    if (eToucher.movetype == MOVETYPE_NONE) {
+        return;
+    }
 
-	/* check if we're inside the pushable */
-	if (eToucher.origin[0] >= absmin[0] && eToucher.origin[0] <= absmax[0])
-	if (eToucher.origin[1] >= absmin[1] && eToucher.origin[1] <= absmax[1])
-		return;
+    /* check if we're inside the pushable */
+    if (eToucher.origin[0] >= absmin[0] && eToucher.origin[0] <= absmax[0])
+    if (eToucher.origin[1] >= absmin[1] && eToucher.origin[1] <= absmax[1])
+        return;
 
-	/* check if we're above the pushable... */
-	if ((eToucher.absmin[2] + 16) >= absmax[2]) {
-		return;
-	}
+    /* check if we're above the pushable... */
+    if ((eToucher.absmin[2] + 16) >= absmax[2]) {
+        return;
+    }
 
-	pushableOrigin = WorldSpaceCenter();
-	pusherPosition[2] = pushableOrigin[2];
-	pushDirection = anglesToForward(vectorToAngles(pusherPosition - pushableOrigin));
+    pushableOrigin = WorldSpaceCenter();
+    pusherPosition[2] = pushableOrigin[2];
+    pushDirection = anglesToForward(vectorToAngles(pusherPosition - pushableOrigin));
 
-	/* add forward direction times speed */
-	SetVelocity(pushDirection * -64);
+    /* add forward direction times speed */
+    SetVelocity(pushDirection * -64);
 }
 
 void
 func_pushable::OnPlayerUse(void)
 {
-	m_pPuller = eActivator;
+    m_pPuller = eActivator;
 }

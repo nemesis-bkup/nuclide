@@ -18,215 +18,215 @@
 
 class CListBox:CWidget
 {
-	int m_size[2];
-	string m_entries[LB_MAX_ENTRIES];
-	int m_count;
-	int m_scroll;
-	int m_selected;
-	virtual void(int) m_execute = 0;
+    int m_size[2];
+    string m_entries[LB_MAX_ENTRIES];
+    int m_count;
+    int m_scroll;
+    int m_selected;
+    virtual void(int) m_execute = 0;
 
-	void(void) CListBox;
-	virtual void(void) Draw;
-	virtual void(float, float, float, float) Input;
+    void(void) CListBox;
+    virtual void(void) Draw;
+    virtual void(float, float, float, float) Input;
 
-	virtual void(string) AddEntry;
-	virtual void(string) AddWrapped;
-	virtual void(int) DelEntry;
-	virtual void(void) Clear;
-	virtual void(int, int) SetSize;
-	virtual void(void(int)) SetChanged;
-	virtual string(int) GetItem;
-	virtual void(int, string) SetItem;
-	virtual void(int, int) SetSelected;
-	virtual string(void) GetSelectedItem;
-	virtual int(void) GetSelected;
-	virtual int(void) GetCount;
-	virtual void(int) SetScroll;
+    virtual void(string) AddEntry;
+    virtual void(string) AddWrapped;
+    virtual void(int) DelEntry;
+    virtual void(void) Clear;
+    virtual void(int, int) SetSize;
+    virtual void(void(int)) SetChanged;
+    virtual string(int) GetItem;
+    virtual void(int, string) SetItem;
+    virtual void(int, int) SetSelected;
+    virtual string(void) GetSelectedItem;
+    virtual int(void) GetSelected;
+    virtual int(void) GetCount;
+    virtual void(int) SetScroll;
 };
 
 void
 CListBox::CListBox(void)
 {
-	m_selected = -1;
+    m_selected = -1;
 }
 
 void
 CListBox::Draw(void)
 {
-	int visible;
-	int pos[2];
-	drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], [m_size[0], m_size[1]], 
-			 [0,0,0], 1.0f);
+    int visible;
+    int pos[2];
+    drawfill([g_menuofs[0] + m_x, g_menuofs[1] + m_y], [m_size[0], m_size[1]], 
+             [0,0,0], 1.0f);
 
-	visible = floor(m_size[1] / 15);
-	pos[0] = m_x + 2;
-	pos[1] = m_y + 2;
+    visible = floor(m_size[1] / 15);
+    pos[0] = m_x + 2;
+    pos[1] = m_y + 2;
 
-	for (int i = m_scroll; i < (visible + m_scroll); i++) {
-		if (m_selected == i) {
-			drawfill([g_menuofs[0] + pos[0] - 2, g_menuofs[1] + pos[1] - 2], [m_size[0], 15], 
-			 col_list_select, 1.0f);
-		}
-		drawsetcliparea(g_menuofs[0] + m_x, g_menuofs[1] + m_y, m_size[0], m_size[1]);
-		if (m_selected == i) {
-			WLabel_AtHeight(pos[0], pos[1], m_entries[i], 12, [0,0,0],
-					1.0f, 0, font_label);
-		} else {
-			WLabel_AtHeight(pos[0], pos[1], m_entries[i], 12, col_list_text,
-					1.0f, 0, font_label);
-		}
-		drawresetcliparea();
-		pos[1] += 15;
-	}
+    for (int i = m_scroll; i < (visible + m_scroll); i++) {
+        if (m_selected == i) {
+            drawfill([g_menuofs[0] + pos[0] - 2, g_menuofs[1] + pos[1] - 2], [m_size[0], 15], 
+             col_list_select, 1.0f);
+        }
+        drawsetcliparea(g_menuofs[0] + m_x, g_menuofs[1] + m_y, m_size[0], m_size[1]);
+        if (m_selected == i) {
+            WLabel_AtHeight(pos[0], pos[1], m_entries[i], 12, [0,0,0],
+                    1.0f, 0, font_label);
+        } else {
+            WLabel_AtHeight(pos[0], pos[1], m_entries[i], 12, col_list_text,
+                    1.0f, 0, font_label);
+        }
+        drawresetcliparea();
+        pos[1] += 15;
+    }
 }
 
 void
 CListBox::Input(float type, float x, float y, float devid)
 {
-	int visible;
-	int pos[2];
+    int visible;
+    int pos[2];
 
-	visible = floor(m_size[1] / 15);
-	pos[0] = m_x;
-	pos[1] = m_y;
+    visible = floor(m_size[1] / 15);
+    pos[0] = m_x;
+    pos[1] = m_y;
 
-	for (int i = m_scroll; i < (visible + m_scroll); i++) {
-		if (Util_CheckMouse(pos[0], pos[1], m_size[0], 15)) {
-			if (type == IE_KEYDOWN) {
-				if (x == K_MOUSE1) {
-					SetSelected(i, TRUE);
-					break;
-				}
-			}
-		}
-		pos[1] += 15;
-	}
+    for (int i = m_scroll; i < (visible + m_scroll); i++) {
+        if (Util_CheckMouse(pos[0], pos[1], m_size[0], 15)) {
+            if (type == IE_KEYDOWN) {
+                if (x == K_MOUSE1) {
+                    SetSelected(i, TRUE);
+                    break;
+                }
+            }
+        }
+        pos[1] += 15;
+    }
 }
 
 void
 CListBox::AddEntry(string m)
 {
-	for (int i = 0; i < LB_MAX_ENTRIES; i++) {
-		if (m_entries[i] == __NULL__) {
-			m_entries[i] = m;
-			m_count = i + 1;
-			break;
-		}
-	}
+    for (int i = 0; i < LB_MAX_ENTRIES; i++) {
+        if (m_entries[i] == __NULL__) {
+            m_entries[i] = m;
+            m_count = i + 1;
+            break;
+        }
+    }
 }
 
 void
 CListBox::AddWrapped(string m)
 {
-	int len;
-	int argc;
-	string tmp;
-	string new;
+    int len;
+    int argc;
+    string tmp;
+    string new;
 
-	drawfont  = Font_GetID(font_label);
+    drawfont  = Font_GetID(font_label);
 
-	argc = tokenizebyseparator(m, " ");
+    argc = tokenizebyseparator(m, " ");
 
-	tmp = new = "";
+    tmp = new = "";
 
-	for (int i = 0; i < argc; i++) {
-		tmp = sprintf("%s%s ", new, argv(i));
+    for (int i = 0; i < argc; i++) {
+        tmp = sprintf("%s%s ", new, argv(i));
 
-		len = stringwidth(tmp, TRUE, [12, 12]);
+        len = stringwidth(tmp, TRUE, [12, 12]);
 
-		if (len >= m_size[0]) {
-			AddEntry(new);
-			new = "";
-		} else {
-			new = tmp;
-		}
-	}
+        if (len >= m_size[0]) {
+            AddEntry(new);
+            new = "";
+        } else {
+            new = tmp;
+        }
+    }
 
-	AddEntry(new);
+    AddEntry(new);
 }
 
 void
 CListBox::DelEntry(int i)
 {
-	if (m_entries[i] != __NULL__) {
-		m_entries[i] = __NULL__;
-		m_count--;
-	}
+    if (m_entries[i] != __NULL__) {
+        m_entries[i] = __NULL__;
+        m_count--;
+    }
 }
 
 void
 CListBox::Clear(void)
 {
-	for (int i = 0; i < LB_MAX_ENTRIES; i++) {
-		m_entries[i] = __NULL__;
-	}
+    for (int i = 0; i < LB_MAX_ENTRIES; i++) {
+        m_entries[i] = __NULL__;
+    }
 }
 
 void
 CListBox::SetSize(int w, int h)
 {
-	m_size[0] = w;
-	m_size[1] = h;
+    m_size[0] = w;
+    m_size[1] = h;
 }
 
 void
 CListBox::SetScroll(int i)
 {
-	if (i >= 0 && i < LB_MAX_ENTRIES) {
-		m_scroll = i;
-	}
+    if (i >= 0 && i < LB_MAX_ENTRIES) {
+        m_scroll = i;
+    }
 }
 
 void
 CListBox::SetChanged(void(int val) func)
 {
-	m_execute = func;
+    m_execute = func;
 }
 
 void
 CListBox::SetSelected(int i, int exec)
 {
-	if (m_entries[i] == __NULL__) {
-		return;
-	}
+    if (m_entries[i] == __NULL__) {
+        return;
+    }
 
-	m_selected = i;
+    m_selected = i;
 
-	if (m_execute && exec) {
-		m_execute(i);
-	}
+    if (m_execute && exec) {
+        m_execute(i);
+    }
 }
 
 int
 CListBox::GetSelected(void)
 {
-	return m_selected;
+    return m_selected;
 }
 
 string
 CListBox::GetItem(int i)
 {
-	return m_entries[i];
+    return m_entries[i];
 }
 
 void
 CListBox::SetItem(int i, string s)
 {
-	m_entries[i] = s;
+    m_entries[i] = s;
 }
 
 
 string
 CListBox::GetSelectedItem(void)
 {
-	if (m_selected == -1) {
-		return (__NULL__);
-	}
-	return m_entries[m_selected];
+    if (m_selected == -1) {
+        return (__NULL__);
+    }
+    return m_entries[m_selected];
 }
 
 int
 CListBox::GetCount(void)
 {
-	return m_count;
+    return m_count;
 }

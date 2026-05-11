@@ -36,22 +36,22 @@ Every user placed object is derived from this.
 class
 ncUserEntity:ncMediaSurface
 {
-	void ncUserEntity(void);
+    void ncUserEntity(void);
 
-	virtual void Spawned(void);
+    virtual void Spawned(void);
 
 #ifdef SERVER
-	nonvirtual ncUserEntity AllocateNewType(ncPlayer queryingPlayer, string entClass);
+    nonvirtual ncUserEntity AllocateNewType(ncPlayer queryingPlayer, string entClass);
 #endif
 
 #ifdef CLIENT
-	virtual void _ReceiveComplete(float, float);
-	nonvirtual void RequestRemoval(void);
+    virtual void _ReceiveComplete(float, float);
+    nonvirtual void RequestRemoval(void);
 
-	virtual void OnGainedFocus(void);
-	virtual void OnLostFocus(void);
+    virtual void OnGainedFocus(void);
+    virtual void OnLostFocus(void);
 
-	entity m_uiControlView;
+    entity m_uiControlView;
 #endif
 
 private:

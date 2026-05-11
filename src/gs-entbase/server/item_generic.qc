@@ -37,64 +37,64 @@ class
 item_generic:ncRenderableEntity
 {
 public:
-	void item_generic(void);
+    void item_generic(void);
 
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void Save(float);
-	virtual void Restore(string, string);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Save(float);
+    virtual void Restore(string, string);
 
 private:
-	string m_strSequenceName;
+    string m_strSequenceName;
 };
 
 void
 item_generic::item_generic(void)
 {
-	m_strSequenceName = "";
+    m_strSequenceName = "";
 }
 
 void
 item_generic::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strSequenceName", m_strSequenceName);
+    super::Save(handle);
+    SaveString(handle, "m_strSequenceName", m_strSequenceName);
 }
 
 void
 item_generic::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strSequenceName":
-		m_strSequenceName = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strSequenceName":
+        m_strSequenceName = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 item_generic::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "sequencename":
-		m_strSequenceName = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "sequencename":
+        m_strSequenceName = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 item_generic::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetSize([0,0,0], [0,0,0]);
-	SetSolid(SOLID_NOT);
-	SetMovetype(MOVETYPE_NONE);
+    SetSize([0,0,0], [0,0,0]);
+    SetSolid(SOLID_NOT);
+    SetMovetype(MOVETYPE_NONE);
 
-	if (m_strSequenceName) {
-		SetFrame(frameforname(GetModelindex(), m_strSequenceName));
-	}
+    if (m_strSequenceName) {
+        SetFrame(frameforname(GetModelindex(), m_strSequenceName));
+    }
 }

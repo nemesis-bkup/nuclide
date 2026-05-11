@@ -24,26 +24,26 @@ class
 ncAddonManager
 {
 public:
-	/** Called when the plugin gets unloaded. */
-	nonvirtual void Shutdown(void);
+    /** Called when the plugin gets unloaded. */
+    nonvirtual void Shutdown(void);
 
-	/** Called when the server issues a console command. */
-	nonvirtual bool ConsoleCommand(ncPlayer,string);
-	/** Called when a client issues a client command. */
-	nonvirtual bool ClientCommand(ncClient, string);
-	/** Called when a ncPlayer joins the server. */
-	nonvirtual void PlayerConnect(ncPlayer);
-	/** Called when a ncPlayer leaves the server. */
-	nonvirtual void PlayerDisconnect(ncPlayer);
-	/** Called when a ncPlayer spawns, called sometime after joining. */
-	nonvirtual void PlayerSpawn(ncPlayer);
-	/** Called when a ncPlayer dies in the game. */
-	nonvirtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
-	/** Called when an NPC gets killed. */
-	nonvirtual void NPCDeath(ncActor, ncEntity, ncEntity);
+    /** Called when the server issues a console command. */
+    nonvirtual bool ConsoleCommand(ncPlayer,string);
+    /** Called when a client issues a client command. */
+    nonvirtual bool ClientCommand(ncClient, string);
+    /** Called when a ncPlayer joins the server. */
+    nonvirtual void PlayerConnect(ncPlayer);
+    /** Called when a ncPlayer leaves the server. */
+    nonvirtual void PlayerDisconnect(ncPlayer);
+    /** Called when a ncPlayer spawns, called sometime after joining. */
+    nonvirtual void PlayerSpawn(ncPlayer);
+    /** Called when a ncPlayer dies in the game. */
+    nonvirtual void PlayerDeath(ncPlayer, ncEntity, ncEntity, string);
+    /** Called when an NPC gets killed. */
+    nonvirtual void NPCDeath(ncActor, ncEntity, ncEntity);
 
-	/** Called when the plugin gets unloaded. */
-	nonvirtual void LoadDefaultAddons(void);
+    /** Called when the plugin gets unloaded. */
+    nonvirtual void LoadDefaultAddons(void);
 };
 
 

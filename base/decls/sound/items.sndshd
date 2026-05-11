@@ -98,8 +98,3 @@ health.pickup
 {
 	sample items/health1.wav
 }
-
-weapon.pickup
-{
-	sample weapons/pkup.wav
-}

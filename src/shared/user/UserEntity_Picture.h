@@ -27,31 +27,32 @@ class
 ncUserEntity_Picture:ncUserEntity
 {
 public:
-	void ncUserEntity_Picture(void);
+    void ncUserEntity_Picture(void);
 
 #ifdef SERVER
-	virtual void Save(float handle);
-	virtual void Restore(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity ePEnt, float flChanged);
+    virtual void Save(float handle);
+    virtual void Restore(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity ePEnt, float flChanged);
 
-	nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL, vector realSize, string optionalDescription);
+    nonvirtual void Place(ncPlayer videoSharer, string videoName, string videoURL, vector realSize, string optionalDescription);
+    nonvirtual void PlaceAtPositionWithSize(ncPlayer pictureSharer, string pictureName, string pictureURL, vector worldPos, vector eulerAngle, vector realSize);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float flNew, float flChanged);
-	virtual void ReloadVideoResources(void);
-	virtual float predraw(void);
-	virtual void RenderScene(void);
+    virtual void ReceiveEntity(float flNew, float flChanged);
+    virtual void ReloadVideoResources(void);
+    virtual float predraw(void);
+    virtual void RenderScene(void);
 #endif
 
 private:
-	string m_userPictureURL;
-	string m_userPosterName;
-	string m_userPosterTitle;
+    string m_userPictureURL;
+    string m_userPosterName;
+    string m_userPosterTitle;
 
 #ifdef CLIENT
-	entity m_uiPic;
-	entity m_uiLabel;
+    entity m_uiPic;
+    entity m_uiLabel;
 #endif
 };

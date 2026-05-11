@@ -25,44 +25,44 @@ const string g_constantsFile = "scripts/constants.txt";
 void
 ncConstantManager::Init(void)
 {
-	filestream constFile;
-	string tempString;
-	int arguments = 0i;
-	int indexCount = 0i;
+    filestream constFile;
+    string tempString;
+    int arguments = 0i;
+    int indexCount = 0i;
 
-	InitStart();
+    InitStart();
 
-	g_constCount = 0i;
+    g_constCount = 0i;
 
-	if (!g_hashConstants) {
-		g_hashConstants = hash_createtab(2, HASH_ADD);
-	}
+    if (!g_hashConstants) {
+        g_hashConstants = hash_createtab(2, HASH_ADD);
+    }
 
-	constFile = fopen(g_constantsFile, FILE_READ);
+    constFile = fopen(g_constantsFile, FILE_READ);
 
-	if (constFile < 0) {
-		ncWarning("No constants, missing %S", g_constantsFile);
-		InitEnd();
-		return;
-	}
+    if (constFile < 0) {
+        ncWarning("No constants, missing %S", g_constantsFile);
+        InitEnd();
+        return;
+    }
 
-	while ((tempString = fgets(constFile))) {
-		arguments = (int)tokenize_console(tempString);
+    while ((tempString = fgets(constFile))) {
+        arguments = (int)tokenize_console(tempString);
 
-		if (arguments != 2) {
-			continue;
-		}
+        if (arguments != 2) {
+            continue;
+        }
 
-		/* sanity bounds check */
-		if (!ncConstantManager::Add(argv(0), argv(1))) {
-			fclose(constFile);
-			InitEnd();
-			return;
-		}
-	}
+        /* sanity bounds check */
+        if (!ncConstantManager::Add(argv(0), argv(1))) {
+            fclose(constFile);
+            InitEnd();
+            return;
+        }
+    }
 
-	fclose(constFile);
-	InitEnd();
+    fclose(constFile);
+    InitEnd();
 }
 
 
@@ -76,34 +76,34 @@ ncConstantManager::Shutdown(void)
 bool
 ncConstantManager::Add(string constantName, string constantValue)
 {
-	/* sanity bounds check */
-	if (g_constCount == MAX_CONSTANTS_ID) {
-		ncError("Hit maximum number of %d constants.", MAX_CONSTANTS_ID);
-		return (false);
-	}
+    /* sanity bounds check */
+    if (g_constCount == MAX_CONSTANTS_ID) {
+        ncError("Hit maximum number of %d constants.", MAX_CONSTANTS_ID);
+        return (false);
+    }
 
-	int checkIndex = hash_get(g_hashConstants, constantName, -1i);
+    int checkIndex = hash_get(g_hashConstants, constantName, -1i);
 
-	/* already added */
-	if (checkIndex != -1i) {
-		return (true);
-	}
+    /* already added */
+    if (checkIndex != -1i) {
+        return (true);
+    }
 
-	g_constIndex[g_constCount] = constantValue;
-	hash_add(g_hashConstants, constantName, g_constCount);
-	g_constCount++;
-	return (true);
+    g_constIndex[g_constCount] = constantValue;
+    hash_add(g_hashConstants, constantName, g_constCount);
+    g_constCount++;
+    return (true);
 }
 
 string
 ncConstantManager::LookUp(string constName, string returnValue)
 {
-	int constIndex = -1i;
+    int constIndex = -1i;
 
-	/* only if we're prefixed */
-	if (substring(constName, 0, 1) == "$") {
-		constIndex = hash_get(g_hashConstants, substring(constName, 1, -1), -1i);
-	}
+    /* only if we're prefixed */
+    if (substring(constName, 0, 1) == "$") {
+        constIndex = hash_get(g_hashConstants, substring(constName, 1, -1), -1i);
+    }
 
-	return (constIndex == -1i) ? returnValue : g_constIndex[constIndex];
+    return (constIndex == -1i) ? returnValue : g_constIndex[constIndex];
 }

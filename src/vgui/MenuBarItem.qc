@@ -21,9 +21,9 @@
 class vguiMenuBarItem:vguiButton
 {
 public:
-	void vguiMenuBarItem(void);
+    void vguiMenuBarItem(void);
 
-	virtual void OnMouseUp(void);
+    virtual void OnMouseUp(void);
 };
 
 void
@@ -35,9 +35,9 @@ vguiMenuBarItem::vguiMenuBarItem(void)
 void
 vguiMenuBarItem::OnMouseUp(void)
 {
-	for (vguiWidget menuEnum = 0; (menuEnum = (vguiWidget)find(menuEnum, ::classname, "vguiMenu"));) {
-		menuEnum.Hide();
-	}
+    for (vguiWidget menuEnum = 0; (menuEnum = (vguiWidget)find(menuEnum, ::classname, "vguiMenu"));) {
+        menuEnum.Hide();
+    }
 
-	super::OnMouseUp();
+    super::OnMouseUp();
 }

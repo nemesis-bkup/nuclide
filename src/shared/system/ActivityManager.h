@@ -29,10 +29,10 @@ which will look a lot like the following:
 
 ```
 typeInfo activities {
-	"act_reset" "0"
-	"act_idle" "1"
-	"act_walk" "2"
-	"act_run" "3"
+    "act_reset" "0"
+    "act_idle" "1"
+    "act_walk" "2"
+    "act_run" "3"
 }
 ```
 
@@ -87,15 +87,15 @@ Simply put, if you want the very first animation in the model
 to be an idle animation, add this line to your entityDef:
 
 ```
-"act_idle"	"0"
+"act_idle"  "0"
 "act_fire" "1,2"
 ```
 
 Some may also want to use @ref constants, which can be mapped like so:
 
 ```
-"act_idle"	"$PISTOL_ANIM_IDLE"
-"act_fire"	"$PISTOL_ANIM_FIRE1,$PISTOL_ANIM_FIRE2"
+"act_idle"  "$PISTOL_ANIM_IDLE"
+"act_fire"  "$PISTOL_ANIM_FIRE1,$PISTOL_ANIM_FIRE2"
 ```
 
 @{

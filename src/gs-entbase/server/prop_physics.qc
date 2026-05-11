@@ -16,15 +16,15 @@
 
 enumflags
 {
-	PHYSPROPSFL_ASLEEP,
-	PHYSPROPSFL_NOPHYSDMG,
-	PHYSPROPSFL_DEBRIS,
-	PHYSPROPSFL_NOMOTION,
-	PHYSPROPSFL_UNUSED1,
-	PHYSPROPSFL_UNUSED2,
-	PHYSPROPSFL_PHYSDEVICE,
-	PHYSPROPSFL_NOROTOR,
-	PHYSPROPSFL_USEOUT,
+    PHYSPROPSFL_ASLEEP,
+    PHYSPROPSFL_NOPHYSDMG,
+    PHYSPROPSFL_DEBRIS,
+    PHYSPROPSFL_NOMOTION,
+    PHYSPROPSFL_UNUSED1,
+    PHYSPROPSFL_UNUSED2,
+    PHYSPROPSFL_PHYSDEVICE,
+    PHYSPROPSFL_NOROTOR,
+    PHYSPROPSFL_USEOUT,
 };
 
 /*! \brief Server-Entity: Physics Prop Model */
@@ -55,11 +55,11 @@ class
 prop_physics:ncPhysicsEntity
 {
 public:
-	void prop_physics(void);
-	
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void OnPlayerUse(void);
+    void prop_physics(void);
+    
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void OnPlayerUse(void);
 };
 
 void
@@ -70,68 +70,68 @@ prop_physics::prop_physics(void)
 void
 prop_physics::OnPlayerUse(void)
 {
-	ncPlayer thePlayer = (ncPlayer)eActivator;
+    ncPlayer thePlayer = (ncPlayer)eActivator;
 
-	if (HeldByPlayer() == true) {
-		return;
-	}
+    if (HeldByPlayer() == true) {
+        return;
+    }
 
-	/* disallow +use */
-	if (HasSpawnFlags(PHYSPROPSFL_PHYSDEVICE)) {
-		return;
-	}
+    /* disallow +use */
+    if (HasSpawnFlags(PHYSPROPSFL_PHYSDEVICE)) {
+        return;
+    }
 
-	if (thePlayer.CanPickupEntity(this, 35, 128) == true) {
-		Wake();
-		EntLog("Picked up by %S", thePlayer.netname);
-		thePlayer.PickupEntity(this);
-	}
+    if (thePlayer.CanPickupEntity(this, 35, 128) == true) {
+        Wake();
+        EntLog("Picked up by %S", thePlayer.netname);
+        thePlayer.PickupEntity(this);
+    }
 }
 
 void
 prop_physics::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 prop_physics::Respawn(void)
 {
-	bool startAwake = false;
+    bool startAwake = false;
 
-	super::Respawn();
+    super::Respawn();
 
-	/* the least priority one of them all */
-	if (HasSpawnFlags(PHYSPROPSFL_ASLEEP)) {
-		startAwake = false;
-	} else {
-		startAwake = true;
-	}
+    /* the least priority one of them all */
+    if (HasSpawnFlags(PHYSPROPSFL_ASLEEP)) {
+        startAwake = false;
+    } else {
+        startAwake = true;
+    }
 
-	if (HasSpawnFlags(PHYSPROPSFL_NOMOTION)) {
-		startAwake = false;
-	}
+    if (HasSpawnFlags(PHYSPROPSFL_NOMOTION)) {
+        startAwake = false;
+    }
 
-	if (HasSpawnFlags(PHYSPROPSFL_PHYSDEVICE)) {
-		startAwake = false;
-	}
+    if (HasSpawnFlags(PHYSPROPSFL_PHYSDEVICE)) {
+        startAwake = false;
+    }
 
 
-	if (startAwake == true) {
-		setorigin_safe(this, origin);
-		Wake();
-	} else {
-		Sleep();
-	}
+    if (startAwake == true) {
+        setorigin_safe(this, origin);
+        Wake();
+    } else {
+        Sleep();
+    }
 
-	if (HasSpawnFlags(PHYSPROPSFL_DEBRIS)) {
-		SetSolid(SOLID_NOT);
-	}
+    if (HasSpawnFlags(PHYSPROPSFL_DEBRIS)) {
+        SetSolid(SOLID_NOT);
+    }
 
-	PlayerUse = OnPlayerUse;
+    PlayerUse = OnPlayerUse;
 }
 
 CLASSEXPORT(prop_physics_override, prop_physics)

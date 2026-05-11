@@ -17,14 +17,14 @@
 static void
 ncAddonDelegate_Destroy(void)
 {
-	remove(self);
+    remove(self);
 }
 
 void
 ncAddonDelegate::ncAddonDelegate(void)
 {
-	m_progHandle = 0;
-	m_name = __NULL__;
+    m_progHandle = 0;
+    m_name = __NULL__;
 }
 
 /* init */
@@ -51,13 +51,13 @@ ncAddonDelegate::Shutdown(void)
 bool
 ncAddonDelegate::ConsoleCommand(ncPlayer pl, string cmd)
 {
-	return (false);
+    return (false);
 }
 
 bool
 ncAddonDelegate::ClientCommand(ncClient pl, string cmd)
 {
-	return (false);
+    return (false);
 }
 
 void
@@ -88,48 +88,48 @@ ncAddonDelegate::PlayerSpawn(ncPlayer pl)
 string
 ncAddonDelegate::Name(void)
 {
-	return (m_name);
+    return (m_name);
 }
 
 void
 ncAddonDelegate::Close(void)
 {
-	Shutdown();
+    Shutdown();
 
-	printf("Closed addon %S.\n", m_name);
-	m_progHandle = 0;
-	m_name = __NULL__;
-	think = ncAddonDelegate_Destroy;
-	nextthink = time;
+    printf("Closed addon %S.\n", m_name);
+    m_progHandle = 0;
+    m_name = __NULL__;
+    think = ncAddonDelegate_Destroy;
+    nextthink = time;
 }
 
 void
 ncAddonDelegate::LinkProgs(void)
 {
-	ADDON_LINK(Load, "Plug_Load")
-	ADDON_LINK(Shutdown, "Plug_Shutdown")
-	ADDON_LINK(ConsoleCommand, "Plug_ConsoleCommand")
-	ADDON_LINK(ClientCommand, "Plug_ClientCommand")
-	ADDON_LINK(PlayerConnect, "Plug_PlayerConnect")
-	ADDON_LINK(PlayerDisconnect, "Plug_PlayerDisconnect")
-	ADDON_LINK(ServerActivate, "Plug_ServerActivate")
-	ADDON_LINK(LateActivate, "Plug_LateActivate")
-	ADDON_LINK(PlayerSpawn, "Plug_PlayerSpawn")
-	ADDON_LINK(PlayerDeath, "Plug_PlayerDeath")
-	ADDON_LINK(NPCDeath, "Plug_NPCDeath")
+    ADDON_LINK(Load, "Plug_Load")
+    ADDON_LINK(Shutdown, "Plug_Shutdown")
+    ADDON_LINK(ConsoleCommand, "Plug_ConsoleCommand")
+    ADDON_LINK(ClientCommand, "Plug_ClientCommand")
+    ADDON_LINK(PlayerConnect, "Plug_PlayerConnect")
+    ADDON_LINK(PlayerDisconnect, "Plug_PlayerDisconnect")
+    ADDON_LINK(ServerActivate, "Plug_ServerActivate")
+    ADDON_LINK(LateActivate, "Plug_LateActivate")
+    ADDON_LINK(PlayerSpawn, "Plug_PlayerSpawn")
+    ADDON_LINK(PlayerDeath, "Plug_PlayerDeath")
+    ADDON_LINK(NPCDeath, "Plug_NPCDeath")
 }
 
 ncAddonDelegate
 ncAddonDelegate::CreateFromProgs(string addonName, float progHandle)
 {
-	ncAddonDelegate newRule = __NULL__;
+    ncAddonDelegate newRule = __NULL__;
 
-	if (progHandle) {
-		newRule = spawn(ncAddonDelegate);
-		newRule.m_progHandle = progHandle;
-		newRule.m_name = addonName;
-		newRule.LinkProgs();
-	}
+    if (progHandle) {
+        newRule = spawn(ncAddonDelegate);
+        newRule.m_progHandle = progHandle;
+        newRule.m_name = addonName;
+        newRule.LinkProgs();
+    }
 
-	return (newRule);
+    return (newRule);
 }

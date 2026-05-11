@@ -47,30 +47,30 @@ vector v_up;
 vector v_right;
 void makevectors( vector angles )
 {
-	float angle;
-	float sr, sp, sy, cr, cp, cy;
-	
-	angle = angles[1] * (M_PI*2 / 360);
-	sy = sin(angle);
-	cy = cos(angle);
-	angle = angles[0] * (M_PI*2 / 360);
-	sp = sin(angle);
-	cp = cos(angle);
-	angle = angles[2] * (M_PI*2 / 360);
-	sr = sin(angle);
-	cr = cos(angle);
+    float angle;
+    float sr, sp, sy, cr, cp, cy;
+    
+    angle = angles[1] * (M_PI*2 / 360);
+    sy = sin(angle);
+    cy = cos(angle);
+    angle = angles[0] * (M_PI*2 / 360);
+    sp = sin(angle);
+    cp = cos(angle);
+    angle = angles[2] * (M_PI*2 / 360);
+    sr = sin(angle);
+    cr = cos(angle);
 
-	v_forward[0] = cp*cy;
-	v_forward[1] = cp*sy;
-	v_forward[2] = -sp;
+    v_forward[0] = cp*cy;
+    v_forward[1] = cp*sy;
+    v_forward[2] = -sp;
 
-	v_right[0] = (-1*sr*sp*cy+-1*cr*-sy);
-	v_right[1] = (-1*sr*sp*sy+-1*cr*cy);
-	v_right[2] = -1*sr*cp;
+    v_right[0] = (-1*sr*sp*cy+-1*cr*-sy);
+    v_right[1] = (-1*sr*sp*sy+-1*cr*cy);
+    v_right[2] = -1*sr*cp;
 
-	v_up[0] = (cr*sp*cy+-sr*-sy);
-	v_up[1] = (cr*sp*sy+-sr*cy);
-	v_up[2] = cr*cp;
+    v_up[0] = (cr*sp*cy+-sr*-sy);
+    v_up[1] = (cr*sp*sy+-sr*cy);
+    v_up[2] = cr*cp;
 }
 #endif
 
@@ -84,8 +84,8 @@ void makevectors( vector angles )
 float
 lerpAngle(float startAngle, float endAngle, float lerpAmount)
 {
-	float shortest_angle = ((((endAngle - startAngle) % 360.0f) + 540.0f) % 360.0f) - 180.0f;
-	return shortest_angle * lerpAmount;
+    float shortest_angle = ((((endAngle - startAngle) % 360.0f) + 540.0f) % 360.0f) - 180.0f;
+    return shortest_angle * lerpAmount;
 }
 
 /** Linear lerp function.
@@ -97,7 +97,7 @@ lerpAngle(float startAngle, float endAngle, float lerpAmount)
 float
 lerp(float startValue, float endValue, float lerpAmount)
 {
-	return (startValue * (1 - lerpAmount)) + (endValue * lerpAmount);
+    return (startValue * (1 - lerpAmount)) + (endValue * lerpAmount);
 }
 
 /** Tecursive function that fixes an euler angle.
@@ -107,15 +107,15 @@ lerp(float startValue, float endValue, float lerpAmount)
 float
 fixAngleDelta(float angleValue)
 {
-	if (angleValue > 180) {
-		angleValue -= 360;
-	} else if (angleValue < -180) {
-		angleValue += 360;
-	} else {
-		return angleValue;
-	}
+    if (angleValue > 180) {
+        angleValue -= 360;
+    } else if (angleValue < -180) {
+        angleValue += 360;
+    } else {
+        return angleValue;
+    }
 
-	return fixAngleDelta(angleValue);
+    return fixAngleDelta(angleValue);
 }
 
 
@@ -126,10 +126,10 @@ fixAngleDelta(float angleValue)
 vector
 fixAngle(vector inputAngle)
 {
-	inputAngle[0] = fixAngleDelta(inputAngle[0]);
-	inputAngle[1] = fixAngleDelta(inputAngle[1]);
-	inputAngle[2] = fixAngleDelta(inputAngle[2]);
-	return inputAngle;
+    inputAngle[0] = fixAngleDelta(inputAngle[0]);
+    inputAngle[1] = fixAngleDelta(inputAngle[1]);
+    inputAngle[2] = fixAngleDelta(inputAngle[2]);
+    return inputAngle;
 }
 
 /** Takes a direction and a plane normal, returns a new trajectory.
@@ -140,7 +140,7 @@ fixAngle(vector inputAngle)
 vector
 reflect(vector hitDirection, vector planeNormal)
 {
-	return hitDirection - 2 * dotproduct(hitDirection, planeNormal) * planeNormal;
+    return hitDirection - 2 * dotproduct(hitDirection, planeNormal) * planeNormal;
 }
 
 /** Calculates a random Vector, with every axis being a value between -1.0 and 1.0, unless flyUp is `true`.
@@ -150,17 +150,17 @@ reflect(vector hitDirection, vector planeNormal)
 vector
 randomVector(bool flyUp)
 {
-	vector tmp;
-	tmp[0] = random() - 0.5f;
-	tmp[1] = random() - 0.5f;
-	
-	if ( flyUp == true ) {
-		tmp[2] = random();
-	} else {
-		tmp[2] = random() - 0.5f;
-	}
+    vector tmp;
+    tmp[0] = random() - 0.5f;
+    tmp[1] = random() - 0.5f;
+    
+    if ( flyUp == true ) {
+        tmp[2] = random();
+    } else {
+        tmp[2] = random() - 0.5f;
+    }
 
-	return tmp * 2.0f;
+    return tmp * 2.0f;
 }
 
 /** Takes a position and a pivot point and rotates point by N degrees around the pivot (YAW)
@@ -172,10 +172,10 @@ randomVector(bool flyUp)
 vector
 rotateAroundPoint(vector pos, vector pivot, float degr)
 {
-	vector new = pos;
-	new[0] = pivot[0] + (pos[0] - pivot[0]) * cos(degr) - (pos[1] - pivot[1]) * sin(degr);
-	new[1] = pivot[1] + (pos[0] - pivot[0]) * sin(degr) + (pos[1] - pivot[1]) * cos(degr);
-	return new;
+    vector new = pos;
+    new[0] = pivot[0] + (pos[0] - pivot[0]) * cos(degr) - (pos[1] - pivot[1]) * sin(degr);
+    new[1] = pivot[1] + (pos[0] - pivot[0]) * sin(degr) + (pos[1] - pivot[1]) * cos(degr);
+    return new;
 }
 
 /** Calculates the difference between two angles.
@@ -186,28 +186,28 @@ rotateAroundPoint(vector pos, vector pivot, float degr)
 vector
 angleDifference(vector angle1, vector angle2)
 {
-	static float Math_AngleDiff_S(float from, float to) {
-		float angleDelta = from - to;
+    static float Math_AngleDiff_S(float from, float to) {
+        float angleDelta = from - to;
 
-		if (angleDelta > 180) {
-			angleDelta -= 360;
-		} else if (angleDelta < -180) {
-			angleDelta += 360;
-		}
+        if (angleDelta > 180) {
+            angleDelta -= 360;
+        } else if (angleDelta < -180) {
+            angleDelta += 360;
+        }
 
-		return angleDelta;
-	}
+        return angleDelta;
+    }
 
-	vector newAngle;
+    vector newAngle;
 
-	/* clean up input angles */
-	angle1 = fixAngle(angle1);
-	angle2 = fixAngle(angle2);
+    /* clean up input angles */
+    angle1 = fixAngle(angle1);
+    angle2 = fixAngle(angle2);
 
-	newAngle[0] = Math_AngleDiff_S(angle1[0], angle2[0]);
-	newAngle[1] = Math_AngleDiff_S(angle1[1], angle2[1]);
-	newAngle[2] = Math_AngleDiff_S(angle1[2], angle2[2]);
-	return newAngle;
+    newAngle[0] = Math_AngleDiff_S(angle1[0], angle2[0]);
+    newAngle[1] = Math_AngleDiff_S(angle1[1], angle2[1]);
+    newAngle[2] = Math_AngleDiff_S(angle1[2], angle2[2]);
+    return newAngle;
 }
 
 /** Converts a Hue-Saturation-Value pair to an RGB vector.
@@ -219,59 +219,59 @@ angleDifference(vector angle1, vector angle2)
 vector
 hsvToRGB(float h, float s, float v)
 {
-	float i,f,p,q,t;
-	vector col = [0,0,0];
+    float i,f,p,q,t;
+    vector col = [0,0,0];
 
-	h = max(0.0, min(360.0, h));
-	s = max(0.0, min(100.0, s));
-	v = max(0.0, min(100.0, v));
+    h = max(0.0, min(360.0, h));
+    s = max(0.0, min(100.0, s));
+    v = max(0.0, min(100.0, v));
 
-	s /= 100;
-	v /= 100;
+    s /= 100;
+    v /= 100;
 
-	if (s == 0) {
-		col[0] = col[1] = col[2] = rint(v*255);
-		return col;
-	}
+    if (s == 0) {
+        col[0] = col[1] = col[2] = rint(v*255);
+        return col;
+    }
 
-	h /= 60;
-	i = floor(h);
-	f = h - i;
-	p = v * (1 - s);
-	q = v * (1 - s * f);
-	t = v * (1 - s * (1 - f));
+    h /= 60;
+    i = floor(h);
+    f = h - i;
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
 
-	switch (i) {
-	case 0:
-		col[0] = rint(255*v);
-		col[1] = rint(255*t);
-		col[2] = rint(255*p);
-		break;
-	case 1:
-		col[0] = rint(255*q);
-		col[1] = rint(255*v);
-		col[2] = rint(255*p);
-		break;
-	case 2:
-		col[0] = rint(255*p);
-		col[1] = rint(255*v);
-		col[2] = rint(255*t);
-		break;
-	case 3:
-		col[0] = rint(255*p);
-		col[1] = rint(255*q);
-		col[2] = rint(255*v);
-		break;
-	case 4:
-		col[0] = rint(255*t);
-		col[1] = rint(255*p);
-		col[2] = rint(255*v);
-		break;
-	default:
-		col[0] = rint(255*v);
-		col[1] = rint(255*p);
-		col[2] = rint(255*q);
-	}
-	return col;
+    switch (i) {
+    case 0:
+        col[0] = rint(255*v);
+        col[1] = rint(255*t);
+        col[2] = rint(255*p);
+        break;
+    case 1:
+        col[0] = rint(255*q);
+        col[1] = rint(255*v);
+        col[2] = rint(255*p);
+        break;
+    case 2:
+        col[0] = rint(255*p);
+        col[1] = rint(255*v);
+        col[2] = rint(255*t);
+        break;
+    case 3:
+        col[0] = rint(255*p);
+        col[1] = rint(255*q);
+        col[2] = rint(255*v);
+        break;
+    case 4:
+        col[0] = rint(255*t);
+        col[1] = rint(255*p);
+        col[2] = rint(255*v);
+        break;
+    default:
+        col[0] = rint(255*v);
+        col[1] = rint(255*p);
+        col[2] = rint(255*q);
+    }
+    return col;
 }
 /** @} */ // end of math

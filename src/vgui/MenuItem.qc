@@ -21,35 +21,35 @@
 class vguiMenuItem:vguiButton
 {
 public:
-	void vguiMenuItem(void);
+    void vguiMenuItem(void);
 
-	virtual void Draw(void);
-	virtual void OnMouseUp(void);
+    virtual void Draw(void);
+    virtual void OnMouseUp(void);
 
 private:
-	vguiWidget m_parentMenu;
+    vguiWidget m_parentMenu;
 };
 
 void
 vguiMenuItem::vguiMenuItem(void)
 {
-	m_parentMenu = __NULL__;
+    m_parentMenu = __NULL__;
 }
 
 void
 vguiMenuItem::Draw(void)
 {
-	super::Draw();
+    super::Draw();
 
-	if (!m_parentMenu) {
-		drawpic(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] - 16-3,3], "gfx/icon16/bullet_go", [16,16], [0, 0, 0], 1.0f, 0);
-	}
+    if (!m_parentMenu) {
+        drawpic(m_parent.m_vecOrigin + m_vecOrigin + [m_vecSize[0] - 16-3,3], "gfx/icon16/bullet_go", [16,16], [0, 0, 0], 1.0f, 0);
+    }
 }
 
 void
 vguiMenuItem::OnMouseUp(void)
 {
-	for (vguiWidget menuEnum = 0; (menuEnum = (vguiWidget)find(menuEnum, ::classname, "vguiMenu"));) {
-		menuEnum.Hide();
-	}
+    for (vguiWidget menuEnum = 0; (menuEnum = (vguiWidget)find(menuEnum, ::classname, "vguiMenu"));) {
+        menuEnum.Hide();
+    }
 }

@@ -28,55 +28,55 @@ void
 BannerPlug_Broadcast(string bmsg)
 {
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TEXT_STRING);
-	WriteByte(MSG_MULTICAST, 1);
-	WriteString(MSG_MULTICAST, bmsg);
-	WriteFloat(MSG_MULTICAST, -1);
-	WriteFloat(MSG_MULTICAST, 0.6);
-	WriteByte(MSG_MULTICAST, 2);
-	WriteByte(MSG_MULTICAST, 255);
-	WriteByte(MSG_MULTICAST, 255);
-	WriteByte(MSG_MULTICAST, 255);
-	WriteByte(MSG_MULTICAST, 0);
-	WriteByte(MSG_MULTICAST, 255);
-	WriteByte(MSG_MULTICAST, 0);
-	WriteFloat(MSG_MULTICAST, 0.01f);
-	WriteFloat(MSG_MULTICAST, 0.5f);
-	WriteFloat(MSG_MULTICAST, 4.0f);
-	WriteFloat(MSG_MULTICAST, 0.25f);
-	msg_entity = world;
-	multicast([0,0,0], MULTICAST_ALL);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_TEXT_STRING);
+    WriteByte(MSG_MULTICAST, 1);
+    WriteString(MSG_MULTICAST, bmsg);
+    WriteFloat(MSG_MULTICAST, -1);
+    WriteFloat(MSG_MULTICAST, 0.6);
+    WriteByte(MSG_MULTICAST, 2);
+    WriteByte(MSG_MULTICAST, 255);
+    WriteByte(MSG_MULTICAST, 255);
+    WriteByte(MSG_MULTICAST, 255);
+    WriteByte(MSG_MULTICAST, 0);
+    WriteByte(MSG_MULTICAST, 255);
+    WriteByte(MSG_MULTICAST, 0);
+    WriteFloat(MSG_MULTICAST, 0.01f);
+    WriteFloat(MSG_MULTICAST, 0.5f);
+    WriteFloat(MSG_MULTICAST, 4.0f);
+    WriteFloat(MSG_MULTICAST, 0.25f);
+    msg_entity = world;
+    multicast([0,0,0], MULTICAST_ALL);
 }
 
 void
 BannerPlugin_MapInfo(void)
 {
-	string bmsg;
-	string mname;
+    string bmsg;
+    string mname;
 
-	mname = serverkey("mapname");
-	bmsg = sprintf("Hope you enjoy your time on ^2%s^7!", mname);
-	BannerPlug_Broadcast(bmsg);
+    mname = serverkey("mapname");
+    bmsg = sprintf("Hope you enjoy your time on ^2%s^7!", mname);
+    BannerPlug_Broadcast(bmsg);
 
-	/* loop back to the hostname info in 4 minutes */
-	self.think = BannerPlugin_Hostname;
-	self.nextthink = time + 240.0f;
+    /* loop back to the hostname info in 4 minutes */
+    self.think = BannerPlugin_Hostname;
+    self.nextthink = time + 240.0f;
 }
 
 void
 BannerPlugin_Hostname(void)
 {
-	string bmsg;
-	string hname;
+    string bmsg;
+    string hname;
 
-	hname = cvar_string("hostname");
-	bmsg = sprintf("You're playing on ^1%s^7.", hname);
-	BannerPlug_Broadcast(bmsg);
+    hname = cvar_string("hostname");
+    bmsg = sprintf("You're playing on ^1%s^7.", hname);
+    BannerPlug_Broadcast(bmsg);
 
-	/* play the map info in 5 seconds */
-	self.think = BannerPlugin_MapInfo;
-	self.nextthink = time + 5.0f;
+    /* play the map info in 5 seconds */
+    self.think = BannerPlugin_MapInfo;
+    self.nextthink = time + 5.0f;
 }
 
 entity banner;
@@ -84,16 +84,16 @@ entity banner;
 void
 Plug_Load(void)
 {
-	if (!banner) {
-		banner = spawn();
-	}
+    if (!banner) {
+        banner = spawn();
+    }
 
-	banner.think = BannerPlugin_Hostname;
-	banner.nextthink = time + 30.0f;
+    banner.think = BannerPlugin_Hostname;
+    banner.nextthink = time + 30.0f;
 }
 
 void
 Plug_Shutdown(void)
 {
-	banner.nextthink = 0.0f;
+    banner.nextthink = 0.0f;
 }

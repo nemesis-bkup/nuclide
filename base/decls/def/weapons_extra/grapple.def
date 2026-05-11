@@ -1,0 +1,60 @@
+entityDef weapon_grapple
+{
+	"editor_color"			".3 .3 1"
+	"editor_mins"			"-16 -16 -16"
+	"editor_maxs"			"16 16 16"
+	"editor_usage"			"Grappling-Hook"
+	"editor_rotatable"		"1"
+
+	"inherit"		"weapon_base"
+	"model"				"progs/g_light.mdl"
+	"model_view"		"progs/v_light.mdl"
+	"spin"					"1"
+	"pickupFlash"		"1"
+
+	// ncWeapon specific
+	"def_fireInfo"			"fireInfo_grapple"
+	"inv_name"				"Grappling-Hook"
+	"clipSize"				"1"
+
+	"act_fire"				"1"
+	"act_idle"				"0"
+
+	"snd_fire"				"weapon_grapple.shoot"
+	"snd_empty"				"weapon.empty"
+
+	// hlWeapon specific
+	"hudSlot"				"0"
+	"hudSlotPos"			"2"
+	"weight"				"15"
+	"crosshair"				"none"
+	"ammoIcon"				"none"
+}
+
+entityDef fireInfo_grapple
+{
+	"def_onFire"			"projectile_hook1"
+	"def_onRelease"			"projectile_hook2"
+	"ammoType"				""
+	"ammoRequired"			"0"
+	"fireRate"				"1"
+	"punchAngle"			"0 0 0" // TODO
+}
+
+entityDef projectile_hook1
+{
+	"spawnclass"			"ncAttack"
+	"grappleHook"			"1"
+	"model"	"progs/missile.mdl"
+}
+
+entityDef projectile_hook2
+{
+	"spawnclass"			"ncAttack"
+	"grappleUnhook"			"1"
+}
+
+entityDef damage_hookTouch
+{
+	"damage"				"5"
+}

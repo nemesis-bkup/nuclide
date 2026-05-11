@@ -17,35 +17,35 @@
 static void
 vguiTextPrompt_CallFunctionWithDelegateSender(void(vguiControl sender) targetFunc, vguiWidget delegateWidget, vguiControl sender)
 {
-	entity oldSelf = self;
+    entity oldSelf = self;
 
-	if (delegateWidget) {
-		self = delegateWidget;
-	}
+    if (delegateWidget) {
+        self = delegateWidget;
+    }
 
-	if (targetFunc) {
-		targetFunc(sender);
-	}
+    if (targetFunc) {
+        targetFunc(sender);
+    }
 
-	self = oldSelf;
+    self = oldSelf;
 }
 
 class
 vguiTextPrompt:vguiWindow
 {
-	void vguiTextPrompt(void);
+    void vguiTextPrompt(void);
 
-	virtual void Spawned(void);
+    virtual void Spawned(void);
 
-	nonvirtual void Textprompt_OK(vguiWidget sender);
-	nonvirtual void Textprompt_Cancel(vguiWidget sender);
-	nonvirtual void SetOKAction(void(vguiWidget sender) func, vguiControl delegate);
+    nonvirtual void Textprompt_OK(vguiWidget sender);
+    nonvirtual void Textprompt_Cancel(vguiWidget sender);
+    nonvirtual void SetOKAction(void(vguiWidget sender) func, vguiControl delegate);
 
 private:
 
-	vguiButton btnOK;
-	vguiButton btnCancel;
-	vguiTextBox textBox;
+    vguiButton btnOK;
+    vguiButton btnCancel;
+    vguiTextBox textBox;
 };
 
 void
@@ -57,56 +57,56 @@ vguiTextPrompt::vguiTextPrompt(void)
 void
 vguiTextPrompt::Textprompt_OK(vguiWidget sender)
 {
-	vguiTextPrompt_CallFunctionWithDelegateSender(tmpvguiButton1, tmpvguiButton1Delegate, this);
-	Hide();
+    vguiTextPrompt_CallFunctionWithDelegateSender(tmpvguiButton1, tmpvguiButton1Delegate, this);
+    Hide();
 }
 
 void
 vguiTextPrompt::Textprompt_Cancel(vguiWidget sender)
 {
-	textBox.SetText("");
-	Hide();
+    textBox.SetText("");
+    Hide();
 }
 
 void
 vguiTextPrompt::SetOKAction(void(vguiWidget sender) func, vguiControl delegateWidget)
 {
-	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
-	//m_vFunc = vFunc;
-	tmpvguiButton1 = func;
-	tmpvguiButton1Delegate = delegateWidget;
+    //#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
+    //m_vFunc = vFunc;
+    tmpvguiButton1 = func;
+    tmpvguiButton1Delegate = delegateWidget;
 }
 
 void
 vguiTextPrompt::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	classname = "vguiWindow";
-	SetTitle( "Text Prompt" );
-	SetSize( [192+16,128-24] );
-	SetIcon( "gfx/icon16/page_white_text" );
+    classname = "vguiWindow";
+    SetTitle( "Text Prompt" );
+    SetSize( [192+16,128-24] );
+    SetIcon( "gfx/icon16/page_white_text" );
 
-	btnOK = spawn( vguiButton );
-	btnOK.SetTitle( "OK" );
-	//btnOK.SetIcon( "gfx/icon16/control_play" );
-	btnOK.SetPos( [8,64] );
-	btnOK.SetSize([64,24]);
-	btnOK.SetFuncWithDelegate( Textprompt_OK, this );
+    btnOK = spawn( vguiButton );
+    btnOK.SetTitle( "OK" );
+    //btnOK.SetIcon( "gfx/icon16/control_play" );
+    btnOK.SetPos( [8,64] );
+    btnOK.SetSize([64,24]);
+    btnOK.SetFuncWithDelegate( Textprompt_OK, this );
 
-	btnCancel = spawn( vguiButton );
-	btnCancel.SetTitle( "Cancel" );
-	//btnOK.SetIcon( "gfx/icon16/control_play" );
-	btnCancel.SetPos( [96-16,64] );
-	btnCancel.SetSize([64,24]);
-	btnCancel.SetFuncWithDelegate( Textprompt_Cancel, this );
+    btnCancel = spawn( vguiButton );
+    btnCancel.SetTitle( "Cancel" );
+    //btnOK.SetIcon( "gfx/icon16/control_play" );
+    btnCancel.SetPos( [96-16,64] );
+    btnCancel.SetSize([64,24]);
+    btnCancel.SetFuncWithDelegate( Textprompt_Cancel, this );
 
-	textBox = spawn( vguiTextBox );
-	textBox.SetText( "" );
-	textBox.SetPos( [8,32] );
-	textBox.SetSize([192,24]);
+    textBox = spawn( vguiTextBox );
+    textBox.SetText( "" );
+    textBox.SetPos( [8,32] );
+    textBox.SetSize([192,24]);
 
-	Add( btnCancel );
-	Add( btnOK );
-	Add( textBox );
+    Add( btnCancel );
+    Add( btnOK );
+    Add( textBox );
 }

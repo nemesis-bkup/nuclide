@@ -16,9 +16,9 @@
 
 enumflags
 {
-	EVF_FADEDROM,
-	EVF_MODULATE,
-	EVF_ONLYUSER
+    EVF_FADEDROM,
+    EVF_MODULATE,
+    EVF_ONLYUSER
 };
 
 /*! \brief Server-Entity: Fade In/Out Controller */
@@ -50,94 +50,94 @@ class
 env_fade:ncRenderableEntity
 {
 public:
-	void env_fade(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
-	virtual void SpawnKey(string,string);
+    void env_fade(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
+    virtual void SpawnKey(string,string);
 
 private:
-	float m_flFadeDuration;
-	float m_flFadeHold;
+    float m_flFadeDuration;
+    float m_flFadeHold;
 };
 
 void
 env_fade::env_fade(void)
 {
-	m_flFadeDuration = 0.0f;
-	m_flFadeHold = 0.0f;
+    m_flFadeDuration = 0.0f;
+    m_flFadeHold = 0.0f;
 }
 
 void
 env_fade::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flFadeDuration", m_flFadeDuration);
-	SaveFloat(handle, "m_flFadeHold", m_flFadeHold);
+    super::Save(handle);
+    SaveFloat(handle, "m_flFadeDuration", m_flFadeDuration);
+    SaveFloat(handle, "m_flFadeHold", m_flFadeHold);
 }
 
 void
 env_fade::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flFadeDuration":
-		m_flFadeDuration = ReadFloat(setValue);
-		break;
-	case "m_flFadeHold":
-		m_flFadeHold = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flFadeDuration":
+        m_flFadeDuration = ReadFloat(setValue);
+        break;
+    case "m_flFadeHold":
+        m_flFadeHold = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_fade::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "duration":
-		m_flFadeDuration = stof(setValue);
-		break;
-	case "holdtime":
-		m_flFadeHold = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "duration":
+        m_flFadeDuration = stof(setValue);
+        break;
+    case "holdtime":
+        m_flFadeHold = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_fade::Trigger(entity eAct, triggermode_t iState)
 {
-	/* Half-Life ignores states entirely for env_fade's being triggered */
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_FADE);
-	WriteByte(MSG_MULTICAST, m_renderColor[0]);
-	WriteByte(MSG_MULTICAST, m_renderColor[1]);
-	WriteByte(MSG_MULTICAST, m_renderColor[2]);
-	WriteByte(MSG_MULTICAST, m_renderAmount);
-	WriteFloat(MSG_MULTICAST, m_flFadeDuration);
-	WriteFloat(MSG_MULTICAST, m_flFadeHold);
-	WriteByte(MSG_MULTICAST, spawnflags);
-	msg_entity = eAct;
+    /* Half-Life ignores states entirely for env_fade's being triggered */
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_FADE);
+    WriteByte(MSG_MULTICAST, m_renderColor[0]);
+    WriteByte(MSG_MULTICAST, m_renderColor[1]);
+    WriteByte(MSG_MULTICAST, m_renderColor[2]);
+    WriteByte(MSG_MULTICAST, m_renderAmount);
+    WriteFloat(MSG_MULTICAST, m_flFadeDuration);
+    WriteFloat(MSG_MULTICAST, m_flFadeHold);
+    WriteByte(MSG_MULTICAST, spawnflags);
+    msg_entity = eAct;
 
-	if (HasSpawnFlags(EVF_ONLYUSER))
-		multicast([0,0,0], MULTICAST_ONE_R);
-	else
-		multicast([0,0,0], MULTICAST_ALL);
+    if (HasSpawnFlags(EVF_ONLYUSER))
+        multicast([0,0,0], MULTICAST_ONE_R);
+    else
+        multicast([0,0,0], MULTICAST_ALL);
 }
 
 void
 env_fade::Input(entity theActivator, string inputName, string dataString)
 {
-	switch (inputName) {
-	case "Fade":
-		Trigger(theActivator, TRIG_ON);
-		break;
-	default:
-		super::Input(theActivator, inputName, dataString);
-	}
+    switch (inputName) {
+    case "fade":
+        Trigger(theActivator, TRIG_ON);
+        break;
+    default:
+        super::Input(theActivator, inputName, dataString);
+    }
 }

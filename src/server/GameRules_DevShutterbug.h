@@ -22,53 +22,53 @@ Can not be overriden
 class ncGameRule_DevShutterbug:ncRuleDelegate
 {
 public:
-	void ncGameRule_DevShutterbug(void);
+    void ncGameRule_DevShutterbug(void);
 
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void RestoreComplete(void);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void RestoreComplete(void);
 
-	/* level transitions */
-	/** Overridable: Called to set up new level parms for any ncPlayer. */
-	virtual void LevelNewParms(void);
-	/** Overridable: Called to store parms for a specific ncPlayer. */
-	virtual void LevelChangeParms(ncPlayer);
-	/** Overridable: Called to decode parms for a specific ncPlayer. */
-	virtual void LevelDecodeParms(ncPlayer);
-	/** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
-	virtual void PlayerSpawn(ncPlayer);
+    /* level transitions */
+    /** Overridable: Called to set up new level parms for any ncPlayer. */
+    virtual void LevelNewParms(void);
+    /** Overridable: Called to store parms for a specific ncPlayer. */
+    virtual void LevelChangeParms(ncPlayer);
+    /** Overridable: Called to decode parms for a specific ncPlayer. */
+    virtual void LevelDecodeParms(ncPlayer);
+    /** Overridable: Called when a ncPlayer spawns, called sometime after joining. */
+    virtual void PlayerSpawn(ncPlayer);
 
-	/** Overridable: Called when all map entities have initialized. */
-	virtual void InitPostEnts(void);
+    /** Overridable: Called when all map entities have initialized. */
+    virtual void InitPostEnts(void);
 
-	virtual bool PlayerRequestRespawn(ncPlayer);
+    virtual bool PlayerRequestRespawn(ncPlayer);
 
-	/* logic */
-	/** Overridable: Called from initents(). */
-	virtual void Precache(void);
+    /* logic */
+    /** Overridable: Called from initents(). */
+    virtual void Precache(void);
 
-	/** Overridable: Called from SV_Shutdown(). */
-	virtual void Shutdown(void);
+    /** Overridable: Called from SV_Shutdown(). */
+    virtual void Shutdown(void);
 
-	/** Overridable: Called every server frame. */
-	virtual void FrameStart(void);
+    /** Overridable: Called every server frame. */
+    virtual void FrameStart(void);
 
-	virtual void IntermissionEnd();
+    virtual void IntermissionEnd();
 
 
-	/** Returns the title of the gamemode running. */
-	virtual string Title(void);
+    /** Returns the title of the gamemode running. */
+    virtual string Title(void);
 
-	/** Overridable: Called when the server issues a console command. */
-	virtual bool ConsoleCommand(ncPlayer,string);
-	/** Overridable: Called when a client issues a client command. */
-	virtual bool ClientCommand(ncClient,string);
+    /** Overridable: Called when the server issues a console command. */
+    virtual bool ConsoleCommand(ncPlayer,string);
+    /** Overridable: Called when a client issues a client command. */
+    virtual bool ClientCommand(ncClient,string);
 
-	nonvirtual int NumActiveGamePlayers(void);
-	nonvirtual int NumActiveEditors(void);
+    nonvirtual int NumActiveGamePlayers(void);
+    nonvirtual int NumActiveEditors(void);
 
 private:
-	ncClient m_sessionCreator;
-	bool m_shotTaken;
+    ncClient m_sessionCreator;
+    bool m_shotTaken;
 };

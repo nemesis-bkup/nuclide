@@ -17,6 +17,7 @@
 ../vgui/MenuBar.qc
 ../vgui/MenuBarItem.qc
 ../vgui/Window.qc
+../vgui/Application.qc
 ../vgui/Panel.qc
 ../vgui/Frame.qc
 ../vgui/Label.qc

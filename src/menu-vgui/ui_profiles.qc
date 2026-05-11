@@ -21,9 +21,9 @@ static vguiScrollBar scrlProfiles;
 static void
 Profiles_Switch ( void )
 {
-	string strSong;
-	strSong = lsbProfiles.GetItem( lsbProfiles.GetSelected() );
-	localcmd( sprintf( "profile_switch %s\n", strSong) );
+    string strSong;
+    strSong = lsbProfiles.GetItem( lsbProfiles.GetSelected() );
+    localcmd( sprintf( "profile_switch %s\n", strSong) );
 }
 
 static void
@@ -39,67 +39,67 @@ Profiles_PurgeSelected ( void )
 static void
 Profiles_ScrollUpdate ( void )
 {
-	scrlProfiles.SetValue( lsbProfiles.GetOffset() );
+    scrlProfiles.SetValue( lsbProfiles.GetOffset() );
 }
 
 static void
 Profiles_ListUpdate ( void )
 {
-	lsbProfiles.SetOffset( scrlProfiles.GetValue(), FALSE );
+    lsbProfiles.SetOffset( scrlProfiles.GetValue(), FALSE );
 }
 
 
 void UI_Profiles_Show ( void )
 {
-	static vguiPanel winLoadGame;
-	static vguiButton btnLoad;
+    static vguiPanel winLoadGame;
+    static vguiButton btnLoad;
 
-	if ( !g_iProfilesInitialized ) {
-		g_iProfilesInitialized = true;
-		winLoadGame = spawn( vguiPanel );
-		winLoadGame.SetTitle( "Switch Profile" );
-		winLoadGame.SetSize( [256,180] );
-		winLoadGame.SetIcon( "gfx/icon16/user" );
+    if ( !g_iProfilesInitialized ) {
+        g_iProfilesInitialized = true;
+        winLoadGame = spawn( vguiPanel );
+        winLoadGame.SetTitle( "Switch Profile" );
+        winLoadGame.SetSize( [256,180] );
+        winLoadGame.SetIcon( "gfx/icon16/user" );
 
-		lsbProfiles = spawn( vguiFeeder );
-		lsbProfiles.SetSize( [192, 96] );
-		lsbProfiles.SetPos( [8, 32] );
-		lsbProfiles.SetFeederType( FEEDER_PLAYER_PROFILES );
+        lsbProfiles = spawn( vguiFeeder );
+        lsbProfiles.SetSize( [192, 96] );
+        lsbProfiles.SetPos( [8, 32] );
+        lsbProfiles.SetFeederType( FEEDER_PLAYER_PROFILES );
 
-		scrlProfiles = spawn( vguiScrollBar );
-		scrlProfiles.SetLength( 96 );
-		scrlProfiles.SetPos( [201,32] );
-		scrlProfiles.SetMin( 0 );
-		scrlProfiles.SetStep( 1 );
-		scrlProfiles.CallOnChange( Profiles_ListUpdate );
+        scrlProfiles = spawn( vguiScrollBar );
+        scrlProfiles.SetLength( 96 );
+        scrlProfiles.SetPos( [201,32] );
+        scrlProfiles.SetMin( 0 );
+        scrlProfiles.SetStep( 1 );
+        scrlProfiles.CallOnChange( Profiles_ListUpdate );
 
-		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "Switch" );
-		btnLoad.SetIcon( "gfx/icon16/arrow_right" );
-		btnLoad.SetPos( [8,132] );
-		btnLoad.SetSize([64,24]);
-		btnLoad.SetFunc( Profiles_Switch );
+        btnLoad = spawn( vguiButton );
+        btnLoad.SetTitle( "Switch" );
+        btnLoad.SetIcon( "gfx/icon16/arrow_right" );
+        btnLoad.SetPos( [8,132] );
+        btnLoad.SetSize([64,24]);
+        btnLoad.SetFunc( Profiles_Switch );
 
-		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "New" );
-		btnLoad.SetIcon( "gfx/icon16/new" );
-		btnLoad.SetPos( [8,132] );
-		btnLoad.SetSize([64,24]);
-		btnLoad.SetFunc( Profiles_New );
+        btnLoad = spawn( vguiButton );
+        btnLoad.SetTitle( "New" );
+        btnLoad.SetIcon( "gfx/icon16/new" );
+        btnLoad.SetPos( [8,132] );
+        btnLoad.SetSize([64,24]);
+        btnLoad.SetFunc( Profiles_New );
 
-		btnLoad = spawn( vguiButton );
-		btnLoad.SetTitle( "Purge" );
-		btnLoad.SetIcon( "gfx/icon16/cross" );
-		btnLoad.SetPos( [8,132] );
-		btnLoad.SetSize([64,24]);
-		btnLoad.SetFunc( Profiles_PurgeSelected );
+        btnLoad = spawn( vguiButton );
+        btnLoad.SetTitle( "Purge" );
+        btnLoad.SetIcon( "gfx/icon16/cross" );
+        btnLoad.SetPos( [8,132] );
+        btnLoad.SetSize([64,24]);
+        btnLoad.SetFunc( Profiles_PurgeSelected );
 
-		g_uiDesktop.Add( winLoadGame );
-		winLoadGame.Add( lsbProfiles );
-		winLoadGame.Add( scrlProfiles );
-		winLoadGame.Add( btnLoad );
-	}
+        g_uiDesktop.Add( winLoadGame );
+        winLoadGame.Add( lsbProfiles );
+        winLoadGame.Add( scrlProfiles );
+        winLoadGame.Add( btnLoad );
+    }
 
-	winLoadGame.Show();
-	winLoadGame.SetPos( ( g_vidsize / 2 ) - ( winLoadGame.GetSize() / 2 ) );
+    winLoadGame.Show();
+    winLoadGame.SetPos( ( g_vidsize / 2 ) - ( winLoadGame.GetSize() / 2 ) );
 }

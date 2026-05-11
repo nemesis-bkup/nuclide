@@ -24,19 +24,9 @@ To be written.
 @{
 */
 
-void Archive_SaveWeb(string itemID, string videoFile);
-void Archive_SaveText(string itemID, string videoFile);
-void Archive_SaveVideo(string itemID, string videoFile);
-void Archive_SaveAudio(string itemID, string videoFile);
-void Archive_SaveSoftware(string itemID, string videoFile);
-void Archive_SaveImage(string itemID, string videoFile);
-
-void Archive_ParseItemWeb(string jsonData);
-void Archive_ParseItemText(string jsonData);
-void Archive_ParseItemVideo(string jsonData);
-void Archive_ParseItemAudio(string jsonData);
-void Archive_ParseItemSoftware(string jsonData);
-void Archive_ParseItemImage(string jsonData);
+void Archive_SaveItem(string itemID, string videoFile, float type);
+void Archive_ShareItem(string itemID, string videoFile, float type);
+void Archive_ParseItem(string jsonData, float type);
 
 var bool g_archive_sharing = false;
 var string g_archive_specificItem;

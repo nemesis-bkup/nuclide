@@ -18,89 +18,89 @@ class
 infodecal:ncEntity
 {
 public:
-	void infodecal(void);
-	virtual void SpawnKey(string, string);
-	virtual float predraw(void);
-	virtual bool CanSpawn(bool);
-	virtual void Spawned(void);
+    void infodecal(void);
+    virtual void SpawnKey(string, string);
+    virtual float predraw(void);
+    virtual bool CanSpawn(bool);
+    virtual void Spawned(void);
 
 private:
-	ncDecal m_decChild;
-	string m_strTexture;
+    ncDecal m_decChild;
+    string m_strTexture;
 };
 
 void
 infodecal::infodecal(void)
 {
-	drawmask = MASK_ENGINE;
-	m_decChild = __NULL__;
-	m_strTexture = __NULL__;
-	scale = 1.0f;
+    drawmask = MASK_ENGINE;
+    m_decChild = __NULL__;
+    m_strTexture = __NULL__;
+    scale = 1.0f;
 }
 
 float
 infodecal::predraw(void)
 {
-	if (!m_decChild) {
-		m_decChild = spawn(ncDecal);
-		m_decChild.PlaceAtScale(origin, m_strTexture, scale);
-		Destroy();
-	}
+    if (!m_decChild) {
+        m_decChild = spawn(ncDecal);
+        m_decChild.PlaceAtScale(origin, m_strTexture, scale);
+        Destroy();
+    }
 
-	return (PREDRAW_NEXT);
+    return (PREDRAW_NEXT);
 }
 
 bool
 infodecal::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 infodecal::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "material":
-	case "texture":
-		m_strTexture = strtolower(strKey);
-		break;
-	case "targetname":
-		targetname = strKey;
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "material":
+    case "texture":
+        m_strTexture = strtolower(strKey);
+        break;
+    case "targetname":
+        targetname = strKey;
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 void
 infodecal::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	/* if it has a targetname, it can't be made client-side only */
-	if (STRING_SET(targetname)) {
-		Destroy();
-	}
+    /* if it has a targetname, it can't be made client-side only */
+    if (STRING_SET(targetname)) {
+        Destroy();
+    }
 
-	/* yup, we have to get this bit from the material. */
-	string vmtFile = strcat("materials/", m_strTexture, ".vmt");
+    /* yup, we have to get this bit from the material. */
+    string vmtFile = strcat("materials/", m_strTexture, ".vmt");
 
-	if (fileExists(vmtFile) == true) {
-		string lineFeed;
-		filestream vmtHandle = fopen(vmtFile, FILE_READ);
+    if (fileExists(vmtFile) == true) {
+        string lineFeed;
+        filestream vmtHandle = fopen(vmtFile, FILE_READ);
 
-		if (vmtHandle < 0) {
-			return;
-		}
+        if (vmtHandle < 0) {
+            return;
+        }
 
-		while ((lineFeed = fgets(vmtHandle))) {
-			int c = (int)tokenize_console(lineFeed);
+        while ((lineFeed = fgets(vmtHandle))) {
+            int c = (int)tokenize_console(lineFeed);
 
-			if (argv(0) == "$decalscale") {
-				scale = ReadFloat(argv(1));
-			}
-		}
+            if (argv(0) == "$decalscale") {
+                scale = ReadFloat(argv(1));
+            }
+        }
 
-		fclose(vmtHandle);
-	}
+        fclose(vmtHandle);
+    }
 }

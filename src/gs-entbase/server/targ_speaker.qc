@@ -41,77 +41,77 @@ class
 targ_speaker:ncPointTrigger
 {
 public:
-	void targ_speaker(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    void targ_speaker(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	string m_strSample;
-	float m_flVolume;
+    string m_strSample;
+    float m_flVolume;
 };
 
 void
 targ_speaker::targ_speaker(void)
 {
-	m_strSample = __NULL__;
-	m_flVolume = 0.0f;
+    m_strSample = __NULL__;
+    m_flVolume = 0.0f;
 }
 
 void
 targ_speaker::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strSample", m_strSample);
-	SaveFloat(handle, "m_flVolume", m_flVolume);
+    super::Save(handle);
+    SaveString(handle, "m_strSample", m_strSample);
+    SaveFloat(handle, "m_flVolume", m_flVolume);
 }
 
 void
 targ_speaker::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strSample":
-		m_strSample = ReadString(setValue);
-		break;
-	case "m_flVolume":
-		m_flVolume = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strSample":
+        m_strSample = ReadString(setValue);
+        break;
+    case "m_flVolume":
+        m_flVolume = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 targ_speaker::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "noise":
-	case "tsnoise":
-		m_strSample = setValue;
-		break;
-	case "volume":
-		m_flVolume = stof(setValue);
-		break;
-	default:
-		break;
-	}
+    switch (strKey) {
+    case "noise":
+    case "tsnoise":
+        m_strSample = setValue;
+        break;
+    case "volume":
+        m_flVolume = stof(setValue);
+        break;
+    default:
+        break;
+    }
 }
 
 void
 targ_speaker::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 }
 
 void
 targ_speaker::Trigger(entity act, triggermode_t state)
 {
-	if (GetMaster(act) == FALSE)
-		return;
+    if (GetMaster(act) == FALSE)
+        return;
 
-	sound(this, CHAN_AUTO, m_strSample, m_flVolume, ATTN_NORM);
-	
+    sound(this, CHAN_AUTO, m_strSample, m_flVolume, ATTN_NORM);
+    
 }

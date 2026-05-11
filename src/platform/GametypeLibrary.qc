@@ -77,22 +77,22 @@ ncGametypeLibrary::Count(void)
 void
 ncGametypeLibrary::Reload(void)
 {
-	/* scan and cache the models */
-	searchhandle searchy = search_begin("progs/*.dat", SEARCH_MULTISEARCH | SEARCH_NAMESORT, TRUE);
+    /* scan and cache the models */
+    searchhandle searchy = search_begin("progs/*.dat", SEARCH_MULTISEARCH | SEARCH_NAMESORT, TRUE);
 
-	g_gametypeCount = (int)search_getsize(searchy);
+    g_gametypeCount = (int)search_getsize(searchy);
 
-	if (g_gametypeCount >= 1i) {
-		g_gametypeLibrary = memalloc(sizeof(playerModel_t) * g_gametypeCount);
+    if (g_gametypeCount >= 1i) {
+        g_gametypeLibrary = memalloc(sizeof(playerModel_t) * g_gametypeCount);
 
-		for (int i = 0i; i < g_gametypeCount; i++) {
+        for (int i = 0i; i < g_gametypeCount; i++) {
             g_gametypeLibrary[i].m_path = search_getfilename(searchy, i);
-			g_gametypeLibrary[i].m_name = substring(g_gametypeLibrary[i].m_path, 6, -5);
+            g_gametypeLibrary[i].m_name = substring(g_gametypeLibrary[i].m_path, 6, -5);
             //ncLogAlways("...gametype %S added", g_gametypeLibrary[i].m_name);
-		}
-		search_end(searchy);
-	}
+        }
+        search_end(searchy);
+    }
 
-	ncLogAlways("...indexed %i gametypes", g_gametypeCount);
+    ncLogAlways("...indexed %i gametypes", g_gametypeCount);
 }
 

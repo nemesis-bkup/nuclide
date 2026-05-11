@@ -39,40 +39,40 @@ info_landmark:ncPointTrigger
 
 enumflags
 {
-	LC_NOINTERMISSION,
-	LC_USEONLY
+    LC_NOINTERMISSION,
+    LC_USEONLY
 };
 
 void
 ChangeTarget_Activate(void)
 {
-	string ctarg = cvar_string("_bsp_changetarget");
-	ncTimer foo = __NULL__;
+    string ctarg = cvar_string("_bsp_changetarget");
+    ncTimer foo = __NULL__;
 
-	static void Finalize(void) {
-		string ctarg = cvar_string("_bsp_changetarget");
+    static void Finalize(void) {
+        string ctarg = cvar_string("_bsp_changetarget");
 
-		if not (ctarg)
-			return;
+        if not (ctarg)
+            return;
 
-		if (ctarg == "")
-			return;
+        if (ctarg == "")
+            return;
 
-		for (entity a = world; (a = find(a, ::targetname, ctarg));) {
-			ncEntity t = (ncEntity)a;
+        for (entity a = world; (a = find(a, ::targetname, ctarg));) {
+            ncEntity t = (ncEntity)a;
 
-			if (t.Trigger)
-				t.Trigger(self, TRIG_TOGGLE);
-		}
+            if (t.Trigger)
+                t.Trigger(self, TRIG_TOGGLE);
+        }
 
-		cvar_set("_bsp_changetarget", "");
-		cvar_set("_bsp_changedelay", "");
-	}
+        cvar_set("_bsp_changetarget", "");
+        cvar_set("_bsp_changedelay", "");
+    }
 
-	if not (ctarg)
-		return;
+    if not (ctarg)
+        return;
 
-	foo.TemporaryTimer(self, Finalize, cvar("_bsp_changedelay"), false);
+    foo.TemporaryTimer(self, Finalize, cvar("_bsp_changedelay"), false);
 }
 
 /*! \brief Server-Entity: Triggers Level Changes */
@@ -116,266 +116,266 @@ class
 trigger_changelevel:ncBrushTrigger
 {
 public:
-	void trigger_changelevel(void);
+    void trigger_changelevel(void);
 
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity,string,string);
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity,string,string);
 
-	virtual void Change(void);
-	virtual void Touch(entity);
-	virtual int IsInside(entity,entity);
+    virtual void Change(void);
+    virtual void Touch(entity);
+    virtual int IsInside(entity,entity);
 
 private:
-	float m_flChangeDelay;
-	string m_strChangeTarget;
-	string m_strMap;
-	string m_strLandmark;
-	string m_outputOnLevelChange;
-	entity m_activator;
+    float m_flChangeDelay;
+    string m_strChangeTarget;
+    string m_strMap;
+    string m_strLandmark;
+    string m_outputOnLevelChange;
+    entity m_activator;
 };
 
 void
 trigger_changelevel::trigger_changelevel(void)
 {
-	m_flChangeDelay = 0.0f;
-	m_strChangeTarget = __NULL__;
-	m_strMap = __NULL__;
-	m_strLandmark = __NULL__;
-	m_outputOnLevelChange = __NULL__;
-	m_activator = __NULL__;
+    m_flChangeDelay = 0.0f;
+    m_strChangeTarget = __NULL__;
+    m_strMap = __NULL__;
+    m_strLandmark = __NULL__;
+    m_outputOnLevelChange = __NULL__;
+    m_activator = __NULL__;
 }
 
 void
 trigger_changelevel::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveFloat(handle, "m_flChangeDelay", m_flChangeDelay);
-	SaveString(handle, "m_strChangeTarget", m_strChangeTarget);
-	SaveString(handle, "m_strMap", m_strMap);
-	SaveString(handle, "m_strLandmark", m_strLandmark);
-	SaveString(handle, "m_outputOnLevelChange", m_outputOnLevelChange);
-	SaveEntity(handle, "m_activator", m_activator);
+    SaveFloat(handle, "m_flChangeDelay", m_flChangeDelay);
+    SaveString(handle, "m_strChangeTarget", m_strChangeTarget);
+    SaveString(handle, "m_strMap", m_strMap);
+    SaveString(handle, "m_strLandmark", m_strLandmark);
+    SaveString(handle, "m_outputOnLevelChange", m_outputOnLevelChange);
+    SaveEntity(handle, "m_activator", m_activator);
 }
 
 void
 trigger_changelevel::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flChangeDelay":
-		m_flChangeDelay = ReadFloat(setValue);
-		break;
-	case "m_strChangeTarget":
-		m_strChangeTarget = ReadString(setValue);
-		break;
-	case "m_strMap":
-		m_strMap = ReadString(setValue);
-		break;
-	case "m_strLandmark":
-		m_strLandmark = ReadString(setValue);
-		break;
-	case "m_outputOnLevelChange":
-		m_outputOnLevelChange = ReadString(setValue);
-		break;
-	case "m_activator":
-		m_activator = ReadEntity(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flChangeDelay":
+        m_flChangeDelay = ReadFloat(setValue);
+        break;
+    case "m_strChangeTarget":
+        m_strChangeTarget = ReadString(setValue);
+        break;
+    case "m_strMap":
+        m_strMap = ReadString(setValue);
+        break;
+    case "m_strLandmark":
+        m_strLandmark = ReadString(setValue);
+        break;
+    case "m_outputOnLevelChange":
+        m_outputOnLevelChange = ReadString(setValue);
+        break;
+    case "m_activator":
+        m_activator = ReadEntity(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_changelevel::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "changetarget":
-		m_strChangeTarget = setValue;
-		break;
-	case "map":
-		m_strMap = setValue;
-		break;
-	case "landmark":
-		m_strLandmark = setValue;
-		break;
-	case "changedelay":
-		m_flChangeDelay = stof(setValue);
-		break;
-	case "OnLevelChange":
-	case "OnChangeLevel":
-		m_outputOnLevelChange = PrepareOutput(m_outputOnLevelChange, setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "changetarget":
+        m_strChangeTarget = setValue;
+        break;
+    case "map":
+        m_strMap = setValue;
+        break;
+    case "landmark":
+        m_strLandmark = setValue;
+        break;
+    case "changedelay":
+        m_flChangeDelay = stof(setValue);
+        break;
+    case "OnLevelChange":
+    case "OnChangeLevel":
+        m_outputOnLevelChange = PrepareOutput(m_outputOnLevelChange, setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_changelevel::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnLevelChange) {
-		m_outputOnLevelChange = CreateOutput(m_outputOnLevelChange);
-	}
+    if (m_outputOnLevelChange) {
+        m_outputOnLevelChange = CreateOutput(m_outputOnLevelChange);
+    }
 }
 
 void
 trigger_changelevel::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 int
 trigger_changelevel::IsInside(entity ePlayer, entity eVolume)
 {
-	if (ePlayer.absmin[0] > eVolume.absmax[0] ||
-		 ePlayer.absmin[1] > eVolume.absmax[1] ||
-		 ePlayer.absmin[2] > eVolume.absmax[2] ||
-		 ePlayer.absmax[0] < eVolume.absmin[0] ||
-		 ePlayer.absmax[1] < eVolume.absmin[1] ||
-		 ePlayer.absmax[2] < eVolume.absmin[2]) {
-		 return (0);
-	}
+    if (ePlayer.absmin[0] > eVolume.absmax[0] ||
+         ePlayer.absmin[1] > eVolume.absmax[1] ||
+         ePlayer.absmin[2] > eVolume.absmax[2] ||
+         ePlayer.absmax[0] < eVolume.absmin[0] ||
+         ePlayer.absmax[1] < eVolume.absmin[1] ||
+         ePlayer.absmax[2] < eVolume.absmin[2]) {
+         return (0);
+    }
 
-	return (1);
+    return (1);
 }
 
 void
 trigger_changelevel::Change(void)
 {
-	trigger_transition transitionHelper = __NULL__;
+    trigger_transition transitionHelper = __NULL__;
 
-	/* needed for logic_auto */
-	cvar_set("_bsp_change_auto", "1");
+    /* needed for logic_auto */
+    cvar_set("_bsp_change_auto", "1");
 
-	/* standard level change */
-	if (!m_strLandmark) {
-		EntLog("Change to %S", m_strMap);
-		parm_string = m_strChangeTarget;
-		changelevel(m_strMap);
-		return;
-	}
+    /* standard level change */
+    if (!m_strLandmark) {
+        EntLog("Change to %S", m_strMap);
+        parm_string = m_strChangeTarget;
+        changelevel(m_strMap);
+        return;
+    }
 
-	if (!target) {
-		UseOutput(m_activator, m_outputOnLevelChange);
-	} else {
-		UseTargets(m_activator, TRIG_TOGGLE, GetTriggerDelay());
-	}
+    if (!target) {
+        UseOutput(m_activator, m_outputOnLevelChange);
+    } else {
+        UseTargets(m_activator, TRIG_TOGGLE, GetTriggerDelay());
+    }
 
-	/* if some other entity triggered us... just find the next player. */
-	if (!(m_activator.flags & FL_CLIENT)) {
-		/* we need a player if we want to use landmarks at all */
-		m_activator = next.Player(world);
-	}
+    /* if some other entity triggered us... just find the next player. */
+    if (!(m_activator.flags & FL_CLIENT)) {
+        /* we need a player if we want to use landmarks at all */
+        m_activator = next.Player(world);
+    }
 
-	if (m_strLandmark) {
-		for (entity e = world; (e = find(e, ::classname, "trigger_transition"));) {
-			transitionHelper = (trigger_transition)e;
+    if (m_strLandmark) {
+        for (entity e = world; (e = find(e, ::classname, "trigger_transition"));) {
+            transitionHelper = (trigger_transition)e;
 
-			if (e.targetname == m_strLandmark) {
-				if (IsInside(m_activator, e) == false)
-					return;
-			}
-		}
-	}
+            if (e.targetname == m_strLandmark) {
+                if (IsInside(m_activator, e) == false)
+                    return;
+            }
+        }
+    }
 
-	/* a trigger_transition may share the same targetname, thus we do this */
-	for (entity e = world; (e = find(e, ::classname, "info_landmark"));) {
-		info_landmark landMarkPVS = (info_landmark)e;
-		/* found it */
-		if (landMarkPVS.targetname == m_strLandmark) {
-			EntLog("Found landmark for %S", m_strLandmark);
-			g_landmarkpos = m_activator.origin - landMarkPVS.origin;
+    /* a trigger_transition may share the same targetname, thus we do this */
+    for (entity e = world; (e = find(e, ::classname, "info_landmark"));) {
+        info_landmark landMarkPVS = (info_landmark)e;
+        /* found it */
+        if (landMarkPVS.targetname == m_strLandmark) {
+            EntLog("Found landmark for %S", m_strLandmark);
+            g_landmarkpos = m_activator.origin - landMarkPVS.origin;
 
-			if (transitionHelper) {
-				ncSessionManager::TransitionFromVolume(transitionHelper);
-			} else {
-				ncSessionManager::TransitionFromPVS(landMarkPVS);
-			}
+            if (transitionHelper) {
+                ncSessionManager::TransitionFromVolume(transitionHelper);
+            } else {
+                ncSessionManager::TransitionFromPVS(landMarkPVS);
+            }
 
-			changelevel(m_strMap, m_strLandmark);
-			return;
-		}
-	}
+            changelevel(m_strMap, m_strLandmark);
+            return;
+        }
+    }
 }
 
 void
 trigger_changelevel::Trigger(entity act, triggermode_t unused)
 {
-	if (GetMaster(act) == false) {
-		return;
-	}
+    if (GetMaster(act) == false) {
+        return;
+    }
 
-	/* disable meself */
-	SetSolid(SOLID_NOT);
+    /* disable meself */
+    SetSolid(SOLID_NOT);
 
-	/* eActivator == player who triggered the damn thing */
-	m_activator = act;
+    /* eActivator == player who triggered the damn thing */
+    m_activator = act;
 
-	cvar_set("_bsp_changetarget", m_strChangeTarget);
-	cvar_set("_bsp_changedelay", ftos(m_flChangeDelay));
+    cvar_set("_bsp_changetarget", m_strChangeTarget);
+    cvar_set("_bsp_changedelay", ftos(m_flChangeDelay));
 
-	Change();
+    Change();
 }
 
 void
 trigger_changelevel::Touch(entity eToucher)
 {
-	if (HasSpawnFlags(LC_USEONLY)) {
-		return;
-	}
+    if (HasSpawnFlags(LC_USEONLY)) {
+        return;
+    }
 
-	if (is.Player(eToucher) == false) {
-		return;
-	}
+    if (is.Player(eToucher) == false) {
+        return;
+    }
 
-	if (time < 2.0f) {
-		return;
-	}
+    if (time < 2.0f) {
+        return;
+    }
 
-	Trigger(eToucher, TRIG_TOGGLE);
+    Trigger(eToucher, TRIG_TOGGLE);
 }
 
 void
 trigger_changelevel::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "ChangeLevel":
-		Trigger(eAct, TRIG_TOGGLE);
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "changelevel":
+        Trigger(eAct, TRIG_TOGGLE);
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }
 
 vector
 Landmark_GetSpot(void)
 {
-	/* a trigger_transition may share the same targetname, thus we do this */
-	for (entity e = world; (e = find(e, ::classname, "info_landmark"));) {
-		info_landmark lm = (info_landmark)e;
-		/* found it */
-		if (lm.targetname == startspot) {
-			ncLog("^3Landmark_GetSpot^7: Found landmark for %s", startspot);
-			return lm.origin + g_landmarkpos;
-		}
-	}
+    /* a trigger_transition may share the same targetname, thus we do this */
+    for (entity e = world; (e = find(e, ::classname, "info_landmark"));) {
+        info_landmark lm = (info_landmark)e;
+        /* found it */
+        if (lm.targetname == startspot) {
+            ncLog("^3Landmark_GetSpot^7: Found landmark for %s", startspot);
+            return lm.origin + g_landmarkpos;
+        }
+    }
 
-	/* return something useful at least */
-	entity ips = find(world, ::classname, "info_player_start");
-	ncError("Cannot find startspot %S!\n", startspot);
-	return ips.origin;
+    /* return something useful at least */
+    entity ips = find(world, ::classname, "info_player_start");
+    ncError("Cannot find startspot %S!\n", startspot);
+    return ips.origin;
 }
 
 vector
 Landmark_GetPosition(void)
 {
-	return g_landmarkpos;
+    return g_landmarkpos;
 }

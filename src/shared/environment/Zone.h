@@ -28,7 +28,7 @@ class
 ncZone:ncPointTrigger
 {
 public:
-	void ncZone(void);
+    void ncZone(void);
 
     nonvirtual ncZone CreateZoneBoundsWithDescription(vector minBox, vector maxBox, string zoneDescription);
     nonvirtual ncZone CreateZoneWithDescription(vector positionCoord, string zoneDescription);
@@ -36,12 +36,12 @@ public:
     nonvirtual void LimitedZoneFromPoint(vector pointLocation, float limitedSize);
 
     /* overrides */
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	virtual void Touch(entity);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    virtual void Touch(entity);
 
 private:
-	string m_strDescription;
+    string m_strDescription;
 };
 
 void

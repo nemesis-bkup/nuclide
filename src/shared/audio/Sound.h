@@ -16,56 +16,56 @@
 
 enumflags
 {
-	SOUND_SAMPLE,
-	SOUND_VOLUME,
-	SOUND_RADIUS,
-	SOUND_PITCH,
-	SOUND_ORIGIN,
-	SOUND_ENABLED
+    SOUND_SAMPLE,
+    SOUND_VOLUME,
+    SOUND_RADIUS,
+    SOUND_PITCH,
+    SOUND_ORIGIN,
+    SOUND_ENABLED
 };
 
 class
 ncSound:ncPointTrigger
 {
 public:
-	void ncSound( void );
+    void ncSound( void );
 
-	nonvirtual void SetSample( string );
-	nonvirtual void SetVolume( float );
-	nonvirtual void SetRadius( float );
-	nonvirtual void SetPitch( float );
-	nonvirtual void SetSoundOffset( float );
-	nonvirtual void MakeOmniDirectional( void );
-	nonvirtual void MakeDirectional( void );
-	nonvirtual void EnableReverb( void );
-	nonvirtual void DisableReverb( void );
-	nonvirtual void ForceLoop( bool );
-	nonvirtual void Play( void );
+    nonvirtual void SetSample( string );
+    nonvirtual void SetVolume( float );
+    nonvirtual void SetRadius( float );
+    nonvirtual void SetPitch( float );
+    nonvirtual void SetSoundOffset( float );
+    nonvirtual void MakeOmniDirectional( void );
+    nonvirtual void MakeDirectional( void );
+    nonvirtual void EnableReverb( void );
+    nonvirtual void DisableReverb( void );
+    nonvirtual void ForceLoop( bool );
+    nonvirtual void Play( void );
 
-	virtual void Spawned(void);
-	virtual void OnRemoveEntity(void);
+    virtual void Spawned(void);
+    virtual void OnRemoveEntity(void);
 
 #ifdef SERVER
-	virtual void Respawn(void);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity, float);
+    virtual void Respawn(void);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity, float);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float,float);
+    virtual void ReceiveEntity(float,float);
 #endif
 
-	nonvirtual ncSound CreateAmbientSound(vector worldPosition, string sampleFX, float maxRadius, optional float minRadius = 0);
+    nonvirtual ncSound CreateAmbientSound(vector worldPosition, string sampleFX, float maxRadius, optional float minRadius = 0);
 
 private:
-	NETWORKED_FLOAT(m_radius)
-	NETWORKED_FLOAT(m_volume)
-	NETWORKED_FLOAT(m_soundIndex)
-	NETWORKED_FLOAT(m_pitch)
-	NETWORKED_BOOL(m_isLooping)
-	string m_sample;
-	bool m_omniDirectional;
-	float m_offset;
-	bool m_ignoreReverb;
-	bool m_forceLoop;
+    NETWORKED_FLOAT(m_radius)
+    NETWORKED_FLOAT(m_volume)
+    NETWORKED_FLOAT(m_soundIndex)
+    NETWORKED_FLOAT(m_pitch)
+    NETWORKED_BOOL(m_isLooping)
+    string m_sample;
+    bool m_omniDirectional;
+    float m_offset;
+    bool m_ignoreReverb;
+    bool m_forceLoop;
 };

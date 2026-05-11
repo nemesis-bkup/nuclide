@@ -21,9 +21,9 @@
 class ncSpawnPoint:ncPointTrigger
 {
 public:
-	void ncSpawnPoint(void);
+    void ncSpawnPoint(void);
 
-	/* overrides */
-	virtual void Respawn(void);
-	virtual void Spawned(void);
+    /* overrides */
+    virtual void Respawn(void);
+    virtual void Spawned(void);
 };

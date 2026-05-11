@@ -17,9 +17,9 @@
 void
 ncMailDict::ncMailDict(void)
 {
-	m_mailDate = g_string_null;
-	m_mailTo = g_string_null;
-	m_mailFrom = g_string_null;
-	m_mailSubject = g_string_null;
-	m_mailText = g_string_null;
+    m_mailDate = g_string_null;
+    m_mailTo = g_string_null;
+    m_mailFrom = g_string_null;
+    m_mailSubject = g_string_null;
+    m_mailText = g_string_null;
 }

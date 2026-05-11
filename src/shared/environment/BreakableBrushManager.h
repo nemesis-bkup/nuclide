@@ -20,13 +20,14 @@ ncBreakableBrushManager
 {
 #ifdef SERVER
 public:
-	nonvirtual void CarveRadiusIntoBrush(vector atPos, float withDamage);
-	nonvirtual void CreateBrush(vector absMin, vector absMax, string shaderName);
-	nonvirtual void ResetBrushFaceUVCoords(brushface_t *fa);
+    nonvirtual void CarveRadiusIntoBrush(vector atPos, float withDamage);
+    nonvirtual void CreateBrush(vector absMin, vector absMax, string shaderName);
+    nonvirtual void CarveBrush(vector absMin, vector absMax, string shaderName);
+    nonvirtual void ResetBrushFaceUVCoords(brushface_t *fa);
 private:
-	nonvirtual void _StageCarvedBrush(vector centre, float radius, string shadername);
-	nonvirtual void _SubtractStageFromIntersecting(float modelindex, int br);
-	nonvirtual void _StageBoundingBoxBrush(vector min, vector max, string shadername);
-	nonvirtual float _SubtractStagedFromModelindex(float mod);
+    nonvirtual void _StageCarvedBrush(vector centre, float radius, string shadername);
+    nonvirtual void _SubtractStageFromIntersecting(float modelindex, int br);
+    nonvirtual void _StageBoundingBoxBrush(vector min, vector max, string shadername);
+    nonvirtual float _SubtractStagedFromModelindex(float mod);
 #endif
 };

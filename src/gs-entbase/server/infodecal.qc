@@ -44,116 +44,116 @@ class
 infodecal:ncPointTrigger
 {
 public:
-	void infodecal(void);
-	
-	virtual void SpawnKey(string,string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
+    void infodecal(void);
+    
+    virtual void SpawnKey(string,string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	ncDecal m_decChild;
-	string m_strTexture;
+    ncDecal m_decChild;
+    string m_strTexture;
 };
 
 void
 infodecal::infodecal(void)
 {
-	m_decChild = __NULL__;
-	m_strTexture = __NULL__;
+    m_decChild = __NULL__;
+    m_strTexture = __NULL__;
 }
 
 void
 infodecal::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "material":
-		m_strTexture = setValue;
-		break;
-	case "texture":
-		m_strTexture = strtolower(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "material":
+        m_strTexture = setValue;
+        break;
+    case "texture":
+        m_strTexture = strtolower(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 infodecal::Spawned(void)
 {
-	float bsp_version = serverkeyfloat("*bspversion");
+    float bsp_version = serverkeyfloat("*bspversion");
 
-	super::Spawned();
+    super::Spawned();
 
-	switch (bsp_version) {
-	case BSPVER_HL:
-	case BSPVER_RBSP:
-	case BSPVER_Q3:
-	case BSPVER_RTCW:
-		break;
-	default:
-		Destroy();
-		return;
-	}
+    switch (bsp_version) {
+    case BSPVER_HL:
+    case BSPVER_RBSP:
+    case BSPVER_Q3:
+    case BSPVER_RTCW:
+        break;
+    default:
+        Destroy();
+        return;
+    }
 }
 
 void
 infodecal::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 
-	if (HasTargetname() == false) {
-		/* we'll let the client-side handle this infodecal */
-		Destroy();
-	} else {
-		/* this will be invisible by default. needs to be triggered. */
-		Trigger(this, TRIG_OFF);
-		m_decChild = __NULL__;
-	}
+    if (HasTargetname() == false) {
+        /* we'll let the client-side handle this infodecal */
+        Destroy();
+    } else {
+        /* this will be invisible by default. needs to be triggered. */
+        Trigger(this, TRIG_OFF);
+        m_decChild = __NULL__;
+    }
 }
 
 void
 infodecal::Save(float handle)
 {
-	super::Save(handle);
-	SaveEntity(handle, "decChild", m_decChild);
-	SaveString(handle, "strTexture", m_strTexture);
+    super::Save(handle);
+    SaveEntity(handle, "decChild", m_decChild);
+    SaveString(handle, "strTexture", m_strTexture);
 }
 
 void
 infodecal::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "decChild":
-		m_decChild = (ncDecal)ReadEntity(setValue);
-		break;
-	case "strTexture":
-		m_strTexture = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "decChild":
+        m_decChild = (ncDecal)ReadEntity(setValue);
+        break;
+    case "strTexture":
+        m_strTexture = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 infodecal::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		if (m_decChild) {
-			remove(m_decChild);
-			m_decChild = __NULL__;
-		}
-		break;
-	case TRIG_ON:
-		if (!m_decChild) {
-			m_decChild = spawn(ncDecal);
-			m_decChild.Place(origin, m_strTexture);
-		}
-		break;
-	default:
-		Trigger(act, (m_decChild == __NULL__) ? TRIG_ON : TRIG_OFF);
-	}
+    switch (state) {
+    case TRIG_OFF:
+        if (m_decChild) {
+            remove(m_decChild);
+            m_decChild = __NULL__;
+        }
+        break;
+    case TRIG_ON:
+        if (!m_decChild) {
+            m_decChild = spawn(ncDecal);
+            m_decChild.Place(origin, m_strTexture);
+        }
+        break;
+    default:
+        Trigger(act, (m_decChild == __NULL__) ? TRIG_ON : TRIG_OFF);
+    }
 }

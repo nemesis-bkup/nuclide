@@ -33,9 +33,9 @@ class
 reserved_spot:ncEntity
 {
 public:
-	void reserved_spot(void);
+    void reserved_spot(void);
 
-	virtual void Respawn(void);
+    virtual void Respawn(void);
 };
 
 void
@@ -47,10 +47,10 @@ reserved_spot::reserved_spot(void)
 void
 reserved_spot::Respawn(void)
 {
-	super::Respawn();
-	ClearAngles();
-	SetSolid(SOLID_BSP);
-	SetMovetype(MOVETYPE_NONE);
-	SetSkin(-17); /* undocumented MONSTERCLIP */
-	Hide();
+    super::Respawn();
+    ClearAngles();
+    SetSolid(SOLID_BSP);
+    SetMovetype(MOVETYPE_NONE);
+    SetSkin(-17); /* undocumented MONSTERCLIP */
+    Hide();
 }

@@ -17,116 +17,128 @@
 int
 Route_RoundDistance(float flDist)
 {
-	float r = fabs(flDist) % 2.0f;
+    float r = fabs(flDist) % 2.0f;
 
-	if (r == 0)
-		return (flDist);
+    if (r == 0)
+        return (flDist);
 
-	if (flDist < 0)
-		return -(fabs(flDist) - r);
-	else
-		return (flDist + 2.0f - r);
+    if (flDist < 0)
+        return -(fabs(flDist) - r);
+    else
+        return (flDist + 2.0f - r);
 }
 
 
 /* returns a botinfo point that's nearest to us */
 ncEntity
-Route_SelectFarthest(string type, vector org, optional vector lastpoi = [0,0,0]) 
+Route_SelectFarthest(string type, vector org, optional vector lastpoi = [0,0,0])
 {
-	entity temp;
-	int bestrange = 0;
-	int range;
-	entity dest = __NULL__;
+    entity temp;
+    int bestrange = 0;
+    int range;
+    entity dest = __NULL__;
 
-	for (temp = world; (temp = find(temp, ::m_hintType, type));) {
-		range = distanceSquared(temp.origin, org);
+    for (temp = world; (temp = find(temp, ::m_hintType, type));) {
+        range = distanceSquared(temp.origin, org);
 
-		if (lastpoi == temp.origin)
-			continue;
+        if (lastpoi == temp.origin)
+            continue;
 
-		if ((range > bestrange) && (temp.solid != SOLID_NOT)) {
-			bestrange = range;
-			dest = temp;
-		}
-	}
+        if ((range > bestrange) && (temp.solid != SOLID_NOT)) {
+            bestrange = range;
+            dest = temp;
+        }
+    }
 
-	return dest;
+    return dest;
 }
 
 /* returns a botinfo point that's nearest to us */
 ncEntity
-Route_SelectNearest(string type, vector org, optional vector lastpoi = [0,0,0]) 
+Route_SelectNearest(string type, vector org, optional vector lastpoi = [0,0,0])
 {
-	entity temp;
-	int bestrange = MAX_DISTANCE;
-	int range;
-	entity dest = __NULL__;
+    entity temp;
+    int bestrange = MAX_DISTANCE;
+    int range;
+    entity dest = __NULL__;
 
-	for (temp = world; (temp = find(temp, ::m_hintType, type));) {
-		range = distanceSquared(temp.owner.origin, org);
+    for (temp = world; (temp = find(temp, ::m_hintType, type));) {
+        range = distanceSquared(temp.owner.origin, org);
 
-		if (lastpoi == temp.owner.origin)
-			continue;
+        if (lastpoi == temp.owner.origin)
+            continue;
 
-		if ((range < bestrange) && (temp.owner.solid != SOLID_NOT)) {
-			bestrange = range;
-			dest = temp;
-		}
-	}
+        if ((range < bestrange) && (temp.owner.solid != SOLID_NOT)) {
+            bestrange = range;
+            dest = temp;
+        }
+    }
 
-	return dest;
+    return dest;
 }
 
 /* returns a botinfo point belonging to our team */
 ncEntity
-Route_SelectNearestTeam(string type, vector org, float tt) 
+Route_SelectNearestTeamObject(string type, vector org, float tt)
 {
-	entity temp;
-	int bestrange = MAX_DISTANCE;
-	int range;
-	entity dest = __NULL__;
+    entity temp;
+    int bestrange = MAX_DISTANCE;
+    int range;
+    entity dest = __NULL__;
 
-	for (temp = world; (temp = find(temp, ::m_hintType, type));) {
-		ncEntity tempEnt = (ncEntity)temp.owner;
+    for (temp = world; (temp = find(temp, ::m_hintType, type));) {
+        ncEntity tempEnt = (ncEntity)temp.owner;
+        vector pos1;
 
-		if (tempEnt.team != tt)
-			continue;
+        if (tempEnt.m_goalNo != tt)
+            continue;
 
-		range = distanceSquared(tempEnt.WorldSpaceCenter(), org);
+        pos1 = tempEnt.WorldSpaceCenter();
+        range = vlen(pos1 - org);
+        BotLog("%s  %d team == %d, solid %d != %d, %v - %v; %d < %d == %d", tempEnt.classname, tempEnt.m_goalNo, tt, tempEnt.solid, SOLID_NOT, pos1, org, range, bestrange, (range < bestrange));
 
-		if ((range < bestrange) && (tempEnt.solid != SOLID_NOT)) {
-			bestrange = range;
-			dest = temp;
-		}
-	}
+        if ((range < bestrange) && (tempEnt.solid != SOLID_NOT)) {
+            bestrange = range;
+            dest = temp;
+            BotLog("%s (%d) is a great pick (team %d, which isn't %d)", dest.classname, num_for_edict(dest), dest.m_goalNo, tt);
+        }
+    }
 
-	return dest;
+    return dest;
 }
 
 /* returns a botinfo point belonging to the enemy team */
 ncEntity
-Route_SelectNearestEnemyTeam(string type, vector org, float tt) 
+Route_SelectNearestEnemyTeamObject(string type, vector org, float tt)
 {
-	entity temp;
-	int bestrange = MAX_DISTANCE;
-	int range;
-	entity dest = __NULL__;
+    entity temp;
+    int bestrange = MAX_DISTANCE;
+    int range;
+    entity dest = __NULL__;
 
-	for (temp = world; (temp = find(temp, ::m_hintType, type));) {
-		ncEntity tempEnt = (ncEntity)temp.owner;
+    for (temp = world; (temp = find(temp, ::m_hintType, type));) {
+        ncEntity tempEnt = (ncEntity)temp.owner;
+        vector pos1;
 
-		if (tempEnt.team == tt)
-			continue;
+        if (tempEnt.m_goalNo == tt) {
+            continue;
+        }
 
-		range = distanceSquared(tempEnt.WorldSpaceCenter(), org);
+        pos1 = tempEnt.WorldSpaceCenter();
 
-		if ((range < bestrange) && (tempEnt.solid != SOLID_NOT)) {
-			bestrange = range;
-			dest = temp;
-		}
-	}
+        range = vlen(pos1 - org);
+        BotLog("%s  %d team != %d, solid %d != %d, %v - %v; %d < %d == %d", tempEnt.classname, tempEnt.m_goalNo, tt, tempEnt.solid, SOLID_NOT, pos1, org, range, bestrange, (range < bestrange));
 
-	return dest;
+
+        if ((range < bestrange) && (tempEnt.solid != SOLID_NOT)) {
+            bestrange = range;
+            dest = temp;
+            BotLog("%s (%d) is a great pick (team %d, which isn't %d)", dest.classname, num_for_edict(dest), dest.m_goalNo, tt);
+        }
+    }
+
+    BotLog("%s (%d) chosen", dest.classname, num_for_edict(dest));
+    return dest;
 }
 
 
@@ -136,11 +148,11 @@ Spawn_SelectRandom
 ================
 */
 ncEntity
-Route_SelectRandom(string sEntname) 
+Route_SelectRandom(string sEntname)
 {
-	static entity eLastSpot;
-	eLastSpot = find(eLastSpot, classname, sEntname);
-	return (eLastSpot);
+    static entity eLastSpot;
+    eLastSpot = find(eLastSpot, classname, sEntname);
+    return (eLastSpot);
 }
 
 /*
@@ -151,125 +163,130 @@ Route_SelectRandomSpot
 ncEntity
 Route_SelectRandomSpot(void)
 {
-	static entity eLastSpot;
-	eLastSpot = find(eLastSpot, ::spawnclass, "ncSpawnPoint");
+    static entity eLastSpot;
+    eLastSpot = find(eLastSpot, ::spawnclass, "ncSpawnPoint");
 
-	if (!eLastSpot)
-		return (Route_SelectRandomSpot());
+    if (!eLastSpot)
+        return (Route_SelectRandomSpot());
 
-	return (eLastSpot);
+    return (eLastSpot);
 }
 
 vector
 Route_SelectDestination(ncBot target)
 {
-	ncRuleDelegate rules;
-	rules = (ncRuleDelegate)g_grMode;
+    ncRuleDelegate rules;
+    rules = (ncRuleDelegate)g_grMode;
 
-	ncEntity dest = __NULL__;
+    ncEntity dest = __NULL__;
 
-	if (rules.IsTeamplay()) {
-		/* we have the goal item, so capture it */
-		if (target.m_nuclideFlags & VFL_GOALITEM) {
-			BotLog("%s going for capture", target.netname);
-			dest = Route_SelectNearestTeam("GOALCAP", target.origin, target.team);
-			
-			/* we may have to go to our teams' goal item then */
-			if (!dest) {
-				dest = Route_SelectNearestTeam("GOALITEM", target.origin, target.team);
-			}
-		} else {
-			BotLog("%s hunting for goal item", target.netname);
-			dest = Route_SelectNearestEnemyTeam("GOALITEM", target.origin, target.team);
-		}
+    if (rules.IsTeamplay()) {
+        /* we have the goal item, so capture it */
+        if (target.m_nuclideFlags & VFL_GOALITEM) {
+            BotLog("%s (team %d) going for capture", target.netname, target.team);
+            dest = Route_SelectNearestTeamObject("GOALCAP", target.origin, target.team);
 
-		if (dest != __NULL__) {
-			target.m_vecLastPOI = dest.WorldSpaceCenter();
-			return dest.WorldSpaceCenter() + [0,0,32];
-		}
+            /* we may have to go to our teams' goal item then */
+            if (!dest) {
+                dest = Route_SelectNearestTeamObject("GOALITEM", target.origin, target.team);
+            }
+        } else {
+            BotLog("%s (team %d) hunting for goal item", target.netname, target.team);
+            dest = Route_SelectNearestEnemyTeamObject("GOALITEM", target.origin, target.team);
 
-		/* by now, they need something else to do involving goal items probably */
-		BotLog("%s can't figure out where to go for the goal", target.netname);
-	}
+            /* we may have to go to our teams' goal item then */
+            if (!dest) {
+                dest = Route_SelectNearestTeamObject("GOALITEM", target.origin, target.team);
+            }
+        }
 
-	/* if we're low on health, look for health items */
-	if (target.health < 50) {
-		BotLog("%s going for health", target.netname);
-		dest = Route_SelectNearest("HEALTH", target.origin, target.m_vecLastPOI);
+        if (dest != __NULL__) {
+            target.m_vecLastPOI = dest.WorldSpaceCenter();
+            return dest.WorldSpaceCenter() + [0,0,32];
+        }
 
-		if (dest != __NULL__) {
-			target.m_vecLastPOI = dest.WorldSpaceCenter();
-			return dest.origin + [0,0,32];
-		}
+        /* by now, they need something else to do involving goal items probably */
+        BotLog("%s can't figure out where to go for the goal", target.netname);
+    }
 
-		BotLog("%s can't figure out where to go for health", target.netname);
-	}
+    /* if we're low on health, look for health items */
+    if (target.health < 50) {
+        BotLog("%s going for health", target.netname);
+        dest = Route_SelectNearest("HEALTH", target.origin, target.m_vecLastPOI);
 
-	/* armor is always a good idea to have */
-	if (random() < 0.25)
-	if (target.armor < 50) {
-		BotLog("%s going for armor", target.netname);
-		dest = Route_SelectNearest("ARMOR", target.origin, target.m_vecLastPOI);
-		
-		if (dest != __NULL__) {
-			target.m_vecLastPOI = dest.origin;
-			return dest.origin + [0,0,32];
-		}
+        if (dest != __NULL__) {
+            target.m_vecLastPOI = dest.WorldSpaceCenter();
+            return dest.origin + [0,0,32];
+        }
 
-		BotLog("%s can't figure out where to go for armor", target.netname);
-	}
+        BotLog("%s can't figure out where to go for health", target.netname);
+    }
 
-	/* go for ammo, or weapon */
-	if (random() < 0.25)
-	if (!dest) {
-		BotLog("%s going for ammo/weapon", target.netname);
+    /* armor is always a good idea to have */
+    if (random() < 0.25)
+    if (target.armor < 50) {
+        BotLog("%s going for armor", target.netname);
+        dest = Route_SelectNearest("ARMOR", target.origin, target.m_vecLastPOI);
 
-		if (random() < 0.5)
-			dest = Route_SelectFarthest("WEAPON", target.origin, target.m_vecLastPOI);
-		else
-			dest = Route_SelectFarthest("AMMO", target.origin, target.m_vecLastPOI);
-		
-		if (dest != __NULL__) {
-			target.m_vecLastPOI = dest.origin;
-			return dest.origin + [0,0,32];
-		}
+        if (dest != __NULL__) {
+            target.m_vecLastPOI = dest.origin;
+            return dest.origin + [0,0,32];
+        }
 
-		BotLog("%s can't figure out where to go for ammo/weapon", target.netname);
-	}
+        BotLog("%s can't figure out where to go for armor", target.netname);
+    }
 
-	if (random() < 0.25)
-	if (!dest) {
-		static entity but;
-		but = find(but, ::classname, "func_button");
+    /* go for ammo, or weapon */
+    if (random() < 0.25)
+    if (!dest) {
+        BotLog("%s going for ammo/weapon", target.netname);
 
-		if (but)
-			return but.absmin + (0.5 * (but.absmax - but.absmin));
-	}
+        if (random() < 0.5)
+            dest = Route_SelectFarthest("WEAPON", target.origin, target.m_vecLastPOI);
+        else
+            dest = Route_SelectFarthest("AMMO", target.origin, target.m_vecLastPOI);
 
-	if (random() < 0.25)
-	if (!dest) {
-		static entity trig;
-		trig = find(trig, ::classname, "trigger_multiple");
+        if (dest != __NULL__) {
+            target.m_vecLastPOI = dest.origin;
+            return dest.origin + [0,0,32];
+        }
 
-		if (trig)
-			return trig.absmin + (0.5 * (trig.absmax - trig.absmin));
-	}
+        BotLog("%s can't figure out where to go for ammo/weapon", target.netname);
+    }
 
-	/* if all else fails... select a random spot */
-	BotLog("%s found nothing, going for random PoI", target.netname);
-	dest = Route_SelectRandomSpot();
-	target.m_eDestination = dest;
-	return (dest.origin);
+    if (random() < 0.25)
+    if (!dest) {
+        static entity but;
+        but = find(but, ::classname, "func_button");
+
+        if (but)
+            return but.absmin + (0.5 * (but.absmax - but.absmin));
+    }
+
+    if (random() < 0.25)
+    if (!dest) {
+        static entity trig;
+        trig = find(trig, ::classname, "trigger_multiple");
+
+        if (trig)
+            return trig.absmin + (0.5 * (trig.absmax - trig.absmin));
+    }
+
+    /* if all else fails... select a random spot */
+    BotLog("%s found nothing, going for random PoI", target.netname);
+    dest = Route_SelectRandomSpot();
+    target.m_eDestination = dest;
+    return (dest.origin);
 }
 
 int
 Route_GetNodeFlags(nodeslist_t *node)
 {
-	int fl = node.linkflags;
+    int fl = node.linkflags;
 
-	/* to avoid random buttons being pressed */
-	if (fl < 0)
-		return LF_DESTINATION;
-	else
-		return fl;
+    /* to avoid random buttons being pressed */
+    if (fl < 0)
+        return LF_DESTINATION;
+    else
+        return fl;
 }

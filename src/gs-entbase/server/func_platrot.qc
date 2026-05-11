@@ -16,22 +16,22 @@
 
 enumflags
 {
-	FNCPLATROT_TOGGLE,
-	FNCPLATROT_UNUSED1,
-	FNCPLATROT_UNUSED2,
-	FNCPLATROT_UNUSED3,
-	FNCPLATROT_UNUSED4,
-	FNCPLATROT_UNUSED5,
-	FNCPLATROT_AXISX,
-	FNCPLATROT_AXISY,
+    FNCPLATROT_TOGGLE,
+    FNCPLATROT_UNUSED1,
+    FNCPLATROT_UNUSED2,
+    FNCPLATROT_UNUSED3,
+    FNCPLATROT_UNUSED4,
+    FNCPLATROT_UNUSED5,
+    FNCPLATROT_AXISX,
+    FNCPLATROT_AXISY,
 };
 
 enum
 {
-	PLATSTATE_RAISED,
-	PLATSTATE_LOWERED,
-	PLATSTATE_UP,
-	PLATSTATE_DOWN
+    PLATSTATE_RAISED,
+    PLATSTATE_LOWERED,
+    PLATSTATE_UP,
+    PLATSTATE_DOWN
 };
 
 /*! \brief Server-Entity: Rotating Vertical Platform */
@@ -65,93 +65,93 @@ class
 func_platrot:func_plat
 {
 public:
-	void func_platrot(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	virtual void PlatformReturn(void);
+    void func_platrot(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    virtual void PlatformReturn(void);
 
 private:
-	float m_platRotation;
+    float m_platRotation;
 };
 
 void
 func_platrot::func_platrot(void)
 {
-	m_platRotation = 0.0f;
+    m_platRotation = 0.0f;
 }
 
 void
 func_platrot::Save(float handle)
 {
-	super::Save(handle);
+    super::Save(handle);
 
-	SaveFloat(handle, "platRotation", m_platRotation);
+    SaveFloat(handle, "platRotation", m_platRotation);
 }
 
 void
 func_platrot::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "platRotation":
-		m_platRotation = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "platRotation":
+        m_platRotation = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_platrot::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "rotation":
-		m_platRotation = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "rotation":
+        m_platRotation = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_platrot::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetMoverRotation2(GetAngles());
-	SetMoverRotation1([0, m_platRotation, 0]);
+    SetMoverRotation2(GetAngles());
+    SetMoverRotation1([0, m_platRotation, 0]);
 
-	if (HasTargetname() == false) {
-		SetAngles(GetMoverRotation2());
-	} else {
-		SetAngles(GetMoverRotation1());
-	}
+    if (HasTargetname() == false) {
+        SetAngles(GetMoverRotation2());
+    } else {
+        SetAngles(GetMoverRotation1());
+    }
 }
 
 void
 func_platrot::PlatformReturn(void)
 {
-	MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
+    MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
 }
 
 void
 func_platrot::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		MoveAndRotateToPosition(GetMoverPosition1(), GetMoverRotation1(), GetPlatformSpeed());
-		break;
-	case TRIG_ON:
-		MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
-		break;
-	default:
-		if ((GetMoverState() == MOVER_POS2) || (GetMoverState() == MOVER_1TO2)){
-			MoveAndRotateToPosition(GetMoverPosition1(), GetMoverRotation1(), GetPlatformSpeed());
-		} else {
-			MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
-		}
-	}
+    switch (state) {
+    case TRIG_OFF:
+        MoveAndRotateToPosition(GetMoverPosition1(), GetMoverRotation1(), GetPlatformSpeed());
+        break;
+    case TRIG_ON:
+        MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
+        break;
+    default:
+        if ((GetMoverState() == MOVER_POS2) || (GetMoverState() == MOVER_1TO2)){
+            MoveAndRotateToPosition(GetMoverPosition1(), GetMoverRotation1(), GetPlatformSpeed());
+        } else {
+            MoveAndRotateToPosition(GetMoverPosition2(), GetMoverRotation2(), GetPlatformSpeed());
+        }
+    }
 }

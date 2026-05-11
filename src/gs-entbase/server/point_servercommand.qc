@@ -35,10 +35,10 @@ class
 point_servercommand:ncPointTrigger
 {
 public:
-	void point_servercommand(void);
-	
-	/* overrides */
-	virtual void Input(entity,string,string);
+    void point_servercommand(void);
+    
+    /* overrides */
+    virtual void Input(entity,string,string);
 };
 
 void
@@ -50,12 +50,12 @@ point_servercommand::point_servercommand(void)
 void
 point_servercommand::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "Command":
-		localcmd(strData);
-		localcmd("\n");
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "command":
+        localcmd(strData);
+        localcmd("\n");
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }

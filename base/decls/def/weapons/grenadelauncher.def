@@ -6,11 +6,7 @@ entityDef weapon_grenadelauncher
 	"editor_usage"		"Grenade Launcher"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
-	"model"				"progs/g_rock.mdl"
-	"model_view"		"progs/v_rock.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
+	"inherit"		"weapon_base"
 	"spin"				"1"
 	"pickupFlash"		"1"
 
@@ -22,6 +18,8 @@ entityDef weapon_grenadelauncher
 	"ammoRequired"		"1"
 	"ammoPerShot"		"1"
 
+	"model"				"progs/g_rock.mdl"
+	"model_view"		"progs/v_rock.mdl"
 	"act_fire"			"1"
 	"act_idle"			"0"
 
@@ -32,7 +30,6 @@ entityDef weapon_grenadelauncher
 //	"msg_gib"			"%s was gibbed by %s's grenade."
 //	"msg_suicide"		"%s tries to put the pin back in."
 
-	// ncWeapon specific
 	"hudSlot"			"5"
 	"hudSlotPos"		"0"
 	"weight"			"25"

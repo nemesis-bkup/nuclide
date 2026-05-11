@@ -39,11 +39,11 @@ Such a decl can look like this:
 ```
 typeInfo commands
 {
-	"1"	"say Hello World"
-	"2"	"play sound/enforcer/enfstop.wav"
-	"3"	"toggle r_showshaders"
-	"5"	"textMenuOpen MENUTEST2"
-	"9"	"textMenuClose"
+    "1" "say Hello World"
+    "2" "play sound/enforcer/enfstop.wav"
+    "3" "toggle r_showshaders"
+    "5" "textMenuOpen MENUTEST2"
+    "9" "textMenuClose"
 }
 ```
 
@@ -59,9 +59,9 @@ class
 ncTextMenuDict:ncDict
 {
 public:
-	void ncTextMenuDict(void);
-	
-	nonvirtual void Input(int inputNum);
+    void ncTextMenuDict(void);
+    
+    nonvirtual void Input(int inputNum);
 };
 
 ncTextMenuDict g_textMenuDict;

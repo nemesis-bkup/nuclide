@@ -21,12 +21,12 @@
 class vguiView:vguiWidget
 {
 public:
-	void vguiView(void);
+    void vguiView(void);
 
-	/* overrides */
-	virtual void Add(vguiWidget);
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
+    /* overrides */
+    virtual void Add(vguiWidget);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
 };
 
 void
@@ -37,21 +37,21 @@ vguiView::vguiView(void)
 void
 vguiView::Add(vguiWidget wNew)
 {
-	wNew.m_parent = this;
+    wNew.m_parent = this;
 }
 
 void vguiView::Draw(void)
 {
-	vguiWidget wNext = this;
-	g_vguiWidgetCount = 0;
+    vguiWidget wNext = this;
+    g_vguiWidgetCount = 0;
 
-	if (!Visible()) {
-		return;
-	}
+    if (!Visible()) {
+        return;
+    }
 
     for (vguiWidget widgets = 0; (widgets = findfloat(widgets, ::isVGUI, true));) {
         if (widgets.GetParent() == this && widgets.Visible()) {
-			widgets.Draw();
+            widgets.Draw();
         }
     }
 
@@ -69,5 +69,5 @@ bool vguiView::Input (float flEVType, float flKey, float flChar, float flDevID)
         }
     }
 
-	return (false);
+    return (false);
 }

@@ -4,7 +4,7 @@ entityDef func_computer
 	"editor_color"	"1 1 0"
 	"spawnclass"	"ncComputerDesktop"
 	"model"			"models/comp.mdl"
-} 
+}
 
 entityDef computerDisplay
 {
@@ -26,7 +26,7 @@ entityDef avTransmitter
 
 	"mindset_movie1"	"videoBC"
 	"mindset_movie2"	"videoBC1"
-	"ui"				"ui/tv.menu"
+	"gui64"				"ewphc3NldGdsb2JhbGRlZgp7CmZvbnQgZm9udHMvZm9udDE2IDE2Cn0KbWVudURlZgp7Cm5hbWUgIkRlZmF1bHRUViIKcmVjdCAwIDAgMzIwIDI0MApiYWNrY29sb3IgMCAwIDEgMQp2aXNpYmxlIDEKaXRlbURlZgp7Cm5hbWUgY2hhbm5lbApiYWNrZ3JvdW5kICJ0dlN0YXRpYyIKcmVjdCAwIDAgMzIwIDI0MApmb3JlY29sb3IgMSAxIDEgMQpkZWNvcmF0aW9uCnZpc2libGUgMQp0eXBlIDM0Cn0KaXRlbURlZgp7Cm5hbWUgZG9nCmJhY2tncm91bmQgInZ0dkRPRyIKcmVjdCAyNDQgMjA3IDUwIDE4CmRlY29yYXRpb24KdmlzaWJsZSAxCnR5cGUgMzUKfQppdGVtRGVmCnsKbmFtZSB0b3B0ZXh0CnRleHQgIiIKcmVjdCA0OCAzMiAzMjAgMjAKZm9yZWNvbG9yIDEgMSAxIDEKZGVjb3JhdGlvbgp2aXNpYmxlIDEKfQppdGVtRGVmCnsKbmFtZSBib3R0b210ZXh0CnRleHQgIiIKcmVjdCA0OCAxODAgMzIwIDIwCmZvcmVjb2xvciAxIDEgMSAxCmRlY29yYXRpb24KdmlzaWJsZSAxCn0KfQp9Cg"
 	"targetname"		"foobar"
 }
 
@@ -46,9 +46,9 @@ entityDef videoDisplay
 
 entityDef radioTransmitter
 {
-	"spawnclass"	"ncAVTransmitter"
-	"channel"		"-20"
-	"audio"			"sound/misc/intermission.ogg"
+	"spawnclass"	      "ncAVTransmitter"
+	"channel"		    "-1"
+	"mindset_idle"		"radioBC"
 	"targetname"		"radioStation"
 }
 

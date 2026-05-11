@@ -6,11 +6,9 @@ entityDef weapon_supershotgun
 	"editor_usage"		"Super Shotgun"
 	"editor_rotatable"	"1"
 
-	"spawnclass"		"ncWeapon"
+	"inherit"		"weapon_base"
 	"model"				"progs/g_shot.mdl"
 	"model_view"		"progs/v_shot2.mdl"
-	"snd_acquire"		"weapon.pickup"
-	"snd_respawn"		"item.respawn"
 	"spin"				"1"
 	"pickupFlash"		"1"
 
@@ -37,6 +35,8 @@ entityDef weapon_supershotgun
 	"ammoIcon"			"weapon_doubleshotgun.ammo"
 	"icon"				"weapon_doubleshotgun.weapon"
 	"iconSelected"		"weapon_doubleshotgun.weapon_s"
+    "muzzleRelativeOffset"  "18 0 -6"
+	"smoke_muzzle"		"muzzle.smoke"
 }
 
 entityDef projectile_superShotgun

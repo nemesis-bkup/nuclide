@@ -17,293 +17,293 @@
 float
 Font_GetID(font_s fnt)
 {
-	return (float)fnt.iID;
+    return (float)fnt.iID;
 }
 
 void
 Font_Load(string strFile, font_s &fntNew)
 {
-	string strTemp = "";
-	string strFontPath = "";
-	string strRenderSize = "";
+    string strTemp = "";
+    string strFontPath = "";
+    string strRenderSize = "";
 
-	filestream fileFont = fopen(strFile, FILE_READ);
-	fntNew.iID = 0;
-	fntNew.iScaleX = fntNew.iScaleY = 12;
-	fntNew.vecColor = [1,1,1];
-	fntNew.hexColor = "^xFFF";
-	fntNew.flAlpha = 1.0f;
-	fntNew.iFlags = 0;
+    filestream fileFont = fopen(strFile, FILE_READ);
+    fntNew.iID = 0;
+    fntNew.iScaleX = fntNew.iScaleY = 12;
+    fntNew.vecColor = [1,1,1];
+    fntNew.hexColor = "^xFFF";
+    fntNew.flAlpha = 1.0f;
+    fntNew.iFlags = 0;
 
-	if (fileFont >= 0) {
-		int argc;
-		while ((strTemp = fgets(fileFont))) {
-			float segments;
-			argc = tokenize_console(strTemp);
+    if (fileFont >= 0) {
+        int argc;
+        while ((strTemp = fgets(fileFont))) {
+            float segments;
+            argc = tokenize_console(strTemp);
 
-			if (argc != 2)
-				continue;
+            if (argc != 2)
+                continue;
 
-			switch (argv(0)) {
-			case "color":
-				fntNew.vecColor = stov(argv(1)) / 255;
-				fntNew.hexColor = Font_RGBtoHex(fntNew.vecColor);
-				break;
-			case "alpha":
-				fntNew.flAlpha = stof(argv(1)) / 255;
-				break;
-			case "size_x":
-				fntNew.iScaleX = (int)stof(argv(1));
-				break;
-			case "size_y":
-				fntNew.iScaleY = (int)stof(argv(1));
-				break;
-			case "size":
-				if ((autocvar(font_ttfOnly, 0) == 0) && (autocvar(font_bitmapOnly, 0) == 0)) {
-					fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(1));
-				}
-				break;
-			case "size_ttf":
-				if (autocvar(font_ttfOnly, 0) == 1) {
-					segments = tokenize(argv(1));
+            switch (argv(0)) {
+            case "color":
+                fntNew.vecColor = stov(argv(1)) / 255;
+                fntNew.hexColor = Font_RGBtoHex(fntNew.vecColor);
+                break;
+            case "alpha":
+                fntNew.flAlpha = stof(argv(1)) / 255;
+                break;
+            case "size_x":
+                fntNew.iScaleX = (int)stof(argv(1));
+                break;
+            case "size_y":
+                fntNew.iScaleY = (int)stof(argv(1));
+                break;
+            case "size":
+                if ((autocvar(font_ttfOnly, 0) == 0) && (autocvar(font_bitmapOnly, 0) == 0)) {
+                    fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(1));
+                }
+                break;
+            case "size_ttf":
+                if (autocvar(font_ttfOnly, 0) == 1) {
+                    segments = tokenize(argv(1));
 
-					if (segments == 2) {
-						fntNew.iScaleX = (int)stof(argv(0));
-						fntNew.iScaleY = (int)stof(argv(1));
-					} else if (segments == 1) {
-						fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(0));
-					}
-				}
-				break;
-			case "size_bitmap":
-				if (autocvar(font_bitmapOnly, 0) == 1) {
-					segments = tokenize(argv(1));
+                    if (segments == 2) {
+                        fntNew.iScaleX = (int)stof(argv(0));
+                        fntNew.iScaleY = (int)stof(argv(1));
+                    } else if (segments == 1) {
+                        fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(0));
+                    }
+                }
+                break;
+            case "size_bitmap":
+                if (autocvar(font_bitmapOnly, 0) == 1) {
+                    segments = tokenize(argv(1));
 
-					if (segments == 2) {
-						fntNew.iScaleX = (int)stof(argv(0));
-						fntNew.iScaleY = (int)stof(argv(1));
-					} else if (segments == 1) {
-						fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(0));
-					}
-				}
-				break;
-			case "path":
-				if ((autocvar(font_ttfOnly, 0) == 0) && (autocvar(font_bitmapOnly, 0) == 0)) {
-					strFontPath = argv(1);
-				}
-				break;
-			case "path_ttf":
-				if (autocvar(font_ttfOnly, 0) == 1) {
-					strFontPath = argv(1);
-				}
-				break;
-			case "path_bitmap":
-				if (autocvar(font_bitmapOnly, 0) == 1) {
-					strFontPath = argv(1);
-				}
-				break;
-			case "rendersize":
-				strRenderSize = argv(1);
-				break;
-			case "flags":
-				fntNew.iFlags = (int)stof(argv(1));
-				break;
-			case "additive":
-				if (stof(argv(1)) == 1)
-					fntNew.iFlags = DRAWFLAG_ADDITIVE;
-				break;
-			default:
-				break;
-			}
-		}
-		fclose(fileFont);
-	} else {
-		ncError("Missing file %s", strFile);
-	}
+                    if (segments == 2) {
+                        fntNew.iScaleX = (int)stof(argv(0));
+                        fntNew.iScaleY = (int)stof(argv(1));
+                    } else if (segments == 1) {
+                        fntNew.iScaleY = fntNew.iScaleX = (int)stof(argv(0));
+                    }
+                }
+                break;
+            case "path":
+                if ((autocvar(font_ttfOnly, 0) == 0) && (autocvar(font_bitmapOnly, 0) == 0)) {
+                    strFontPath = argv(1);
+                }
+                break;
+            case "path_ttf":
+                if (autocvar(font_ttfOnly, 0) == 1) {
+                    strFontPath = argv(1);
+                }
+                break;
+            case "path_bitmap":
+                if (autocvar(font_bitmapOnly, 0) == 1) {
+                    strFontPath = argv(1);
+                }
+                break;
+            case "rendersize":
+                strRenderSize = argv(1);
+                break;
+            case "flags":
+                fntNew.iFlags = (int)stof(argv(1));
+                break;
+            case "additive":
+                if (stof(argv(1)) == 1)
+                    fntNew.iFlags = DRAWFLAG_ADDITIVE;
+                break;
+            default:
+                break;
+            }
+        }
+        fclose(fileFont);
+    } else {
+        ncError("Missing file %s", strFile);
+    }
 
-	if (!fntNew.iScaleX || !fntNew.iScaleY) {
-		ncError("Invalid size defined for %s", strFile);
-		fntNew.iScaleX = 12i;
-		fntNew.iScaleY = 12i;
-	}
+    if (!fntNew.iScaleX || !fntNew.iScaleY) {
+        ncError("Invalid size defined for %s", strFile);
+        fntNew.iScaleX = 12i;
+        fntNew.iScaleY = 12i;
+    }
 
-	ncLogAlways("...precached font %S (%i x %i)", strFile, fntNew.iScaleX, fntNew.iScaleY);
+    ncLogAlways("...precached font %S (%i x %i)", strFile, fntNew.iScaleX, fntNew.iScaleY);
 
-	if (strRenderSize != "") {
-		fntNew.iID = (int)loadfont("", strFontPath, strRenderSize, -1, 0, 0);
-	} else
-		fntNew.iID = (int)loadfont("", strFontPath, ftos((float)fntNew.iScaleY), -1, 0, 0);
+    if (strRenderSize != "") {
+        fntNew.iID = (int)loadfont("", strFontPath, strRenderSize, -1, 0, 0);
+    } else
+        fntNew.iID = (int)loadfont("", strFontPath, ftos((float)fntNew.iScaleY), -1, 0, 0);
 
 #if 0
-	/* this is the console font, so make sure we use it */
-	if (strFile == "fonts/consoleFont.font") {
-		string r = ftos(fntNew.vecColor[0]);
-		string g = ftos(fntNew.vecColor[1]);
-		string b = ftos(fntNew.vecColor[2]);
-		cvar_set("con_textfont", strcat(strFontPath, "?col=", r, ",", g, ",", b));
+    /* this is the console font, so make sure we use it */
+    if (strFile == "fonts/consoleFont.font") {
+        string r = ftos(fntNew.vecColor[0]);
+        string g = ftos(fntNew.vecColor[1]);
+        string b = ftos(fntNew.vecColor[2]);
+        cvar_set("con_textfont", strcat(strFontPath, "?col=", r, ",", g, ",", b));
 
-		/* just to be extra sure */
-		if (fntNew.iScaleY > 0i) {
-			string size = ftos((float)fntNew.iScaleY);
-			cvar_set("con_textsize", strcat("-", size));
-		}
-	}
+        /* just to be extra sure */
+        if (fntNew.iScaleY > 0i) {
+            string size = ftos((float)fntNew.iScaleY);
+            cvar_set("con_textsize", strcat("-", size));
+        }
+    }
 #endif
 }
 
 void
 Font_DrawText(vector vecOrigin, string strText, font_s fnt)
 {
-	drawfont = (float)fnt.iID;
-	drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], fnt.vecColor, fnt.flAlpha, (float)fnt.iFlags);
-	drawfont = 0;
+    drawfont = (float)fnt.iID;
+    drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], fnt.vecColor, fnt.flAlpha, (float)fnt.iFlags);
+    drawfont = 0;
 }
 
 void
 Font_DrawTextScroll(vector vecOrigin, string strText, vector canvasSize, font_s fnt)
 {
-	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], 1.0f, fnt);
+    Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], 1.0f, fnt);
 }
 
 void
 Font_DrawTextScroll_A(vector vecOrigin, string strText, vector canvasSize, float a, font_s fnt)
 {
-	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], a, fnt);
+    Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, [1,1,1], a, fnt);
 }
 
 void
 Font_DrawTextScroll_RGB(vector vecOrigin, string strText, vector canvasSize, vector rgb, font_s fnt)
 {
-	Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, rgb, 1.0f, fnt);
+    Font_DrawTextScroll_RGBA(vecOrigin , strText, canvasSize, rgb, 1.0f, fnt);
 }
 
 void
 Font_DrawTextScroll_RGBA(vector vecOrigin, string strText, vector canvasSize, vector rgb, float a, font_s fnt)
 {
-	float width = Font_StringWidth(strText, true, fnt);
-	static float offset = 0;
+    float width = Font_StringWidth(strText, true, fnt);
+    static float offset = 0;
 
-	if (width > canvasSize[0]) {
-		offset -= frametime * 30;
-		if (offset < -width)
-			offset = width;
-	}
+    if (width > canvasSize[0]) {
+        offset -= frametime * 30;
+        if (offset < -width)
+            offset = width;
+    }
 
-	drawsetcliparea(vecOrigin[0], vecOrigin[1], canvasSize[0], canvasSize[1]);
-	Font_DrawText(vecOrigin + [offset, 0], strText, fnt);
+    drawsetcliparea(vecOrigin[0], vecOrigin[1], canvasSize[0], canvasSize[1]);
+    Font_DrawText(vecOrigin + [offset, 0], strText, fnt);
 
-	if (offset < 0)
-		Font_DrawText(vecOrigin + [width + offset, 0], strText, fnt);
-	else if (offset > 0)
-		Font_DrawText(vecOrigin + [offset - width, 0], strText, fnt);
+    if (offset < 0)
+        Font_DrawText(vecOrigin + [width + offset, 0], strText, fnt);
+    else if (offset > 0)
+        Font_DrawText(vecOrigin + [offset - width, 0], strText, fnt);
 
-	drawresetcliparea();
+    drawresetcliparea();
 }
 
 void
 Font_DrawText_A(vector vecOrigin, string strText, float a, font_s fnt)
 {
-	drawfont = (float)fnt.iID;
-	drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], fnt.vecColor, a, (float)fnt.iFlags);
-	drawfont = 0;
+    drawfont = (float)fnt.iID;
+    drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], fnt.vecColor, a, (float)fnt.iFlags);
+    drawfont = 0;
 }
 
 void
 Font_DrawText_RGB(vector vecOrigin, string strText, vector rgb, font_s fnt)
 {
-	drawfont = (float)fnt.iID;
-	drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], rgb, fnt.flAlpha, (float)fnt.iFlags);
-	drawfont = 0;
+    drawfont = (float)fnt.iID;
+    drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], rgb, fnt.flAlpha, (float)fnt.iFlags);
+    drawfont = 0;
 }
 
 void
 Font_DrawText_RGBA(vector vecOrigin, string strText, vector rgb, float a, font_s fnt)
 {
-	drawfont = (float)fnt.iID;
-	drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], rgb, a, (float)fnt.iFlags);
-	drawfont = 0;
+    drawfont = (float)fnt.iID;
+    drawstring(vecOrigin, strText, [fnt.iScaleX, fnt.iScaleY], rgb, a, (float)fnt.iFlags);
+    drawfont = 0;
 }
 
 void
 Font_DrawRText(vector vecOrigin, string strText, font_s fnt)
 {
-	vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
-	Font_DrawText(vecOrigin, strText, fnt);
+    vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
+    Font_DrawText(vecOrigin, strText, fnt);
 }
 
 void
 Font_DrawRText_A(vector vecOrigin, string strText, float a, font_s fnt)
 {
-	vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
-	Font_DrawText_A(vecOrigin, strText, a, fnt);
+    vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
+    Font_DrawText_A(vecOrigin, strText, a, fnt);
 }
 
 void
 Font_DrawRText_RGB(vector vecOrigin, string strText, vector rgb, font_s fnt)
 {
-	vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
-	Font_DrawText_RGB(vecOrigin, strText, rgb, fnt);
+    vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
+    Font_DrawText_RGB(vecOrigin, strText, rgb, fnt);
 }
 
 void
 Font_DrawRText_RGBA(vector vecOrigin, string strText, vector rgb, float a, font_s fnt)
 {
-	vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
-	Font_DrawText_RGBA(vecOrigin, strText, rgb, a, fnt);
+    vecOrigin[0] -= Font_StringWidth(strText, TRUE, fnt);
+    Font_DrawText_RGBA(vecOrigin, strText, rgb, a, fnt);
 }
 
 void
 Font_DrawField(vector vecOrigin, vector vecSize, string strText, font_s fnt, alignflags_t iAlignFlags)
 {
-	drawfont = (float)fnt.iID;
-	drawfontscale[0] = (float)fnt.iScaleX / 8;
-	drawfontscale[1] = (float)fnt.iScaleY / 8;
-	drawtextfield(vecOrigin, vecSize, (float)iAlignFlags, strcat(fnt.hexColor, strText));
-	drawfont = 0;
-	drawfontscale = [1,1,0];
+    drawfont = (float)fnt.iID;
+    drawfontscale[0] = (float)fnt.iScaleX / 8;
+    drawfontscale[1] = (float)fnt.iScaleY / 8;
+    drawtextfield(vecOrigin, vecSize, (float)iAlignFlags, strcat(fnt.hexColor, strText));
+    drawfont = 0;
+    drawfontscale = [1,1,0];
 }
 
 void
 Font_DrawFieldAtHeight(vector vecOrigin, vector vecSize, int iTextHeight, string strText, font_s fnt, alignflags_t iAlignFlags)
 {
-	drawfont = (float)fnt.iID;
-	drawfontscale[0] = (float)iTextHeight / 8;
-	drawfontscale[1] = (float)iTextHeight / 8;
-	drawtextfield(vecOrigin, vecSize, (float)iAlignFlags, strcat(fnt.hexColor, strText));
-	drawfont = 0;
-	drawfontscale = [1,1,0];
+    drawfont = (float)fnt.iID;
+    drawfontscale[0] = (float)iTextHeight / 8;
+    drawfontscale[1] = (float)iTextHeight / 8;
+    drawtextfield(vecOrigin, vecSize, (float)iAlignFlags, strcat(fnt.hexColor, strText));
+    drawfont = 0;
+    drawfontscale = [1,1,0];
 }
 
 string
 Font_RGBtoHex(vector vecColor)
 {
-	static string numtohex(float x) {
-		x = rint(x * 15);
-		if (x <= 9)
-			return ftos(x);
-		else {
-			x -= 10;
-			return sprintf("%c", 'A' + x);
-		}
+    static string numtohex(float x) {
+        x = rint(x * 15);
+        if (x <= 9)
+            return ftos(x);
+        else {
+            x -= 10;
+            return sprintf("%c", 'A' + x);
+        }
 
-	}
+    }
 
-	return sprintf("^x%s%s%s", numtohex(vecColor[0]), numtohex(vecColor[1]), numtohex(vecColor[2]));
+    return sprintf("^x%s%s%s", numtohex(vecColor[0]), numtohex(vecColor[1]), numtohex(vecColor[2]));
 }
 
 int
 Font_GetHeight(font_s fnt)
 {
-	return (float)fnt.iScaleY;
+    return (float)fnt.iScaleY;
 }
 
 float
 Font_StringWidth(string strText, bool hasColor, font_s fnt)
 {
-	float w;
-	drawfont = (float)fnt.iID;
-	w = stringwidth(strText, (float)hasColor, [fnt.iScaleX, fnt.iScaleY]);
-	drawfont = 0;
-	drawfontscale = [1,1,0];
-	return w;
+    float w;
+    drawfont = (float)fnt.iID;
+    w = stringwidth(strText, (float)hasColor, [fnt.iScaleX, fnt.iScaleY]);
+    drawfont = 0;
+    drawfontscale = [1,1,0];
+    return w;
 }

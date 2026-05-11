@@ -17,48 +17,48 @@
 void
 Print_Draw(void)
 {
-	vector pos = g_hudmins + [16, 16];
+    vector pos = g_hudmins + [16, 16];
 
-	if (pSeat->m_iPrintLines < 0) {
-		return;
-	}
+    if (pSeat->m_iPrintLines < 0) {
+        return;
+    }
 
-	if (pSeat->m_flPrintTime < time) {
-		pSeat->m_strPrintBuffer[pSeat->m_iPrintLines] = __NULL__;
-		pSeat->m_iPrintLines--;
-		pSeat->m_flPrintTime = time + 5;
-	}
+    if (pSeat->m_flPrintTime < time) {
+        pSeat->m_strPrintBuffer[pSeat->m_iPrintLines] = __NULL__;
+        pSeat->m_iPrintLines--;
+        pSeat->m_flPrintTime = time + 5;
+    }
 
-	for (int i = 0; i < 5; i++) {
-		Font_DrawText_A(pos, pSeat->m_strPrintBuffer[i], 1.0f, FONT_CON);
-		pos[1] += 14;
-	}
+    for (int i = 0; i < 5; i++) {
+        Font_DrawText_A(pos, pSeat->m_strPrintBuffer[i], 1.0f, FONT_CON);
+        pos[1] += 14;
+    }
 }
 
 void
 Print_DrawCenterprint(void)
 {
-	vector vecPos = [0.0f, 0.0f, 0.0f];
+    vector vecPos = [0.0f, 0.0f, 0.0f];
 
-	if (pSeat->m_flCenterprintAlpha <= 0) {
-		return;
-	}
+    if (pSeat->m_flCenterprintAlpha <= 0) {
+        return;
+    }
 
-	if (pSeat->m_flCenterprintTime > time) {
-		pSeat->m_flCenterprintAlpha = 1;
-	} else {
-		pSeat->m_flCenterprintAlpha -= clframetime;
-		
-		if (pSeat->m_flCenterprintAlpha < 0) {
-			pSeat->m_flCenterprintAlpha = 0;
-		}
-	}
+    if (pSeat->m_flCenterprintTime > time) {
+        pSeat->m_flCenterprintAlpha = 1;
+    } else {
+        pSeat->m_flCenterprintAlpha -= clframetime;
+        
+        if (pSeat->m_flCenterprintAlpha < 0) {
+            pSeat->m_flCenterprintAlpha = 0;
+        }
+    }
 
-	vecPos[1] = g_hudmins[1] + (g_hudres[1] / 2) - (pSeat->m_iCenterprintLines - 4) - 69;
+    vecPos[1] = g_hudmins[1] + (g_hudres[1] / 2) - (pSeat->m_iCenterprintLines - 4) - 69;
 
-	for (int i = 0; i < (pSeat->m_iCenterprintLines); i++) {
-		vecPos[0] = g_hudmins[0] + (g_hudres[0] / 2) - (stringwidth(pSeat->m_strCenterprintBuffer[i], TRUE, '18 18') / 2);
-		Font_DrawText_A(vecPos, pSeat->m_strCenterprintBuffer[i], pSeat->m_flCenterprintAlpha, FONT_CENTERPRINT);
-		vecPos[1] += 8;
-	}
+    for (int i = 0; i < (pSeat->m_iCenterprintLines); i++) {
+        vecPos[0] = g_hudmins[0] + (g_hudres[0] / 2) - (stringwidth(pSeat->m_strCenterprintBuffer[i], TRUE, '18 18') / 2);
+        Font_DrawText_A(vecPos, pSeat->m_strCenterprintBuffer[i], pSeat->m_flCenterprintAlpha, FONT_CENTERPRINT);
+        vecPos[1] += 8;
+    }
 }

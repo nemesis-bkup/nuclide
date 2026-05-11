@@ -52,67 +52,67 @@
 
 /* helper macros */
 #define EVALUATE_FIELD(fieldname, changedflag) {\
-	if (ATTR_CHANGED(fieldname)) {\
-		SetSendFlags(changedflag);\
-	}\
-	SAVE_STATE(fieldname);\
+    if (ATTR_CHANGED(fieldname)) {\
+        SetSendFlags(changedflag);\
+    }\
+    SAVE_STATE(fieldname);\
 }
 
 #define EVALUATE_VECTOR(fieldname, idx, changedflag) {\
-	if (VEC_CHANGED(fieldname, idx)) {\
-		SetSendFlags(changedflag);\
-	}\
-	SAVE_STATE_FIELD(fieldname, idx);\
+    if (VEC_CHANGED(fieldname, idx)) {\
+        SetSendFlags(changedflag);\
+    }\
+    SAVE_STATE_FIELD(fieldname, idx);\
 }
 
 #define SENDENTITY_BYTE(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteByte(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteByte(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_SHORT(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteShort(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteShort(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_INT(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteInt(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteInt(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_FLOAT(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteFloat(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteFloat(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_STRING(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteString(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteString(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_COORD(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteCoord(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteCoord(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_ANGLE(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteAngle(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteAngle(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_ENTITY(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteEntity(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteEntity(MSG_ENTITY, field);\
 }
 
 #define SENDENTITY_COLOR(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteByte(MSG_ENTITY, field * 255.0);\
+    if (flChanged & changedflag)\
+        WriteByte(MSG_ENTITY, field * 255.0);\
 }
 
 #define SENDENTITY_MODELINDEX(field, changedflag) {\
-	if (flChanged & changedflag)\
-		WriteShort(MSG_ENTITY, field);\
+    if (flChanged & changedflag)\
+        WriteShort(MSG_ENTITY, field);\
 }
 
 var bool g_isloading = false;
@@ -200,31 +200,31 @@ string EntityDef_GetKeyValue(string className, string keyName);
 void
 WriteEntityEvent(float to, entity targetEntity, float eventType)
 {
-	WriteByte(to, SVC_CGAMEPACKET);
-	WriteByte(to, EV_ENTITYEVENT);
-	WriteEntity(to, targetEntity);
-	WriteFloat(to, eventType);
+    WriteByte(to, SVC_CGAMEPACKET);
+    WriteByte(to, EV_ENTITYEVENT);
+    WriteEntity(to, targetEntity);
+    WriteFloat(to, eventType);
 }
 
 void
 CallFunctionAsEntity(entity targetEntity, void(void) functionToCall)
 {
-	if (!functionToCall) {
-		breakpoint();
-		ncError("Invalid function call");
-		return;
-	}
+    if (!functionToCall) {
+        breakpoint();
+        ncError("Invalid function call");
+        return;
+    }
 
-	if (!targetEntity) {
-		breakpoint();
-		ncError("Invalid target entity");
-		return;
-	}
+    if (!targetEntity) {
+        breakpoint();
+        ncError("Invalid target entity");
+        return;
+    }
 
-	entity oldSelf = self;
-	self = targetEntity;
-	functionToCall();
-	self = oldSelf;
+    entity oldSelf = self;
+    self = targetEntity;
+    functionToCall();
+    self = oldSelf;
 }
 
 /** @defgroup serverentity Entities that are server-side

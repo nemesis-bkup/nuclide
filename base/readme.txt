@@ -1,25 +1,70 @@
-Mayhem
-======
+=================================================
+NUCLIDE
+DIGITAL WORLD BUILD
+=================================================
 
-This is Mayhem. A collaboration of Nuclide and LibreQuake.
+For more up-to-date information,
+please go online and visit
+https://www.vera-visions.com/nuclide
 
-This sample game is yours to take apart. We ensured that
-every single resource here is yours for the taking.
-In all cases only attribution is required.
+You can find the sources to this
+project over at
+https://idtech.space/vera/nuclide
 
-Gameplay is loosely based upon LQ, but intended to highlight
-the various enhancements that can be easily taken advantage
-of in Nuclide.
+1. INTRODUCTION
+=================================================
 
-Generally, everything you see can be edited outside the
-source code.
+We spent many years working on this
+new environment, ensuring that it is
+possible to rebuild classic games
+in a streamlined way while also
+removing a lot of limits and
+barriers in the process.
 
-Try a couple game modes in multiplayer. Or attempt to play
-a chapter in singleplayer.
+Throughout this 'game' you will be
+spending time in environments you
+may already know, while also
+interacting with them in a new
+way.
 
-Most importantly, build something for you to share with
-others, much like we have done.
+The base game is very minimal, you
+are expected to supply user-created
+levels and content from the Internet
+and be part of the fabric of Nuclide
+sessions.
 
-Marco Cawthorne
+2. WORLDS
+=================================================
 
-Vera Visions L.L.C.
+Thanks to our online infrastructure
+people can host their own private
+sessions effortlessly.
+
+We don't call them 'servers' because
+people generally associate them
+with dedicated server machines.
+
+Anyone can host (and join) a session,
+either if it is listed in the public
+server browser or if they are invited
+to a session through the Friends
+menu.
+
+3. CREDITS
+=================================================
+
+This project contains data from
+the following projects:
+
+LibreQuad:
+https://code.idtech.space/LibreQuake/LibreQuake
+
+Freedoom:
+https://github.com/freedoom/freedoom
+
+Silk Icons:
+https://github.com/markjames/famfamfam-silk-icons
+
+Flag Icons:
+https://github.com/markjames/famfamfam-flag-icons
+

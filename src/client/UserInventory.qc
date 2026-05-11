@@ -19,7 +19,7 @@ static ncUserInventory g_userInventory;
 int
 ncUserInventory::IndexInventoryForType(string subDirectory, string fileExtension)
 {
-	int itemCount;
+    int itemCount;
     string profileName = cvars.GetString("cl_cred");
 
     if (!STRING_SET(profileName)) {
@@ -28,59 +28,59 @@ ncUserInventory::IndexInventoryForType(string subDirectory, string fileExtension
 
     string libraryPath = sprintf("decls/%s/*.%s", subDirectory, fileExtension);
     string inventoryPath = sprintf("data/players/%s/decls/%s/*.%s", profileName, subDirectory, fileExtension);
-	searchhandle shSearchItemLibrary = search_begin( libraryPath, SEARCH_NAMESORT | SEARCH_MULTISEARCH, TRUE );
-	searchhandle shSearchItemInventory = search_begin( inventoryPath, SEARCH_NAMESORT | SEARCH_MULTISEARCH, TRUE );
+    searchhandle shSearchItemLibrary = search_begin( libraryPath, SEARCH_NAMESORT | SEARCH_MULTISEARCH, TRUE );
+    searchhandle shSearchItemInventory = search_begin( inventoryPath, SEARCH_NAMESORT | SEARCH_MULTISEARCH, TRUE );
 
-	int invCount = search_getsize( shSearchItemInventory );
-	int libCount = search_getsize( shSearchItemLibrary );
+    int invCount = search_getsize( shSearchItemInventory );
+    int libCount = search_getsize( shSearchItemLibrary );
 
-	if (invCount > 2048) {
+    if (invCount > 2048) {
         invCount = 2048;
-	}
-	if (libCount > 2048) {
+    }
+    if (libCount > 2048) {
         libCount = 2048;
-	}
+    }
 
-	for ( int i = 0; i < invCount; i++ ) {
-		string dictName = substring(search_getfilename( shSearchItemInventory, i ), 28 + strlen(subDirectory), -2 - strlen(fileExtension));
-		ncDict videoDict = ncDict::LoadDeclFromFile(dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
-		ncLog("Cached %S %S", dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
-	}
+    for ( int i = 0; i < invCount; i++ ) {
+        string dictName = substring(search_getfilename( shSearchItemInventory, i ), 28 + strlen(subDirectory), -2 - strlen(fileExtension));
+        ncDict videoDict = ncDict::LoadDeclFromFile(dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
+        ncLog("Cached %S %S", dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
+    }
 
-	for ( int i = 0; i < libCount; i++ ) {
-		string dictName = substring(search_getfilename( shSearchItemLibrary, i ), 7 + strlen(subDirectory), -2 - strlen(fileExtension));
-		ncDict videoDict = ncDict::LoadDeclFromFile(dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
-		ncLog("Cached %S %S", dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
-	}
+    for ( int i = 0; i < libCount; i++ ) {
+        string dictName = substring(search_getfilename( shSearchItemLibrary, i ), 7 + strlen(subDirectory), -2 - strlen(fileExtension));
+        ncDict videoDict = ncDict::LoadDeclFromFile(dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
+        ncLog("Cached %S %S", dictName, sprintf("%s/%s.%s", subDirectory, dictName, fileExtension));
+    }
 
-	itemCount = invCount + libCount;
-	search_end( shSearchItemLibrary );
-	search_end( shSearchItemInventory );
+    itemCount = invCount + libCount;
+    search_end( shSearchItemLibrary );
+    search_end( shSearchItemInventory );
 
-	return (itemCount);
+    return (itemCount);
 }
 
 void
 ncUserInventory::IndexInventory(void)
 {
-	if (!g_userInventory) {
-		g_userInventory = spawn(ncUserInventory);
-	}
+    if (!g_userInventory) {
+        g_userInventory = spawn(ncUserInventory);
+    }
 
-	g_userInventory.m_pictureCount = IndexInventoryForType("pictures", "picture");
-	g_userInventory.m_audioCount = IndexInventoryForType("audio", "audio");
-	g_userInventory.m_videoCount = IndexInventoryForType("videos", "video");
-	g_userInventory.m_objectCount = IndexInventoryForType("objects", "object");
-	g_userInventory.m_appCount = IndexInventoryForType("apps", "app");
-	g_userInventory.m_textCount = IndexInventoryForType("texts", "text");
+    g_userInventory.m_pictureCount = IndexInventoryForType("pictures", "picture");
+    g_userInventory.m_audioCount = IndexInventoryForType("audio", "audio");
+    g_userInventory.m_videoCount = IndexInventoryForType("videos", "video");
+    g_userInventory.m_objectCount = IndexInventoryForType("objects", "object");
+    g_userInventory.m_appCount = IndexInventoryForType("apps", "app");
+    g_userInventory.m_textCount = IndexInventoryForType("texts", "text");
 }
 
 int
 ncUserInventory::GetItemCount(profileItem_t dictType)
 {
-	if (!g_userInventory) {
-		return (0i);
-	}
+    if (!g_userInventory) {
+        return (0i);
+    }
 
     switch (dictType) {
     case ITEM_PICTURE:
@@ -103,8 +103,8 @@ ncUserInventory::GetItemCount(profileItem_t dictType)
 ncDict
 ncUserInventory::GetItemDictByIndex(int itemIndex, profileItem_t dictType)
 {
-	int itemCounter = 0i;
-	string dictTypeName = g_string_null;
+    int itemCounter = 0i;
+    string dictTypeName = g_string_null;
 
     switch (dictType) {
     case ITEM_PICTURE:
@@ -125,18 +125,18 @@ ncUserInventory::GetItemDictByIndex(int itemIndex, profileItem_t dictType)
     case ITEM_TEXT:
         dictTypeName = "text";
         break;
-	default:
-		return (__NULL__);
+    default:
+        return (__NULL__);
     }
 
-	for (ncDict dictSearch = 0; (dictSearch = (ncDict)find(dictSearch, ::classname, "ncDict"));) {
-		if (dictSearch.m_dictType == dictTypeName) {
-			if (itemCounter == itemIndex) {
-				return (dictSearch);
-			}
-			itemCounter++;
-		}
-	}
+    for (ncDict dictSearch = 0; (dictSearch = (ncDict)find(dictSearch, ::classname, "ncDict"));) {
+        if (dictSearch.m_dictType == dictTypeName) {
+            if (itemCounter == itemIndex) {
+                return (dictSearch);
+            }
+            itemCounter++;
+        }
+    }
 
     return (__NULL__);
 }

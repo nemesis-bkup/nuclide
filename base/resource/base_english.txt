@@ -1,8 +1,8 @@
-"lang" 
-{ 
-	"Language" "English" 
-	"Tokens" 
-	{ 
+"lang"
+{
+	"Language" "English"
+	"Tokens"
+	{
 		"MAYHEM_Chapter1_Title"		"LQ Episode 0"
 		"WEAPON_UNARMED"			"Unarmed"
 		"WEAPON_AXE"			"Axe"
@@ -27,5 +27,8 @@
 
 		"EMPTY_PLAYERSLOT"		"Empty player slot"
 		"LOCATION_MOON" "Moon"
-	} 
+
+		"OBJECT_COMPUTER" "Computer"
+		"OBJECT_COMPUTER_DESC" "You can use this computer to analyze other objects and to display other pieces of data. Computers and other sources of media handle their own interfaces."
+	}
 }

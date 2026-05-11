@@ -39,69 +39,69 @@ This entity was introduced in Quake II (1997).
 class trigger_gravity:ncBrushTrigger
 {
 public:
-	void trigger_gravity(void);
-	
+    void trigger_gravity(void);
+    
 #ifdef SERVER
-	virtual void Save(float);
-	virtual void Restore(string,string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
 #endif
 
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
-	virtual void Touch(entity);
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
+    virtual void Touch(entity);
 
 private:
-	float m_flGravity;
+    float m_flGravity;
 };
 
 void
 trigger_gravity::trigger_gravity(void)
 {
-	m_flGravity = 1.0;
+    m_flGravity = 1.0;
 }
 
 #ifdef SERVER
 void
 trigger_gravity::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flGravity", m_flGravity);
+    super::Save(handle);
+    SaveFloat(handle, "m_flGravity", m_flGravity);
 }
 
 void
 trigger_gravity::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flGravity":
-		m_flGravity = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flGravity":
+        m_flGravity = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 #endif
 
 void
 trigger_gravity::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "gravity":
-		m_flGravity = stof(strKey);
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "gravity":
+        m_flGravity = stof(strKey);
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 void
 trigger_gravity::Respawn(void)
 {
-	super::Respawn();
-	SetSolid(SOLID_BSPTRIGGER);
+    super::Respawn();
+    SetSolid(SOLID_BSPTRIGGER);
 }
 
 void
 trigger_gravity::Touch(entity eToucher)
 {
-	eToucher.gravity = m_flGravity;
+    eToucher.gravity = m_flGravity;
 }

@@ -32,19 +32,19 @@ class
 script_struct:ncBrushTrigger
 {
 public:
-	void script_struct(void);
-	virtual void Trigger(entity, triggermode_t);
+    void script_struct(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
 script_struct::script_struct(void)
 {
-	
+    
 }
 
 void
 script_struct::Trigger(entity entityActivator, triggermode_t state)
 {
-	
+    
 }
 

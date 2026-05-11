@@ -15,20 +15,20 @@
 */
 
 class
-vguiTool_Map:vguiWindow
+vguiTool_Map:vguiApplication
 {
-	void vguiTool_Map(void);
+    void vguiTool_Map(void);
 
-	virtual void Draw(void);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual void Spawned(void);
 
 private:
 
-	int m_tvChannelNum;
-	vguiButton btnPlay;
-	vguiButton btnStop;
-	vguiFrame m_outlineFrame;
-	vguiTextPrompt urlPrompt;
+    int m_tvChannelNum;
+    vguiButton btnPlay;
+    vguiButton btnStop;
+    vguiFrame m_outlineFrame;
+    vguiTextPrompt urlPrompt;
 };
 
 void
@@ -51,57 +51,57 @@ vguiTool_Map::Map_SwitchTo3DView(void)
 void
 vguiTool_Map::Draw(void)
 {
-	super::Draw();
+    super::Draw();
 
-	g_overview.SetViewPosition(m_outlineFrame.m_parent.m_vecOrigin + m_outlineFrame.m_vecOrigin);
-	g_overview.SetViewSize(m_outlineFrame.GetSize());
-	g_overview.SetRadarPitch(90);
-	g_overview.UpdateView();
+    g_overview.SetViewPosition(m_outlineFrame.m_parent.m_vecOrigin + m_outlineFrame.m_vecOrigin);
+    g_overview.SetViewSize(m_outlineFrame.GetSize());
+    g_overview.SetRadarPitch(90);
+    g_overview.UpdateView();
 
-	vector centerPos = m_outlineFrame.m_parent.m_vecOrigin + m_outlineFrame.m_vecOrigin;
-	centerPos += (m_outlineFrame.GetSize() * 0.5) - [8,8];
-	draw.Pic(centerPos, "gfx/icon16/bullet_white", [16,16], [1,1,1], 1.0, 0);
+    vector centerPos = m_outlineFrame.m_parent.m_vecOrigin + m_outlineFrame.m_vecOrigin;
+    centerPos += (m_outlineFrame.GetSize() * 0.5) - [8,8];
+    draw.Pic(centerPos, "gfx/icon16/bullet_white", [16,16], [1,1,1], 1.0, 0);
 }
 
 void
 vguiTool_Map::VideoPlayer_Resized(void)
 {
-	vector windowSize = GetSize();
-	m_outlineFrame.SetSize( [windowSize[0]-16, windowSize[1]-64] );
+    vector windowSize = GetSize();
+    m_outlineFrame.SetSize( [windowSize[0]-16, windowSize[1]-64] );
 
-	btnPlay.SetPos( [8,windowSize[1]-28] );
-	btnStop.SetPos( btnPlay.GetPos() + [32+2, 0] );
+    btnPlay.SetPos( [8,windowSize[1]-28] );
+    btnStop.SetPos( btnPlay.GetPos() + [32+2, 0] );
 }
 
 void
 vguiTool_Map::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	classname = "vguiWindow";
-	SetTitle( "Map" );
-	SetSize( [160+16,120+32] );
-	SetIcon( "gfx/icon16/map" );
-	SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
-	CallOnResize(VideoPlayer_Resized);
+    classname = "vguiWindow";
+    SetTitle( "Map" );
+    SetSize( [160+16,120+32] );
+    SetIcon( "gfx/icon16/map" );
+    SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
+    CallOnResize(VideoPlayer_Resized);
 
-	m_outlineFrame = spawn(vguiFrame);
-	m_outlineFrame.SetPos([8,32]);
-	m_outlineFrame.SetSize([160,120]);
+    m_outlineFrame = spawn(vguiFrame);
+    m_outlineFrame.SetPos([8,32]);
+    m_outlineFrame.SetSize([160,120]);
 
-	btnPlay = spawn( vguiButton );
-	btnPlay.SetIcon( "gfx/icon16/map_add" );
-	btnPlay.SetSize([32,24]);
-	btnPlay.SetFuncWithDelegate( Map_SwitchToOverview, this );
+    btnPlay = spawn( vguiButton );
+    btnPlay.SetIcon( "gfx/icon16/map_add" );
+    btnPlay.SetSize([32,24]);
+    btnPlay.SetFuncWithDelegate( Map_SwitchToOverview, this );
 
-	btnStop = spawn( vguiButton );
-	btnStop.SetIcon( "gfx/icon16/map_magnify" );
-	btnStop.SetSize([32,24]);
-	btnStop.SetFuncWithDelegate( Map_SwitchTo3DView, this );
+    btnStop = spawn( vguiButton );
+    btnStop.SetIcon( "gfx/icon16/map_magnify" );
+    btnStop.SetSize([32,24]);
+    btnStop.SetFuncWithDelegate( Map_SwitchTo3DView, this );
 
-	Add( m_outlineFrame );
-	Add( btnPlay );
-	Add( btnStop );
+    Add( m_outlineFrame );
+    Add( btnPlay );
+    Add( btnStop );
 
-	VideoPlayer_Resized();
+    VideoPlayer_Resized();
 }

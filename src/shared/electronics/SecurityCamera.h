@@ -16,13 +16,13 @@
 
 typedef enum
 {
-	CAMSWEEP_IDLE,
-	CAMSWEEP_RIGHT,
-	CAMSWEEP_RIGHT_WAIT,
-	CAMSWEEP_LEFT,
-	CAMSWEEP_LEFT_WAIT,
-	CAMSWEEP_ALERTED,
-	CAMSWEEP_RETURN
+    CAMSWEEP_IDLE,
+    CAMSWEEP_RIGHT,
+    CAMSWEEP_RIGHT_WAIT,
+    CAMSWEEP_LEFT,
+    CAMSWEEP_LEFT_WAIT,
+    CAMSWEEP_ALERTED,
+    CAMSWEEP_RETURN
 } camsweepstate_t;
 
 /*!QUAKED ncSecurityCamera (1 0 0) (-8 -8 -8) (8 8 8)
@@ -51,43 +51,43 @@ It can also alert enemies in the area.
 class
 ncSecurityCamera:ncCamera
 {
-	void ncSecurityCamera(void);
+    void ncSecurityCamera(void);
 
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void SpawnKey(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void Spawned(void);
+    virtual void SpawnKey(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 
-	nonvirtual bool SecurityCameraIsEnemy(entity);
-	nonvirtual bool SecurityCameraCheck(ncActor toCheck);
-	nonvirtual void SecurityCameraMovement(void);
-	nonvirtual void SecurityCameraVisionTick(void);
+    nonvirtual bool SecurityCameraIsEnemy(entity);
+    nonvirtual bool SecurityCameraCheck(ncActor toCheck);
+    nonvirtual void SecurityCameraMovement(void);
+    nonvirtual void SecurityCameraVisionTick(void);
 #endif
 
 #ifdef CLIENT
-	virtual void Draw(void);
-	virtual void ReceiveEntity(float,float);
+    virtual void Draw(void);
+    virtual void ReceiveEntity(float,float);
 #endif
 
 private:
-	float m_securiCamScanDist;
-	float m_securiCamScanFOV;
-	float m_securiCamSightResume;
-	float m_securiCamSightTime;
-	float m_securiCamSweepAngle;
-	float m_securiCamSweepSpeed;
-	float m_securiCamSweepWait;
-	float m_securiCamAlertResumeTime;
-	string m_outputOnFoundPlayer;
+    float m_securiCamScanDist;
+    float m_securiCamScanFOV;
+    float m_securiCamSightResume;
+    float m_securiCamSightTime;
+    float m_securiCamSweepAngle;
+    float m_securiCamSweepSpeed;
+    float m_securiCamSweepWait;
+    float m_securiCamAlertResumeTime;
+    string m_outputOnFoundPlayer;
 
-	entity m_securiCamTrackingRef;
-	float m_securiCamTrackingTime;
+    entity m_securiCamTrackingRef;
+    float m_securiCamTrackingTime;
 
-	float m_securiCamSweepTime;
-	camsweepstate_t m_securiCamSweepState;
-	float m_securiCamSpawnYaw;
-	float m_securiCamSweepWaitTime;
+    float m_securiCamSweepTime;
+    camsweepstate_t m_securiCamSweepState;
+    float m_securiCamSpawnYaw;
+    float m_securiCamSweepWaitTime;
 
 };
 

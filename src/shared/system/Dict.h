@@ -34,35 +34,40 @@ class
 ncDict
 {
 public:
-	void ncDict(void);
+    void ncDict(void);
 
-	nonvirtual string Name(void);
-	nonvirtual int GetInteger(string);
-	nonvirtual float GetFloat(string);
-	nonvirtual string GetString(string);
-	nonvirtual vector GetVector(string);
-	nonvirtual bool GetBool(string);
+    nonvirtual string Name(void);
+    nonvirtual string Type(void);
+    nonvirtual int GetInteger(string);
+    nonvirtual float GetFloat(string);
+    nonvirtual string GetString(string);
+    nonvirtual vector GetVector(string);
+    nonvirtual bool GetBool(string);
 
-	nonvirtual void SetDeclBody(string);
-	nonvirtual string GetDeclBody(void);
-	nonvirtual string GetDeclBodyBase64(void);
+    nonvirtual void SetDeclBody(string);
+    nonvirtual string GetDeclBody(void);
+    nonvirtual string GetDeclBodyBase64(void);
     nonvirtual ncDict InitWithSpawnDataFromBase64(string base64Data);
 
-	nonvirtual void AddKey(string, string);
-	nonvirtual void RemoveKey(string);
+    nonvirtual void AddKey(string, string);
+    nonvirtual void RemoveKey(string);
 
-	nonvirtual int TokenCount(void);
+    nonvirtual int TokenCount(void);
 
-	static ncDict InitWithSpawnData(string);
-	static ncDict LoadDeclFromFile(string, string);
+    static ncDict InitWithSpawnData(string);
+    static ncDict LoadDeclFromFile(string, string);
+
+#ifdef CLIENT
+    nonvirtual void TransmitToEntity(float serversideEntityNum);
+#endif
 
 private:
-	nonvirtual void _AddRemoveKey(string, string, bool);
-	string m_strBody;
-	string m_declPath;
-	string m_filePath;
+    nonvirtual void _AddRemoveKey(string, string, bool);
+    string m_strBody;
+    string m_declPath;
+    string m_filePath;
 
-	string m_dictType;
+    string m_dictType;
 };
 
 /** @} */ // end of decl

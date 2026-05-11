@@ -42,10 +42,10 @@ class
 prop_dynamic:ncSurfacePropEntity
 {
 public:
-	void prop_dynamic(void);
-	
-	virtual void SpawnKey(string,string);
-	virtual void Respawn(void);
+    void prop_dynamic(void);
+    
+    virtual void SpawnKey(string,string);
+    virtual void Respawn(void);
 };
 
 void
@@ -56,35 +56,35 @@ prop_dynamic::prop_dynamic(void)
 void
 prop_dynamic::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "frame":
-	case "sequence":
-		frame = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    case "frame":
+    case "sequence":
+        frame = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 prop_dynamic::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	if (HasSpawnFlags(PRPDYN_NONSOLID)) {
-		SetSolid(SOLID_NOT);
-	} else {
+    if (HasSpawnFlags(PRPDYN_NONSOLID)) {
+        SetSolid(SOLID_NOT);
+    } else {
         switch (GetSpawnFloat("solid")) {
-		case 2:
-			SetSolid(SOLID_BBOX);
-			break;
-		case 6:
-			SetSolid(SOLID_BSP);
-			break;
-		default:
-			SetSolid(SOLID_NOT);
-		}
+        case 2:
+            SetSolid(SOLID_BBOX);
+            break;
+        case 6:
+            SetSolid(SOLID_BSP);
+            break;
+        default:
+            SetSolid(SOLID_NOT);
+        }
     }
 }
 

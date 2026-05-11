@@ -21,26 +21,26 @@
 class ncRagdoll:ncSurfacePropEntity
 {
 public:
-	void ncRagdoll(void);
+    void ncRagdoll(void);
 
-	nonvirtual void CreateRagdoll(void);
+    nonvirtual void CreateRagdoll(void);
 
-	virtual void OnRemoveEntity(void);
+    virtual void OnRemoveEntity(void);
 
 #ifdef SERVER
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float,float);
-	virtual float predraw(void);
+    virtual void ReceiveEntity(float,float);
+    virtual float predraw(void);
 #endif
 
 
 private:
-	float m_morphTime;
-	float m_animationSkeletonIndex;
+    float m_morphTime;
+    float m_animationSkeletonIndex;
 };
 
 

@@ -59,9 +59,9 @@ var bool autocvar_mp_allowvote = true;
 
 enum
 {
-	VOTE_INACTIVE,
-	VOTE_INPROGRESS,
-	VOTE_PASSED
+    VOTE_INACTIVE,
+    VOTE_INPROGRESS,
+    VOTE_PASSED
 };
 
 void Vote_End(void);

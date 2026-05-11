@@ -19,15 +19,15 @@ var float autocvar_s_nominaldistance = 1000.0f;
 /** Enumeration of valid sound flags. */
 typedef enumflags
 {
-	SNDFL_LOOPING,	/**< forceloop */
-	SNDFL_NODUPS,	/**< don't random the samples */
-	SNDFL_GLOBAL,	/**< no attenuation */
-	SNDFL_NOREVERB,	/**< skip reverb */
-	SNDFL_OMNI,	/**< volume on all channels is equal */
-	SNDFL_PRIVATE,	/**< only play on target */
-	SNDFL_STEP,	/**< volume is calculated from entity speed */
-	SNDFL_FOLLOW,	/**< sample follows entity as it plays */
-	SNDFL_ALERTS	/**< this sounds alerts AI, takes distance into account */
+    SNDFL_LOOPING,  /**< forceloop */
+    SNDFL_NODUPS,   /**< don't random the samples */
+    SNDFL_GLOBAL,   /**< no attenuation */
+    SNDFL_NOREVERB, /**< skip reverb */
+    SNDFL_OMNI, /**< volume on all channels is equal */
+    SNDFL_PRIVATE,  /**< only play on target */
+    SNDFL_STEP, /**< volume is calculated from entity speed */
+    SNDFL_FOLLOW,   /**< sample follows entity as it plays */
+    SNDFL_ALERTS    /**< this sounds alerts AI, takes distance into account */
 } soundFlag_t;
 
 /** Dictionary for sound effect definition.
@@ -39,38 +39,38 @@ class
 ncSoundDict:ncDict
 {
 public:
-	void ncSoundDict(void);
+    void ncSoundDict(void);
 
-	nonvirtual float AttenuationValue(void);
-	nonvirtual void Play(void);
-	nonvirtual void PlayOnEntity(entity);
-	nonvirtual void PlayOnEntityChannel(entity, int);
-	nonvirtual void PlayOnSpot(vector);
+    nonvirtual float AttenuationValue(void);
+    nonvirtual void Play(void);
+    nonvirtual void PlayOnEntity(entity);
+    nonvirtual void PlayOnEntityChannel(entity, int);
+    nonvirtual void PlayOnSpot(vector);
 
-	nonvirtual ncSoundDict SoundForName(string soundDef);
-	nonvirtual ncSoundDict SoundForID(int soundID);
-	nonvirtual int ID(void);
+    nonvirtual ncSoundDict SoundForName(string soundDef);
+    nonvirtual ncSoundDict SoundForID(int soundID);
+    nonvirtual int ID(void);
 
 #ifdef CLIENT
-	nonvirtual void UpdateChannelVolumeOnEntity(entity, int, float);
+    nonvirtual void UpdateChannelVolumeOnEntity(entity, int, float);
 #endif
 
 private:
-	float dist_min;			/**< Minimum playback distance. Default is 0. */
-	float dist_max;			/**< Maximum playback distance. */
-	float offset;			/**< Sound sample offset. Will start playback this many seconds in. */
-	float pitch_min;		/**< Minimum sound pitch. */
-	float pitch_max;		/**< Maximum sound pitch. */
-	float shakes;			/**< Earthquake/Shake amplifier. Default is 0. */
-	float volume;			/**< Desired playback volume. */
-	soundFlag_t flags;		/**< Sound flags that are applied to this soundDef. */
-	int playc;				/**< Number of plays. */
-	int sample_count;		/**< Total amount of samples within this soundDef. */
-	string samples;			/**< Separated list of samples. */
-	string name;			/**< Name of the soundDef. */
-	string distshader;		/**< soundDef to play where this soundDef is not audible. */
-	float pointparticle;
-	string musictracks;
-	int music_count;
+    float dist_min;         /**< Minimum playback distance. Default is 0. */
+    float dist_max;         /**< Maximum playback distance. */
+    float offset;           /**< Sound sample offset. Will start playback this many seconds in. */
+    float pitch_min;        /**< Minimum sound pitch. */
+    float pitch_max;        /**< Maximum sound pitch. */
+    float shakes;           /**< Earthquake/Shake amplifier. Default is 0. */
+    float volume;           /**< Desired playback volume. */
+    soundFlag_t flags;      /**< Sound flags that are applied to this soundDef. */
+    int playc;              /**< Number of plays. */
+    int sample_count;       /**< Total amount of samples within this soundDef. */
+    string samples;         /**< Separated list of samples. */
+    string name;            /**< Name of the soundDef. */
+    string distshader;      /**< soundDef to play where this soundDef is not audible. */
+    float pointparticle;
+    string musictracks;
+    int music_count;
 };
 

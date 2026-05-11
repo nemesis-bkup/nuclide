@@ -36,45 +36,46 @@ class
 ncAVReceiver:ncMediaSource
 {
 public:
-	void ncAVReceiver(void);
+    void ncAVReceiver(void);
 
 #ifdef SERVER
-	virtual void Input(entity,string,string);
-	virtual void SpawnKey(string,string);
+    virtual void Input(entity,string,string);
+    virtual void SpawnKey(string,string);
 
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 #ifdef CLIENT
-	virtual void Draw(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void UpdateSpeakers(void);
-	virtual void UpdateVideoOutputs(void);
-	virtual void RefreshVideoDisplay(entity);
-	virtual void OnRemoveEntity(void);
-	virtual void KillVideoOutputs(void);
+    virtual void Draw(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void UpdateSpeakers(void);
+    virtual void UpdateVideoOutputs(void);
+    virtual void RefreshVideoDisplay(entity);
+    virtual void OnRemoveEntity(void);
+    virtual void KillVideoOutputs(void);
 
-	nonvirtual int GlobalBroadcasters(void);
-	nonvirtual string GetMaterialForChannel(int channelNum);
+    nonvirtual int GlobalBroadcasters(void);
+    nonvirtual ncAVTransmitter GetTransmitterForChannel(int channelNum);
+    nonvirtual string GetMaterialForChannel(int channelNum);
 #endif
 
 private:
-	NETWORKED_INT(m_avReceiverChannel)
-	NETWORKED_FLOAT(m_avReceiverVolume)
-	NETWORKED_FLOAT(m_avReceiverMuted)
-	bool m_triggerEnabled_net;
+    NETWORKED_INT(m_avReceiverChannel)
+    NETWORKED_FLOAT(m_avReceiverVolume)
+    NETWORKED_FLOAT(m_avReceiverMuted)
+    bool m_triggerEnabled_net;
 
 #ifdef CLIENT
-	bool m_triggerEnabled;
+    bool m_triggerEnabled;
 #endif
 };
 
 typedef enumflags
 {
-	AVRECEIVERFL_ORIGIN,
-	AVRECEIVERFL_CHAN,
-	AVRECEIVERFL_VOLUME,
-	AVRECEIVERFL_ENABLED,
-	AVRECEIVERFL_MUTED,
+    AVRECEIVERFL_ORIGIN,
+    AVRECEIVERFL_CHAN,
+    AVRECEIVERFL_VOLUME,
+    AVRECEIVERFL_ENABLED,
+    AVRECEIVERFL_MUTED,
 };

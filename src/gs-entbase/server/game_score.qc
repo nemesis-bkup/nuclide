@@ -38,74 +38,74 @@ class
 game_score:ncPointTrigger
 {
 public:
-	void game_score(void);
+    void game_score(void);
 
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void SpawnKey(string, string);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void SpawnKey(string, string);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	int m_iPoints;
+    int m_iPoints;
 };
 
 void
 game_score::game_score(void)
 {
-	m_iPoints = 0i;
+    m_iPoints = 0i;
 }
 
 void
 game_score::Save(float handle)
 {
-	SaveInt(handle, "m_iPoints", m_iPoints);
+    SaveInt(handle, "m_iPoints", m_iPoints);
 }
 
 void
 game_score::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_iPoints":
-		m_iPoints = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_iPoints":
+        m_iPoints = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+    }
 }
 
 void
 game_score::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "points":
-		m_iPoints = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "points":
+        m_iPoints = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 game_score::Trigger(entity entityActivator, triggermode_t state)
 {
-	int toAdd = m_iPoints;
+    int toAdd = m_iPoints;
 
-	if (GetMaster(entityActivator) == FALSE) {
-		return;
-	}
+    if (GetMaster(entityActivator) == FALSE) {
+        return;
+    }
 
-	/* don't allow negative values. */
-	if (HasSpawnFlags(1) == false) {
-		toAdd = m_iPoints < 0i ? 0i : m_iPoints;
-	}
+    /* don't allow negative values. */
+    if (HasSpawnFlags(1) == false) {
+        toAdd = m_iPoints < 0i ? 0i : m_iPoints;
+    }
 
-	if (HasSpawnFlags(2) == false) {
-		entityActivator.frags += (float)toAdd;
-	} else {
-		int targetTeam = (int)entityActivator.team;
-		string targetKey = sprintf("teamscore_%i", targetTeam);
-		int currentPoints = (int)serverkeyfloat(targetKey);
-		string targetValue = sprintf("%i", currentPoints + toAdd);
-		forceinfokey(world, targetKey, targetValue);
-	}
+    if (HasSpawnFlags(2) == false) {
+        entityActivator.frags += (float)toAdd;
+    } else {
+        int targetTeam = (int)entityActivator.team;
+        string targetKey = sprintf("teamscore_%i", targetTeam);
+        int currentPoints = (int)serverkeyfloat(targetKey);
+        string targetValue = sprintf("%i", currentPoints + toAdd);
+        forceinfokey(world, targetKey, targetValue);
+    }
 }

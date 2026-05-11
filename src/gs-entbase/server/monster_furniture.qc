@@ -16,14 +16,14 @@
 
 enumflags
 {
-	MF_WAITTILSEEN,
-	MF_GAG,
-	MF_MONSTERCLIP,
-	MF_PRISONER,
-	MF_UNUSED,
-	MF_WAITFORSCRIPT,
-	MF_PREDISASTER,
-	MF_FADECORPSE
+    MF_WAITTILSEEN,
+    MF_GAG,
+    MF_MONSTERCLIP,
+    MF_PRISONER,
+    MF_UNUSED,
+    MF_WAITFORSCRIPT,
+    MF_PREDISASTER,
+    MF_FADECORPSE
 };
 
 /*! \brief Server-Entity: Scripted Sequence Prop */
@@ -47,54 +47,54 @@ class
 monster_furniture:ncMonster
 {
 public:
-	void monster_furniture(void);
-	
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
+    void monster_furniture(void);
+    
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
 
 };
 
 void
 monster_furniture::monster_furniture(void)
 {
-	spawnflags |= MSF_MULTIPLAYER;
-	solid = SOLID_BBOX;
+    spawnflags |= MSF_MULTIPLAYER;
+    solid = SOLID_BBOX;
 }
 
 void
 monster_furniture::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "solid":
-		float s = ReadFloat(setValue);
+    switch (strKey) {
+    case "solid":
+        float s = ReadFloat(setValue);
 
-		switch (s) {
-		case 2:
-			SetSolid(SOLID_BBOX);
-			break;
-		case 6:
-			SetSolid(SOLID_BSP);
-			break;
-		default:
-			SetSolid(SOLID_NOT);
-		}
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+        switch (s) {
+        case 2:
+            SetSolid(SOLID_BBOX);
+            break;
+        case 6:
+            SetSolid(SOLID_BSP);
+            break;
+        default:
+            SetSolid(SOLID_NOT);
+        }
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 monster_furniture::Respawn(void)
 {
-	_m_bStartDead = true;
-	super::Respawn();
-	SetMovetype(MOVETYPE_NOCLIP);
+    _m_bStartDead = true;
+    super::Respawn();
+    SetMovetype(MOVETYPE_NOCLIP);
 
-	if (GetSolid() == SOLID_BBOX) {
-		SetSize([-16, -16, 0], [16, 16, 72]);
-	}
+    if (GetSolid() == SOLID_BBOX) {
+        SetSize([-16, -16, 0], [16, 16, 72]);
+    }
 
-	RestoreAngles();
+    RestoreAngles();
 }

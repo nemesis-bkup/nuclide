@@ -42,10 +42,10 @@ InitDomination(void)
 		entity newIcon = ents.Create("domination_icon", s.origin);
 
 		if (STRING_SET(s.netname)) {
-			ents.Input(newIcon, "SetText", s.netname, world);
+			ents.Input(newIcon, "settext", s.netname, world);
 		}
 
-		ents.Input(newIcon, "Trigger", "", world);
+		ents.Input(newIcon, "trigger", "", world);
 	}
 }
 
@@ -111,10 +111,10 @@ CodeCallback_FrameStart(void)
 			if (teams.Score(1) >= autocvar_dom_scoreLimit) {
 				nextPointDistribution = -1;
 				game.EndMapDelayed(5.0);
-				ents.Input(dom_team1WinMessage, "Display", "", world);
+				ents.Input(dom_team1WinMessage, "display", "", world);
 			}
 		}
-	} 
+	}
 
 	if (g_team2_scoring > 0) {
 		teams.AddScore(2, 5 * g_team2_scoring);
@@ -123,7 +123,7 @@ CodeCallback_FrameStart(void)
 			if (teams.Score(2) >= autocvar_dom_scoreLimit) {
 				nextPointDistribution = -1;
 				game.EndMapDelayed(5.0f);
-				ents.Input(dom_team2WinMessage, "Display", "", world);
+				ents.Input(dom_team2WinMessage, "display", "", world);
 			}
 		}
 	}
@@ -154,7 +154,7 @@ CodeCallback_PlayerRequestRespawn(entity playerEntity)
 bool
 CodeCallback_CallRequestTeam(entity playerEntity, int teamNum)
 {
-	ents.Input(playerEntity, "SetTeam", itos(teamNum), playerEntity);
+	ents.Input(playerEntity, "setteam", itos(teamNum), playerEntity);
 
 	if (is.Alive(playerEntity) == false) {
 		if (playerEntity.team == 1) {
@@ -170,7 +170,7 @@ CodeCallback_CallRequestTeam(entity playerEntity, int teamNum)
 		game.TeleportToSpawn(playerEntity);
 		music.PlayOnceOnClient(precache.Music("music/track05.ogg"), playerEntity);
 	} else {
-		ents.Input(playerEntity, "Damage", "1000", playerEntity);
+		ents.Input(playerEntity, "damage", "1000", playerEntity);
 	}
 
 	return (true);
@@ -229,23 +229,23 @@ void
 CodeCallback_Input(entity activator, string inputName, string dataString)
 {
 	switch (inputName) {
-	case "Capture":
+	case "capture":
 		entity closestIcon = FindClosestIcon(activator.origin);
 
 		if (dataString == "1") {
 			if (closestIcon) {
-				ents.Input(closestIcon, "Color", "255 0 0", world);
+				ents.Input(closestIcon, "color", "255 0 0", world);
 			}
 		} else if (dataString == "2") {
 
 			if (closestIcon) {
-				ents.Input(closestIcon, "Color", "0 0 255", world);
+				ents.Input(closestIcon, "color", "0 0 255", world);
 			}
 		}
 		break;
-	case "Break":
+	case "break":
 		entity closestIcon2 = FindClosestIcon(activator.origin);
-		ents.Input(closestIcon2, "Color", "255 255 255", world);
+		ents.Input(closestIcon2, "color", "255 255 255", world);
 		//music.PlayOnce(precache.Music("music/mp_yield.wav"));
 
 		break;

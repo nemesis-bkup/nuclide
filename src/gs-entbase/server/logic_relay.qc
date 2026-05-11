@@ -16,8 +16,8 @@
 
 enumflags
 {
-	LOGICRELAY_ONCE,
-	LOGICRELAY_FAST
+    LOGICRELAY_ONCE,
+    LOGICRELAY_FAST
 };
 
 /*! \brief Server-Entity: Relay Trigger */
@@ -58,11 +58,11 @@ class
 logic_relay:ncPointTrigger
 {
 public:
-	void logic_relay(void);
+    void logic_relay(void);
 
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
 };
 
 void
@@ -73,45 +73,46 @@ logic_relay::logic_relay(void)
 void
 logic_relay::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 }
 
 void
 logic_relay::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
+#warning incomplete
 void
 logic_relay::Input(entity activatorEntity, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "Trigger":
-		if (TriggerEnabled() == true) {
-			/* if we don't allow fast retrigger... */
-			if (HasSpawnFlags(LOGICRELAY_FAST) == false) {
-				if (CheckOutput(m_outputOnTrigger) == false) {
-					return;
-				}
-			}
+    switch (inputName) {
+    case "trigger":
+        if (TriggerEnabled() == true) {
+            /* if we don't allow fast retrigger... */
+            if (HasSpawnFlags(LOGICRELAY_FAST) == false) {
+                if (CheckOutput(m_outputOnTrigger) == false) {
+                    return;
+                }
+            }
 
-			UseOutput(activatorEntity, m_outputOnTrigger);
+            UseOutput(activatorEntity, m_outputOnTrigger);
 
-			/* remove forever! */
-			if (HasSpawnFlags(LOGICRELAY_ONCE)) {
-				Destroy();
-			}
-		}
-		break;
-	/* TODO: complete this mess */
-	case "CancelPending":
-		break;
-	case "EnableRefire":
-		break;
-	default:
-		super::Input(activatorEntity, inputName, dataField);
-	}
+            /* remove forever! */
+            if (HasSpawnFlags(LOGICRELAY_ONCE)) {
+                Destroy();
+            }
+        }
+        break;
+    /* TODO: complete this mess */
+    case "cancelpending":
+        break;
+    case "enablerefire":
+        break;
+    default:
+        super::Input(activatorEntity, inputName, dataField);
+    }
 }

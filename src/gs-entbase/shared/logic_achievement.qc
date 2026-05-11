@@ -47,114 +47,114 @@ class
 logic_achievement:ncPointTrigger
 {
 public:
-	void logic_achievement(void);
+    void logic_achievement(void);
 
-	/** overrides */
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void SpawnKey(string, string);
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void Input(entity, string, string);
-	virtual void Trigger(entity, triggermode_t);
+    /** overrides */
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void SpawnKey(string, string);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void Input(entity, string, string);
+    virtual void Trigger(entity, triggermode_t);
 
-	nonvirtual void CallEvent(entity);
+    nonvirtual void CallEvent(entity);
 
 private:
-	string m_strAchievementEvent;
-	string m_outputOnFired;
+    string m_strAchievementEvent;
+    string m_outputOnFired;
 };
 
 void
 logic_achievement::logic_achievement(void)
 {
-	m_strAchievementEvent = __NULL__;
-	m_outputOnFired = __NULL__;
+    m_strAchievementEvent = __NULL__;
+    m_outputOnFired = __NULL__;
 }
 
 void
 logic_achievement::Save(float handle)
 {
-	SaveString(handle, "m_strAchievementEvent", m_strAchievementEvent);
-	SaveString(handle, "m_outputOnFired", m_outputOnFired);
+    SaveString(handle, "m_strAchievementEvent", m_strAchievementEvent);
+    SaveString(handle, "m_outputOnFired", m_outputOnFired);
 }
 
 void
 logic_achievement::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "m_strAchievementEvent":
-		m_strAchievementEvent = ReadString(setValue);
-		break;
-	case "m_outputOnFired":
-		m_outputOnFired = ReadString(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-	}
+    switch (keyName) {
+    case "m_strAchievementEvent":
+        m_strAchievementEvent = ReadString(setValue);
+        break;
+    case "m_outputOnFired":
+        m_outputOnFired = ReadString(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+    }
 }
 
 void
 logic_achievement::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "AchievementEvent":
-		m_strAchievementEvent = ReadString(setValue);
-		break;
-	case "OnFired":
-		m_outputOnFired = PrepareOutput(m_outputOnFired, setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "AchievementEvent":
+        m_strAchievementEvent = ReadString(setValue);
+        break;
+    case "OnFired":
+        m_outputOnFired = PrepareOutput(m_outputOnFired, setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 logic_achievement::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnFired)
-		m_outputOnFired = CreateOutput(m_outputOnFired);
+    if (m_outputOnFired)
+        m_outputOnFired = CreateOutput(m_outputOnFired);
 }
 
 void
 logic_achievement::Respawn(void)
 {
-	InitPointTrigger();
+    InitPointTrigger();
 }
 
 void
 logic_achievement::Input(entity activatorEntity, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "FireEvent":
-		CallEvent(activatorEntity);
-		break;
-	default:
-		super::Input(activatorEntity, inputName, dataField);
-	}
+    switch (inputName) {
+    case "fireevent":
+        CallEvent(activatorEntity);
+        break;
+    default:
+        super::Input(activatorEntity, inputName, dataField);
+    }
 }
 
 void
 logic_achievement::Trigger(entity activatorEntity, triggermode_t state)
 {
-	CallEvent(activatorEntity);
+    CallEvent(activatorEntity);
 }
 
 void
 logic_achievement::CallEvent(entity targetPlayer)
 {
-	if (TriggerEnabled() == false) {
-		return;
-	}
+    if (TriggerEnabled() == false) {
+        return;
+    }
 
-	UseOutput(targetPlayer, m_outputOnFired);
+    UseOutput(targetPlayer, m_outputOnFired);
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_ACHIEVEMENT);
-	WriteString(MSG_MULTICAST, m_strAchievementEvent);
-	msg_entity = targetPlayer;
-	multicast([0,0,0], MULTICAST_ONE_R);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_ACHIEVEMENT);
+    WriteString(MSG_MULTICAST, m_strAchievementEvent);
+    msg_entity = targetPlayer;
+    multicast([0,0,0], MULTICAST_ONE_R);
 }
 #endif

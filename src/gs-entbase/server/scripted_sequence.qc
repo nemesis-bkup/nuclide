@@ -19,8 +19,8 @@ var bool autocvar_ai_debugScripts = false;
 void
 _NSAIScript_Log(string msg)
 {
-	if (autocvar_ai_debugScripts == true)
-		print(sprintf("%f %s\n", time, msg));
+    if (autocvar_ai_debugScripts == true)
+        print(sprintf("%f %s\n", time, msg));
 }
 #define NSAIScript_Log(...) _NSAIScript_Log(sprintf(__VA_ARGS__))
 
@@ -99,360 +99,360 @@ class
 scripted_sequence:ncPointTrigger
 {
 public:
-	void scripted_sequence(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
-	virtual void Touch(entity);
-	virtual void DebugDraw(void);
-	virtual void OnMapFinishedLoading(void);
-	
-	nonvirtual void RunOnEntity(entity);
-	nonvirtual void InitIdle(void);
+    void scripted_sequence(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
+    virtual void Touch(entity);
+    virtual void DebugDraw(void);
+    virtual void OnMapFinishedLoading(void);
+    
+    nonvirtual void RunOnEntity(entity);
+    nonvirtual void InitIdle(void);
 
 private:
-	int m_iEnabled;
-	string m_strMonster;
-	string m_strActionAnim;
-	string m_strIdleAnim;
-	float m_flSearchRadius;
-	int m_iMove;
+    int m_iEnabled;
+    string m_strMonster;
+    string m_strActionAnim;
+    string m_strIdleAnim;
+    float m_flSearchRadius;
+    int m_iMove;
 };
 
 void
 scripted_sequence::scripted_sequence(void)
 {
-	m_iEnabled = 0i;
-	m_strMonster = __NULL__;
-	m_strActionAnim = __NULL__;
-	m_strIdleAnim = __NULL__;
-	m_flSearchRadius = 0.0f;
-	m_iMove = 0i;
+    m_iEnabled = 0i;
+    m_strMonster = __NULL__;
+    m_strActionAnim = __NULL__;
+    m_strIdleAnim = __NULL__;
+    m_flSearchRadius = 0.0f;
+    m_iMove = 0i;
 }
 
 void
 scripted_sequence::DebugDraw(void)
 {
-	vector pos = GetOrigin();
-	pos[2] += 32;
+    vector pos = GetOrigin();
+    pos[2] += 32;
 
-	R_BeginPolygon("textures/editor/scripted_sequence", 0, 0);
-	R_PolygonVertex(pos + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
-	R_PolygonVertex(pos - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
-	R_PolygonVertex(pos - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
-	R_PolygonVertex(pos + v_right * 16 + v_up * 16, [1,0], [1,1,1], 1.0f);
-	R_EndPolygon();
+    R_BeginPolygon("textures/editor/scripted_sequence", 0, 0);
+    R_PolygonVertex(pos + v_right * 16 - v_up * 16, [1,1], [1,1,1], 1.0f);
+    R_PolygonVertex(pos - v_right * 16 - v_up * 16, [0,1], [1,1,1], 1.0f);
+    R_PolygonVertex(pos - v_right * 16 + v_up * 16, [0,0], [1,1,1], 1.0f);
+    R_PolygonVertex(pos + v_right * 16 + v_up * 16, [1,0], [1,1,1], 1.0f);
+    R_EndPolygon();
 
-	R_BeginPolygon("", 0, 0);
-	R_PolygonVertex(GetOrigin(), [0,1], [1,1,1], 0.5);
-	R_PolygonVertex(pos, [1,1], [1,1,1], 0.5);
-	R_EndPolygon();
+    R_BeginPolygon("", 0, 0);
+    R_PolygonVertex(GetOrigin(), [0,1], [1,1,1], 0.5);
+    R_PolygonVertex(pos, [1,1], [1,1,1], 0.5);
+    R_EndPolygon();
 }
 
 void
 scripted_sequence::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iEnabled", m_iEnabled);
-	SaveString(handle, "m_strMonster", m_strMonster);
-	SaveString(handle, "m_strActionAnim", m_strActionAnim);
-	SaveString(handle, "m_strIdleAnim", m_strIdleAnim);
-	SaveFloat(handle, "m_flSearchRadius", m_flSearchRadius);
-	SaveInt(handle, "m_iMove", m_iMove);
+    super::Save(handle);
+    SaveInt(handle, "m_iEnabled", m_iEnabled);
+    SaveString(handle, "m_strMonster", m_strMonster);
+    SaveString(handle, "m_strActionAnim", m_strActionAnim);
+    SaveString(handle, "m_strIdleAnim", m_strIdleAnim);
+    SaveFloat(handle, "m_flSearchRadius", m_flSearchRadius);
+    SaveInt(handle, "m_iMove", m_iMove);
 }
 
 void
 scripted_sequence::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iEnabled":
-		m_iEnabled = ReadInt(setValue);
-		break;
-	case "m_strMonster":
-		m_strMonster = ReadString(setValue);
-		break;
-	case "m_strActionAnim":
-		m_strActionAnim = ReadString(setValue);
-		break;
-	case "m_strIdleAnim":
-		m_strIdleAnim = ReadString(setValue);
-		break;
-	case "m_flSearchRadius":
-		m_flSearchRadius = ReadFloat(setValue);
-		break;
-	case "m_iMove":
-		m_iMove = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iEnabled":
+        m_iEnabled = ReadInt(setValue);
+        break;
+    case "m_strMonster":
+        m_strMonster = ReadString(setValue);
+        break;
+    case "m_strActionAnim":
+        m_strActionAnim = ReadString(setValue);
+        break;
+    case "m_strIdleAnim":
+        m_strIdleAnim = ReadString(setValue);
+        break;
+    case "m_flSearchRadius":
+        m_flSearchRadius = ReadFloat(setValue);
+        break;
+    case "m_iMove":
+        m_iMove = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 scripted_sequence::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iszEntity":
-		m_strMonster = setValue;
-		break;
-	case "m_iszPlay":
-		m_strActionAnim = setValue;
-		break;
-	case "m_iszIdle":
-		m_strIdleAnim = setValue;
-		break;
-	case "m_flRadius":
-		m_flSearchRadius = stof(setValue);
-		break;
-	case "m_flRepeat":
-		/* TODO: */
-		break;
-	case "m_fMoveTo":
-		m_iMove = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iszEntity":
+        m_strMonster = setValue;
+        break;
+    case "m_iszPlay":
+        m_strActionAnim = setValue;
+        break;
+    case "m_iszIdle":
+        m_strIdleAnim = setValue;
+        break;
+    case "m_flRadius":
+        m_flSearchRadius = stof(setValue);
+        break;
+    case "m_flRepeat":
+        /* TODO: */
+        break;
+    case "m_fMoveTo":
+        m_iMove = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 scripted_sequence::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	m_iEnabled = TRUE;
-	target = GetSpawnString("target");
+    m_iEnabled = TRUE;
+    target = GetSpawnString("target");
 
-	if (m_flSearchRadius) {
-		SetSolid(SOLID_TRIGGER);
-		mins[0] = mins[1] = mins[2] = -(m_flSearchRadius/2);
-		maxs[0] = maxs[1] = maxs[2] = (m_flSearchRadius/2);
-		SetSize(mins, maxs);
-	} else {
-		SetSolid(SOLID_NOT);
-	}
+    if (m_flSearchRadius) {
+        SetSolid(SOLID_TRIGGER);
+        mins[0] = mins[1] = mins[2] = -(m_flSearchRadius/2);
+        maxs[0] = maxs[1] = maxs[2] = (m_flSearchRadius/2);
+        SetSize(mins, maxs);
+    } else {
+        SetSolid(SOLID_NOT);
+    }
 
-	ScheduleThink(InitIdle, 1.0f);
+    ScheduleThink(InitIdle, 1.0f);
 }
 
 void
 scripted_sequence::OnMapFinishedLoading(void)
 {
-	if (m_strIdleAnim) {
-		ScheduleThink(InitIdle, 1.0f);
-	}
+    if (m_strIdleAnim) {
+        ScheduleThink(InitIdle, 1.0f);
+    }
 }
 
 void
 scripted_sequence::RunOnEntity(entity targ)
-{	
-	ncMonster f;
-	float duration;
+{   
+    ncMonster f;
+    float duration;
 
-	f = (ncMonster)targ;
+    f = (ncMonster)targ;
 
-	if (!m_iEnabled)
-		return;
+    if (!m_iEnabled)
+        return;
 
-	/* aaaaand it's gone */
-	if (!HasSpawnFlags(SSFL_REPEATABLE))
-		m_iEnabled = FALSE;
+    /* aaaaand it's gone */
+    if (!HasSpawnFlags(SSFL_REPEATABLE))
+        m_iEnabled = FALSE;
 
-	if (f.IsPerforming()) {
-		f.CancelSchedule();
-	}
+    if (f.IsPerforming()) {
+        f.CancelSchedule();
+    }
 
-	NSAIScript_Log("\tName: %s", targetname);
-	NSAIScript_Log("\tTarget: %s", m_strMonster);
-	NSAIScript_Log("\tStarted: %f", time);
+    NSAIScript_Log("\tName: %s", targetname);
+    NSAIScript_Log("\tTarget: %s", m_strMonster);
+    NSAIScript_Log("\tStarted: %f", time);
 
-	/* if we're told an anim, we better have it... or else. */
-	if (STRING_SET(m_strActionAnim)) {
-		f.m_flSequenceEnd = frameforname(f.modelindex, m_strActionAnim);
-		if (f.m_flSequenceEnd == -1) {
-			print(sprintf("^1ERROR: Framegroup %s not found!\n", m_strActionAnim));
-			return;
-		}
-	}
+    /* if we're told an anim, we better have it... or else. */
+    if (STRING_SET(m_strActionAnim)) {
+        f.m_flSequenceEnd = frameforname(f.modelindex, m_strActionAnim);
+        if (f.m_flSequenceEnd == -1) {
+            print(sprintf("^1ERROR: Framegroup %s not found!\n", m_strActionAnim));
+            return;
+        }
+    }
 
-	/* entity to trigger after sequence ends */
-	if (STRING_SET(target)) {
-		NSAIScript_Log("\tTrigger when finished: %s", target);
-		f.m_strRouteEnded = target;
-		f.m_ssLast = this;
-		SetValue(0i); /* will be marked as used once triggered */
-	} else {
-		/* make sure we're not about to trigger _anything_ */
-		f.m_strRouteEnded = __NULL__;
-		f.m_ssLast = __NULL__;
-		SetValue(1i); /* mark us as having been used, for multisources. */
-	}
+    /* entity to trigger after sequence ends */
+    if (STRING_SET(target)) {
+        NSAIScript_Log("\tTrigger when finished: %s", target);
+        f.m_strRouteEnded = target;
+        f.m_ssLast = this;
+        SetValue(0i); /* will be marked as used once triggered */
+    } else {
+        /* make sure we're not about to trigger _anything_ */
+        f.m_strRouteEnded = __NULL__;
+        f.m_ssLast = __NULL__;
+        SetValue(1i); /* mark us as having been used, for multisources. */
+    }
 
-	/* mark the state */
-	f.m_iSequenceState = SEQUENCESTATE_ACTIVE;
+    /* mark the state */
+    f.m_iSequenceState = SEQUENCESTATE_ACTIVE;
 
-	/* seems to be active at all times? contrary to SS_TURNTOFACE existing? */
-	f.m_vecSequenceAngle = GetAngles();
-	f.m_iSequenceFlags = spawnflags;
-	f.m_strSequenceKillTarget = GetTriggerKillTarget();
+    /* seems to be active at all times? contrary to SS_TURNTOFACE existing? */
+    f.m_vecSequenceAngle = GetAngles();
+    f.m_iSequenceFlags = spawnflags;
+    f.m_strSequenceKillTarget = GetTriggerKillTarget();
 
-	if (STRING_SET(f.m_strSequenceKillTarget)) {
-		//readcmd(sprintf("watchpoint_ssqc %d.nextthink\n", num_for_edict(f)));
-		NSAIScript_Log("\tKillTarget when finished: %S", GetTriggerKillTarget());
-	}
+    if (STRING_SET(f.m_strSequenceKillTarget)) {
+        //readcmd(sprintf("watchpoint_ssqc %d.nextthink\n", num_for_edict(f)));
+        NSAIScript_Log("\tKillTarget when finished: %S", GetTriggerKillTarget());
+    }
 
-	if (m_iMove == SS_NO) {
-		f.m_vecSequenceAngle = f.angles;
-		NSAIScript_Log("\tType: SS_NO (%i)", m_iMove);
-	} else if (m_iMove == SS_WALK) {
-		f.RouteToPosition(GetOrigin());
-		f.m_flSequenceSpeed = f.GetWalkSpeed();
-		NSAIScript_Log("\tType: SS_WALK (%i) at %d up/s", m_iMove, f.m_flSequenceSpeed);
-		return;
-	} else if (m_iMove == SS_RUN) {
-		f.RouteToPosition(GetOrigin());
-		f.m_flSequenceSpeed = f.GetRunSpeed();
-		NSAIScript_Log("\tType: SS_RUN (%i) at %d up/s", m_iMove, f.m_flSequenceSpeed);
-		return;
-	} else if (m_iMove == SS_INSTANTANEOUS) {
-		f.SetOrigin(GetOrigin());
-		NSAIScript_Log("\tType: SS_INSTANTANEOUS (%i)", m_iMove);
-	} else if (m_iMove == SS_TURNTOFACE) {
-		NSAIScript_Log("\tType: SS_TURNTOFACE (%i)", m_iMove);
-	}
+    if (m_iMove == SS_NO) {
+        f.m_vecSequenceAngle = f.angles;
+        NSAIScript_Log("\tType: SS_NO (%i)", m_iMove);
+    } else if (m_iMove == SS_WALK) {
+        f.RouteToPosition(GetOrigin());
+        f.m_flSequenceSpeed = f.GetWalkSpeed();
+        NSAIScript_Log("\tType: SS_WALK (%i) at %d up/s", m_iMove, f.m_flSequenceSpeed);
+        return;
+    } else if (m_iMove == SS_RUN) {
+        f.RouteToPosition(GetOrigin());
+        f.m_flSequenceSpeed = f.GetRunSpeed();
+        NSAIScript_Log("\tType: SS_RUN (%i) at %d up/s", m_iMove, f.m_flSequenceSpeed);
+        return;
+    } else if (m_iMove == SS_INSTANTANEOUS) {
+        f.SetOrigin(GetOrigin());
+        NSAIScript_Log("\tType: SS_INSTANTANEOUS (%i)", m_iMove);
+    } else if (m_iMove == SS_TURNTOFACE) {
+        NSAIScript_Log("\tType: SS_TURNTOFACE (%i)", m_iMove);
+    }
 
-	/* all the non-moving targets will do this at least */
-	if (STRING_SET(m_strActionAnim)) {
-		if (m_iMove == SS_NO) {
-			//f.SetAngles(GetAngles());
-			//f.SetOrigin(GetOrigin());
-			f.AnimPlay(f.m_flSequenceEnd);
-		}
+    /* all the non-moving targets will do this at least */
+    if (STRING_SET(m_strActionAnim)) {
+        if (m_iMove == SS_NO) {
+            //f.SetAngles(GetAngles());
+            //f.SetOrigin(GetOrigin());
+            f.AnimPlay(f.m_flSequenceEnd);
+        }
 
-		duration = frameduration(f.modelindex, f.m_flSequenceEnd);
-		NSAIScript_Log(
-			"\tAnimation: %s Duration: %f seconds (modelindex %d, frame %d)",
-			m_strActionAnim,
-			duration,
-			f.modelindex,
-			f.m_flSequenceEnd
-		);
-	} else {
-		duration = 0.0f;
-		NSAIScript_Log(
-			"\t^1WARNING: %s skipping animation on script type %i",
-			f.targetname,
-			m_iMove
-		);
-	}
+        duration = frameduration(f.modelindex, f.m_flSequenceEnd);
+        NSAIScript_Log(
+            "\tAnimation: %s Duration: %f seconds (modelindex %d, frame %d)",
+            m_strActionAnim,
+            duration,
+            f.modelindex,
+            f.m_flSequenceEnd
+        );
+    } else {
+        duration = 0.0f;
+        NSAIScript_Log(
+            "\t^1WARNING: %s skipping animation on script type %i",
+            f.targetname,
+            m_iMove
+        );
+    }
 
-	f.m_iSequenceState = SEQUENCESTATE_ENDING;
+    f.m_iSequenceState = SEQUENCESTATE_ENDING;
 
-	if (HasSpawnFlags(SSFL_LEAVECORPSE)) {
-		f.think = ncMonster::ScriptedSequenceEnded_Dead;
-		f.nextthink = GetTime() + duration;
-	} else if (HasSpawnFlags(SSFL_NOSCRIPTMOVE) || m_iMove == SS_NO) {
-		f.think = ncMonster::ScriptedSequenceEnded;
-		f.nextthink = GetTime() + duration;
-	} else {
-		f.think = ncMonster::ScriptedSequenceEnded_Moved;
-		f.nextthink = GetTime() + duration;
-	}
+    if (HasSpawnFlags(SSFL_LEAVECORPSE)) {
+        f.think = ncMonster::ScriptedSequenceEnded_Dead;
+        f.nextthink = GetTime() + duration;
+    } else if (HasSpawnFlags(SSFL_NOSCRIPTMOVE) || m_iMove == SS_NO) {
+        f.think = ncMonster::ScriptedSequenceEnded;
+        f.nextthink = GetTime() + duration;
+    } else {
+        f.think = ncMonster::ScriptedSequenceEnded_Moved;
+        f.nextthink = GetTime() + duration;
+    }
 
-	NSAIScript_Log("\tEnding: %f", f.nextthink);
+    NSAIScript_Log("\tEnding: %f", f.nextthink);
 
-	/* make sure we're forgetting about enemies and attack states in sequence */
-	f.m_eEnemy = __NULL__;
-	f.m_iMState = MONSTER_IDLE;
+    /* make sure we're forgetting about enemies and attack states in sequence */
+    f.m_eEnemy = __NULL__;
+    f.m_iMState = MONSTER_IDLE;
 }
 
 void
 scripted_sequence::Trigger(entity act, triggermode_t unused)
 {
-	ncMonster f;
+    ncMonster f;
 
-	NSAIScript_Log("^2scripted_sequence::^3Trigger^7: with spawnflags %d", spawnflags);
-	f = (ncMonster)find(world, ::targetname, m_strMonster);
+    NSAIScript_Log("^2scripted_sequence::^3Trigger^7: with spawnflags %d", spawnflags);
+    f = (ncMonster)find(world, ::targetname, m_strMonster);
 
-	/* target doesn't exist/hasn't spawned */
-	if (!f) {
-		for (entity c = world; (c = find(c, ::classname, m_strMonster));) {
-			/* within radius */
-			if (vlen(origin - c.origin) < m_flSearchRadius) {
-				f = (ncMonster)c;
-				break;
-			}
-		}
+    /* target doesn't exist/hasn't spawned */
+    if (!f) {
+        for (entity c = world; (c = find(c, ::classname, m_strMonster));) {
+            /* within radius */
+            if (vlen(origin - c.origin) < m_flSearchRadius) {
+                f = (ncMonster)c;
+                break;
+            }
+        }
 
-		/* cancel out. this trigger is not yet ready. */
-		if (!f) {
-			return;
-		}
-	}
+        /* cancel out. this trigger is not yet ready. */
+        if (!f) {
+            return;
+        }
+    }
 
-	RunOnEntity((entity)f);
+    RunOnEntity((entity)f);
 }
 
 void
 scripted_sequence::InitIdle(void)
 {
-	ncMonster f;
+    ncMonster f;
 
-	NSAIScript_Log("^2scripted_sequence::^3InitIdle^7: with spawnflags %d on %S", spawnflags, m_strMonster);
-	f = (ncMonster)find(world, ::targetname, m_strMonster);
+    NSAIScript_Log("^2scripted_sequence::^3InitIdle^7: with spawnflags %d on %S", spawnflags, m_strMonster);
+    f = (ncMonster)find(world, ::targetname, m_strMonster);
 
-	/* target doesn't exist/hasn't spawned */
-	if (!f) {
-		/* time to look for a classname instead */
-		for (entity c = world; (c = find(c, ::classname, m_strMonster));) {
-			/* within radius */
-			if (vlen(origin - c.origin) < m_flSearchRadius) {
-				f = (ncMonster)c;
-				break;
-			}
-		}
+    /* target doesn't exist/hasn't spawned */
+    if (!f) {
+        /* time to look for a classname instead */
+        for (entity c = world; (c = find(c, ::classname, m_strMonster));) {
+            /* within radius */
+            if (vlen(origin - c.origin) < m_flSearchRadius) {
+                f = (ncMonster)c;
+                break;
+            }
+        }
 
-		/* cancel out. this trigger is broken. */
-		if (!f) {
-			NSAIScript_Log("^1scripted_sequence::^3InitIdle^7: Unknown target %s", m_strMonster);
-			return;
-		}
-	}
+        /* cancel out. this trigger is broken. */
+        if (!f) {
+            NSAIScript_Log("^1scripted_sequence::^3InitIdle^7: Unknown target %s", m_strMonster);
+            return;
+        }
+    }
 
-	/* FIXME: does this filter apply to other types as well? */
-	if (m_iMove != SS_NO) {
-		NSAIScript_Log("^2scripted_sequence::^3InitIdle^7: Moving %S to %v", m_strMonster, GetOrigin());
-		/* The entity may be configured to reposition itself on ::Respawn...*/
-		f.ReleaseThink();
-		setorigin(f, GetOrigin());
-		f.m_vecSequenceAngle = GetAngles();
-	} else {
-		f.m_vecSequenceAngle = f.angles;
-	}
+    /* FIXME: does this filter apply to other types as well? */
+    if (m_iMove != SS_NO) {
+        NSAIScript_Log("^2scripted_sequence::^3InitIdle^7: Moving %S to %v", m_strMonster, GetOrigin());
+        /* The entity may be configured to reposition itself on ::Respawn...*/
+        f.ReleaseThink();
+        setorigin(f, GetOrigin());
+        f.m_vecSequenceAngle = GetAngles();
+    } else {
+        f.m_vecSequenceAngle = f.angles;
+    }
 
-	f.m_flSequenceEnd = frameforname(f.GetModelindex(), m_strIdleAnim);
-	f.m_iSequenceState = SEQUENCESTATE_ENDING;
+    f.m_flSequenceEnd = frameforname(f.GetModelindex(), m_strIdleAnim);
+    f.m_iSequenceState = SEQUENCESTATE_ENDING;
 }
 
 void
 scripted_sequence::Touch(entity eToucher)
 {
-	ncMonster f;
+    ncMonster f;
 
-	if (eToucher.classname != m_strMonster)
-		return;
+    if (eToucher.classname != m_strMonster)
+        return;
 
-	f = (ncMonster)eToucher;
+    f = (ncMonster)eToucher;
 
-	/* we already ARE on a sequence. */
-	if (f.m_iSequenceState != SEQUENCESTATE_NONE)
-		return;
+    /* we already ARE on a sequence. */
+    if (f.m_iSequenceState != SEQUENCESTATE_NONE)
+        return;
 
-	RunOnEntity(eToucher);
+    RunOnEntity(eToucher);
 }
 
 CLASSEXPORT(aiscripted_sequence, scripted_sequence)

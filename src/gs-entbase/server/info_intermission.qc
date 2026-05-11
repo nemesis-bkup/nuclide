@@ -39,7 +39,7 @@ class
 info_intermission:ncPointTrigger
 {
 public:
-	void info_intermission(void);
+    void info_intermission(void);
 };
 
 void

@@ -22,40 +22,40 @@ class
 vguiHGradient:vguiWidget
 {
 public:
-	void vguiPic(void);
+    void vguiPic(void);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
 
 
 private:
-	vector m_gradientColor1;
-	vector m_gradientColor2;
+    vector m_gradientColor1;
+    vector m_gradientColor2;
 };
 
 void
 vguiHGradient::vguiHGradient(void)
 {
-	m_gradientColor1 = [1,1,1];
-	m_gradientColor2 = [0,0,0];
+    m_gradientColor1 = [1,1,1];
+    m_gradientColor2 = [0,0,0];
 }
 
 void
 vguiHGradient::Spawned(void)
 {
-	SetSize([16,16]);
+    SetSize([16,16]);
 }
 
 void
 vguiHGradient::Draw(void)
 {
-	drawfill(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, m_gradientColor1, 1.0f, 0);
-	drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/hgradient", m_vecSize, m_gradientColor1, 1.0f, 0);
+    drawfill(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, m_gradientColor1, 1.0f, 0);
+    drawpic(m_parent.m_vecOrigin + m_vecOrigin, "gfx/icon16/hgradient", m_vecSize, m_gradientColor1, 1.0f, 0);
 }
 
 bool
 vguiHGradient::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	return false;
+    return false;
 }

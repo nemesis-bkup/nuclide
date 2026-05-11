@@ -6,4 +6,5 @@ app librequake
 	"resolution"	"320 240"
 	"captureMouse"	"1"
 	"webShim"		"1"
+    "icon"          "gfx/icon16/joystick"
 }

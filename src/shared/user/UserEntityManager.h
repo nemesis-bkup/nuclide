@@ -25,17 +25,17 @@ muting, permissions and other such rules.
 class
 ncUserEntityManager:ncIO
 {
-	void ncUserEntityManager(void);
-	nonvirtual int NumUserObjectsForClient(ncClient, string type);
+    void ncUserEntityManager(void);
+    nonvirtual int NumUserObjectsForClient(ncClient, string type);
 
 #ifdef CLIENT
-	nonvirtual void IndexClientInventory(void);
+    nonvirtual void IndexClientInventory(void);
 #endif
 
 #ifdef SERVER
-	nonvirtual void StopVideos(void);
-	nonvirtual void RemoveAllObjects(void);
-	nonvirtual void RemoveClientObjects(ncPlayer playerRef);
+    nonvirtual void StopVideos(void);
+    nonvirtual void RemoveAllObjects(void);
+    nonvirtual void RemoveClientObjects(ncPlayer playerRef);
 #endif
 };
 

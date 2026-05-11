@@ -25,33 +25,33 @@ Commandmenu_Init(void)
 void
 Commandmenu_Draw(void)
 {
-	if (pSeat->m_bCommandMenu == false)
-		return;
+    if (pSeat->m_bCommandMenu == false)
+        return;
 
-	if (g_uiCommandMenu)
-		g_uiCommandMenu.Draw();
+    if (g_uiCommandMenu)
+        g_uiCommandMenu.Draw();
 }
 
 bool
 Commandmenu_Input(float flEvType, float flScanX, float flCharY, float flDevID)
 {
-	if (pSeat->m_bCommandMenu == false)
-		return (false);
+    if (pSeat->m_bCommandMenu == false)
+        return (false);
 
-	if (!g_uiCommandMenu)
-		return (false);
+    if (!g_uiCommandMenu)
+        return (false);
 
-	return g_uiCommandMenu.Input(flEvType, flScanX, flCharY, flDevID);
+    return g_uiCommandMenu.Input(flEvType, flScanX, flCharY, flDevID);
 }
 
 void
 Commandmenu_Open(void)
 {
-	pSeat->m_bCommandMenu = true;
+    pSeat->m_bCommandMenu = true;
 }
 
 void
 Commandmenu_Close(void)
 {
-	pSeat->m_bCommandMenu = false;
+    pSeat->m_bCommandMenu = false;
 }

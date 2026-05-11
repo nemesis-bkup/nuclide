@@ -33,9 +33,9 @@ class
 func_tankcontrols:ncBrushTrigger
 {
 public:
-	void func_tankcontrols(void);
-	
-	virtual void PlayerUse(void);
+    void func_tankcontrols(void);
+    
+    virtual void PlayerUse(void);
 
 };
 
@@ -47,26 +47,26 @@ func_tankcontrols::func_tankcontrols(void)
 void
 func_tankcontrols:: PlayerUse(void)
 {
-	entity f;
-	ncVehicle tank;
+    entity f;
+    ncVehicle tank;
 
-	tank = __NULL__;
+    tank = __NULL__;
 
-	if (!(eActivator.flags & FL_CLIENT)) {
-		return;
-	}
+    if (!(eActivator.flags & FL_CLIENT)) {
+        return;
+    }
 
-	for (f = world; (f = find(f, ::targetname, target));) {
-		/* we found the right entity */
-		if (f.classname == "func_tank" || f.classname == "func_tankmortar") {
-			tank = (ncVehicle)f;
-		}
-	}
+    for (f = world; (f = find(f, ::targetname, target));) {
+        /* we found the right entity */
+        if (f.classname == "func_tank" || f.classname == "func_tankmortar") {
+            tank = (ncVehicle)f;
+        }
+    }
 
-	if (tank) {
-		if (!tank.m_eDriver)
-			tank.PlayerEnter((ncPlayer)eActivator);
-		else if (tank.m_eDriver == eActivator)
-			tank.PlayerLeave((ncPlayer)eActivator);
-	}
+    if (tank) {
+        if (!tank.m_eDriver)
+            tank.PlayerEnter((ncPlayer)eActivator);
+        else if (tank.m_eDriver == eActivator)
+            tank.PlayerLeave((ncPlayer)eActivator);
+    }
 }

@@ -22,11 +22,11 @@ class
 vguiRect:vguiWidget
 {
 public:
-	void vguiRect(void);
+    void vguiRect(void);
 
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
 };
 
 void
@@ -37,18 +37,18 @@ vguiRect::vguiRect(void)
 void
 vguiRect::Spawned(void)
 {
-	SetSize([16,16, 0]);
+    SetSize([16,16, 0]);
 }
 
 void
 vguiRect::Draw(void)
 {
-	drawfill(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, [0.5f, 0.5f, 0.5f], 1.0f);
+    drawfill(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, [0.5f, 0.5f, 0.5f], 1.0f);
 }
 
 bool
 vguiRect::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	return false;
+    return false;
 }
 

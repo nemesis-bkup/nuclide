@@ -16,17 +16,17 @@
 
 enumflags
 {
-	PRTEXFL_CHANGED_ORIGIN,
-	PRTEXFL_CHANGED_ANGLES,
-	PRTEXFL_CHANGED_LIGHT,
-	PRTEXFL_CHANGED_INTENSITY,
-	PRTEXFL_CHANGED_FARZ,
-	PRTEXFL_CHANGED_NEARZ,
-	PRTEXFL_CHANGED_STYLE,
-	PRTEXFL_CHANGED_STATE,
-	PRTEXFL_CHANGED_TEXTURE,
-	PRTEXFL_CHANGED_FOV,
-	PRTEXFL_CHANGED_PATTERN
+    PRTEXFL_CHANGED_ORIGIN,
+    PRTEXFL_CHANGED_ANGLES,
+    PRTEXFL_CHANGED_LIGHT,
+    PRTEXFL_CHANGED_INTENSITY,
+    PRTEXFL_CHANGED_FARZ,
+    PRTEXFL_CHANGED_NEARZ,
+    PRTEXFL_CHANGED_STYLE,
+    PRTEXFL_CHANGED_STATE,
+    PRTEXFL_CHANGED_TEXTURE,
+    PRTEXFL_CHANGED_FOV,
+    PRTEXFL_CHANGED_PATTERN
 };
 
 /*! \brief Shared-Entity: Light Texture Projector */
@@ -68,96 +68,96 @@ This entity was introduced in Half-Life 2: Episode One (2006).
 class env_projectedtexture:ncPointTrigger
 {
 public:
-	void env_projectedtexture(void);
+    void env_projectedtexture(void);
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float,float);
-	virtual float predraw(void);
+    virtual void ReceiveEntity(float,float);
+    virtual float predraw(void);
 #endif
 
 #ifdef SERVER
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Respawn(void);
-	virtual float SendEntity(entity,float);
-	virtual void SpawnKey(string,string);
-	virtual void EvaluateEntity(void);
-	virtual void Input(entity, string, string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual float SendEntity(entity,float);
+    virtual void SpawnKey(string,string);
+    virtual void EvaluateEntity(void);
+    virtual void Input(entity, string, string);
 #endif
 
 private:
-	vector m_vecLight;
-	float m_flIntensity;
-	float m_flInnerCone;
-	float m_flCone;
-	float m_flFarZ;
-	float m_flNearZ;
-	float m_flRadius;
-	float m_flStyle;
-	string m_strPattern;
-	string m_strTextureName;
-	float m_flFOV;
-	int m_iState;
+    vector m_vecLight;
+    float m_flIntensity;
+    float m_flInnerCone;
+    float m_flCone;
+    float m_flFarZ;
+    float m_flNearZ;
+    float m_flRadius;
+    float m_flStyle;
+    string m_strPattern;
+    string m_strTextureName;
+    float m_flFOV;
+    int m_iState;
 };
 
 #ifdef CLIENT
 float
 env_projectedtexture::predraw(void)
 {
-	if (!m_iState) {
-		return (PREDRAW_NEXT);
-	}
+    if (!m_iState) {
+        return (PREDRAW_NEXT);
+    }
 
-	/* TODO: We need to handle the second cone light */
-	float p = dynamiclight_add(origin, m_flFarZ, m_vecLight, m_flStyle, m_strTextureName);
-	dynamiclight_set(p, LFIELD_ANGLES, angles);
-	dynamiclight_set(p, LFIELD_FLAGS, LFLAG_NORMALMODE | LFLAG_REALTIMEMODE | LFLAG_SHADOWMAP);
-	dynamiclight_set(p, LFIELD_NEARCLIP, m_flNearZ);
-	dynamiclight_set(p, LFIELD_STYLESTRING, m_strPattern);
+    /* TODO: We need to handle the second cone light */
+    float p = dynamiclight_add(origin, m_flFarZ, m_vecLight, m_flStyle, m_strTextureName);
+    dynamiclight_set(p, LFIELD_ANGLES, angles);
+    dynamiclight_set(p, LFIELD_FLAGS, LFLAG_NORMALMODE | LFLAG_REALTIMEMODE | LFLAG_SHADOWMAP);
+    dynamiclight_set(p, LFIELD_NEARCLIP, m_flNearZ);
+    dynamiclight_set(p, LFIELD_STYLESTRING, m_strPattern);
 
-	return (PREDRAW_NEXT);
+    return (PREDRAW_NEXT);
 }
 
 void
 env_projectedtexture::ReceiveEntity(float flNew, float flFlags)
 {
-	if (flFlags & PRTEXFL_CHANGED_ORIGIN) {
-		origin[0] = readcoord();
-		origin[1] = readcoord();
-		origin[2] = readcoord();
-		setorigin(this, origin);
-	}
+    if (flFlags & PRTEXFL_CHANGED_ORIGIN) {
+        origin[0] = readcoord();
+        origin[1] = readcoord();
+        origin[2] = readcoord();
+        setorigin(this, origin);
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_ANGLES) {
-		angles[0] = readfloat();
-		angles[1] = readfloat();
-		angles[2] = readfloat();
-	}
+    if (flFlags & PRTEXFL_CHANGED_ANGLES) {
+        angles[0] = readfloat();
+        angles[1] = readfloat();
+        angles[2] = readfloat();
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_LIGHT) {
-		m_vecLight[0] = readbyte() / 255;
-		m_vecLight[1] = readbyte() / 255;
-		m_vecLight[2] = readbyte() / 255;
-	}
+    if (flFlags & PRTEXFL_CHANGED_LIGHT) {
+        m_vecLight[0] = readbyte() / 255;
+        m_vecLight[1] = readbyte() / 255;
+        m_vecLight[2] = readbyte() / 255;
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_INTENSITY)
-		m_flIntensity = readfloat();
-	if (flFlags & PRTEXFL_CHANGED_FARZ)
-		m_flFarZ = readfloat();
-	if (flFlags & PRTEXFL_CHANGED_NEARZ)
-		m_flNearZ = readfloat();
-	if (flFlags & PRTEXFL_CHANGED_STYLE)
-		m_flStyle = readbyte();
-	if (flFlags & PRTEXFL_CHANGED_STATE)
-		m_iState = readbyte();
-	if (flFlags & PRTEXFL_CHANGED_TEXTURE)
-		m_strTextureName = readstring();
-	if (flFlags & PRTEXFL_CHANGED_FOV)
-		m_flFOV = readfloat();
-	if (flFlags & PRTEXFL_CHANGED_PATTERN)
-		m_strPattern = readstring();
+    if (flFlags & PRTEXFL_CHANGED_INTENSITY)
+        m_flIntensity = readfloat();
+    if (flFlags & PRTEXFL_CHANGED_FARZ)
+        m_flFarZ = readfloat();
+    if (flFlags & PRTEXFL_CHANGED_NEARZ)
+        m_flNearZ = readfloat();
+    if (flFlags & PRTEXFL_CHANGED_STYLE)
+        m_flStyle = readbyte();
+    if (flFlags & PRTEXFL_CHANGED_STATE)
+        m_iState = readbyte();
+    if (flFlags & PRTEXFL_CHANGED_TEXTURE)
+        m_strTextureName = readstring();
+    if (flFlags & PRTEXFL_CHANGED_FOV)
+        m_flFOV = readfloat();
+    if (flFlags & PRTEXFL_CHANGED_PATTERN)
+        m_strPattern = readstring();
 
-	classname = "env_projectedtexture";
-	drawmask = MASK_ENGINE;
+    classname = "env_projectedtexture";
+    drawmask = MASK_ENGINE;
 }
 #endif
 
@@ -165,176 +165,176 @@ env_projectedtexture::ReceiveEntity(float flNew, float flFlags)
 void
 env_projectedtexture::EvaluateEntity(void)
 {
-	if (ATTR_CHANGED(origin)) {
-		SetSendFlags(PRTEXFL_CHANGED_ORIGIN);
-	}
+    if (ATTR_CHANGED(origin)) {
+        SetSendFlags(PRTEXFL_CHANGED_ORIGIN);
+    }
 
-	if (STRING_SET(target)) {
-		ncEntity aimingAt = (ncEntity)find(world, ::targetname, target);
-		vector centerPos = aimingAt.WorldSpaceCenter();
+    if (STRING_SET(target)) {
+        ncEntity aimingAt = (ncEntity)find(world, ::targetname, target);
+        vector centerPos = aimingAt.WorldSpaceCenter();
 
-		if (aimingAt) {
-			TurnToPos(centerPos);
-		}
-	}
+        if (aimingAt) {
+            TurnToPos(centerPos);
+        }
+    }
 
-	if (ATTR_CHANGED(angles)) {
-		//angles = fixAngle(angles);
-		SetSendFlags(PRTEXFL_CHANGED_ANGLES);
-	}
-	SAVE_STATE(origin)
-	SAVE_STATE(angles)
+    if (ATTR_CHANGED(angles)) {
+        //angles = fixAngle(angles);
+        SetSendFlags(PRTEXFL_CHANGED_ANGLES);
+    }
+    SAVE_STATE(origin)
+    SAVE_STATE(angles)
 }
 
 void
 env_projectedtexture::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		m_iState = 0;
-		break;
-	case TRIG_ON:
-		m_iState = 1;
-		break;
-	default:
-		m_iState = 1 - m_iState;
-	}
+    switch (state) {
+    case TRIG_OFF:
+        m_iState = 0;
+        break;
+    case TRIG_ON:
+        m_iState = 1;
+        break;
+    default:
+        m_iState = 1 - m_iState;
+    }
 
-	SendFlags |= PRTEXFL_CHANGED_STATE;
+    SendFlags |= PRTEXFL_CHANGED_STATE;
 }
 
 float
 env_projectedtexture::SendEntity(entity ePEnt, float flFlags)
 {
-	if (clienttype(ePEnt) != CLIENTTYPE_REAL)
-		return (0);
+    if (clienttype(ePEnt) != CLIENTTYPE_REAL)
+        return (0);
 
-	WriteByte(MSG_ENTITY, ENT_PROJECTEDTEXTURE);
-	WriteFloat(MSG_ENTITY, flFlags);
+    WriteByte(MSG_ENTITY, ENT_PROJECTEDTEXTURE);
+    WriteFloat(MSG_ENTITY, flFlags);
 
-	if (flFlags & PRTEXFL_CHANGED_ORIGIN) {
-		WriteCoord(MSG_ENTITY, origin[0]);
-		WriteCoord(MSG_ENTITY, origin[1]);
-		WriteCoord(MSG_ENTITY, origin[2]);
-	}
+    if (flFlags & PRTEXFL_CHANGED_ORIGIN) {
+        WriteCoord(MSG_ENTITY, origin[0]);
+        WriteCoord(MSG_ENTITY, origin[1]);
+        WriteCoord(MSG_ENTITY, origin[2]);
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_ANGLES) {
-		WriteFloat(MSG_ENTITY, angles[0]);
-		WriteFloat(MSG_ENTITY, angles[1]);
-		WriteFloat(MSG_ENTITY, angles[2]);
-	}
+    if (flFlags & PRTEXFL_CHANGED_ANGLES) {
+        WriteFloat(MSG_ENTITY, angles[0]);
+        WriteFloat(MSG_ENTITY, angles[1]);
+        WriteFloat(MSG_ENTITY, angles[2]);
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_LIGHT) {
-		WriteByte(MSG_ENTITY, m_vecLight[0]);
-		WriteByte(MSG_ENTITY, m_vecLight[1]);
-		WriteByte(MSG_ENTITY, m_vecLight[2]);
-	}
+    if (flFlags & PRTEXFL_CHANGED_LIGHT) {
+        WriteByte(MSG_ENTITY, m_vecLight[0]);
+        WriteByte(MSG_ENTITY, m_vecLight[1]);
+        WriteByte(MSG_ENTITY, m_vecLight[2]);
+    }
 
-	if (flFlags & PRTEXFL_CHANGED_INTENSITY)
-		WriteFloat(MSG_ENTITY, m_flIntensity);
-	if (flFlags & PRTEXFL_CHANGED_FARZ)
-		WriteFloat(MSG_ENTITY, m_flFarZ);
-	if (flFlags & PRTEXFL_CHANGED_NEARZ)
-		WriteFloat(MSG_ENTITY, m_flNearZ);
-	if (flFlags & PRTEXFL_CHANGED_STYLE)
-		WriteByte(MSG_ENTITY, m_flStyle);
-	if (flFlags & PRTEXFL_CHANGED_STATE)
-		WriteByte(MSG_ENTITY, m_iState);
-	if (flFlags & PRTEXFL_CHANGED_TEXTURE)
-		WriteString(MSG_ENTITY, m_strTextureName);
-	if (flFlags & PRTEXFL_CHANGED_FOV)
-		WriteFloat(MSG_ENTITY, m_flFOV);
-	if (flFlags & PRTEXFL_CHANGED_PATTERN)
-		WriteString(MSG_ENTITY, m_strPattern);
+    if (flFlags & PRTEXFL_CHANGED_INTENSITY)
+        WriteFloat(MSG_ENTITY, m_flIntensity);
+    if (flFlags & PRTEXFL_CHANGED_FARZ)
+        WriteFloat(MSG_ENTITY, m_flFarZ);
+    if (flFlags & PRTEXFL_CHANGED_NEARZ)
+        WriteFloat(MSG_ENTITY, m_flNearZ);
+    if (flFlags & PRTEXFL_CHANGED_STYLE)
+        WriteByte(MSG_ENTITY, m_flStyle);
+    if (flFlags & PRTEXFL_CHANGED_STATE)
+        WriteByte(MSG_ENTITY, m_iState);
+    if (flFlags & PRTEXFL_CHANGED_TEXTURE)
+        WriteString(MSG_ENTITY, m_strTextureName);
+    if (flFlags & PRTEXFL_CHANGED_FOV)
+        WriteFloat(MSG_ENTITY, m_flFOV);
+    if (flFlags & PRTEXFL_CHANGED_PATTERN)
+        WriteString(MSG_ENTITY, m_strPattern);
 
-	return (1);
+    return (1);
 }
 
 void
 env_projectedtexture::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "LightColor":
-		m_vecLight = stov(strData);
-		SetSendFlags(PRTEXFL_CHANGED_LIGHT);
-		break;
-	case "SetNearZ":
-		m_flNearZ = stof(strData);
-		SetSendFlags(PRTEXFL_CHANGED_NEARZ);
-		break;
-	case "SetFarZ":
-		m_flFarZ = stof(strData);
-		SetSendFlags(PRTEXFL_CHANGED_FARZ);
-		break;
-	case "SetLightStyle":
-		m_flStyle = stof(strData);
-		SetSendFlags(PRTEXFL_CHANGED_STYLE);
-		break;
-	case "SpotlightTexture":
-		m_strTextureName = strData;
-		SetSendFlags(PRTEXFL_CHANGED_TEXTURE);
-		break;
-	case "SetPattern":
-		m_strPattern = strData;
-		SetSendFlags(PRTEXFL_CHANGED_PATTERN);
-		break;
-	case "TurnOn":
-		Trigger(eAct, TRIG_ON);
-		break;
-	case "TurnOff":
-		Trigger(eAct, TRIG_OFF);
-		break;
-	case "Toggle":
-		Trigger(eAct, TRIG_TOGGLE);
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "lightcolor":
+        m_vecLight = stov(strData);
+        SetSendFlags(PRTEXFL_CHANGED_LIGHT);
+        break;
+    case "setnearz":
+        m_flNearZ = stof(strData);
+        SetSendFlags(PRTEXFL_CHANGED_NEARZ);
+        break;
+    case "setfarz":
+        m_flFarZ = stof(strData);
+        SetSendFlags(PRTEXFL_CHANGED_FARZ);
+        break;
+    case "setlightstyle":
+        m_flStyle = stof(strData);
+        SetSendFlags(PRTEXFL_CHANGED_STYLE);
+        break;
+    case "spotlighttexture":
+        m_strTextureName = strData;
+        SetSendFlags(PRTEXFL_CHANGED_TEXTURE);
+        break;
+    case "setpattern":
+        m_strPattern = strData;
+        SetSendFlags(PRTEXFL_CHANGED_PATTERN);
+        break;
+    case "turnon":
+        Trigger(eAct, TRIG_ON);
+        break;
+    case "turnoff":
+        Trigger(eAct, TRIG_OFF);
+        break;
+    case "toggle":
+        Trigger(eAct, TRIG_TOGGLE);
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }
 
 void
 env_projectedtexture::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "lightcolor":
-		tokenize(setValue);
-		m_vecLight[0] = stof(argv(0));
-		m_vecLight[1] = stof(argv(1));
-		m_vecLight[2] = stof(argv(2));
-		m_flIntensity = stof(argv(3));
-		break;
-	case "style":
-		m_flStyle = stof(setValue);
-		break;
-	case "texturename":
-		m_strTextureName = setValue;
-		break;
-	case "lightfov":
-		m_flFOV = stof(setValue);
-		break;
-	case "farz":
-		m_flFarZ = stof(setValue);
-		break;
-	case "nearz":
-		m_flNearZ = stof(setValue);
-		break;
-	case "pattern":
-		m_strPattern = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "lightcolor":
+        tokenize(setValue);
+        m_vecLight[0] = stof(argv(0));
+        m_vecLight[1] = stof(argv(1));
+        m_vecLight[2] = stof(argv(2));
+        m_flIntensity = stof(argv(3));
+        break;
+    case "style":
+        m_flStyle = stof(setValue);
+        break;
+    case "texturename":
+        m_strTextureName = setValue;
+        break;
+    case "lightfov":
+        m_flFOV = stof(setValue);
+        break;
+    case "farz":
+        m_flFarZ = stof(setValue);
+        break;
+    case "nearz":
+        m_flNearZ = stof(setValue);
+        break;
+    case "pattern":
+        m_strPattern = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_projectedtexture::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	SetSolid(SOLID_NOT);
-	SetSize([-16,-16,-16], [16,16,16]);
+    SetSolid(SOLID_NOT);
+    SetSize([-16,-16,-16], [16,16,16]);
 
-	m_iState = HasSpawnFlags(1) ? 1 : 0;
+    m_iState = HasSpawnFlags(1) ? 1 : 0;
 }
 #endif
 
@@ -342,15 +342,15 @@ void
 env_projectedtexture::env_projectedtexture(void)
 {
 #ifndef CLIENT
-	m_strPattern = "z";
-	m_vecLight = [255,255,255];
-	m_flIntensity = 512;
-	m_flFarZ = 512;
-	m_flNearZ = 0;
-	m_strTextureName = "lights/flashlight";
-	m_flFOV = 90;
+    m_strPattern = "z";
+    m_vecLight = [255,255,255];
+    m_flIntensity = 512;
+    m_flFarZ = 512;
+    m_flNearZ = 0;
+    m_strTextureName = "lights/flashlight";
+    m_flFOV = 90;
 
-	if (m_flStyle > 0 && m_flStyle < 12)
-		m_strPattern = getlightstyle(m_flStyle);
+    if (m_flStyle > 0 && m_flStyle < 12)
+        m_strPattern = getlightstyle(m_flStyle);
 #endif
 }

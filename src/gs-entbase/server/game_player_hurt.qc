@@ -38,71 +38,71 @@ class
 game_player_hurt:ncPointTrigger
 {
 public:
-	void game_player_hurt(void);
+    void game_player_hurt(void);
 
-	virtual void SpawnKey(string, string);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void SpawnKey(string, string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Trigger(entity, triggermode_t);
 
 private:
-	int m_iDamage;
+    int m_iDamage;
 };
 
 void
 game_player_hurt::game_player_hurt(void)
 {
-	m_iDamage = 0i;
+    m_iDamage = 0i;
 }
 
 void
 game_player_hurt::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "dmg":
-		m_iDamage = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-	}
+    switch (keyName) {
+    case "dmg":
+        m_iDamage = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+    }
 }
 
 void
 game_player_hurt::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iDamage", m_iDamage);
+    super::Save(handle);
+    SaveInt(handle, "m_iDamage", m_iDamage);
 }
 
 void
 game_player_hurt::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iDamage":
-		m_iDamage = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iDamage":
+        m_iDamage = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 game_player_hurt::Trigger(entity activatingEntity, triggermode_t triggerMode)
 {
-	if (GetMaster(activatingEntity) == FALSE) {
-		return;
-	}
-	if (!(activatingEntity.flags & FL_CLIENT)) {
-		return;
-	}
+    if (GetMaster(activatingEntity) == FALSE) {
+        return;
+    }
+    if (!(activatingEntity.flags & FL_CLIENT)) {
+        return;
+    }
 
-	ncSurfacePropEntity toAttack = (ncSurfacePropEntity)activatingEntity;
-	ncDict damageDecl = spawn(ncDict);
-	damageDecl.AddKey("damage", itos(m_iDamage));
-	toAttack.Damage(this, activatingEntity, damageDecl, 1.0f, g_vec_null, activatingEntity.origin);
-	remove(damageDecl);
+    ncSurfacePropEntity toAttack = (ncSurfacePropEntity)activatingEntity;
+    ncDict damageDecl = spawn(ncDict);
+    damageDecl.AddKey("damage", itos(m_iDamage));
+    toAttack.Damage(this, activatingEntity, damageDecl, 1.0f, g_vec_null, activatingEntity.origin);
+    remove(damageDecl);
 
-	if (HasSpawnFlags(1)) {
-		Destroy();
-	}
+    if (HasSpawnFlags(1)) {
+        Destroy();
+    }
 }

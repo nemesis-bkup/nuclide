@@ -43,120 +43,120 @@ class
 env_shake:ncPointTrigger
 {
 public:
-	void env_shake(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
+    void env_shake(void);
+    
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
 
-	virtual void OnRemoveEntity(void);
+    virtual void OnRemoveEntity(void);
 
 private:
-	float m_flRadius;
-	float m_flAmplitude;
-	float m_flDuration;
-	float m_flFrequency;
+    float m_flRadius;
+    float m_flAmplitude;
+    float m_flDuration;
+    float m_flFrequency;
 };
 
 void
 env_shake::env_shake(void)
 {
-	m_flRadius = 0.0f;
-	m_flAmplitude = 0.0f;
-	m_flDuration = 0.0f;
-	m_flFrequency = 0.0f;
+    m_flRadius = 0.0f;
+    m_flAmplitude = 0.0f;
+    m_flDuration = 0.0f;
+    m_flFrequency = 0.0f;
 }
 
 void
 env_shake::OnRemoveEntity(void)
 {
-	if (HasSpawnFlags(1)) {
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, EV_SHAKE);
-		WriteFloat(MSG_MULTICAST, 1.0);
-		WriteFloat(MSG_MULTICAST, m_flAmplitude);
-		WriteFloat(MSG_MULTICAST, m_flFrequency);
-		multicast([0,0,0], MULTICAST_ALL_R);
-	}
+    if (HasSpawnFlags(1)) {
+        WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+        WriteByte(MSG_MULTICAST, EV_SHAKE);
+        WriteFloat(MSG_MULTICAST, 1.0);
+        WriteFloat(MSG_MULTICAST, m_flAmplitude);
+        WriteFloat(MSG_MULTICAST, m_flFrequency);
+        multicast([0,0,0], MULTICAST_ALL_R);
+    }
 }
 
 void
 env_shake::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "m_flRadius", m_flRadius);
-	SaveFloat(handle, "m_flAmplitude", m_flAmplitude);
-	SaveFloat(handle, "m_flDuration", m_flDuration);
-	SaveFloat(handle, "m_flFrequency", m_flFrequency);
+    super::Save(handle);
+    SaveFloat(handle, "m_flRadius", m_flRadius);
+    SaveFloat(handle, "m_flAmplitude", m_flAmplitude);
+    SaveFloat(handle, "m_flDuration", m_flDuration);
+    SaveFloat(handle, "m_flFrequency", m_flFrequency);
 }
 
 void
 env_shake::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_flRadius":
-		m_flRadius = ReadFloat(setValue);
-		break;
-	case "m_flAmplitude":
-		m_flAmplitude = ReadFloat(setValue);
-		break;
-	case "m_flDuration":
-		m_flDuration = ReadFloat(setValue);
-		break;
-	case "m_flFrequency":
-		m_flFrequency = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_flRadius":
+        m_flRadius = ReadFloat(setValue);
+        break;
+    case "m_flAmplitude":
+        m_flAmplitude = ReadFloat(setValue);
+        break;
+    case "m_flDuration":
+        m_flDuration = ReadFloat(setValue);
+        break;
+    case "m_flFrequency":
+        m_flFrequency = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_shake::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "radius":
-		m_flRadius = stof(setValue);
-		break;
-	case "amplitude":
-		m_flAmplitude = stof(setValue);
-		break;
-	case "duration":
-		m_flDuration = stof(setValue);
-		break;
-	case "frequency":
-		m_flFrequency = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "radius":
+        m_flRadius = stof(setValue);
+        break;
+    case "amplitude":
+        m_flAmplitude = stof(setValue);
+        break;
+    case "duration":
+        m_flDuration = stof(setValue);
+        break;
+    case "frequency":
+        m_flFrequency = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_shake::Trigger(entity act, triggermode_t state)
 {
-	if (HasSpawnFlags(EVS_GLOBAL)) {
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, EV_SHAKE);
-		WriteFloat(MSG_MULTICAST, m_flDuration);
-		WriteFloat(MSG_MULTICAST, m_flAmplitude);
-		WriteFloat(MSG_MULTICAST, m_flFrequency);
-		multicast([0,0,0], MULTICAST_ALL_R);
-	} else {
-		Client_ShakeOnce(origin, m_flRadius, m_flDuration, m_flFrequency, m_flAmplitude);
-	}
+    if (HasSpawnFlags(EVS_GLOBAL)) {
+        WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+        WriteByte(MSG_MULTICAST, EV_SHAKE);
+        WriteFloat(MSG_MULTICAST, m_flDuration);
+        WriteFloat(MSG_MULTICAST, m_flAmplitude);
+        WriteFloat(MSG_MULTICAST, m_flFrequency);
+        multicast([0,0,0], MULTICAST_ALL_R);
+    } else {
+        Client_ShakeOnce(origin, m_flRadius, m_flDuration, m_flFrequency, m_flAmplitude);
+    }
 }
 
 void
 env_shake::Input(entity theActivator, string inputName, string dataString)
 {
-	switch (inputName) {
-	case "StartShake":
-		Trigger(theActivator, TRIG_ON);
-		break;
-	default:
-		super::Input(theActivator, inputName, dataString);
-	}
+    switch (inputName) {
+    case "startshake":
+        Trigger(theActivator, TRIG_ON);
+        break;
+    default:
+        super::Input(theActivator, inputName, dataString);
+    }
 }

@@ -28,30 +28,30 @@ It can also alert enemies in the area.
 class
 ncCamera:ncMediaSource
 {
-	void ncCamera(void);
+    void ncCamera(void);
 
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
+    virtual void Spawned(void);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void Death(entity inflictor, entity attacker, int damagePoints, vector dir, vector absImpactPos, int hitBody);
 
 #endif
 
 #ifdef CLIENT
-	virtual void postdraw(void);
-	virtual void Draw(void);
-	virtual void ReceiveEntity(float,float);
-	virtual void ReloadVideoResources(void);
+    virtual void postdraw(void);
+    virtual void Draw(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void ReloadVideoResources(void);
 #endif
 
 #ifdef CLIENT
 private:
-	bool m_bCached;
-	float m_flSurfaceMat;
-	string m_strSurfaceMat;
+    bool m_bCached;
+    float m_flSurfaceMat;
+    string m_strSurfaceMat;
 #endif
 };
 

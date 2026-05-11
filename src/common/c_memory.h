@@ -17,14 +17,14 @@
 void*
 memreallocOld(__variant *oldptr, int elementsize, int oldelements, int newelements)
 {
-	void *n = memalloc(elementsize * newelements);
-	memcpy(n, oldptr, elementsize * min(oldelements, newelements));
-	memfree(oldptr);
-	return n;
+    void *n = memalloc(elementsize * newelements);
+    memcpy(n, oldptr, elementsize * min(oldelements, newelements));
+    memfree(oldptr);
+    return n;
 }
 
 __wrap __variant*
 memalloc(int size)
 {
-	return prior(size);
+    return prior(size);
 } 

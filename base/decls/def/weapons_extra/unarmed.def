@@ -1,0 +1,14 @@
+entityDef weapon_unarmed
+{
+	"inherit"		"weapon_base"
+	"inv_name"			"#WEAPON_UNARMED"
+
+	// weapon specific
+	"hudSlot"			"0"
+	"hudSlotPos"		"0"
+	"weight"			"1"
+	"crosshair"			"none"
+	"ammoIcon"			"none"
+	"ammoRequired"		"0"
+	"silent_fire"		"1"
+}

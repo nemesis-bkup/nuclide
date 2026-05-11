@@ -16,9 +16,9 @@
 
 enumflags
 {
-	TEXTBOX_HOVER,
-	TEXTBOX_DOWN,
-	TEXTBOX_FOCUS
+    TEXTBOX_HOVER,
+    TEXTBOX_DOWN,
+    TEXTBOX_FOCUS
 };
 
 .void(void) tmpvguiTextBox1;
@@ -31,157 +31,158 @@ enumflags
 class vguiTextBox:vguiWidget
 {
 public:
-	void vguiTextBox(void);
+    void vguiTextBox(void);
 
-	/** Set the starting text of the textbox. */
-	nonvirtual void SetText(string);
-	/** Get the text inside the textbox. */
-	nonvirtual string GetText(void);
+    /** Set the starting text of the textbox. */
+    nonvirtual void SetText(string);
+    /** Get the text inside the textbox. */
+    nonvirtual string GetText(void);
 
-	/* overrides */
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	virtual void Spawned(void);
-	virtual void CallOnEnter(void(void));
-	virtual void CallOnEnterWithDelegate(void(void), vguiControl delegateWidget);
+    /* overrides */
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    virtual void Spawned(void);
+    virtual void CallOnEnter(void(void));
+    virtual void CallOnEnterWithDelegate(void(void), vguiControl delegateWidget);
 
 private:
-	vector m_vecColor;
-	float m_flAlpha;
-	string m_strText;
-	float m_flTime;
+    vector m_vecColor;
+    float m_flAlpha;
+    string m_strText;
+    float m_flTime;
 };
 
 void vguiTextBox::vguiTextBox(void)
 {
-	m_flAlpha = 1.0f;
+    m_flAlpha = 1.0f;
 }
 
 void vguiTextBox::Spawned(void)
 {
-	SetSize([96,24]);
+    SetSize([96,24]);
 }
 
 void vguiTextBox::SetText(string strName)
 {
-	m_strText = strName;
+    m_strText = strName;
 }
 string vguiTextBox::GetText(void)
 {
-	return m_strText;
+    return m_strText;
 }
 
 void
 vguiTextBox::CallOnEnter(void(void) func)
 {
-	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
-	//m_vFunc = vFunc;
-	tmpvguiTextBox1 = func;
+    //#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
+    //m_vFunc = vFunc;
+    tmpvguiTextBox1 = func;
 }
 
 void
 vguiTextBox::CallOnEnterWithDelegate(void(void) func, vguiControl delegateWidget)
 {
-	//#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
-	//m_vFunc = vFunc;
-	tmpvguiTextBox1 = func;
-	tmpvguiTextBox1Delegate = delegateWidget;
+    //#warning "SetFunc in vguiButton is DEPRECATED. Compiler IS generating JUNK in the old way. Please override vguiButton and define a OnMouseDown/Up method instead"
+    //m_vFunc = vFunc;
+    tmpvguiTextBox1 = func;
+    tmpvguiTextBox1Delegate = delegateWidget;
 }
 
 void vguiTextBox::Draw(void)
 {
-	vguiTheme theme = GetTheme();
-	vector pos = m_parent.m_vecOrigin + m_vecOrigin;
-	drawsetcliparea(pos[0], pos[1], m_vecSize[0], m_vecSize[1]);
+    vguiTheme theme = GetTheme();
+    vector pos = GetAbsPos();
+    drawsetcliparea(pos[0], pos[1], m_vecSize[0], m_vecSize[1]);
 
-	theme.DrawTextBackground(pos, m_vecSize, VGUI_STATE_NORMAL);
+    theme.DrawTextBackground(pos, m_vecSize, VGUI_STATE_NORMAL);
 
-	m_flTime += frametime * 2;
+    m_flTime += frametime * 2;
 
-	/* these are to deal with text going off-screen */
-	float len = Font_StringWidth(m_strText, TRUE, g_fntDefault);
-	float ofs = bound(0, len - (m_vecSize[0] - 16), len);
+    /* these are to deal with text going off-screen */
+    float len = Font_StringWidth(m_strText, TRUE, g_fntDefault);
+    float ofs = bound(0, len - (m_vecSize[0] - 16), len);
 
-	// blinking cursor
-	if (m_iFlags & TEXTBOX_FOCUS) {
-		if (rint(m_flTime) & 1) {
-			theme.DrawText(pos + [8 - ofs, 8], sprintf("%s|", m_strText), m_vecSize, g_fntDefault);
-			drawresetcliparea();
-			return;
-		}
-	}
+    // blinking cursor
+    if (m_iFlags & TEXTBOX_FOCUS) {
+        if (rint(m_flTime) & 1) {
+            theme.DrawText(pos + [8 - ofs, 8], sprintf("%s|", m_strText), m_vecSize, g_fntDefault);
+            drawresetcliparea();
+            return;
+        }
+    }
 
-	if (m_strText) {
-		theme.DrawText(pos + [8 - ofs, 8], m_strText, m_vecSize, g_fntDefault);
-	}
+    if (m_strText) {
+        theme.DrawText(pos + [8 - ofs, 8], m_strText, m_vecSize, g_fntDefault);
+    }
 
-	drawresetcliparea();
+    drawresetcliparea();
 }
 
 
 static void
 vguiButton_CallFunctionWithDelegateSender(void(vguiControl sender) targetFunc, vguiWidget delegateWidget, vguiControl sender)
 {
-	entity oldSelf = self;
+    entity oldSelf = self;
 
-	if (delegateWidget) {
-		self = delegateWidget;
-	}
+    if (delegateWidget) {
+        self = delegateWidget;
+    }
 
-	if (targetFunc) {
-		targetFunc(sender);
-	}
+    if (targetFunc) {
+        targetFunc(sender);
+    }
 
-	self = oldSelf;
+    self = oldSelf;
 }
 
 bool vguiTextBox::Input (float flEVType, float flKey, float flChar, float flDevID)
 {
-	bool ret = false;
+    bool ret = false;
+    vector pos = GetAbsPos();
 
-	switch (flKey) {
-	case K_MOUSE1 :
-		if (flEVType == IE_KEYDOWN) {
-			if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				m_iFlags |= TEXTBOX_DOWN;
-				ret = true;
-			}
-		} else {
-			if (m_iFlags & TEXTBOX_DOWN && Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-				m_iFlags |= TEXTBOX_FOCUS;
-				ret = true;
-			} else {
-				m_iFlags -= (m_iFlags & TEXTBOX_FOCUS);
-			}
-			m_iFlags -= (m_iFlags & TEXTBOX_DOWN);
-		}
-		break;
-	case K_BACKSPACE:
-			if (flEVType == IE_KEYDOWN) {
-				if (m_iFlags & TEXTBOX_FOCUS) {
-					m_strText = substring(m_strText, 0, strlen(m_strText) - 1);
-				}
-			}
-		break;
-	case K_ENTER:
-		if (tmpvguiTextBox1) {
-			vguiButton_CallFunctionWithDelegateSender(tmpvguiTextBox1, tmpvguiTextBox1Delegate ? tmpvguiTextBox1Delegate : m_parent, this);
-		}
-		break;
-	default:
-		if (m_iFlags & TEXTBOX_DOWN) {
-			ret = true;
-		} else if (m_iFlags & TEXTBOX_FOCUS) {
-			if ((flChar >= 32 && flChar <= 125)) {
-				if (flEVType == IE_KEYDOWN)
-					m_strText = sprintf("%s%s", m_strText, chr2str(flChar));
-				ret = true;
-			}
-			if ((flKey >= 32 && flKey <= 125)) {
-				ret = true;
-			}
-		}
-	}
+    switch (flKey) {
+    case K_MOUSE1 :
+        if (flEVType == IE_KEYDOWN) {
+            if (Util_MouseAbove(g_vecMousePos, pos, m_vecSize)) {
+                m_iFlags |= TEXTBOX_DOWN;
+                ret = true;
+            }
+        } else {
+            if (m_iFlags & TEXTBOX_DOWN && Util_MouseAbove(g_vecMousePos, pos, m_vecSize)) {
+                m_iFlags |= TEXTBOX_FOCUS;
+                ret = true;
+            } else {
+                m_iFlags -= (m_iFlags & TEXTBOX_FOCUS);
+            }
+            m_iFlags -= (m_iFlags & TEXTBOX_DOWN);
+        }
+        break;
+    case K_BACKSPACE:
+            if (flEVType == IE_KEYDOWN) {
+                if (m_iFlags & TEXTBOX_FOCUS) {
+                    m_strText = substring(m_strText, 0, strlen(m_strText) - 1);
+                }
+            }
+        break;
+    case K_ENTER:
+        if (tmpvguiTextBox1) {
+            vguiButton_CallFunctionWithDelegateSender(tmpvguiTextBox1, tmpvguiTextBox1Delegate ? tmpvguiTextBox1Delegate : m_parent, this);
+        }
+        break;
+    default:
+        if (m_iFlags & TEXTBOX_DOWN) {
+            ret = true;
+        } else if (m_iFlags & TEXTBOX_FOCUS) {
+            if ((flChar >= 32 && flChar <= 125)) {
+                if (flEVType == IE_KEYDOWN)
+                    m_strText = sprintf("%s%s", m_strText, chr2str(flChar));
+                ret = true;
+            }
+            if ((flKey >= 32 && flKey <= 125)) {
+                ret = true;
+            }
+        }
+    }
 
-	return (ret);
+    return (ret);
 }

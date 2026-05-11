@@ -16,9 +16,9 @@
 
 enumflags
 {
-	TO_MONSTERS,
-	TO_NOCLIENTS,
-	TO_PUSHABLES
+    TO_MONSTERS,
+    TO_NOCLIENTS,
+    TO_PUSHABLES
 };
 
 /*! \brief Server-Entity: One-Time Use Trigger Volume */
@@ -70,130 +70,130 @@ This entity was introduced in Quake (1996).
 class trigger_once:ncBrushTrigger
 {
 public:
-	void trigger_once(void);
+    void trigger_once(void);
 
-	/* overrides */
-	virtual void Spawned(void);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Touch(entity);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
+    /* overrides */
+    virtual void Spawned(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Touch(entity);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
 
-	virtual void Input(entity, string, string);
+    virtual void Input(entity, string, string);
 
 private:
-	string m_outputOnStartTouch;
-	string m_outputOnTrigger;
+    string m_outputOnStartTouch;
+    string m_outputOnTrigger;
 };
 
 void
 trigger_once::trigger_once(void)
 {
-	m_outputOnStartTouch =
-	m_outputOnTrigger = __NULL__;
+    m_outputOnStartTouch =
+    m_outputOnTrigger = __NULL__;
 }
 
 void
 trigger_once::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (m_outputOnTrigger)
-		m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
-	if (m_outputOnStartTouch)
-		m_outputOnStartTouch = CreateOutput(m_outputOnStartTouch);
+    if (m_outputOnTrigger)
+        m_outputOnTrigger = CreateOutput(m_outputOnTrigger);
+    if (m_outputOnStartTouch)
+        m_outputOnStartTouch = CreateOutput(m_outputOnStartTouch);
 }
 
 void
 trigger_once::Respawn(void)
 {
-	super::Respawn();
-	SetValue(0i);
+    super::Respawn();
+    SetValue(0i);
 }
 
 void
 trigger_once::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "outputOnStartTouch", m_outputOnStartTouch);
-	SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
+    super::Save(handle);
+    SaveString(handle, "outputOnStartTouch", m_outputOnStartTouch);
+    SaveString(handle, "outputOnTrigger", m_outputOnTrigger);
 }
 
 void
 trigger_once::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "outputOnStartTouch":
-		m_outputOnStartTouch = ReadString(setValue);
-		break;
-	case "outputOnTrigger":
-		m_outputOnTrigger = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "outputOnStartTouch":
+        m_outputOnStartTouch = ReadString(setValue);
+        break;
+    case "outputOnTrigger":
+        m_outputOnTrigger = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_once::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "OnStartTouch":
-		m_outputOnStartTouch = PrepareOutput(m_outputOnStartTouch, setValue);
-		break;
-	case "OnTrigger":
-		m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-		break;
-	}
+    switch (strKey) {
+    case "OnStartTouch":
+        m_outputOnStartTouch = PrepareOutput(m_outputOnStartTouch, setValue);
+        break;
+    case "OnTrigger":
+        m_outputOnTrigger = PrepareOutput(m_outputOnTrigger, setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+        break;
+    }
 }
 
 void
 trigger_once::Input(entity entityActivator, string inputName, string dataField)
 {
-	switch (inputName) {
-	case "StartTouch":
-		StartTouch(entityActivator);
-		break;
-	default:
-		super::Input(entityActivator, inputName, dataField);
-		break;
-	}
+    switch (inputName) {
+    case "starttouch":
+        StartTouch(entityActivator);
+        break;
+    default:
+        super::Input(entityActivator, inputName, dataField);
+        break;
+    }
 }
 
 void
 trigger_once::Touch(entity eToucher)
 {
-	bool isPushable = (substring(eToucher.classname, 0, 5) == "func_") ? true : false;
+    bool isPushable = (substring(eToucher.classname, 0, 5) == "func_") ? true : false;
 
-	if (GetMaster(eToucher) == false) {
-		return;
-	}
+    if (GetMaster(eToucher) == false) {
+        return;
+    }
 
-	if (TriggerEnabled() == false) {
-		return;
-	}
+    if (TriggerEnabled() == false) {
+        return;
+    }
 
-	/* legacy entity check */
-	if (m_triggerSpawnflagFilter == false) {
-		if (HasSpawnFlags(TO_NOCLIENTS) && eToucher.flags & FL_CLIENT)
-			return;
-		if (!HasSpawnFlags(TO_MONSTERS) && eToucher.flags & FL_MONSTER)
-			return;
-		if (!HasSpawnFlags(TO_PUSHABLES) && isPushable == true)
-			return;
-	} else if (CanBeTriggeredBy(eToucher) == false) {
-		return;
-	}
+    /* legacy entity check */
+    if (m_triggerSpawnflagFilter == false) {
+        if (HasSpawnFlags(TO_NOCLIENTS) && eToucher.flags & FL_CLIENT)
+            return;
+        if (!HasSpawnFlags(TO_MONSTERS) && eToucher.flags & FL_MONSTER)
+            return;
+        if (!HasSpawnFlags(TO_PUSHABLES) && isPushable == true)
+            return;
+    } else if (CanBeTriggeredBy(eToucher) == false) {
+        return;
+    }
 
-	SetSolid(SOLID_NOT); /* make inactive */
-	SetValue(1i);
+    SetSolid(SOLID_NOT); /* make inactive */
+    SetValue(1i);
 
-	EntLog("%S is triggering %S", eToucher.classname, target);
-	UseOutput(eToucher, m_outputOnStartTouch);
-	UseOutput(eToucher, m_outputOnTrigger);
-	UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
+    EntLog("%S is triggering %S", eToucher.classname, target);
+    UseOutput(eToucher, m_outputOnStartTouch);
+    UseOutput(eToucher, m_outputOnTrigger);
+    UseTargets(eToucher, TRIG_TOGGLE, GetTriggerDelay());
 }

@@ -17,124 +17,124 @@
 void
 m_init(void)
 {
-	Platform_Init();
-	UISystem_Init();
-	Desktop_Init();
+    Platform_Init();
+    UISystem_Init();
+    Desktop_Init();
 
-	registercommand("packageList");
-	registercommand("friendsList");
-	registercommand("console");
-	registercommand("menu_quit");
-	registercommand("menu_music");
-	registercommand("map_background");
+    registercommand("packageList");
+    registercommand("friendsList");
+    registercommand("console");
+    registercommand("menu_quit");
+    registercommand("menu_music");
+    registercommand("map_background");
 
-	draw.Rect = linkToMenuProgs("UIPF_draw_Rect");
-	draw.RectOutline = linkToMenuProgs("UIPF_draw_RectOutline");
-	draw.RoundedRectOutline = linkToMenuProgs("UIPF_draw_RoundedRectOutline");
-	draw.RoundedBox = linkToMenuProgs("UIPF_draw_RoundedBox");
-	draw.Line = linkToMenuProgs("UIPF_draw_Line");
-	draw.Pic = linkToMenuProgs("UIPF_draw_Pic");
-	draw.SubPic = linkToMenuProgs("UIPF_draw_SubPic");
+    draw.Rect = linkToMenuProgs("UIPF_draw_Rect");
+    draw.RectOutline = linkToMenuProgs("UIPF_draw_RectOutline");
+    draw.RoundedRectOutline = linkToMenuProgs("UIPF_draw_RoundedRectOutline");
+    draw.RoundedBox = linkToMenuProgs("UIPF_draw_RoundedBox");
+    draw.Line = linkToMenuProgs("UIPF_draw_Line");
+    draw.Pic = linkToMenuProgs("UIPF_draw_Pic");
+    draw.SubPic = linkToMenuProgs("UIPF_draw_SubPic");
 
-	draw.TextField = linkToMenuProgs("Font_DrawField");
-	draw.TextFieldAtHeight = linkToMenuProgs("Font_DrawFieldAtHeight");
-	draw.RText = linkToMenuProgs("Font_DrawRText");
-	draw.RText_A = linkToMenuProgs("Font_DrawRText_A");
-	draw.RText_RGB = linkToMenuProgs("Font_DrawRText_RGB");
-	draw.RText_RGBA = linkToMenuProgs("Font_DrawRText_RGBA");
-	draw.Text = linkToMenuProgs("Font_DrawText");
-	draw.Text_A= linkToMenuProgs("Font_DrawText_A");
-	draw.Text_RGB= linkToMenuProgs("Font_DrawText_RGB");
-	draw.Text_RGBA = linkToMenuProgs("Font_DrawText_RGBA");
-	draw.RadarRect = linkToMenuProgs("UIPF_draw_RadarRect");
+    draw.TextField = linkToMenuProgs("Font_DrawField");
+    draw.TextFieldAtHeight = linkToMenuProgs("Font_DrawFieldAtHeight");
+    draw.RText = linkToMenuProgs("Font_DrawRText");
+    draw.RText_A = linkToMenuProgs("Font_DrawRText_A");
+    draw.RText_RGB = linkToMenuProgs("Font_DrawRText_RGB");
+    draw.RText_RGBA = linkToMenuProgs("Font_DrawRText_RGBA");
+    draw.Text = linkToMenuProgs("Font_DrawText");
+    draw.Text_A= linkToMenuProgs("Font_DrawText_A");
+    draw.Text_RGB= linkToMenuProgs("Font_DrawText_RGB");
+    draw.Text_RGBA = linkToMenuProgs("Font_DrawText_RGBA");
+    draw.RadarRect = linkToMenuProgs("UIPF_draw_RadarRect");
 }
 
 void
 Menu_RendererRestarted(string renderer)
 {
-	Platform_RendererRestarted();
+    Platform_RendererRestarted();
 }
 
 void
 m_shutdown(void)
 {
-	Platform_Shutdown();
+    Platform_Shutdown();
 }
 
 void
 m_draw(vector screensize)
 {
-	/* set new scale whenever the resolution changes */
-	if (Platform_DimensionsChanged(screensize) == true) {
-		Platform_CalculateRenderingScale(screensize);
-		Desktop_CanvasChanged();
-	}
+    /* set new scale whenever the resolution changes */
+    if (Platform_DimensionsChanged(screensize) == true) {
+        Platform_CalculateRenderingScale(screensize);
+        Desktop_CanvasChanged();
+    }
 
 
-	frametime = time - lasttime;
-	lasttime = time;
+    frametime = time - lasttime;
+    lasttime = time;
 
-	if (Platform_Draw(screensize) == false) {
-		return;
-	}
+    if (Platform_Draw(screensize) == false) {
+        return;
+    }
 
-	Background_Draw([0,0], g_vidsize, false);
-	Desktop_Draw();
+    Background_Draw([0,0], g_vidsize, false);
+    Desktop_Draw();
 }
 
 void
 m_drawloading(vector screensize, float opaque)
 {
-	vector pos;
+    vector pos;
 
-	/* set new scale whenever the resolution changes */
-	if (Platform_DimensionsChanged(screensize) == true) {
-		Platform_CalculateRenderingScale(screensize);
-		Desktop_CanvasChanged();
-	}
+    /* set new scale whenever the resolution changes */
+    if (Platform_DimensionsChanged(screensize) == true) {
+        Platform_CalculateRenderingScale(screensize);
+        Desktop_CanvasChanged();
+    }
 
-	pos = (screensize / 2) - [32,32];
+    pos = (screensize / 2) - [32,32];
 
-	if (opaque) {
-		Platform_DrawLoading(screensize);
-	}
+    if (opaque) {
+        Platform_DrawLoading(screensize);
+    }
 
-	Loading_Draw(screensize);
+    Loading_Draw(screensize);
 }
 
 float
 Menu_InputEvent (float evtype, float scanx, float chary, float devid)
 {
-	switch (evtype) {
-	case IE_KEYDOWN:
-		if (chary == K_ESCAPE) {
-			if (clientstate() == 2 && !g_background) {
-				m_toggle(0);
-			}
-		}
-		break;
-	case IE_MOUSEABS:
-		g_vecMousePos[0] = scanx;
-		g_vecMousePos[1] = chary;
-		break;
-	case IE_MOUSEDELTA:
-		g_vecMousePos[0] += scanx;
-		g_vecMousePos[1] += chary;
-		break;
-	}
+    switch (evtype) {
+    case IE_KEYDOWN:
+        if (chary == K_ESCAPE) {
+            if (clientstate() == 2 && !g_background) {
+                m_toggle(0);
+            }
+        }
+        break;
+    case IE_MOUSEABS:
+        g_vecMousePos[0] = scanx;
+        g_vecMousePos[1] = chary;
+        break;
+    case IE_MOUSEDELTA:
+        g_vecMousePos[0] += scanx;
+        g_vecMousePos[1] += chary;
+        break;
+    }
 
-	g_vecMousePos = getmousepos();
-	g_uiDesktop.Input(evtype, scanx, chary, devid);
-	return (float)g_active;
+    g_vecMousePos = getmousepos();
+    g_uiDesktop.Input(evtype, scanx, chary, devid);
+    return (float)g_active;
 }
 
 void
 m_display(void)
 {
-	g_active = TRUE;
-	setkeydest(KEY_MENU);
-	setmousetarget(TARGET_MENU);
-	setcursormode(TRUE, "gfx/icon16/cursor");
+    g_active = TRUE;
+    setkeydest(KEY_MENU);
+    setmousetarget(TARGET_MENU);
+    setcursormode(TRUE, "gfx/icon16/cursor");
 }
 
 /*
@@ -145,10 +145,10 @@ m_hide
 void
 m_hide(void)
 {
-	g_active = FALSE;
-	setkeydest(KEY_GAME);
-	setmousetarget(TARGET_CLIENT);
-	setcursormode(FALSE);
+    g_active = FALSE;
+    setkeydest(KEY_GAME);
+    setmousetarget(TARGET_CLIENT);
+    setcursormode(FALSE);
 }
 
 /*
@@ -159,33 +159,33 @@ m_toggle
 void
 m_toggle(float fMode)
 {
-	if (fMode == FALSE)
-		m_hide();
-	else
-		m_display();
+    if (fMode == FALSE)
+        m_hide();
+    else
+        m_display();
 }
 
 float
 m_consolecommand(string cmd)
 {
-	int c = (int)tokenize(cmd);
+    int c = (int)tokenize(cmd);
 
-	switch (argv(0)) {
-	case "menu_quit":
-		UI_QuitGame_Show();
-		break;
-	case "menu_music":
-		UI_MusicPlayer_Show();
-		break;
-	case "friendsList":
-		UI_Friends_Show();
-		break;
-	case "packageList":
-		UI_Packages_Show();
-		break;
-	default:
-		return Platform_ConsoleCommand(cmd, c);
-	}
+    switch (argv(0)) {
+    case "menu_quit":
+        UI_QuitGame_Show();
+        break;
+    case "menu_music":
+        UI_MusicPlayer_Show();
+        break;
+    case "friendsList":
+        UI_Friends_Show();
+        break;
+    case "packageList":
+        UI_Packages_Show();
+        break;
+    default:
+        return Platform_ConsoleCommand(cmd, c);
+    }
 
-	return (1);
+    return (1);
 }

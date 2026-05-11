@@ -24,34 +24,34 @@ Draws a little notification for anyone using voice chat
 void
 Voice_DrawHUD(void)
 {
-	vector pos = video_mins + [g_vidsize[0] - 160, g_vidsize[1] - 136];
+    vector pos = video_mins + [g_vidsize[0] - 160, g_vidsize[1] - 136];
 
-	for (int i = -1; i > -32; i--) {
-		if (getplayerkeyfloat(i, INFOKEY_P_VOIPSPEAKING) != 1) {
-			continue;
-		}
+    for (int i = -1; i > -32; i--) {
+        if (getplayerkeyfloat(i, INFOKEY_P_VOIPSPEAKING) != 1) {
+            continue;
+        }
 
-		/* borders */
-		drawfill(pos, [144,24], [0,0,0], 0.5f);
-		drawfill(pos, [144, 1], UI_MAINCOLOR, 1.0f);
-		drawfill([pos[0], pos[1] + 23], [144, 1], UI_MAINCOLOR, 1.0f);
-		drawfill(pos, [1, 24], UI_MAINCOLOR, 1.0f);
-		drawfill([pos[0] + 143, pos[1]], [1, 24], UI_MAINCOLOR, 1.0f);
+        /* borders */
+        drawfill(pos, [144,24], [0,0,0], 0.5f);
+        drawfill(pos, [144, 1], UI_MAINCOLOR, 1.0f);
+        drawfill([pos[0], pos[1] + 23], [144, 1], UI_MAINCOLOR, 1.0f);
+        drawfill(pos, [1, 24], UI_MAINCOLOR, 1.0f);
+        drawfill([pos[0] + 143, pos[1]], [1, 24], UI_MAINCOLOR, 1.0f);
 
-		/* icon */
-		drawpic(
-			pos + [2,0],
-			"gfx/icon16/transmit",
-			[16,16],
-			UI_MAINCOLOR,
-			1.0f,
-			DRAWFLAG_NORMAL
-		);
+        /* icon */
+        drawpic(
+            pos + [2,0],
+            "gfx/icon16/transmit",
+            [16,16],
+            UI_MAINCOLOR,
+            1.0f,
+            DRAWFLAG_NORMAL
+        );
 
-		/* speaker name */
-		Font_DrawText([pos[0] + 28, pos[1] + 8], getplayerkeyvalue(i, "name"), FONT_CON);
-		pos[1] -= 32;
-	}
+        /* speaker name */
+        Font_DrawText([pos[0] + 28, pos[1] + 8], getplayerkeyvalue(i, "name"), FONT_CON);
+        pos[1] -= 32;
+    }
 }
 
 /*
@@ -64,14 +64,14 @@ Draws an image above a player in-world if they're speaking over VoIP
 void
 Voice_Draw3D(entity t)
 {
-	if (getplayerkeyfloat(t.entnum - 1, INFOKEY_P_VOIPSPEAKING)) {
-		vector vpos = t.origin + [0,0,48];
-		makevectors(view_angles);
-		R_BeginPolygon("gfx/icon16/transmit");
-		R_PolygonVertex(vpos + v_right * 8 - v_up * 8, [1,1], [1,1,1], 1.0f);
-		R_PolygonVertex(vpos - v_right * 8 - v_up * 8, [0,1], [1,1,1], 1.0f);
-		R_PolygonVertex(vpos - v_right * 8 + v_up * 8, [0,0], [1,1,1], 1.0f);
-		R_PolygonVertex(vpos + v_right * 8 + v_up * 8, [1,0], [1,1,1], 1.0f);
-		R_EndPolygon();
-	}
+    if (getplayerkeyfloat(t.entnum - 1, INFOKEY_P_VOIPSPEAKING)) {
+        vector vpos = t.origin + [0,0,48];
+        makevectors(view_angles);
+        R_BeginPolygon("gfx/icon16/transmit");
+        R_PolygonVertex(vpos + v_right * 8 - v_up * 8, [1,1], [1,1,1], 1.0f);
+        R_PolygonVertex(vpos - v_right * 8 - v_up * 8, [0,1], [1,1,1], 1.0f);
+        R_PolygonVertex(vpos - v_right * 8 + v_up * 8, [0,0], [1,1,1], 1.0f);
+        R_PolygonVertex(vpos + v_right * 8 + v_up * 8, [1,0], [1,1,1], 1.0f);
+        R_EndPolygon();
+    }
 }

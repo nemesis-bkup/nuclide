@@ -17,80 +17,80 @@
 class
 vguiLoadingPanel:vguiWindow
 {
-	void vguiLoadingPanel(void);
-	virtual void Spawned(void);
-	virtual void Reposition(void);
-	nonvirtual void UpdateProgress(void);
+    void vguiLoadingPanel(void);
+    virtual void Spawned(void);
+    virtual void Reposition(void);
+    nonvirtual void UpdateProgress(void);
 
 private:
 
-	vguiLabel m_lblLoading;
-	vguiButton m_btnCancel;
-	vguiProgressBar m_progressBar;
-	float timePassed;
+    vguiLabel m_lblLoading;
+    vguiButton m_btnCancel;
+    vguiProgressBar m_progressBar;
+    float timePassed;
 };
 
 void
 vguiLoadingPanel::vguiLoadingPanel(void)
 {
-	m_lblLoading = __NULL__;
-	m_btnCancel = __NULL__;
+    m_lblLoading = __NULL__;
+    m_btnCancel = __NULL__;
 }
 
 void
 vguiLoadingPanel::UpdateProgress(void)
 {
 #ifdef MENU
-	float minLoadingStage = (float)Platform_GetLoadingStage();
-	float maxLoadingStage = 4;
-	float min = (float)Platform_GetCurrentLoadingSize();
-	float max = (float)Platform_GetTotalLoadingSize();
-	timePassed = (minLoadingStage + (min / max)) / maxLoadingStage;
-	//printf("%f %f %f %f\n", minLoadingStage, maxLoadingStage, min, max);
+    float minLoadingStage = (float)Platform_GetLoadingStage();
+    float maxLoadingStage = 4;
+    float min = (float)Platform_GetCurrentLoadingSize();
+    float max = (float)Platform_GetTotalLoadingSize();
+    timePassed = (minLoadingStage + (min / max)) / maxLoadingStage;
+    //printf("%f %f %f %f\n", minLoadingStage, maxLoadingStage, min, max);
 #else
-	timePassed += frametime;
+    timePassed += frametime;
 
-	if (timePassed > 1.0f)
-		timePassed = 0.0f;
+    if (timePassed > 1.0f)
+        timePassed = 0.0f;
 #endif
 
-	m_progressBar.SetProgress(timePassed);
+    m_progressBar.SetProgress(timePassed);
 }
 
 void
 vguiLoadingPanel::Reposition(void)
 {
-	SetPos( ( g_vidsize / 2 ) - ( GetSize() / 2 ) );
+    SetPos( ( g_vidsize / 2 ) - ( GetSize() / 2 ) );
 }
 
 void
 vguiLoadingPanel::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	SetSize( [380,112] );
-	SetTitle( "Loading..." );
-	SetStyleMask(vguiWindowTitled);
+    SetSize( [380,112] );
+    SetTitle( "Loading..." );
+    SetStyleMask(vguiWindowTitled);
 
-	m_progressBar = spawn( vguiProgressBar );
-	m_progressBar.SetSize( [260,24] );
-	m_progressBar.SetPos( [20,64] );
+    m_progressBar = spawn( vguiProgressBar );
+    m_progressBar.SetSize( [260,24] );
+    m_progressBar.SetPos( [20,64] );
 
-	m_btnCancel = spawn( vguiButton );
-	m_btnCancel.SetTitle( "Cancel" );
-	m_btnCancel.SetSize( [72,24] );
-	m_btnCancel.SetPos( [288,64] );
+    m_btnCancel = spawn( vguiButton );
+    m_btnCancel.SetTitle( "Cancel" );
+    m_btnCancel.SetSize( [72,24] );
+    m_btnCancel.SetPos( [288,64] );
 
-	m_lblLoading = spawn( vguiLabel );
-	m_lblLoading.SetTitle( "Starting local game server" );
-	m_lblLoading.SetSize( [248,16] );
-	m_lblLoading.SetPos( [20,40] );
-	//m_lblLoading.SetAlignment(AF_NONE);
+    m_lblLoading = spawn( vguiLabel );
+    m_lblLoading.SetTitle( "Starting local game server" );
+    m_lblLoading.SetSize( [248,16] );
+    m_lblLoading.SetPos( [20,40] );
+    //m_lblLoading.SetAlignment(AF_NONE);
 
-	//m_btnCancel.SetFunc( QuitGame_No );
+    //m_btnCancel.SetFunc( QuitGame_No );
 
-	Add( m_progressBar );
-	Add( m_btnCancel );
-	Add( m_lblLoading );
-	Reposition();
+    Add( m_progressBar );
+    Add( m_btnCancel );
+    Add( m_lblLoading );
+    Reposition();
 }

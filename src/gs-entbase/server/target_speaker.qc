@@ -40,10 +40,10 @@ class
 target_speaker:ncSound
 {
 public:
-	void target_speaker(void);
+    void target_speaker(void);
 
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
 };
 
 void
@@ -54,28 +54,28 @@ target_speaker::target_speaker(void)
 void
 target_speaker::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "noise":
-		SetSample(setValue);
-	case "volume":
-		float ourVolume = ReadFloat(setValue);
+    switch (keyName) {
+    case "noise":
+        SetSample(setValue);
+    case "volume":
+        float ourVolume = ReadFloat(setValue);
 
-		if (ourVolume <= 0.0) {
-			ourVolume = 1.0f;
-		}
+        if (ourVolume <= 0.0) {
+            ourVolume = 1.0f;
+        }
 
-		SetVolume(ourVolume);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+        SetVolume(ourVolume);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 target_speaker::Respawn(void)
 {
-	if (HasSpawnFlags(1) == true) {
-		ForceLoop(true);
-	}
+    if (HasSpawnFlags(1) == true) {
+        ForceLoop(true);
+    }
 }

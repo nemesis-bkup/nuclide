@@ -50,59 +50,55 @@ class
 ncAVTransmitter:ncMediaSource
 {
 public:
-	void ncAVTransmitter(void);
+    void ncAVTransmitter(void);
 
 #ifdef SERVER
-	virtual void Input(entity,string,string);
-	virtual void SpawnKey(string,string);
-	virtual bool IsAlive(void);
+    virtual void Input(entity,string,string);
+    virtual void SpawnKey(string,string);
+    virtual bool IsAlive(void);
 
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void TransmitSingleVideo(string videoFile, bool advancesSchedule);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void TransmitSingleVideo(string videoFile, bool advancesSchedule);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float,float);
-	virtual void ReloadVideoResources(void);
-	virtual void UpdateReceivers(void);
-	virtual void Draw(void);
-
-	/** Called by the client once per frame... REMOVE */
-	nonvirtual void FlipImages(void);
+    virtual void postdraw(void);
+    nonvirtual void DrawDebug(void);
+    virtual void ReceiveEntity(float,float);
 #endif
 
 private:
-	NETWORKED_INT(m_tvChannelNum)
-	NETWORKED_STRING(m_tvChannelVideo)
-	NETWORKED_STRING(m_tvChannelAudio)
-	NETWORKED_FLOAT(m_tvChannelTime)
-	NETWORKED_STRING(m_tvChannelDOG)
-	NETWORKED_STRING(m_tvChannelTopText)
-	NETWORKED_STRING(m_tvChannelBottomText)
-	NETWORKED_VECTOR(m_tvChannelLight)
-	NETWORKED_STRING(m_tvChannelUI)
-	NETWORKED_FLOAT(m_tvChannelLightStyle)
+    NETWORKED_INT(m_tvChannelNum)
+    NETWORKED_STRING(m_tvChannelVideo)
+    NETWORKED_STRING(m_tvChannelAudio)
+    NETWORKED_FLOAT(m_tvChannelTime)
+    NETWORKED_STRING(m_tvChannelDOG)
+    NETWORKED_STRING(m_tvChannelTopText)
+    NETWORKED_STRING(m_tvChannelBottomText)
+    NETWORKED_VECTOR(m_tvChannelLight)
+    NETWORKED_STRING(m_tvChannelUI)
+    NETWORKED_FLOAT(m_tvChannelLightStyle)
 
 #ifdef CLIENT
-	bool m_bCached;
-	string m_tvChannelMat;
-	string m_tvChannelVideoMat;
-	entity m_tvChannelUIRootWindow;
-	entity m_tvChannelUIMenu;
+    bool m_bCached;
+    string m_tvChannelMat;
+    string m_tvChannelVideoMat;
+    entity m_tvChannelUIRootWindow;
+    entity m_tvChannelUIMenu;
 #endif
 };
 
 typedef enumflags
 {
-	TVCHANNELFL_ORIGIN,
-	TVCHANNELFL_CHAN,
-	TVCHANNELFL_UI,
-	TVCHANNELFL_VIDEO,
-	TVCHANNELFL_AUDIO,
-	TVCHANNELFL_DOG,
-	TVCHANNELFL_TOPTEXT,
-	TVCHANNELFL_BOTTOMTEXT,
-	TVCHANNELFL_LIGHT,
-	TVCHANNELFL_SEEKTIME,
+    TVCHANNELFL_ORIGIN,
+    TVCHANNELFL_CHAN,
+    TVCHANNELFL_UI,
+    TVCHANNELFL_VIDEO,
+    TVCHANNELFL_AUDIO,
+    TVCHANNELFL_DOG,
+    TVCHANNELFL_TOPTEXT,
+    TVCHANNELFL_BOTTOMTEXT,
+    TVCHANNELFL_LIGHT,
+    TVCHANNELFL_SEEKTIME,
 };

@@ -24,19 +24,19 @@ class
 ncSessionManager
 {
 public:
-	void ncSessionManager(void);
+    void ncSessionManager(void);
 
-	const string GetGlobal(string);
-	const void SetGlobal(string, string);
-	const void HandleLevelTransition(void);
-	const void TransitionFromPVS(ncEntity pvsEnt);
-	const void TransitionFromVolume(ncEntity volumeEnt);
-	const void RestoreStateFromHandle(float saveHandle, float entityCount, float playerSlots);
-	const void SaveStateToHandle(float saveHandle, float entityCount, float playerSlots);
-	const void ListGlobals(void);
+    const string GetGlobal(string);
+    const void SetGlobal(string, string);
+    const void HandleLevelTransition(void);
+    const void TransitionFromPVS(ncEntity pvsEnt);
+    const void TransitionFromVolume(ncEntity volumeEnt);
+    const void RestoreStateFromHandle(float saveHandle, float entityCount, float playerSlots);
+    const void SaveStateToHandle(float saveHandle, float entityCount, float playerSlots);
+    const void ListGlobals(void);
 
 private:
-	const void _LoadTransition(void);
-	const void _SaveTransition(ncEntity pvsTest, bool usePVS);
-	const ncEntity _FindCarrierEntity(string globalName);
+    const void _LoadTransition(void);
+    const void _SaveTransition(ncEntity pvsTest, bool usePVS);
+    const ncEntity _FindCarrierEntity(string globalName);
 };

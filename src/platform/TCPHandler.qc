@@ -17,133 +17,133 @@
 int
 TCP_Connect(tcpinfo_t *in, string path)
 {
-	in.m_fSocket = fopen(path, -1);
+    in.m_fSocket = fopen(path, -1);
 
-	if (in.m_fSocket < 0) {
-		ncError("Unable to access %s", path);
-	} else {
-		/* we got at least this far */
-		in.m_iState = STATE_CONNECTING;
-		in.m_timeOfConnection = time;
-		in.m_lastMessageSent = 0.0f;
-		in.m_lastMessageReceived = 0.0f;
+    if (in.m_fSocket < 0) {
+        ncError("Unable to access %s", path);
+    } else {
+        /* we got at least this far */
+        in.m_iState = STATE_CONNECTING;
+        in.m_timeOfConnection = time;
+        in.m_lastMessageSent = 0.0f;
+        in.m_lastMessageReceived = 0.0f;
 
-		tokenizebyseparator(path, "/");
-		tokenizebyseparator(argv(2), ":");
-		in.m_host = argv(0);
-		in.m_port = argv(1);
-	}
+        tokenizebyseparator(path, "/");
+        tokenizebyseparator(argv(2), ":");
+        in.m_host = argv(0);
+        in.m_port = argv(1);
+    }
 
-	return (int)in.m_fSocket;
+    return (int)in.m_fSocket;
 }
 
 void
 TCP_Disconnect(tcpinfo_t *in)
 {
-	if (in.m_iState == STATE_DISCONNECTED)
-		return;
+    if (in.m_iState == STATE_DISCONNECTED)
+        return;
 
-	in.m_iState = STATE_DISCONNECTED;
-	fclose(in.m_fSocket);
-	in.m_fSocket = -1;
+    in.m_iState = STATE_DISCONNECTED;
+    fclose(in.m_fSocket);
+    in.m_fSocket = -1;
 }
 
 int
 TCP_Send(tcpinfo_t *in, string msg)
 {
-	if (in.m_iState == STATE_DISCONNECTED) {
-		dprint("^1TCP_Send^7: Can't send, we're disconnected\n");
-		return (0);
-	}
+    if (in.m_iState == STATE_DISCONNECTED) {
+        dprint("^1TCP_Send^7: Can't send, we're disconnected\n");
+        return (0);
+    }
 
-	/* the buffer is full. we've been unable to send messages for a while */
-	if (in.m_iBufferLines >= (TCP_BUFFER_LENGTH - 1)) {
-		dprint("^1TCP_Send^7: Buffer full.\n");
-		return (0);
-	}
+    /* the buffer is full. we've been unable to send messages for a while */
+    if (in.m_iBufferLines >= (TCP_BUFFER_LENGTH - 1)) {
+        dprint("^1TCP_Send^7: Buffer full.\n");
+        return (0);
+    }
 
-	in.m_strBuffer[in.m_iBufferLines] = msg;
-	in.m_iBufferLines++;
-	in.m_lastMessageSent = time;
-	return (1);
+    in.m_strBuffer[in.m_iBufferLines] = msg;
+    in.m_iBufferLines++;
+    in.m_lastMessageSent = time;
+    return (1);
 }
 
 string
 TCP_Receive(tcpinfo_t *in)
 {
-	string result;
+    string result;
 
-	/* not even open */
-	if (in.m_iState != STATE_CONNECTED)
-		return (__NULL__);
+    /* not even open */
+    if (in.m_iState != STATE_CONNECTED)
+        return (__NULL__);
 
-	/* not even open */
-	if (in.m_fSocket <= 0)
-		return (__NULL__);
+    /* not even open */
+    if (in.m_fSocket <= 0)
+        return (__NULL__);
 
-	result = fgets(in.m_fSocket);
+    result = fgets(in.m_fSocket);
 
-	if (!STRING_SET(result)) {
-		if (in.m_lastMessageReceived > 0.0f && (in.m_lastMessageReceived + 4.0f) < time) {
+    if (!STRING_SET(result)) {
+        if (in.m_lastMessageReceived > 0.0f && (in.m_lastMessageReceived + 4.0f) < time) {
             return (__NULL__);
-		}
+        }
 
-		if (in.m_lastMessageReceived > 0.0)
-			return " ";
-		else
-			return (__NULL__);
-	}
+        if (in.m_lastMessageReceived > 0.0)
+            return " ";
+        else
+            return (__NULL__);
+    }
 
-	in.m_lastMessageReceived = time;
-	return (result);
+    in.m_lastMessageReceived = time;
+    return (result);
 }
 
 /* you want to run this every frame */
 void
 TCP_Frame(tcpinfo_t *in)
 {
-	string out;
+    string out;
 
-	/* not even open */
-	if (in.m_iState == STATE_DISCONNECTED)
-		return;
+    /* not even open */
+    if (in.m_iState == STATE_DISCONNECTED)
+        return;
 
-	/* got nothing worth sending */
-	if (in.m_strBuffer[0] == "" || in.m_iBufferLines <= 0)
-		return;
+    /* got nothing worth sending */
+    if (in.m_strBuffer[0] == "" || in.m_iBufferLines <= 0)
+        return;
 
-	/* if the send was unsuccessful, try next frame */
-	out = (string)memalloc(strlen(in.m_strBuffer[0]));
+    /* if the send was unsuccessful, try next frame */
+    out = (string)memalloc(strlen(in.m_strBuffer[0]));
 
-	for (float i = 0; i < strlen(in.m_strBuffer[0]); i++)
-		out[i] = str2chr(in.m_strBuffer[0], i);
+    for (float i = 0; i < strlen(in.m_strBuffer[0]); i++)
+        out[i] = str2chr(in.m_strBuffer[0], i);
 
-	if (fwrite(in.m_fSocket, (void *)out, strlen(in.m_strBuffer[0])) <= 0) {
-		dprint("^1TCP_Frame^7: Unsuccessful frame\n");
-		memfree((__variant *)out);
-		return;
-	}
+    if (fwrite(in.m_fSocket, (void *)out, strlen(in.m_strBuffer[0])) <= 0) {
+        dprint("^1TCP_Frame^7: Unsuccessful frame\n");
+        memfree((__variant *)out);
+        return;
+    }
 
-	ncLog("Sent %s", in.m_strBuffer[0]);
+    ncLog("Sent %s", in.m_strBuffer[0]);
 
-	/* at least one successful write went through */
-	in.m_iState = STATE_CONNECTED;
-	in.m_lastMessageSent = time;
+    /* at least one successful write went through */
+    in.m_iState = STATE_CONNECTED;
+    in.m_lastMessageSent = time;
 
-	/* a send was successful after here */
-	for (int i = 0; i < (TCP_BUFFER_LENGTH - 1); i++) {
-		in.m_strBuffer[i] = in.m_strBuffer[i+1];
-	}
+    /* a send was successful after here */
+    for (int i = 0; i < (TCP_BUFFER_LENGTH - 1); i++) {
+        in.m_strBuffer[i] = in.m_strBuffer[i+1];
+    }
 
-	in.m_iBufferLines--;
-	memfree((__variant *)out);
+    in.m_iBufferLines--;
+    memfree((__variant *)out);
 }
 
 tcpstate_t
 TCP_GetState(tcpinfo_t *in)
 {
-	if (!in)
-		return STATE_DISCONNECTED;
+    if (!in)
+        return STATE_DISCONNECTED;
 
-	return in.m_iState;
+    return in.m_iState;
 }

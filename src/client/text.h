@@ -22,17 +22,17 @@ chapter titles and message with a special type of fade in/out rendering effect
 on them.*/
 typedef struct
 {
-	string m_strMessage; /**< the message contents. */
-	float m_flPosX; /**< Normalized starting position on the X-axis. -1 is center. */
-	float m_flPosY; /**< Normalized starting position on the X-axis. -1 is center. */
-	int m_iEffect; /**< Effect to use when rendering the text. */
-	vector m_vecColor1; /**< Primary text color. */
-	vector m_vecColor2; /**< Secondary text color for use with effects. */
-	float m_flFadeIn; /**< Time in seconds it takes for the text to fade in. */
-	float m_flFadeOut; /**< Time in seconds it takes for the text to fade out. */
-	float m_flHoldTime; /**< Time in seconds on which we'll hold onto the text. */
-	float m_flFXTime; /**< Time in seconds that it takes for the effect to finish. */
-	float m_flTime; /**< The time that's passed on the active channel. */
+    string m_strMessage; /**< the message contents. */
+    float m_flPosX; /**< Normalized starting position on the X-axis. -1 is center. */
+    float m_flPosY; /**< Normalized starting position on the X-axis. -1 is center. */
+    int m_iEffect; /**< Effect to use when rendering the text. */
+    vector m_vecColor1; /**< Primary text color. */
+    vector m_vecColor2; /**< Secondary text color for use with effects. */
+    float m_flFadeIn; /**< Time in seconds it takes for the text to fade in. */
+    float m_flFadeOut; /**< Time in seconds it takes for the text to fade out. */
+    float m_flHoldTime; /**< Time in seconds on which we'll hold onto the text. */
+    float m_flFXTime; /**< Time in seconds that it takes for the effect to finish. */
+    float m_flTime; /**< The time that's passed on the active channel. */
 } hudText_t;
 
 /** Global pool of text channels. */

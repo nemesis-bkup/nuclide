@@ -17,98 +17,98 @@
 void
 ncOutput::TriggerOutput(void)
 {
-	ncIO ourOwner = (ncIO)owner;
-	ncIO ourActivator = (ncIO)m_eActivator;
+    ncIO ourOwner = (ncIO)owner;
+    ncIO ourActivator = (ncIO)m_eActivator;
 
-	/* plug into all the inputs. */
-	if (m_strTarget == "!self") {
-		if (ourOwner)
-			ourOwner.Input(m_eActivator, m_strInput, m_strData);
-	} else if (m_strTarget == "!activator") {
-		if (ourActivator)
-			ourActivator.Input(m_eActivator, m_strInput, m_strData);
-	} else if (m_strTarget == "!target") {
-		ncEntity ourTarget = __NULL__;
+    /* plug into all the inputs. */
+    if (m_strTarget == "!self") {
+        if (ourOwner)
+            ourOwner.Input(m_eActivator, m_strInput, m_strData);
+    } else if (m_strTarget == "!activator") {
+        if (ourActivator)
+            ourActivator.Input(m_eActivator, m_strInput, m_strData);
+    } else if (m_strTarget == "!target") {
+        ncEntity ourTarget = __NULL__;
 
-		if (m_internalTarget) {
-			ourTarget = (ncEntity)m_internalTarget;
-			ourTarget.Input(m_eActivator, m_strInput, m_strData);
-		} else {
-			ourTarget = (ncEntity)find(world, ::targetname, ourOwner.target);
+        if (m_internalTarget) {
+            ourTarget = (ncEntity)m_internalTarget;
+            ourTarget.Input(m_eActivator, m_strInput, m_strData);
+        } else {
+            ourTarget = (ncEntity)find(world, ::targetname, ourOwner.target);
 
-			if (ourTarget)
-				ourTarget.Input(m_eActivator, m_strInput, m_strData);
-		}
-	} else if (m_strTarget == "!rules") {
-		ncRuleDelegate ourRules = ncRuleDelegate::ActiveInstance();
+            if (ourTarget)
+                ourTarget.Input(m_eActivator, m_strInput, m_strData);
+        }
+    } else if (m_strTarget == "!rules") {
+        ncRuleDelegate ourRules = ncRuleDelegate::ActiveInstance();
 
-		if (ourRules)
-			ourRules.Input(m_eActivator, m_strInput, m_strData);
-	} else {
-		if (!STRING_SET(m_strTarget)) {
-			EntError("target invalid.");
-			return;
-		}
+        if (ourRules)
+            ourRules.Input(m_eActivator, m_strInput, m_strData);
+    } else {
+        if (!STRING_SET(m_strTarget)) {
+            EntError("target invalid.");
+            return;
+        }
 
-		for (entity f = world; (f = find(f, ::targetname, m_strTarget));) {
-			ncEntity trigger = (ncEntity)f;
+        for (entity f = world; (f = find(f, ::targetname, m_strTarget));) {
+            ncEntity trigger = (ncEntity)f;
 
-			if (trigger.Input != __NULL__) {
-				trigger.Input(m_eActivator, m_strInput, m_strData);
-			}
-		}
-	}
+            if (trigger.Input != __NULL__) {
+                trigger.Input(m_eActivator, m_strInput, m_strData);
+            }
+        }
+    }
 
-	/* we're not -1 (infinite) and we've still got one use to deduct */
-	if (m_iCount > 0)
-		m_iCount--;
+    /* we're not -1 (infinite) and we've still got one use to deduct */
+    if (m_iCount > 0)
+        m_iCount--;
 
-	nextthink = 0.0f;
+    nextthink = 0.0f;
 }
 
 void
 ncOutput::ScheduleOutput(entity activatorEnt)
 {
-	m_eActivator = activatorEnt;
+    m_eActivator = activatorEnt;
 
-	if (m_flDelay > 0.0f || GetSpawnAge() == 0.0f) {
-		think = TriggerOutput;
-		nextthink = time + m_flDelay;
-	} else {
-		nextthink = 0.0f;
-		think = __NULL__;
-		TriggerOutput();
-	}
+    if (m_flDelay > 0.0f || GetSpawnAge() == 0.0f) {
+        think = TriggerOutput;
+        nextthink = time + m_flDelay;
+    } else {
+        nextthink = 0.0f;
+        think = __NULL__;
+        TriggerOutput();
+    }
 }
 
 void
 ncOutput::Init(void)
 {
-	/* Init of ncIO will tokenize __fullspawndata which
-	   in turn will break ncIO::CreateOutput's tokenize loop,
-	   as we'll be creating a bunch of ncOutputs in there */
+    /* Init of ncIO will tokenize __fullspawndata which
+       in turn will break ncIO::CreateOutput's tokenize loop,
+       as we'll be creating a bunch of ncOutputs in there */
 }
 
 void
 ncOutput::Respawn(void)
 {
-	/* gotta reset our counter */
-	m_iCount = m_iOldCount;
-	nextthink = 0.0f;
-	think = __NULL__;
+    /* gotta reset our counter */
+    m_iCount = m_iOldCount;
+    nextthink = 0.0f;
+    think = __NULL__;
 }
 
 void
 ncOutput::ncOutput(void)
 {
-	/* Make sure Respawn() will be called between rounds */
-	identity = 1;
-	m_eActivator = __NULL__;
-	m_strTarget =
-	m_strInput =
-	m_strData = __NULL__;
-	m_flDelay = 0.0f;
-	m_iCount = 0i;
-	m_iOldCount = 0i;
-	m_internalTarget = __NULL__;
+    /* Make sure Respawn() will be called between rounds */
+    identity = 1;
+    m_eActivator = __NULL__;
+    m_strTarget =
+    m_strInput =
+    m_strData = __NULL__;
+    m_flDelay = 0.0f;
+    m_iCount = 0i;
+    m_iOldCount = 0i;
+    m_internalTarget = __NULL__;
 }

@@ -21,61 +21,61 @@ CMainButton advmpopt_btnCancel;
 void
 advmpopt_btndone_start(void)
 {
-	static void advmpopt_btndone_end(void) {
-		g_menupage = PAGE_CREATEGAME;
-	}
-	localsound("../media/launch_dnmenu1.wav");
-	header.SetStartEndPos(45,45,50,172);
-	header.SetStartEndSize(460,80,156,26);
-	header.m_lerp = 0.0f;
-	header.m_visible = TRUE;
-	header.SetHeader(HEAD_ADVANCED);
-	header.SetExecute(advmpopt_btndone_end);
+    static void advmpopt_btndone_end(void) {
+        g_menupage = PAGE_CREATEGAME;
+    }
+    localsound("../media/launch_dnmenu1.wav");
+    header.SetStartEndPos(45,45,50,172);
+    header.SetStartEndSize(460,80,156,26);
+    header.m_lerp = 0.0f;
+    header.m_visible = TRUE;
+    header.SetHeader(HEAD_ADVANCED);
+    header.SetExecute(advmpopt_btndone_end);
 }
 
 void
 advmpopt_btncancel_start(void)
 {
-	static void advmpopt_btncancel_end(void) {
-		g_menupage = PAGE_CREATEGAME;
-	}
-	localsound("../media/launch_dnmenu1.wav");
-	header.SetStartEndPos(45,45,50,172);
-	header.SetStartEndSize(460,80,156,26);
-	header.m_lerp = 0.0f;
-	header.m_visible = TRUE;
-	header.SetHeader(HEAD_ADVANCED);
-	header.SetExecute(advmpopt_btncancel_end);
+    static void advmpopt_btncancel_end(void) {
+        g_menupage = PAGE_CREATEGAME;
+    }
+    localsound("../media/launch_dnmenu1.wav");
+    header.SetStartEndPos(45,45,50,172);
+    header.SetStartEndSize(460,80,156,26);
+    header.m_lerp = 0.0f;
+    header.m_visible = TRUE;
+    header.SetHeader(HEAD_ADVANCED);
+    header.SetExecute(advmpopt_btncancel_end);
 }
 
 void
 menu_advancedmpoptions_init(void)
 {
-	fn_advmpoptions = spawn(CWidget);
-	advmpopt_btnDone = spawn(CMainButton);
-	advmpopt_btnDone.SetImage(BTN_DONE);
-	advmpopt_btnDone.SetExecute(advmpopt_btndone_start);
-	advmpopt_btnDone.SetPos(50,140);
-	Widget_Add(fn_advmpoptions, advmpopt_btnDone);
+    fn_advmpoptions = spawn(CWidget);
+    advmpopt_btnDone = spawn(CMainButton);
+    advmpopt_btnDone.SetImage(BTN_DONE);
+    advmpopt_btnDone.SetExecute(advmpopt_btndone_start);
+    advmpopt_btnDone.SetPos(50,140);
+    Widget_Add(fn_advmpoptions, advmpopt_btnDone);
 
-	advmpopt_btnCancel = spawn(CMainButton);
-	advmpopt_btnCancel.SetImage(BTN_CANCEL);
-	advmpopt_btnCancel.SetExecute(advmpopt_btncancel_start);
-	advmpopt_btnCancel.SetPos(50,172);
-	Widget_Add(fn_advmpoptions, advmpopt_btnCancel);
+    advmpopt_btnCancel = spawn(CMainButton);
+    advmpopt_btnCancel.SetImage(BTN_CANCEL);
+    advmpopt_btnCancel.SetExecute(advmpopt_btncancel_start);
+    advmpopt_btnCancel.SetPos(50,172);
+    Widget_Add(fn_advmpoptions, advmpopt_btnCancel);
 
-	Layout_FromFile("settings.scr", fn_advmpoptions);
+    Layout_FromFile("settings.scr", fn_advmpoptions);
 }
 
 void
 menu_advancedmpoptions_draw(void)
 {
-	Widget_Draw(fn_advmpoptions);
-	Header_Draw(HEAD_ADVOPTIONS);
+    Widget_Draw(fn_advmpoptions);
+    Header_Draw(HEAD_ADVOPTIONS);
 }
 
 void
 menu_advancedmpoptions_input(float evtype, float scanx, float chary, float devid)
 {
-	Widget_Input(fn_advmpoptions, evtype, scanx, chary, devid);
+    Widget_Input(fn_advmpoptions, evtype, scanx, chary, devid);
 }

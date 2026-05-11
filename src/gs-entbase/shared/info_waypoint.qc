@@ -18,11 +18,11 @@
 
 enumflags
 {
-	INFWAY_CHANGED_ORIGIN,
-	INFWAY_CHANGED_IMAGE,
-	INFWAY_CHANGED_TEXT,
-	INFWAY_CHANGED_COLOR,
-	INFWAY_CHANGED_STATE
+    INFWAY_CHANGED_ORIGIN,
+    INFWAY_CHANGED_IMAGE,
+    INFWAY_CHANGED_TEXT,
+    INFWAY_CHANGED_COLOR,
+    INFWAY_CHANGED_STATE
 };
 
 /*! \brief Shared-Entity: Objective/Waypoint Hint */
@@ -52,147 +52,147 @@ class
 info_waypoint:ncPointTrigger
 {
 public:
-	void info_waypoint(void);
+    void info_waypoint(void);
 
 #ifdef SERVER
-	virtual void SpawnKey(string,string);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void Input(entity,string,string);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void SpawnKey(string,string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void Input(entity,string,string);
+    virtual void Trigger(entity, triggermode_t);
 
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float, float);
-	virtual void postdraw(void);
+    virtual void ReceiveEntity(float, float);
+    virtual void postdraw(void);
 #endif
 
 private:
-	NETWORKED_STRING(m_strIcon)
-	NETWORKED_STRING(m_strText)
-	NETWORKED_BOOL(m_bEnabled)
-	NETWORKED_VECTOR(m_imageColor)
+    NETWORKED_STRING(m_strIcon)
+    NETWORKED_STRING(m_strText)
+    NETWORKED_BOOL(m_bEnabled)
+    NETWORKED_VECTOR(m_imageColor)
 };
 
 void
 info_waypoint::info_waypoint(void)
 {
-	m_strIcon =
-	m_strText = __NULL__;
-	m_imageColor = [255, 255, 255];
+    m_strIcon =
+    m_strText = __NULL__;
+    m_imageColor = [255, 255, 255];
 }
 
 #ifdef SERVER
 void
 info_waypoint::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "image":
-		m_strIcon = setValue;
-		break;
-	case "text":
-		m_strText = setValue;
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "image":
+        m_strIcon = setValue;
+        break;
+    case "text":
+        m_strText = setValue;
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 info_waypoint::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strIcon", m_strIcon);
-	SaveString(handle, "m_strText", m_strText);
+    super::Save(handle);
+    SaveString(handle, "m_strIcon", m_strIcon);
+    SaveString(handle, "m_strText", m_strText);
 }
 
 void
 info_waypoint::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strIcon":
-		m_strIcon = ReadString(setValue);
-		break;
-	case "m_strText":
-		m_strText = ReadString(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strIcon":
+        m_strIcon = ReadString(setValue);
+        break;
+    case "m_strText":
+        m_strText = ReadString(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 info_waypoint::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		m_bEnabled = false;
-		break;
-	case TRIG_ON:
-		m_bEnabled = true;
-		break;
-	default:
-		m_bEnabled = m_bEnabled ? false : true;
-	}
+    switch (state) {
+    case TRIG_OFF:
+        m_bEnabled = false;
+        break;
+    case TRIG_ON:
+        m_bEnabled = true;
+        break;
+    default:
+        m_bEnabled = m_bEnabled ? false : true;
+    }
 }
 
 void
 info_waypoint::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "Enable":
-		Trigger(eAct, TRIG_ON);
-		break;
-	case "Disable":
-		Trigger(eAct, TRIG_OFF);
-		break;
-	case "Toggle":
-		Trigger(eAct, TRIG_TOGGLE);
-		break;
-	case "Color":
-		m_imageColor = ReadVector(strData);
-		break;
-	case "SetText":
-		m_strText = ReadString(strData);
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "enable":
+        Trigger(eAct, TRIG_ON);
+        break;
+    case "disable":
+        Trigger(eAct, TRIG_OFF);
+        break;
+    case "toggle":
+        Trigger(eAct, TRIG_TOGGLE);
+        break;
+    case "color":
+        m_imageColor = ReadVector(strData);
+        break;
+    case "settext":
+        m_strText = ReadString(strData);
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }
 
 void
 info_waypoint::EvaluateEntity(void)
 {
-	EVALUATE_VECTOR(origin, 0, INFWAY_CHANGED_ORIGIN)
-	EVALUATE_VECTOR(origin, 1, INFWAY_CHANGED_ORIGIN)
-	EVALUATE_VECTOR(origin, 2, INFWAY_CHANGED_ORIGIN)
-	EVALUATE_FIELD(m_strIcon, INFWAY_CHANGED_IMAGE)
-	EVALUATE_FIELD(m_strText, INFWAY_CHANGED_TEXT)
-	EVALUATE_FIELD(m_bEnabled, INFWAY_CHANGED_STATE)
-	EVALUATE_VECTOR(m_imageColor, 0, INFWAY_CHANGED_COLOR)
-	EVALUATE_VECTOR(m_imageColor, 1, INFWAY_CHANGED_COLOR)
-	EVALUATE_VECTOR(m_imageColor, 2, INFWAY_CHANGED_COLOR)
-	pvsflags = PVSF_IGNOREPVS;
+    EVALUATE_VECTOR(origin, 0, INFWAY_CHANGED_ORIGIN)
+    EVALUATE_VECTOR(origin, 1, INFWAY_CHANGED_ORIGIN)
+    EVALUATE_VECTOR(origin, 2, INFWAY_CHANGED_ORIGIN)
+    EVALUATE_FIELD(m_strIcon, INFWAY_CHANGED_IMAGE)
+    EVALUATE_FIELD(m_strText, INFWAY_CHANGED_TEXT)
+    EVALUATE_FIELD(m_bEnabled, INFWAY_CHANGED_STATE)
+    EVALUATE_VECTOR(m_imageColor, 0, INFWAY_CHANGED_COLOR)
+    EVALUATE_VECTOR(m_imageColor, 1, INFWAY_CHANGED_COLOR)
+    EVALUATE_VECTOR(m_imageColor, 2, INFWAY_CHANGED_COLOR)
+    pvsflags = PVSF_IGNOREPVS;
 }
 
 float
 info_waypoint::SendEntity(entity ePEnt, float flChanged)
 {
-	WriteByte(MSG_ENTITY, ENT_WAYPOINT);
-	WriteFloat(MSG_ENTITY, flChanged);
-	SENDENTITY_COORD(origin[0], INFWAY_CHANGED_ORIGIN)
-	SENDENTITY_COORD(origin[1], INFWAY_CHANGED_ORIGIN)
-	SENDENTITY_COORD(origin[2], INFWAY_CHANGED_ORIGIN)
-	SENDENTITY_STRING(m_strIcon, INFWAY_CHANGED_IMAGE)
-	SENDENTITY_STRING(m_strText, INFWAY_CHANGED_TEXT)
-	SENDENTITY_BYTE(m_bEnabled, INFWAY_CHANGED_STATE)
-	SENDENTITY_BYTE(m_imageColor[0], INFWAY_CHANGED_COLOR)
-	SENDENTITY_BYTE(m_imageColor[1], INFWAY_CHANGED_COLOR)
-	SENDENTITY_BYTE(m_imageColor[2], INFWAY_CHANGED_COLOR)
-	return true;
+    WriteByte(MSG_ENTITY, ENT_WAYPOINT);
+    WriteFloat(MSG_ENTITY, flChanged);
+    SENDENTITY_COORD(origin[0], INFWAY_CHANGED_ORIGIN)
+    SENDENTITY_COORD(origin[1], INFWAY_CHANGED_ORIGIN)
+    SENDENTITY_COORD(origin[2], INFWAY_CHANGED_ORIGIN)
+    SENDENTITY_STRING(m_strIcon, INFWAY_CHANGED_IMAGE)
+    SENDENTITY_STRING(m_strText, INFWAY_CHANGED_TEXT)
+    SENDENTITY_BYTE(m_bEnabled, INFWAY_CHANGED_STATE)
+    SENDENTITY_BYTE(m_imageColor[0], INFWAY_CHANGED_COLOR)
+    SENDENTITY_BYTE(m_imageColor[1], INFWAY_CHANGED_COLOR)
+    SENDENTITY_BYTE(m_imageColor[2], INFWAY_CHANGED_COLOR)
+    return true;
 }
 #endif
 
@@ -200,68 +200,68 @@ info_waypoint::SendEntity(entity ePEnt, float flChanged)
 void
 info_waypoint::ReceiveEntity(float flNew, float flChanged)
 {
-	READENTITY_COORD(origin[0], INFWAY_CHANGED_ORIGIN)
-	READENTITY_COORD(origin[1], INFWAY_CHANGED_ORIGIN)
-	READENTITY_COORD(origin[2], INFWAY_CHANGED_ORIGIN)
-	READENTITY_STRING(m_strIcon, INFWAY_CHANGED_IMAGE)
-	READENTITY_STRING(m_strText, INFWAY_CHANGED_TEXT)
-	READENTITY_BYTE(m_bEnabled, INFWAY_CHANGED_STATE)
-	READENTITY_BYTE(m_imageColor[0], INFWAY_CHANGED_COLOR)
-	READENTITY_BYTE(m_imageColor[1], INFWAY_CHANGED_COLOR)
-	READENTITY_BYTE(m_imageColor[2], INFWAY_CHANGED_COLOR)
-	setorigin(this, origin);
+    READENTITY_COORD(origin[0], INFWAY_CHANGED_ORIGIN)
+    READENTITY_COORD(origin[1], INFWAY_CHANGED_ORIGIN)
+    READENTITY_COORD(origin[2], INFWAY_CHANGED_ORIGIN)
+    READENTITY_STRING(m_strIcon, INFWAY_CHANGED_IMAGE)
+    READENTITY_STRING(m_strText, INFWAY_CHANGED_TEXT)
+    READENTITY_BYTE(m_bEnabled, INFWAY_CHANGED_STATE)
+    READENTITY_BYTE(m_imageColor[0], INFWAY_CHANGED_COLOR)
+    READENTITY_BYTE(m_imageColor[1], INFWAY_CHANGED_COLOR)
+    READENTITY_BYTE(m_imageColor[2], INFWAY_CHANGED_COLOR)
+    setorigin(this, origin);
 }
 
 void
 info_waypoint::postdraw(void)
 {
-	static float
-	drawicon_visible(vector p1) {
-		vector delta;
-		float fov;
-		vector p2 = g_view.GetCameraOrigin();
-		vector ang = g_view.GetCameraAngle();
+    static float
+    drawicon_visible(vector p1) {
+        vector delta;
+        float fov;
+        vector p2 = g_view.GetCameraOrigin();
+        vector ang = g_view.GetCameraAngle();
 
-		makevectors(ang);
-		delta = normalize (p1 - p2);
-		fov = delta * v_forward;
+        makevectors(ang);
+        delta = normalize (p1 - p2);
+        fov = delta * v_forward;
 
-		/* within field of view... */
-		if (fov > (g_view.GetAFOV()/180)) {
-			traceline(p2, p1, MOVE_WORLDONLY, self);
-			if (trace_fraction == 1.0) {
-				return (1);
-			} else {
-				return (2);
-			}
-		}
-		return (0);
-	}
+        /* within field of view... */
+        if (fov > (g_view.GetAFOV()/180)) {
+            traceline(p2, p1, MOVE_WORLDONLY, self);
+            if (trace_fraction == 1.0) {
+                return (1);
+            } else {
+                return (2);
+            }
+        }
+        return (0);
+    }
 
-	float visible;
+    float visible;
 
-	if (!m_bEnabled)
-		return;
+    if (!m_bEnabled)
+        return;
 
-	visible = drawicon_visible(origin);
+    visible = drawicon_visible(origin);
 
-	if (drawicon_visible(origin) != 0) {
-		float textLength = Font_StringWidth(m_strText, true, FONT_CON);
-		vector vecProj = project(origin) - [32, 32];
-		vector projectedPos = project(origin) + [-(textLength/2), 48];
-		float a = (visible == 2) ? 0.25 : 1.0f;
-		float dist = vlen(origin - g_view.GetCameraOrigin()) / WAYPOINT_METER;
-		string distText = sprintf("Distance: %d m", dist);
+    if (drawicon_visible(origin) != 0) {
+        float textLength = Font_StringWidth(m_strText, true, FONT_CON);
+        vector vecProj = project(origin) - [32, 32];
+        vector projectedPos = project(origin) + [-(textLength/2), 48];
+        float a = (visible == 2) ? 0.25 : 1.0f;
+        float dist = vlen(origin - g_view.GetCameraOrigin()) / WAYPOINT_METER;
+        string distText = sprintf("Distance: %d m", dist);
 
-		drawpic(vecProj, m_strIcon, [64, 64], m_imageColor/255, a);
+        drawpic(vecProj, m_strIcon, [64, 64], m_imageColor/255, a);
 
-		Font_DrawText_RGBA(projectedPos + [1,1], distText, [0,0,0], a, FONT_CON);
-		Font_DrawText_RGBA(projectedPos, distText, [1,1,1], a, FONT_CON);
+        Font_DrawText_RGBA(projectedPos + [1,1], distText, [0,0,0], a, FONT_CON);
+        Font_DrawText_RGBA(projectedPos, distText, [1,1,1], a, FONT_CON);
 
-		projectedPos[1] += Font_GetHeight(FONT_CON);
+        projectedPos[1] += Font_GetHeight(FONT_CON);
 
-		Font_DrawText_RGBA(projectedPos + [1,1], m_strText, [0,0,0], a, FONT_CON);
-		Font_DrawText_RGBA(projectedPos, m_strText, [1,1,1], a, FONT_CON);
-	}
+        Font_DrawText_RGBA(projectedPos + [1,1], m_strText, [0,0,0], a, FONT_CON);
+        Font_DrawText_RGBA(projectedPos, m_strText, [1,1,1], a, FONT_CON);
+    }
 }
 #endif

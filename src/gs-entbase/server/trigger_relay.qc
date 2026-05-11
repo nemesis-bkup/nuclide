@@ -16,7 +16,7 @@
 
 enumflags
 {
-	TRLY_ONCE,
+    TRLY_ONCE,
 };
 
 /*! \brief Server-Entity: Relay With State Override */
@@ -53,83 +53,83 @@ class
 trigger_relay:ncPointTrigger
 {
 public:
-	void trigger_relay(void);
+    void trigger_relay(void);
 
-	virtual void Trigger(entity,triggermode_t);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string,string);
+    virtual void Trigger(entity,triggermode_t);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string,string);
 
-	virtual void Save(float);
-	virtual void Restore(string,string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
 
 private:
-	triggermode_t m_relayTargetState;
-	int m_relayActive;
+    triggermode_t m_relayTargetState;
+    int m_relayActive;
 };
 
 void
 trigger_relay::trigger_relay(void)
 {
-	m_relayTargetState = 0;
-	m_relayActive = 0;
+    m_relayTargetState = 0;
+    m_relayActive = 0;
 }
 
 void
 trigger_relay::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "relayTargetState", m_relayTargetState);
-	SaveInt(handle, "relayActive", m_relayActive);
+    super::Save(handle);
+    SaveFloat(handle, "relayTargetState", m_relayTargetState);
+    SaveInt(handle, "relayActive", m_relayActive);
 }
 
 void
 trigger_relay::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "relayTargetState":
-		m_relayTargetState = ReadFloat(setValue);
-		break;
-	case "relayActive":
-		m_relayActive = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "relayTargetState":
+        m_relayTargetState = ReadFloat(setValue);
+        break;
+    case "relayActive":
+        m_relayActive = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_relay::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "triggerstate":
-		m_relayTargetState = ReadInt(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "triggerstate":
+        m_relayTargetState = ReadInt(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_relay::Respawn(void)
 {
-	InitPointTrigger();
-	m_relayActive = TRUE;
-	SetValue(0i);
+    InitPointTrigger();
+    m_relayActive = TRUE;
+    SetValue(0i);
 }
 
 void
 trigger_relay::Trigger(entity act, triggermode_t state)
 {
-	if (m_relayActive == FALSE) {
-		EntLog("trigger_relay %S has already been triggered", targetname);
-		return;
-	}
+    if (m_relayActive == FALSE) {
+        EntLog("trigger_relay %S has already been triggered", targetname);
+        return;
+    }
 
-	if (HasSpawnFlags(TRLY_ONCE) == true) {
-		m_relayActive = FALSE;
-	}
+    if (HasSpawnFlags(TRLY_ONCE) == true) {
+        m_relayActive = FALSE;
+    }
 
-	SetValue(1i);
-	EntLog("trigger_relay %S will trigger %S with state %d", targetname, target, m_relayTargetState);
-	UseTargets(act, m_relayTargetState, GetTriggerDelay());
+    SetValue(1i);
+    EntLog("trigger_relay %S will trigger %S with state %d", targetname, target, m_relayTargetState);
+    UseTargets(act, m_relayTargetState, GetTriggerDelay());
 }

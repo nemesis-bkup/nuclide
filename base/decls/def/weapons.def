@@ -1,7 +1,6 @@
 
 // base
-#include weapons/unarmed.def
-#include weapons/grapple.def
+#include weapons/base.def
 
 // lq
 #include weapons/axe.def
@@ -12,5 +11,13 @@
 #include weapons/shotgun.def
 #include weapons/supernailgun.def
 #include weapons/supershotgun.def
-#include weapons/physgun.def
-#include weapons/portalgun.def
+
+// extra
+#include weapons_extra/unarmed.def
+#include weapons_extra/grapple.def
+#include weapons_extra/chaingun.def
+#include weapons_extra/machinegun.def
+#include weapons_extra/physgun.def
+#include weapons_extra/portalgun.def
+#include weapons_extra/railgun.def
+#include weapons_extra/prox_launcher.def

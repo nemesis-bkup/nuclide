@@ -1,0 +1,42 @@
+entityDef team_blueobelisk
+{
+        "spawnclass"        "ncSurfacePropEntity"
+        "rendercolor"       "0 0 255"
+        "goal_no"           "2"
+        "skin"              "1"
+        "model"             "models/flag.vvm"
+        "script_gametype"   "overload"
+        "health"            "1000"
+        "max_health"        "1000"
+        "solid"             "2"
+
+        "OnDeath"           "!rules,Capture,2,0.0,-1"
+}
+
+entityDef team_redobelisk
+{
+        "spawnclass"        "ncSurfacePropEntity"
+        "rendercolor"       "255 0 0"
+        "goal_no"           "0"
+        "skin"              "2"
+        "model"             "models/flag.vvm"
+        "health"            "1000"
+        "max_health"        "1000"
+        "solid"             "2"
+        "script_gametype"   "overload"
+        "OnDeath"         "!rules,Capture,1,0.0,-1"
+}
+
+entityDef team_neutralobelisk
+{
+        "spawnclass"        "ncSurfacePropEntity"
+        "rendercolor"       "255 0 0"
+        "goal_no"           "0"
+        "skin"              "2"
+        "model"             "models/flag.vvm"
+        "health"            "1000"
+        "max_health"        "1000"
+        "solid"             "2"
+        "script_gametype"   "overload"
+        "OnDeath"         "!rules,Capture,1,0.0,-1"
+}

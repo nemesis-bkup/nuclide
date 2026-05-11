@@ -18,20 +18,20 @@ class
 ncNavInfo
 {
 public:
-	nonvirtual vector PositionOfClosestNode(vector);
+    nonvirtual vector PositionOfClosestNode(vector);
 
 /** Returns the position of a spot that'll provide cover from the specified enemy.
 
 @param targetEnemy The enemy to hide from.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindCoverFromEnemy(ncActor targetEnemy);
+    nonvirtual vector FindCoverFromEnemy(ncActor targetEnemy);
 
 /** Returns the position of a spot that'll be behind where you're currently standing
 
 @param targetPosition The position to back away from.
 @param eulerDirection The direction we're looking in, in euler-angles.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindBackFromPosition(vector targetPosition, vector eulerDirection);
+    nonvirtual vector FindBackFromPosition(vector targetPosition, vector eulerDirection);
 
 
 /** Returns the position of a spot that'll provide cover from the specified enemy, closest to a specified node.
@@ -39,7 +39,7 @@ public:
 @param targetEnemy The enemy to hide from.
 @param nodePosition The position we should get closest to.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindCoverFromEnemyNearNode(ncActor targetEnemy, vector nodePosition);
+    nonvirtual vector FindCoverFromEnemyNearNode(ncActor targetEnemy, vector nodePosition);
 
 
 /** Returns the position of a spot that'll provide cover from the specified enemy, furthest from a specified node.
@@ -47,7 +47,7 @@ public:
 @param targetEnemy The enemy to hide from.
 @param nodePosition The position we should get as far away from as possible from.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindCoverFromEnemyFarNode(ncActor targetEnemy, vector nodePosition);
+    nonvirtual vector FindCoverFromEnemyFarNode(ncActor targetEnemy, vector nodePosition);
 
 
 /** Returns the position of a spot that'll provide cover from the specified enemy.
@@ -55,7 +55,7 @@ public:
 @param traceEntity The entity which will be testing for collisions.
 @param targetOrigin The spot to hide from.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindCoverFromPosition(entity traceEntity, vector targetOrigin);
+    nonvirtual vector FindCoverFromPosition(entity traceEntity, vector targetOrigin);
 
 
 /** Returns the position of a spot that is accessible within a specified position.
@@ -65,7 +65,7 @@ public:
 @param minRadius The mininum distance / search radius from the targetOrigin.
 @param maxRadius The maximum Radius in which we'll look for a free spot.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindEmptySpotNearPosition(entity traceEntity, vector position, float minRadius, float maxRadius);
+    nonvirtual vector FindEmptySpotNearPosition(entity traceEntity, vector position, float minRadius, float maxRadius);
 
 
 /** Returns the position of a spot that is far away within a specified position.
@@ -75,5 +75,5 @@ public:
 @param minRadius The mininum distance / search radius from the targetOrigin.
 @param maxRadius The maximum Radius in which we'll look for a free spot.
 @return Absolute position of a valid cover spot. */
-	nonvirtual vector FindEmptySpotAwayFromPosition(entity traceEntity, vector position, float minRadius, float maxRadius);
+    nonvirtual vector FindEmptySpotAwayFromPosition(entity traceEntity, vector position, float minRadius, float maxRadius);
 };

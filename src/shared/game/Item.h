@@ -15,26 +15,26 @@
 */
 
 typedef enumflags {
-	ITEMFL_CHANGED_MODELINDEX,
-	ITEMFL_CHANGED_ORIGIN_X,
-	ITEMFL_CHANGED_ORIGIN_Y,
-	ITEMFL_CHANGED_ORIGIN_Z,
-	ITEMFL_CHANGED_ANGLES_X,
-	ITEMFL_CHANGED_ANGLES_Y,
-	ITEMFL_CHANGED_ANGLES_Z,
-	ITEMFL_CHANGED_VELOCITY,
-	ITEMFL_CHANGED_ANGULARVELOCITY,
-	ITEMFL_CHANGED_RENDERPROPS,
-	ITEMFL_CHANGED_SIZE,
-	ITEMFL_CHANGED_FLAGS,
-	ITEMFL_CHANGED_SOLID,
-	ITEMFL_CHANGED_FRAME,
-	ITEMFL_CHANGED_SKIN,
-	ITEMFL_CHANGED_MOVETYPE,
-	ITEMFL_CHANGED_EFFECTS,
-	ITEMFL_CHANGED_SCALE,
-	ITEMFL_CHANGED_ENTITYDEF,
-	ITEMFL_CHANGED_CHAIN,
+    ITEMFL_CHANGED_MODELINDEX,
+    ITEMFL_CHANGED_ORIGIN_X,
+    ITEMFL_CHANGED_ORIGIN_Y,
+    ITEMFL_CHANGED_ORIGIN_Z,
+    ITEMFL_CHANGED_ANGLES_X,
+    ITEMFL_CHANGED_ANGLES_Y,
+    ITEMFL_CHANGED_ANGLES_Z,
+    ITEMFL_CHANGED_VELOCITY,
+    ITEMFL_CHANGED_ANGULARVELOCITY,
+    ITEMFL_CHANGED_RENDERPROPS,
+    ITEMFL_CHANGED_SIZE,
+    ITEMFL_CHANGED_FLAGS,
+    ITEMFL_CHANGED_SOLID,
+    ITEMFL_CHANGED_FRAME,
+    ITEMFL_CHANGED_SKIN,
+    ITEMFL_CHANGED_MOVETYPE,
+    ITEMFL_CHANGED_EFFECTS,
+    ITEMFL_CHANGED_SCALE,
+    ITEMFL_CHANGED_ENTITYDEF,
+    ITEMFL_CHANGED_CHAIN,
 } nsitem_changed_t;
 
 /*! \brief This entity class represents inventory items, weapons. */
@@ -84,15 +84,15 @@ Some basic items that most games will have some variety off:
 ```
 entityDef item_health
 {
-	"editor_usage"		"Health Item"
-	"editor_usage2"		""
-	"editor_usage3"		"Gives players 15 Health Points."
+    "editor_usage"      "Health Item"
+    "editor_usage2"     ""
+    "editor_usage3"     "Gives players 15 Health Points."
 
-	"spawnclass"		"ncItem"
-	"model"			"models/items/health.vvm"
-	"mins"			"-16 -16 0"
-	"maxs"			"16 16 16"
-	"inv_health"		"15"
+    "spawnclass"        "ncItem"
+    "model"         "models/items/health.vvm"
+    "mins"          "-16 -16 0"
+    "maxs"          "16 16 16"
+    "inv_health"        "15"
 }
 ```
 
@@ -103,15 +103,15 @@ In the above example, changing **inv_health** to **inv_armor** will increment th
 ```
 entityDef item_keycard
 {
-	"editor_usage"		"Lab Keycard Item"
-	"editor_usage2"		""
-	"editor_usage3"		"Resides in the inventory without much effect on its own."
+    "editor_usage"      "Lab Keycard Item"
+    "editor_usage2"     ""
+    "editor_usage3"     "Resides in the inventory without much effect on its own."
 
-	"spawnclass"		"ncItem"
-	"model"			"models/items/keycard.vvm"
-	"mins"			"-16 -16 0"
-	"maxs"			"16 16 16"
-	"inv_carry"		"1"
+    "spawnclass"        "ncItem"
+    "model"         "models/items/keycard.vvm"
+    "mins"          "-16 -16 0"
+    "maxs"          "16 16 16"
+    "inv_carry"     "1"
 }
 ```
 
@@ -120,15 +120,15 @@ entityDef item_keycard
 ```
 entityDef ammo_shells
 {
-	"editor_usage"		"Shotgun Shells"
-	"editor_usage2"		""
-	"editor_usage3"		"Gives players 20 Shells Ammo."
+    "editor_usage"      "Shotgun Shells"
+    "editor_usage2"     ""
+    "editor_usage3"     "Gives players 20 Shells Ammo."
 
-	"spawnclass"		"ncItem"
-	"model"			"models/ammo/shells.vvm"
-	"mins"			"-16 -16 0"
-	"maxs"			"16 16 16"
-	"inv_ammo_shells"	"20"
+    "spawnclass"        "ncItem"
+    "model"         "models/ammo/shells.vvm"
+    "mins"          "-16 -16 0"
+    "maxs"          "16 16 16"
+    "inv_ammo_shells"   "20"
 }
 ```
 
@@ -137,108 +137,108 @@ entityDef ammo_shells
 class ncItem:ncPhysicsEntity
 {
 public:
-	void ncItem(void);
+    void ncItem(void);
 
-	/* overrides */
+    /* overrides */
 #ifdef SERVER
-	virtual void Spawned(void);
-	virtual bool ItemBonusCheck(entity);
-	virtual bool ItemPickupCheck(entity);
-	virtual void GiveBonusItems(entity, bool);
-	virtual void Touch(entity);
-	virtual void Respawn(void);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void EvaluateEntity(void);
-	virtual float SendEntity(entity,float);
-	virtual void OnMapFinishedLoading(void);
+    virtual void Spawned(void);
+    virtual bool ItemBonusCheck(entity);
+    virtual bool ItemPickupCheck(entity);
+    virtual void GiveBonusItems(entity, bool);
+    virtual void Touch(entity);
+    virtual void Respawn(void);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void EvaluateEntity(void);
+    virtual float SendEntity(entity,float);
+    virtual void OnMapFinishedLoading(void);
 
-	/* item related accessors */
-	nonvirtual void SetFloating(int);
-	nonvirtual bool GetFloating(void);
-	nonvirtual void SetSpinning(bool);
-	nonvirtual bool GetSpinning(void);
-	nonvirtual void PickupRespawn(void);
-	nonvirtual void SetRespawnTime(float);
+    /* item related accessors */
+    nonvirtual void SetFloating(int);
+    nonvirtual bool GetFloating(void);
+    nonvirtual void SetSpinning(bool);
+    nonvirtual bool GetSpinning(void);
+    nonvirtual void PickupRespawn(void);
+    nonvirtual void SetRespawnTime(float);
 
-	/* only if the entity is usable in the inventory. */
-	virtual void OnInventoryUse(void);
+    /* only if the entity is usable in the inventory. */
+    virtual void OnInventoryUse(void);
 
-	/** Overridable: Called when this item is picked up. */
-	virtual void OnPickup(void);
+    /** Overridable: Called when this item is picked up. */
+    virtual void OnPickup(void);
 
-	/** Overridable: Called when this item is used. */
-	virtual void OnUse(entity);
+    /** Overridable: Called when this item is used. */
+    virtual void OnUse(entity);
 
-	virtual void PrintDebugInfo(void);
-	/** Call to turn a weapon into a pickup. */
-	nonvirtual void BecomePickup(void);
+    virtual void PrintDebugInfo(void);
+    /** Call to turn a weapon into a pickup. */
+    nonvirtual void BecomePickup(void);
 
-	nonvirtual void BecomeSolid(void);
-	nonvirtual void BecomeDropped(void);
+    nonvirtual void BecomeSolid(void);
+    nonvirtual void BecomeDropped(void);
 #endif
 
-	/** Called when an item was added to someones inventory. */
-	virtual void AddedToInventory(void);
-	/** Called when an item was removed from someones inventory. */
-	virtual void RemovedFromInventory(void);
+    /** Called when an item was added to someones inventory. */
+    virtual void AddedToInventory(void);
+    /** Called when an item was removed from someones inventory. */
+    virtual void RemovedFromInventory(void);
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float,float);
-	virtual void ReceiveEvent(float);
-	virtual void PredictPreFrame(void);
-	virtual void PredictPostFrame(void);
+    virtual void ReceiveEntity(float,float);
+    virtual void ReceiveEvent(float);
+    virtual void PredictPreFrame(void);
+    virtual void PredictPostFrame(void);
 #endif
 
-	virtual bool IsWeapon(void);
-	virtual bool InInventory(void);
+    virtual bool IsWeapon(void);
+    virtual bool InInventory(void);
 
-	virtual void OnRemoveEntity(void);
+    virtual void OnRemoveEntity(void);
 
 private:
-	/** Called to signal that the owner added this weapon to their inventory. */
-	virtual void _AddedCallback(void);
-	/** Called to signal that the owner removed this weapon from their inventory. */
-	virtual void _RemovedCallback(void);
+    /** Called to signal that the owner added this weapon to their inventory. */
+    virtual void _AddedCallback(void);
+    /** Called to signal that the owner removed this weapon from their inventory. */
+    virtual void _RemovedCallback(void);
 
-	int m_itemWasDropped;
+    int m_itemWasDropped;
 
-	/* item related spawn keys */
-	string m_sndAcquire;
-	string m_sndRespawn;
-	float m_itemRespawn;
-	string m_sndHum;
-	int m_itemPickupFloats;
-	bool m_itemPickupSpins;
-	string m_itemName;
-	string m_itemWeapon;
+    /* item related spawn keys */
+    string m_sndAcquire;
+    string m_sndRespawn;
+    float m_itemRespawn;
+    string m_sndHum;
+    int m_itemPickupFloats;
+    bool m_itemPickupSpins;
+    string m_itemName;
+    string m_itemWeapon;
 
-	int m_itemGivesHealth;
-	int m_itemGivesArmor;
-	float m_itemGivesAir;
-	int m_itemGivesBonusHealth;
-	int m_itemGivesBonusArmor;
-	bool m_itemNoTouch;
-	bool m_itemCarries;
-	string m_itemRequiresItem;
-	bool _m_itemTouchPickup; /* whether the item was touched for pick-up */
+    int m_itemGivesHealth;
+    int m_itemGivesArmor;
+    float m_itemGivesAir;
+    int m_itemGivesBonusHealth;
+    int m_itemGivesBonusArmor;
+    bool m_itemNoTouch;
+    bool m_itemCarries;
+    string m_itemRequiresItem;
+    bool _m_itemTouchPickup; /* whether the item was touched for pick-up */
 
-	int m_itemGivesAmmo[MAX_AMMO_TYPES];
+    int m_itemGivesAmmo[MAX_AMMO_TYPES];
 
 #ifdef CLIENT
-	NETWORKED_FLOAT(chain_entnum)
-	NETWORKED_FLOAT(owner_entnum)
+    NETWORKED_FLOAT(chain_entnum)
+    NETWORKED_FLOAT(owner_entnum)
 #endif
 
 #ifdef SERVER
-	float m_hiddenModelIndex;
-	float m_hiddenSequence;
+    float m_hiddenModelIndex;
+    float m_hiddenSequence;
 #endif
 
-	ncItem m_nextItem;
-	ncItem m_nextItem_net;
-	entity owner_net;
-	entity m_oldOwner;
+    ncItem m_nextItem;
+    ncItem m_nextItem_net;
+    entity owner_net;
+    entity m_oldOwner;
 };

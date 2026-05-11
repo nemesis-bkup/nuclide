@@ -724,19 +724,19 @@ defs-wad: editordefs
 
 editordefs:
 	Tools/make_mapdef.sh $(GAME)
-	
+
 maps:
 	Tools/make_maps.sh $(GAME)
 
 wads: imgtool
 	./Tools/build_wads.sh $(GAME)
-	
+
 textures:
 	Tools/make_textures.sh $(GAME)
-	
+
 $(GAME)/maps/%.bsp:
 	Tools/make_map.sh $(GAME) "$@"
-	
+
 models:
 	Tools/make_models.sh $(GAME)
 
@@ -777,6 +777,8 @@ vvmtool:
 	-install -m 0777 Tools/vvmtool/vvmtool vvmtool
 
 dist: dist-pak dist-engine
+
+dist-web: dist-pak
 
 dist-engine: engine-lin32 engine-lin64 engine-win32 engine-win64 dedicated-lin32 dedicated-lin64 dedicated-win32 dedicated-win64
 
@@ -855,7 +857,7 @@ $(ENGINE_BINARY):
 	cd ThirdParty/fteqw/engine && $(MAKE) $(ENGINE_CLBUILD) PKGCONFIG=pkg-config FTE_CONFIG=$(GAME) ARCH=x86_64
 	-install -m 0777 $(ENGINE_BINARY) ./$(GAME_BINARY)
 
-$(ENGINE_BINARY_WIN32): 
+$(ENGINE_BINARY_WIN32):
 	cd ThirdParty/fteqw/engine && $(MAKE) makelibs FTE_TARGET=win32
 	cp $(GAME)/engine.h ./ThirdParty/fteqw/engine/common/config_$(GAME).h
 	-cp $(GAME)/icon.ico ./ThirdParty/fteqw/engine/common/$(GAME).ico

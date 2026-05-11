@@ -8,18 +8,18 @@ class
 ncProfile
 {
 public:
-	void ncProfile(void);
+    void ncProfile(void);
 
-	nonvirtual ncProfile NewNamed(string profileName);
-	nonvirtual ncProfile LoadFromDiskByName(string profileName);
-	nonvirtual void LoadConfig(void);
-	nonvirtual void SaveConfig(void);
-	nonvirtual void Delete(void);
+    nonvirtual ncProfile NewNamed(string profileName);
+    nonvirtual ncProfile LoadFromDiskByName(string profileName);
+    nonvirtual void LoadConfig(void);
+    nonvirtual void SaveConfig(void);
+    nonvirtual void Delete(void);
 
 private:
-	string m_profileName;	/** The name of the local profile. */
-	string m_profileCert;	/** The name of the certificate/identity */
-	//bool m_offlineOnly;	/** When true, this account will not connect to the online service. LAN games only or direct connect. */
+    string m_profileName;   /** The name of the local profile. */
+    string m_profileCert;   /** The name of the certificate/identity */
+    //bool m_offlineOnly;   /** When true, this account will not connect to the online service. LAN games only or direct connect. */
 };
 
 /** Platform: Player Profile Manager
@@ -32,69 +32,69 @@ are generally tied to it as well. */
 class
 ncProfileManager
 {
-	void ncProfileManager(void);
+    void ncProfileManager(void);
 
-	/** Called by the platform init system upon start. */
-	nonvirtual void Init(void);
+    /** Called by the platform init system upon start. */
+    nonvirtual void Init(void);
 
-	/** Called by platform shutdown for cleanup. */
-	nonvirtual void Shutdown(void);
+    /** Called by platform shutdown for cleanup. */
+    nonvirtual void Shutdown(void);
 
-	/** Returns an object container with the desired profile information. */
-	nonvirtual ncProfile GetActiveProfile(void);
+    /** Returns an object container with the desired profile information. */
+    nonvirtual ncProfile GetActiveProfile(void);
 
-	/** Requests the current settings to be saved to the active profile. */
-	nonvirtual void SaveActiveProfile(void);
-	
-	nonvirtual ncProfile FindProfileByName(string profileName);
+    /** Requests the current settings to be saved to the active profile. */
+    nonvirtual void SaveActiveProfile(void);
+    
+    nonvirtual ncProfile FindProfileByName(string profileName);
 
-	/** Sets the current, active profile to a desired one. Returns `true` on success. */
-	nonvirtual bool SetProfileByName(string profileName);
+    /** Sets the current, active profile to a desired one. Returns `true` on success. */
+    nonvirtual bool SetProfileByName(string profileName);
 
-	/** Creates a new profile under a desired name. Returns `true` on success. */
-	nonvirtual bool CreateNamedProfile(string targetName);
+    /** Creates a new profile under a desired name. Returns `true` on success. */
+    nonvirtual bool CreateNamedProfile(string targetName);
 
-	/** Deletes a named profile. Returns `true` on success. */
-	nonvirtual bool DeleteNamedProfile(string profileName);
+    /** Deletes a named profile. Returns `true` on success. */
+    nonvirtual bool DeleteNamedProfile(string profileName);
 
-	/** Returns `true` or `false` depending on whether a named profile exists. */
-	nonvirtual bool NamedProfileExistsOnDisk(string targetName);
+    /** Returns `true` or `false` depending on whether a named profile exists. */
+    nonvirtual bool NamedProfileExistsOnDisk(string targetName);
 
-	/** Saves web information into the users profile */
-	nonvirtual void SaveWeb(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves web information into the users profile */
+    nonvirtual void SaveWeb(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Saves text information into the users profile */
-	nonvirtual void SaveText(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves text information into the users profile */
+    nonvirtual void SaveText(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Saves video information into the users profile */
-	nonvirtual void SaveVideo(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves video information into the users profile */
+    nonvirtual void SaveVideo(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Saves audio information into the users profile */
-	nonvirtual void SaveAudio(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves audio information into the users profile */
+    nonvirtual void SaveAudio(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Saves software information into the users profile */
-	nonvirtual void SaveSoftware(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves software information into the users profile */
+    nonvirtual void SaveSoftware(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Saves image information into the users profile */
-	nonvirtual void SaveImage(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
+    /** Saves image information into the users profile */
+    nonvirtual void SaveImage(string videoName, string videoTitle, string videoInfo, string videoURL, string audioURL);
 
-	/** Shares web information into the users profile */
-	nonvirtual void ShareWeb(string url);
+    /** Shares web information into the users profile */
+    nonvirtual void ShareWeb(string url);
 
-	/** Shares text information into the users profile */
-	nonvirtual void ShareText(string url);
+    /** Shares text information into the users profile */
+    nonvirtual void ShareText(string url);
 
-	/** Shares video information into the users profile */
-	nonvirtual void ShareVideo(string url);
+    /** Shares video information into the users profile */
+    nonvirtual void ShareVideo(string url);
 
-	/** Shares audio information into the users profile */
-	nonvirtual void ShareAudio(string url);
+    /** Shares audio information into the users profile */
+    nonvirtual void ShareAudio(string url);
 
-	/** Shares software information into the users profile */
-	nonvirtual void ShareSoftware(string url);
+    /** Shares software information into the users profile */
+    nonvirtual void ShareSoftware(string url);
 
-	/** Shares image information into the users profile */
-	nonvirtual void ShareImage(string url);
+    /** Shares image information into the users profile */
+    nonvirtual void ShareImage(string url);
 
-	nonvirtual void ListProfiles(void);
+    nonvirtual void ListProfiles(void);
 };

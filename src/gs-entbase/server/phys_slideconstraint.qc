@@ -46,109 +46,109 @@ class
 phys_slideconstraint:ncPhysicsConstraint
 {
 public:
-	void phys_slideconstraint(void);
+    void phys_slideconstraint(void);
 
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
 
 private:
-	vector m_vecSliderAxis;
-	float m_flSliderFriction;
+    vector m_vecSliderAxis;
+    float m_flSliderFriction;
 };
 
 void
 phys_slideconstraint::phys_slideconstraint(void)
 {
-	m_vecSliderAxis = g_vec_null;
-	m_flSliderFriction = 0.0f;
+    m_vecSliderAxis = g_vec_null;
+    m_flSliderFriction = 0.0f;
 }
 
 void
 phys_slideconstraint::Save(float handle)
 {
-	super::Save(handle);
-	SaveVector(handle, "m_vecSliderAxis", m_vecSliderAxis);
-	SaveFloat(handle, "m_flSliderFriction", m_flSliderFriction);
+    super::Save(handle);
+    SaveVector(handle, "m_vecSliderAxis", m_vecSliderAxis);
+    SaveFloat(handle, "m_flSliderFriction", m_flSliderFriction);
 }
 
 void
 phys_slideconstraint::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_vecSliderAxis":
-		m_vecSliderAxis = ReadVector(setValue);
-		break;
-	case "m_flSliderFriction":
-		m_flSliderFriction = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_vecSliderAxis":
+        m_vecSliderAxis = ReadVector(setValue);
+        break;
+    case "m_flSliderFriction":
+        m_flSliderFriction = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 phys_slideconstraint::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "slideaxis":
-		m_vecSliderAxis = ReadVector(setValue);
-		break;
-	case "slidefriction":
-		m_flSliderFriction = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "slideaxis":
+        m_vecSliderAxis = ReadVector(setValue);
+        break;
+    case "slidefriction":
+        m_flSliderFriction = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 phys_slideconstraint::Respawn(void)
 {
-	ScheduleThink(AfterSpawn, 0.0f);
+    ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
 phys_slideconstraint::AfterSpawn(void)
 {
-	SetConstraintType(CONSTRAINT_SLIDER);
-	SetOrigin(GetSpawnVector("origin"));
+    SetConstraintType(CONSTRAINT_SLIDER);
+    SetOrigin(GetSpawnVector("origin"));
 
-	SetEntity1(find(world, ::targetname, m_strEnt1));
+    SetEntity1(find(world, ::targetname, m_strEnt1));
 
-	if (m_strEnt2)
-		SetEntity2(find(world, ::targetname, m_strEnt2));
-	else
-		SetEntity2(this);
+    if (m_strEnt2)
+        SetEntity2(find(world, ::targetname, m_strEnt2));
+    else
+        SetEntity2(this);
 
-	SetAngles(vectoangles(m_vecSliderAxis - GetOrigin()));
-	SetSliderMaxVelocity(99999);
-	SetSliderFriction(m_flSliderFriction);
+    SetAngles(vectoangles(m_vecSliderAxis - GetOrigin()));
+    SetSliderMaxVelocity(99999);
+    SetSliderFriction(m_flSliderFriction);
 
-	if (HasSpawnFlags(2))
-		SetSliderStop(vlen(m_vecSliderAxis - GetOrigin()));
+    if (HasSpawnFlags(2))
+        SetSliderStop(vlen(m_vecSliderAxis - GetOrigin()));
 
-	WakeTargets();
+    WakeTargets();
 }
 
 void
 phys_slideconstraint::Input(entity activatorEnt, string inputName, string dataString)
 {
-	switch (inputName) {
-	case "SetVelocity":
-		if (GetSliderVelocity() > 0.0f)
-			SetSliderVelocity(-stof(dataString));
-		else
-			SetSliderVelocity(stof(dataString));
+    switch (inputName) {
+    case "setvelocity":
+        if (GetSliderVelocity() > 0.0f)
+            SetSliderVelocity(-stof(dataString));
+        else
+            SetSliderVelocity(stof(dataString));
 
-		WakeTargets();
-		break;
-	default:
-		super::Input(activatorEnt, inputName, dataString);
-		break;
-	}
+        WakeTargets();
+        break;
+    default:
+        super::Input(activatorEnt, inputName, dataString);
+        break;
+    }
 }

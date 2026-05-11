@@ -16,15 +16,15 @@
 
 enumflags
 {
-	ENVFIRE_INFINITE,
-	ENVFIRE_SMOKELESS,
-	ENVFIRE_STARTON,
-	ENVFIRE_STARTFULL,
-	ENVFIRE_NODROP,
-	ENVFIRE_NOGLOW,
-	ENVFIRE_UNUSED,
-	ENVFIRE_DELETE,
-	ENVFIRE_TOPVISIBLE
+    ENVFIRE_INFINITE,
+    ENVFIRE_SMOKELESS,
+    ENVFIRE_STARTON,
+    ENVFIRE_STARTFULL,
+    ENVFIRE_NODROP,
+    ENVFIRE_NOGLOW,
+    ENVFIRE_UNUSED,
+    ENVFIRE_DELETE,
+    ENVFIRE_TOPVISIBLE
 };
 
 /*! \brief Shared-Entity: Fire/Flame Emitter */
@@ -70,120 +70,120 @@ class
 env_fire:ncPointTrigger
 {
 public:
-	void env_fire(void);
+    void env_fire(void);
 
 #ifdef SERVER
-	virtual void Respawn(void);
-	virtual void EvaluateEntity(void);
-	virtual void SpawnKey(string, string);
-	virtual float SendEntity(entity, float);
+    virtual void Respawn(void);
+    virtual void EvaluateEntity(void);
+    virtual void SpawnKey(string, string);
+    virtual float SendEntity(entity, float);
 #endif
 
 #ifdef CLIENT
-	virtual void ReceiveEntity(float, float);
+    virtual void ReceiveEntity(float, float);
 #endif
 
 private:
-	NETWORKED_FLOAT(m_flSize)
-	NETWORKED_BOOL(m_bState)
-	NETWORKED_FLOAT m_flMaxSize)
-	NETWORKED_FLOATm_flGrowTime)
-	NETWORKED_BOOL(m_bType)
-	float m_flIgnitionPoint;
-	float m_flDamageScale;
-	float m_flDuration;
+    NETWORKED_FLOAT(m_flSize)
+    NETWORKED_BOOL(m_bState)
+    NETWORKED_FLOAT m_flMaxSize)
+    NETWORKED_FLOATm_flGrowTime)
+    NETWORKED_BOOL(m_bType)
+    float m_flIgnitionPoint;
+    float m_flDamageScale;
+    float m_flDuration;
 };
 
 void
 env_fire::env_fire(void)
 {
-	m_flDuration = 30.0f;
-	m_flSize = 64.0;
-	m_flGrowTime = 4.0f;
-	m_bType = false;
-	m_flIgnitionPoint = 32.0f;
-	m_flDamageScale = 1.0f;
+    m_flDuration = 30.0f;
+    m_flSize = 64.0;
+    m_flGrowTime = 4.0f;
+    m_bType = false;
+    m_flIgnitionPoint = 32.0f;
+    m_flDamageScale = 1.0f;
 }
 
 #ifdef SERVER
 void
 env_fire::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "health":
-		m_flDuration = stof(setValue);
-		break;
-	case "firesize":
-		m_flSize = stof(setValue);
-		break;
-	case "fireattack":
-		m_flGrowTime = stof(setValue);
-		break;
-	case "firetype":
-		m_bType = stof(setValue);
-		break;
-	case "ignitionpoint":
-		m_flIgnitionPoint = stof(setValue);
-		break;
-	case "damagescale":
-		m_flDamageScale = stof(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "health":
+        m_flDuration = stof(setValue);
+        break;
+    case "firesize":
+        m_flSize = stof(setValue);
+        break;
+    case "fireattack":
+        m_flGrowTime = stof(setValue);
+        break;
+    case "firetype":
+        m_bType = stof(setValue);
+        break;
+    case "ignitionpoint":
+        m_flIgnitionPoint = stof(setValue);
+        break;
+    case "damagescale":
+        m_flDamageScale = stof(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_fire::Respawn(void)
 {
-	SetSize([0,0,0], [0,0,0]);
-	SetOrigin(GetSpawnOrigin());
+    SetSize([0,0,0], [0,0,0]);
+    SetOrigin(GetSpawnOrigin());
 }
 
 void
 env_fire::EvaluateEntity(void)
 {
-	EVALUATE_VECTOR(origin, 0, EVFIRE_CHANGED_ORIGIN)
-	EVALUATE_VECTOR(origin, 1, EVFIRE_CHANGED_ORIGIN)
-	EVALUATE_VECTOR(origin, 2, EVFIRE_CHANGED_ORIGIN)
-	EVALUATE_VECTOR(angles, 0, EVFIRE_CHANGED_ANGLE)
-	EVALUATE_VECTOR(angles, 1, EVFIRE_CHANGED_ANGLE)
-	EVALUATE_VECTOR(angles, 2, EVFIRE_CHANGED_ANGLE)
-	EVALUATE_FIELD(m_flDuration, EVFIRE_CHANGED_DURATION)
-	EVALUATE_FIELD(m_flMaxSize, EVFIRE_CHANGED_SIZE)
-	EVALUATE_FIELD(m_flGrowTime, EVFIRE_CHANGED_GROW)
-	EVALUATE_FIELD(m_bType, EVFIRE_CHANGED_TYPE)
+    EVALUATE_VECTOR(origin, 0, EVFIRE_CHANGED_ORIGIN)
+    EVALUATE_VECTOR(origin, 1, EVFIRE_CHANGED_ORIGIN)
+    EVALUATE_VECTOR(origin, 2, EVFIRE_CHANGED_ORIGIN)
+    EVALUATE_VECTOR(angles, 0, EVFIRE_CHANGED_ANGLE)
+    EVALUATE_VECTOR(angles, 1, EVFIRE_CHANGED_ANGLE)
+    EVALUATE_VECTOR(angles, 2, EVFIRE_CHANGED_ANGLE)
+    EVALUATE_FIELD(m_flDuration, EVFIRE_CHANGED_DURATION)
+    EVALUATE_FIELD(m_flMaxSize, EVFIRE_CHANGED_SIZE)
+    EVALUATE_FIELD(m_flGrowTime, EVFIRE_CHANGED_GROW)
+    EVALUATE_FIELD(m_bType, EVFIRE_CHANGED_TYPE)
 }
 
 float
 env_fire::SendEntity(entity ePEnt, float flChanged)
 {
-	WriteByte(MSG_ENTITY, ENT_STEAM);
-	WriteFloat(MSG_ENTITY, flChanged);
+    WriteByte(MSG_ENTITY, ENT_STEAM);
+    WriteFloat(MSG_ENTITY, flChanged);
 
-	SENDENTITY_COORD(origin[0], EVFIRE_CHANGED_ORIGIN)
-	SENDENTITY_COORD(origin[1], EVFIRE_CHANGED_ORIGIN)
-	SENDENTITY_COORD(origin[2], EVFIRE_CHANGED_ORIGIN)
-	SENDENTITY_COORD(angles[0], EVFIRE_CHANGED_ANGLE)
-	SENDENTITY_COORD(angles[1], EVFIRE_CHANGED_ANGLE)
-	SENDENTITY_COORD(angles[2], EVFIRE_CHANGED_ANGLE)
-	SENDENTITY_BYTE(m_bState, EVFIRE_CHANGED_STATE)
-	SENDENTITY_BYTE(m_bType, EVFIRE_CHANGED_TYPE)
-	SENDENTITY_FLOAT(m_flSpread, EVFIRE_CHANGED_SPREAD)
-	SENDENTITY_FLOAT(m_flSpeed, EVFIRE_CHANGED_SPEED)
-	SENDENTITY_FLOAT(m_flStartSize, EVFIRE_CHANGED_MINS)
-	SENDENTITY_FLOAT(m_flEndSize , EVFIRE_CHANGED_MAXS)
-	SENDENTITY_FLOAT(m_flRate, EVFIRE_CHANGED_RATE)
-	SENDENTITY_COLOR(m_vecColor[0], EVFIRE_CHANGED_COLOR)
-	SENDENTITY_COLOR(m_vecColor[1], EVFIRE_CHANGED_COLOR)
-	SENDENTITY_COLOR(m_vecColor[2], EVFIRE_CHANGED_COLOR)
-	SENDENTITY_FLOAT(m_flLength, EVFIRE_CHANGED_LENGTH)
-	SENDENTITY_FLOAT(m_flAlpha, EVFIRE_CHANGED_ALPHA)
-	SENDENTITY_FLOAT(m_flRollSpeed, EVFIRE_CHANGED_ROLL)
+    SENDENTITY_COORD(origin[0], EVFIRE_CHANGED_ORIGIN)
+    SENDENTITY_COORD(origin[1], EVFIRE_CHANGED_ORIGIN)
+    SENDENTITY_COORD(origin[2], EVFIRE_CHANGED_ORIGIN)
+    SENDENTITY_COORD(angles[0], EVFIRE_CHANGED_ANGLE)
+    SENDENTITY_COORD(angles[1], EVFIRE_CHANGED_ANGLE)
+    SENDENTITY_COORD(angles[2], EVFIRE_CHANGED_ANGLE)
+    SENDENTITY_BYTE(m_bState, EVFIRE_CHANGED_STATE)
+    SENDENTITY_BYTE(m_bType, EVFIRE_CHANGED_TYPE)
+    SENDENTITY_FLOAT(m_flSpread, EVFIRE_CHANGED_SPREAD)
+    SENDENTITY_FLOAT(m_flSpeed, EVFIRE_CHANGED_SPEED)
+    SENDENTITY_FLOAT(m_flStartSize, EVFIRE_CHANGED_MINS)
+    SENDENTITY_FLOAT(m_flEndSize , EVFIRE_CHANGED_MAXS)
+    SENDENTITY_FLOAT(m_flRate, EVFIRE_CHANGED_RATE)
+    SENDENTITY_COLOR(m_vecColor[0], EVFIRE_CHANGED_COLOR)
+    SENDENTITY_COLOR(m_vecColor[1], EVFIRE_CHANGED_COLOR)
+    SENDENTITY_COLOR(m_vecColor[2], EVFIRE_CHANGED_COLOR)
+    SENDENTITY_FLOAT(m_flLength, EVFIRE_CHANGED_LENGTH)
+    SENDENTITY_FLOAT(m_flAlpha, EVFIRE_CHANGED_ALPHA)
+    SENDENTITY_FLOAT(m_flRollSpeed, EVFIRE_CHANGED_ROLL)
 
-	//print(sprintf("S (%x): %v %v %i\n", flChanged, origin, m_vecEndPos, m_iActive));
+    //print(sprintf("S (%x): %v %v %i\n", flChanged, origin, m_vecEndPos, m_iActive));
 
-	return (1);
+    return (1);
 }
 #endif
 
@@ -191,30 +191,30 @@ env_fire::SendEntity(entity ePEnt, float flChanged)
 void
 env_fire::ReceiveEntity(float flNew, float flChanged)
 {
-	READENTITY_COORD(origin[0], EVFIRE_CHANGED_ORIGIN)
-	READENTITY_COORD(origin[1], EVFIRE_CHANGED_ORIGIN)
-	READENTITY_COORD(origin[2], EVFIRE_CHANGED_ORIGIN)
-	READENTITY_COORD(angles[0], EVFIRE_CHANGED_ANGLE)
-	READENTITY_COORD(angles[1], EVFIRE_CHANGED_ANGLE)
-	READENTITY_COORD(angles[2], EVFIRE_CHANGED_ANGLE)
-	READENTITY_BYTE(m_bState, EVFIRE_CHANGED_STATE)
-	READENTITY_BYTE(m_bType, EVFIRE_CHANGED_TYPE)
-	READENTITY_FLOAT(m_flSpread, EVFIRE_CHANGED_SPREAD)
-	READENTITY_FLOAT(m_flSpeed, EVFIRE_CHANGED_SPEED)
-	READENTITY_FLOAT(m_flStartSize, EVFIRE_CHANGED_MINS)
-	READENTITY_FLOAT(m_flEndSize , EVFIRE_CHANGED_MAXS)
-	READENTITY_FLOAT(m_flRate, EVFIRE_CHANGED_RATE)
-	READENTITY_COLOR(m_vecColor[0], EVFIRE_CHANGED_COLOR)
-	READENTITY_COLOR(m_vecColor[1], EVFIRE_CHANGED_COLOR)
-	READENTITY_COLOR(m_vecColor[2], EVFIRE_CHANGED_COLOR)
-	READENTITY_FLOAT(m_flLength, EVFIRE_CHANGED_LENGTH)
-	READENTITY_FLOAT(m_flAlpha, EVFIRE_CHANGED_ALPHA)
-	READENTITY_FLOAT(m_flRollSpeed, EVFIRE_CHANGED_ROLL)
+    READENTITY_COORD(origin[0], EVFIRE_CHANGED_ORIGIN)
+    READENTITY_COORD(origin[1], EVFIRE_CHANGED_ORIGIN)
+    READENTITY_COORD(origin[2], EVFIRE_CHANGED_ORIGIN)
+    READENTITY_COORD(angles[0], EVFIRE_CHANGED_ANGLE)
+    READENTITY_COORD(angles[1], EVFIRE_CHANGED_ANGLE)
+    READENTITY_COORD(angles[2], EVFIRE_CHANGED_ANGLE)
+    READENTITY_BYTE(m_bState, EVFIRE_CHANGED_STATE)
+    READENTITY_BYTE(m_bType, EVFIRE_CHANGED_TYPE)
+    READENTITY_FLOAT(m_flSpread, EVFIRE_CHANGED_SPREAD)
+    READENTITY_FLOAT(m_flSpeed, EVFIRE_CHANGED_SPEED)
+    READENTITY_FLOAT(m_flStartSize, EVFIRE_CHANGED_MINS)
+    READENTITY_FLOAT(m_flEndSize , EVFIRE_CHANGED_MAXS)
+    READENTITY_FLOAT(m_flRate, EVFIRE_CHANGED_RATE)
+    READENTITY_COLOR(m_vecColor[0], EVFIRE_CHANGED_COLOR)
+    READENTITY_COLOR(m_vecColor[1], EVFIRE_CHANGED_COLOR)
+    READENTITY_COLOR(m_vecColor[2], EVFIRE_CHANGED_COLOR)
+    READENTITY_FLOAT(m_flLength, EVFIRE_CHANGED_LENGTH)
+    READENTITY_FLOAT(m_flAlpha, EVFIRE_CHANGED_ALPHA)
+    READENTITY_FLOAT(m_flRollSpeed, EVFIRE_CHANGED_ROLL)
 
-	//print(sprintf("R (%x): %v %v %i\n", flChanged, origin, m_vecEndPos, m_iActive));
+    //print(sprintf("R (%x): %v %v %i\n", flChanged, origin, m_vecEndPos, m_iActive));
 
-	//drawmask = MASK_ENGINE;
-	setsize(this, [0,0,0], [0,0,0]);
-	setorigin(this, origin);
+    //drawmask = MASK_ENGINE;
+    setsize(this, [0,0,0], [0,0,0]);
+    setorigin(this, origin);
 }
 #endif

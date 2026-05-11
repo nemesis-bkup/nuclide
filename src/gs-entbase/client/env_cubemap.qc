@@ -41,141 +41,141 @@ class
 env_cubemap:ncEntity
 {
 public:
-	void env_cubemap(void);
-	virtual void SpawnKey(string,string);
-	virtual bool CanSpawn(bool);
+    void env_cubemap(void);
+    virtual void SpawnKey(string,string);
+    virtual bool CanSpawn(bool);
 
 private:
-	int m_iSize;
+    int m_iSize;
 };
 
 void
 env_cubemap::SpawnKey(string strField, string strKey)
 {
-	switch (strField) {
-	case "scale":
-		m_iSize = stoi(strKey);
-		if (m_iSize <= 16) {
-			m_iSize = 16;
-		} else if (m_iSize <= 32) {
-			m_iSize = 32;
-		} else if (m_iSize <= 64) {
-			m_iSize = 64;
-		} else if (m_iSize <= 128) {
-			m_iSize = 128;
-		} else {
-			m_iSize = 256;
-		}
-		break;
-	default:
-		super::SpawnKey(strField, strKey);
-	}
+    switch (strField) {
+    case "scale":
+        m_iSize = stoi(strKey);
+        if (m_iSize <= 16) {
+            m_iSize = 16;
+        } else if (m_iSize <= 32) {
+            m_iSize = 32;
+        } else if (m_iSize <= 64) {
+            m_iSize = 64;
+        } else if (m_iSize <= 128) {
+            m_iSize = 128;
+        } else {
+            m_iSize = 256;
+        }
+        break;
+    default:
+        super::SpawnKey(strField, strKey);
+    }
 }
 
 bool
 env_cubemap::CanSpawn(bool clientSide)
 {
-	return true;
+    return true;
 }
 
 void
 env_cubemap::env_cubemap(void)
 {
-	m_iSize = 32;
-	isCSQC = true;
+    m_iSize = 32;
+    isCSQC = true;
 }
 
 /*
 =================
 CMap_Check
 
-	Checks whether or not a specific cubemap file was dumped, goes to the next
+    Checks whether or not a specific cubemap file was dumped, goes to the next
 =================
 */
 void
 CMap_Shoot(void)
 {
-	string strReflectcube;
+    string strReflectcube;
 
-	if (self.owner) {
-		env_cubemap tmp = (env_cubemap) self.owner;
-		ncLog("Generating cubemap '%v' (%dx%d)", g_vecCubePos, g_dCubeSize, g_dCubeSize);
-		g_vecCubePos = tmp.origin;
-		g_dCubeSize = (float)tmp.m_iSize;
+    if (self.owner) {
+        env_cubemap tmp = (env_cubemap) self.owner;
+        ncLog("Generating cubemap '%v' (%dx%d)", g_vecCubePos, g_dCubeSize, g_dCubeSize);
+        g_vecCubePos = tmp.origin;
+        g_dCubeSize = (float)tmp.m_iSize;
 
-		g_view.SetClientAngle([0,0,0]);
-		g_view.SetCameraAngle([0,0,0]);
+        g_view.SetClientAngle([0,0,0]);
+        g_view.SetCameraAngle([0,0,0]);
 
-		strReflectcube = sprintf(
-					"env/%s_%d_%d_%d.ktx",
-					mapname,
-					g_vecCubePos[0],
-					g_vecCubePos[1],
-					g_vecCubePos[2]);
+        strReflectcube = sprintf(
+                    "env/%s_%d_%d_%d.ktx",
+                    mapname,
+                    g_vecCubePos[0],
+                    g_vecCubePos[1],
+                    g_vecCubePos[2]);
 
-		localcmd(sprintf(
-			"screenshot_cubemap %S %i\n",
-			strReflectcube,
-			tmp.m_iSize));
+        localcmd(sprintf(
+            "screenshot_cubemap %S %i\n",
+            strReflectcube,
+            tmp.m_iSize));
 
-		self.think = CMap_Check;
-		self.nextthink = time + 0.25f;
-	} else {
-		ncLog("Generating level cubemaps done.");
-		localcmd("r_skipEnvmap 0\n");
-		localcmd("vid_reload\n");
-		g_iCubeProcess = FALSE;
-		remove(self);
-	}
+        self.think = CMap_Check;
+        self.nextthink = time + 0.25f;
+    } else {
+        ncLog("Generating level cubemaps done.");
+        localcmd("r_skipEnvmap 0\n");
+        localcmd("vid_reload\n");
+        g_iCubeProcess = FALSE;
+        remove(self);
+    }
 }
 
 /*
 =================
 CMap_Check
 
-	Checks whether or not a specific cubemap file was dumped, goes to the next
+    Checks whether or not a specific cubemap file was dumped, goes to the next
 =================
 */
 void
 CMap_Check(void)
 {
-	self.owner = find(self.owner, classname, "env_cubemap");
-	self.think = CMap_Shoot;
-	self.nextthink = time + 0.1f; /* because sigh */
+    self.owner = find(self.owner, classname, "env_cubemap");
+    self.think = CMap_Shoot;
+    self.nextthink = time + 0.1f; /* because sigh */
 }
 
 /*
 =================
 CMap_Build
 
-	Called upon 'buildcubemaps'
+    Called upon 'buildcubemaps'
 =================
 */
 void
 CMap_Build(void)
 {
-	/* prevent command spam */
-	if (g_iCubeProcess == TRUE) {
-	        return;
-	}
+    /* prevent command spam */
+    if (g_iCubeProcess == TRUE) {
+            return;
+    }
 
-	cvar_set("r_speeds", "0");
-	cvar_set("show_fps", "0");
-	cvar_set("r_showfields", "0");
-	cvar_set("r_showshaders", "0");
-	cvar_set("r_showbboxes", "0");
-	cvar_set("r_wireframe", "0");
-	cvar_set("r_hdr_irisadaptation", "0");
-	cvar_set("r_postprocshader", "\"\"0");
-	cvar_set("r_skipEnvmap", "1");
+    cvar_set("r_speeds", "0");
+    cvar_set("show_fps", "0");
+    cvar_set("r_showfields", "0");
+    cvar_set("r_showshaders", "0");
+    cvar_set("r_showbboxes", "0");
+    cvar_set("r_wireframe", "0");
+    cvar_set("r_hdr_irisadaptation", "0");
+    cvar_set("r_postprocshader", "\"\"0");
+    cvar_set("r_skipEnvmap", "1");
 
-	ncLog("Building cubemaps...\n");
-	g_eCubeCycle = spawn();
-	g_eCubeCycle.owner = find(world, classname, "env_cubemap");
+    ncLog("Building cubemaps...\n");
+    g_eCubeCycle = spawn();
+    g_eCubeCycle.owner = find(world, classname, "env_cubemap");
 
-	if (g_eCubeCycle.owner) {
-		g_eCubeCycle.think = CMap_Shoot;
-		g_eCubeCycle.nextthink = time;
-		g_iCubeProcess = TRUE;
-	}
+    if (g_eCubeCycle.owner) {
+        g_eCubeCycle.think = CMap_Shoot;
+        g_eCubeCycle.nextthink = time;
+        g_iCubeProcess = TRUE;
+    }
 }

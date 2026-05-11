@@ -17,171 +17,171 @@
 void
 ncTimer::ncTimer(void)
 {
-	_m_ncTimerFunc = __NULL__;
-	m_flTime = 0.0f;
-	m_bRepeats = false;
+    _m_ncTimerFunc = __NULL__;
+    m_flTime = 0.0f;
+    m_bRepeats = false;
 }
 
 /* wrapper to execute our trigger */
 static void
 _ncTimerWrapper(entity receiver, void() func)
 {
-	entity oldself = self;
-	self = receiver;
-	func();
-	self = oldself;
+    entity oldself = self;
+    self = receiver;
+    func();
+    self = oldself;
 }
 
 void
 ncTimer::_TimerThink(void)
 {
-	if (!owner) {
-		Destroy();
-		return;
-	}
+    if (!owner) {
+        Destroy();
+        return;
+    }
 
-	_ncTimerWrapper(owner, _m_ncTimerFunc);
+    _ncTimerWrapper(owner, _m_ncTimerFunc);
 
-	if (m_bRepeats == true) {
-		think = ncTimer::_TempTimerThink;
-		nextthink = time + m_flTime;
-	}
+    if (m_bRepeats == true) {
+        think = ncTimer::_TempTimerThink;
+        nextthink = time + m_flTime;
+    }
 }
 
 void
 ncTimer::_TempTimerThink(void)
 {
-	_ncTimerWrapper(owner, _m_ncTimerFunc);
+    _ncTimerWrapper(owner, _m_ncTimerFunc);
 
-	if (m_bRepeats == true) {
-		think = ncTimer::_TempTimerThink;
-		nextthink = time + m_flTime;
-	} else {
-		Destroy();
-	}
+    if (m_bRepeats == true) {
+        think = ncTimer::_TempTimerThink;
+        nextthink = time + m_flTime;
+    } else {
+        Destroy();
+    }
 }
 
 ncTimer
 ncTimer::ScheduleTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	ncTimer ret = spawn(ncTimer);
+    ncTimer ret = spawn(ncTimer);
 
-	ret.owner = receiver;
-	ret.m_flTime = interval;
-	ret._m_ncTimerFunc = call;
-	ret.m_bRepeats = repeats;
+    ret.owner = receiver;
+    ret.m_flTime = interval;
+    ret._m_ncTimerFunc = call;
+    ret.m_bRepeats = repeats;
 
-	/* time to start running */
-	ret.think = ncTimer::_TimerThink;
-	ret.nextthink = time + interval;
-	return ret;
+    /* time to start running */
+    ret.think = ncTimer::_TimerThink;
+    ret.nextthink = time + interval;
+    return ret;
 }
 
 ncTimer
 ncTimer::TemporaryTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	ncTimer ret = spawn(ncTimer);
-	ret.owner = receiver;
-	ret.m_flTime = interval;
-	ret._m_ncTimerFunc = call;
-	ret.m_bRepeats = repeats;
+    ncTimer ret = spawn(ncTimer);
+    ret.owner = receiver;
+    ret.m_flTime = interval;
+    ret._m_ncTimerFunc = call;
+    ret.m_bRepeats = repeats;
 
-	/* time to start running */
-	ret.think = ncTimer::_TempTimerThink;
-	ret.nextthink = time + interval;
-	return ret;
+    /* time to start running */
+    ret.think = ncTimer::_TempTimerThink;
+    ret.nextthink = time + interval;
+    return ret;
 }
 
 void
 ncTimer::RunTimer(void)
 {
-	if (!m_bRepeats) {
-		think = ncTimer::_TimerThink;
-		nextthink = time + m_flTime;
-	} else {
-	
-	}
+    if (!m_bRepeats) {
+        think = ncTimer::_TimerThink;
+        nextthink = time + m_flTime;
+    } else {
+    
+    }
 }
 
 bool
 ncTimer::IsRunning(void)
 {
-	if (nextthink > time) {
-		return (true);
-	}
-	
-	return (false);
+    if (nextthink > time) {
+        return (true);
+    }
+    
+    return (false);
 }
 
 void
 ncTimer::SetupTimer(entity receiver, void() call, float interval, bool repeats)
 {
-	owner = receiver;
-	m_flTime = interval;
-	_m_ncTimerFunc = call;
-	m_bRepeats = repeats;
+    owner = receiver;
+    m_flTime = interval;
+    _m_ncTimerFunc = call;
+    m_bRepeats = repeats;
 }
 
 void
 ncTimer::OnRemoveEntity(void)
 {
-	super::OnRemoveEntity();
+    super::OnRemoveEntity();
 
-	nextthink = 0.0f;
-	think = __NULL__;
-	owner = __NULL__;
-	_m_ncTimerFunc = __NULL__;
-	m_flTime = 0.0f;
-	m_bRepeats = false;
+    nextthink = 0.0f;
+    think = __NULL__;
+    owner = __NULL__;
+    _m_ncTimerFunc = __NULL__;
+    m_flTime = 0.0f;
+    m_bRepeats = false;
 }
 
 void
 ncTimer::StopTimer(void)
 {
-	if (this) {
-		nextthink = 0.0f;
-		think = __NULL__;
-	}
+    if (this) {
+        nextthink = 0.0f;
+        think = __NULL__;
+    }
 }
 
 void
 ncTimer::WipeEntityTimers(entity targetEntity)
 {
-	for (entity scheduleTimers = world; (scheduleTimers = find(scheduleTimers, ::classname, "ncTimer"));) {
-		ncTimer ourTimer = (ncTimer)scheduleTimers;
+    for (entity scheduleTimers = world; (scheduleTimers = find(scheduleTimers, ::classname, "ncTimer"));) {
+        ncTimer ourTimer = (ncTimer)scheduleTimers;
 
-		if (ourTimer.owner == targetEntity || !ourTimer.owner) {
-			ourTimer.Destroy();
-		}
-	}
+        if (ourTimer.owner == targetEntity || !ourTimer.owner) {
+            ourTimer.Destroy();
+        }
+    }
 }
 
 #ifdef SERVER
 void
 ncTimer::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "ncTimerFunc", getentityfieldstring(findentityfield("_m_ncTimerFunc"), this));
-	SaveFloat(handle, "flTime", m_flTime);
-	SaveBool(handle, "bRepeats", m_bRepeats);
+    super::Save(handle);
+    SaveString(handle, "ncTimerFunc", getentityfieldstring(findentityfield("_m_ncTimerFunc"), this));
+    SaveFloat(handle, "flTime", m_flTime);
+    SaveBool(handle, "bRepeats", m_bRepeats);
 }
 
 void
 ncTimer::Restore(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "ncTimerFunc":
-		_m_ncTimerFunc = externvalue(-1, setValue);
-		break;
-	case "flTime":
-		m_flTime = ReadFloat(setValue);
-		break;
-	case "bRepeats":
-		m_bRepeats = ReadBool(setValue);
-		break;
-	default:
-		super::Restore(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "ncTimerFunc":
+        _m_ncTimerFunc = externvalue(-1, setValue);
+        break;
+    case "flTime":
+        m_flTime = ReadFloat(setValue);
+        break;
+    case "bRepeats":
+        m_bRepeats = ReadBool(setValue);
+        break;
+    default:
+        super::Restore(keyName, setValue);
+        break;
+    }
 }
 #endif

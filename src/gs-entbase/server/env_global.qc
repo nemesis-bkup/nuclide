@@ -40,125 +40,125 @@ This entity was introduced in Half-Life (1998).
 */
 class
 env_global:ncPointTrigger
-{	
+{   
 public:
-	void env_global(void);
-	
-	/* overrides */
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	virtual void SpawnKey(string, string);
-	virtual void Spawned(void);
-	virtual void Trigger(entity, triggermode_t);
+    void env_global(void);
+    
+    /* overrides */
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    virtual void SpawnKey(string, string);
+    virtual void Spawned(void);
+    virtual void Trigger(entity, triggermode_t);
 
-	nonvirtual void SetGlobal(string, globalstate_t);
+    nonvirtual void SetGlobal(string, globalstate_t);
 
 private:
-	int m_iTriggerMode;
-	int m_iInitialState;
+    int m_iTriggerMode;
+    int m_iInitialState;
 };
 
 void
 env_global::env_global(void)
 {
-	m_globalState = __NULL__;
-	m_iTriggerMode = 0;
-	m_iInitialState = 0;
+    m_globalState = __NULL__;
+    m_iTriggerMode = 0;
+    m_iInitialState = 0;
 }
 
 void
 env_global::Save(float handle)
 {
-	super::Save(handle);
-	SaveInt(handle, "m_iTriggerMode", m_iTriggerMode);
-	SaveInt(handle, "m_iInitialState", m_iInitialState);
+    super::Save(handle);
+    SaveInt(handle, "m_iTriggerMode", m_iTriggerMode);
+    SaveInt(handle, "m_iInitialState", m_iInitialState);
 }
 
 void
 env_global::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_iTriggerMode":
-		m_iTriggerMode = ReadInt(setValue);
-		break;
-	case "m_iInitialState":
-		m_iInitialState = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_iTriggerMode":
+        m_iTriggerMode = ReadInt(setValue);
+        break;
+    case "m_iInitialState":
+        m_iInitialState = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_global::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "triggermode":
-		m_iTriggerMode = stoi(setValue);
-		break;
-	case "initialstate":
-		m_iInitialState = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "triggermode":
+        m_iTriggerMode = stoi(setValue);
+        break;
+    case "initialstate":
+        m_iInitialState = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 env_global::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	if (!m_globalState) {
-		objerror("env_global: No globalstate name given! Aborting\n");
-	}
+    if (!m_globalState) {
+        objerror("env_global: No globalstate name given! Aborting\n");
+    }
 
-	if (HasSpawnFlags(GLOBAL_SETSPAWN)) {
-		SetGlobal(m_globalState, m_iInitialState);
-	}
+    if (HasSpawnFlags(GLOBAL_SETSPAWN)) {
+        SetGlobal(m_globalState, m_iInitialState);
+    }
 }
 
 void
 env_global::Trigger(entity act, triggermode_t state)
 {
-	globalstate_t iOldValue = GetGlobalValue(m_globalState);
-	globalstate_t newValue = 0;
-	
-	switch(m_iTriggerMode) {
-	case 0:
-		newValue = GLOBAL_OFF;
-		break;
-	case 1:
-		newValue = GLOBAL_ON;
-		break;
-	case 2:
-		newValue = GLOBAL_DEAD;
-		break;
-	default:
-		if (iOldValue == GLOBAL_ON) {
-			newValue = GLOBAL_OFF;
-		} else if (iOldValue == GLOBAL_OFF) {
-			newValue = GLOBAL_ON;
-		} else {
-			newValue = iOldValue;
-		}
-	}
+    globalstate_t iOldValue = GetGlobalValue(m_globalState);
+    globalstate_t newValue = 0;
+    
+    switch(m_iTriggerMode) {
+    case 0:
+        newValue = GLOBAL_OFF;
+        break;
+    case 1:
+        newValue = GLOBAL_ON;
+        break;
+    case 2:
+        newValue = GLOBAL_DEAD;
+        break;
+    default:
+        if (iOldValue == GLOBAL_ON) {
+            newValue = GLOBAL_OFF;
+        } else if (iOldValue == GLOBAL_OFF) {
+            newValue = GLOBAL_ON;
+        } else {
+            newValue = iOldValue;
+        }
+    }
 
-	SetGlobal(m_globalState, newValue);
+    SetGlobal(m_globalState, newValue);
 }
 
 void
 env_global::SetGlobal(string strName, globalstate_t newValue)
 {
-	switch (newValue) {
-	case GLOBAL_ON:
-		ncSessionManager::SetGlobal(strName, "1");
-		break;
-	case GLOBAL_OFF:
-		ncSessionManager::SetGlobal(strName, "0");
-		break;
-	case GLOBAL_DEAD:
-	default:
-		ncSessionManager::SetGlobal(strName, "");
-	}
+    switch (newValue) {
+    case GLOBAL_ON:
+        ncSessionManager::SetGlobal(strName, "1");
+        break;
+    case GLOBAL_OFF:
+        ncSessionManager::SetGlobal(strName, "0");
+        break;
+    case GLOBAL_DEAD:
+    default:
+        ncSessionManager::SetGlobal(strName, "");
+    }
 }

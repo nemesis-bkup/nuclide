@@ -46,10 +46,10 @@ class
 phys_constraint:ncPhysicsConstraint
 {
 public:
-	void phys_constraint(void);
+    void phys_constraint(void);
 
-	virtual void Respawn(void);
-	nonvirtual void AfterSpawn(void);
+    virtual void Respawn(void);
+    nonvirtual void AfterSpawn(void);
 };
 
 void
@@ -61,19 +61,19 @@ phys_constraint::phys_constraint(void)
 void
 phys_constraint::Respawn(void)
 {
-	ScheduleThink(AfterSpawn, 0.0f);
+    ScheduleThink(AfterSpawn, 0.0f);
 }
 
 void
 phys_constraint::AfterSpawn(void)
 {
-	SetConstraintType(CONSTRAINT_FIXED);
-	SetOrigin(GetSpawnVector("origin"));
+    SetConstraintType(CONSTRAINT_FIXED);
+    SetOrigin(GetSpawnVector("origin"));
 
-	SetEntity1(find(world, ::targetname, m_strEnt1));
+    SetEntity1(find(world, ::targetname, m_strEnt1));
 
-	if (m_strEnt2)
-		SetEntity2(find(world, ::targetname, m_strEnt2));
-	else
-		SetEntity2(this);
+    if (m_strEnt2)
+        SetEntity2(find(world, ::targetname, m_strEnt2));
+    else
+        SetEntity2(this);
 }

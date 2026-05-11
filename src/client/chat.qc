@@ -26,10 +26,30 @@ string g_chatbuffer[CHAT_LINES];
 font_s g_fntChat;
 string g_chatbuffer_final;
 
+static string
+Chat_GetKeyString(string strBind)
+{
+    float flBindKey = tokenize(findkeysforcommandex(strBind, 0));
+    string strBindTx = "";
+    float j;
+
+    for (j = 0; j < flBindKey; ++j) {
+        if (strBindTx != "")
+            strBindTx = strcat(strBindTx, ", ");
+
+        strBindTx = strcat(strBindTx, argv(j));
+    }
+
+    if (!strBindTx)
+        strBindTx = "UNBOUND";
+
+    return strtoupper(strBindTx);
+}
+
 void
 Chat_Reload(void)
 {
-	Font_Load("fonts/chat.font", g_fntChat);
+    Font_Load("fonts/chat.font", g_fntChat);
 }
 
 /*
@@ -39,51 +59,51 @@ Chat_Reload(void)
 void
 Chat_Draw(void)
 {
-	int i;
+    int i;
 
-	/* the voting stuff resides here too, for now */
-	if (serverkey("vote_cmd")) {
-		string tempstr;
-		vector temppos = [0.0f, 0.0f, 0.0f];
-		tempstr = sprintf("^3Vote: %s", serverkey("vote_cmd"));
-		temppos[0] = (g_hudres[0]/2) - (stringwidth(tempstr, TRUE, [12,12]) / 2);
-		temppos[1] = 96;
-		Font_DrawText(temppos, tempstr, g_fntChat);
+    /* the voting stuff resides here too, for now */
+    if (serverkey("vote_cmd")) {
+        string tempstr;
+        vector temppos = [0.0f, 0.0f, 0.0f];
+        tempstr = sprintf("^3Vote: %s", serverkey("vote_cmd"));
+        temppos[0] = (g_hudres[0]/2) - (stringwidth(tempstr, TRUE, [12,12]) / 2);
+        temppos[1] = 96;
+        Font_DrawText(temppos, tempstr, g_fntChat);
 
-		tempstr = sprintf(
-			"^2Yes (%s): %s    ^1No (%s): %s",
-					Util_GetKeyString("vote yes"), serverkey("votes_y"), 
-					Util_GetKeyString("vote no"), serverkey("votes_n")
-			);
-		temppos[0] = (g_hudres[0]/2) - (Font_StringWidth(tempstr, TRUE, g_fntChat) / 2);
-		Font_DrawText(temppos + [0,16], tempstr, g_fntChat);
-	}
+        tempstr = sprintf(
+            "^2Yes (%s): %s    ^1No (%s): %s",
+                    Chat_GetKeyString("vote yes"), serverkey("votes_y"),
+                    Chat_GetKeyString("vote no"), serverkey("votes_n")
+            );
+        temppos[0] = (g_hudres[0]/2) - (Font_StringWidth(tempstr, TRUE, g_fntChat) / 2);
+        Font_DrawText(temppos + [0,16], tempstr, g_fntChat);
+    }
 
-	if (autocvar_cg_chatEnabled == false)
-		return;
+    if (autocvar_cg_chatEnabled == false)
+        return;
 
-	g_chatpos[0] = g_hudmins[0] + 16;
-	g_chatpos[1] = g_hudmins[1] + (g_hudres[1] / 2) - 80;
+    g_chatpos[0] = g_hudmins[0] + 16;
+    g_chatpos[1] = g_hudmins[1] + (g_hudres[1] / 2) - 80;
 
-	if (g_chatlines < 0) {
-		return;
-	}
+    if (g_chatlines < 0) {
+        return;
+    }
 
-	/* remove messages after a g_chattime has passed */
-	if (g_chattime < time) {
-		for (i = 0; i < g_chatlines; i++) {
-			if (g_chatbuffer[i+1] != __NULL__) {
-				g_chatbuffer[i] = g_chatbuffer[i+1];
-			} else {
-				break;
-			}
-		}
-		g_chatbuffer[g_chatlines] = __NULL__;
-		g_chatlines--;
-		g_chattime = time + CHAT_TIME;
-	}
+    /* remove messages after a g_chattime has passed */
+    if (g_chattime < time) {
+        for (i = 0; i < g_chatlines; i++) {
+            if (g_chatbuffer[i+1] != __NULL__) {
+                g_chatbuffer[i] = g_chatbuffer[i+1];
+            } else {
+                break;
+            }
+        }
+        g_chatbuffer[g_chatlines] = __NULL__;
+        g_chatlines--;
+        g_chattime = time + CHAT_TIME;
+    }
 
-	Font_DrawField([g_chatpos[0],g_chatpos[1]], [g_hudres[0]/2,g_hudres[1]/2], g_chatbuffer_final, g_fntChat, AF_LEFT | AF_BOTTOM);
+    Font_DrawField([g_chatpos[0],g_chatpos[1]], [g_hudres[0]/2,g_hudres[1]/2], g_chatbuffer_final, g_fntChat, AF_LEFT | AF_BOTTOM);
 }
 
 /*
@@ -92,34 +112,34 @@ Chat_Draw(void)
 void
 Chat_Parse(string msg)
 {
-	if (g_chatlines < (CHAT_LINES - 1)) {
-		g_chatbuffer[g_chatlines + 1] = msg;
-		g_chatlines++;
-	} else {
-		for (int i = 0; i < (CHAT_LINES - 1); i++) {
-			g_chatbuffer[i] = g_chatbuffer[i + 1];
-		}
-		g_chatbuffer[CHAT_LINES - 1] = msg;
-	}
+    if (g_chatlines < (CHAT_LINES - 1)) {
+        g_chatbuffer[g_chatlines + 1] = msg;
+        g_chatlines++;
+    } else {
+        for (int i = 0; i < (CHAT_LINES - 1); i++) {
+            g_chatbuffer[i] = g_chatbuffer[i + 1];
+        }
+        g_chatbuffer[CHAT_LINES - 1] = msg;
+    }
 
-	g_chattime = time + CHAT_TIME;
+    g_chattime = time + CHAT_TIME;
 
-	/* we need to be silent */
-	if (autocvar_cg_chatEnabled == false)
-		return;
+    /* we need to be silent */
+    if (autocvar_cg_chatEnabled == false)
+        return;
 
-	localsound("misc/talk.wav");
+    localsound("misc/talk.wav");
 
-	g_chatbuffer_final = "";
+    g_chatbuffer_final = "";
 
-	for (int i = 0; i < CHAT_LINES; i++) {
-		if (i == 0)
-			g_chatbuffer_final = g_chatbuffer[i];
-		else
-			g_chatbuffer_final = sprintf("%s\n%s", g_chatbuffer_final, g_chatbuffer[i]);
-	}
+    for (int i = 0; i < CHAT_LINES; i++) {
+        if (i == 0)
+            g_chatbuffer_final = g_chatbuffer[i];
+        else
+            g_chatbuffer_final = sprintf("%s\n%s", g_chatbuffer_final, g_chatbuffer[i]);
+    }
 
-	/* log to client console */
-	print(msg);
-	print("\n");
+    /* log to client console */
+    print(msg);
+    print("\n");
 }

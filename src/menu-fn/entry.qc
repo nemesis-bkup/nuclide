@@ -27,181 +27,181 @@ var bool serverDisconnect = false;
 void
 m_init(void)
 {
-	void m_init_okdisconnect(void) {
-		serverDisconnect = false;
-	}
+    void m_init_okdisconnect(void) {
+        serverDisconnect = false;
+    }
 
-	localcmd("plug_load ffmpeg\n");
+    localcmd("plug_load ffmpeg\n");
 
-	Platform_Init();
+    Platform_Init();
 
-	Font_Load("fonts/menu_button.font", font_button);
-	Font_Load("fonts/menu_label.font", font_label);
-	Font_Load("fonts/menu_main.font", font_arial);
-	Font_Load("fonts/menu_label_bold.font", font_label_b);
-	Font_Load("fonts/menu_header.font", font_label_p);
-	Font_Load("fonts/console.font", font_console);
+    Font_Load("fonts/menu_button.font", font_button);
+    Font_Load("fonts/menu_label.font", font_label);
+    Font_Load("fonts/menu_main.font", font_arial);
+    Font_Load("fonts/menu_label_bold.font", font_label_b);
+    Font_Load("fonts/menu_header.font", font_label_p);
+    Font_Load("fonts/console.font", font_console);
 
-	/* don't precache btns_main.bmp directly any more. */
-	CMainButton_InitSheets();
-	Strings_Init();
-	main_init();
-	Colors_Init();
+    /* don't precache btns_main.bmp directly any more. */
+    CMainButton_InitSheets();
+    Strings_Init();
+    main_init();
+    Colors_Init();
 
-	/* prepare spray logo keys */
-	spray_setinfokeys();
+    /* prepare spray logo keys */
+    spray_setinfokeys();
 
-	if (!Platform_FileInCurrentGamedir("gfx/shell/splash8bit.bmp")) {
-		m_intro_skip();
-	}
+    if (!Platform_FileInCurrentGamedir("gfx/shell/splash8bit.bmp")) {
+        m_intro_skip();
+    }
 
-	if (Platform_HasStartupVideos() == true) {
-		Platform_PlayStartupVideos();
-	}
+    if (Platform_HasStartupVideos() == true) {
+        Platform_PlayStartupVideos();
+    }
 
-	/* init the disconnect dialog */
-	main_dgDisconnect = spawn(CDialog);
-	main_btnRefOK = spawn(CMainButton);
-	main_btnRefOK.SetImage(BTN_OK);
-	main_btnRefOK.SetPos(233,291);
-	main_btnRefOK.SetLength(68);
-	main_btnRefOK.SetExecute(m_init_okdisconnect);
-	Widget_Add(main_dgDisconnect, main_btnRefOK);
+    /* init the disconnect dialog */
+    main_dgDisconnect = spawn(CDialog);
+    main_btnRefOK = spawn(CMainButton);
+    main_btnRefOK.SetImage(BTN_OK);
+    main_btnRefOK.SetPos(233,291);
+    main_btnRefOK.SetLength(68);
+    main_btnRefOK.SetExecute(m_init_okdisconnect);
+    Widget_Add(main_dgDisconnect, main_btnRefOK);
 
-	g_initialized = true;
+    g_initialized = true;
 }
 
 /* called upon vid_reload, vid_restart, but not menu init/restart */
 void
 Menu_RendererRestarted(string rendererdesc)
 {
-	Platform_RendererRestarted();
-	CMainButton_InitSheets();
+    Platform_RendererRestarted();
+    CMainButton_InitSheets();
 }
 
 /* called, in theory, whenever the menu gets killed */
 void
 m_shutdown(void)
 {
-	g_initialized = false;
+    g_initialized = false;
 
-	/*int i = 0;
-	for (i = 0; i < g_bmp.length; i++) {
-		freepic(g_bmp[i]);
-	}*/
+    /*int i = 0;
+    for (i = 0; i < g_bmp.length; i++) {
+        freepic(g_bmp[i]);
+    }*/
 
-	entity e;
-	while((e=nextent(__NULL__)))
-		remove(e);
+    entity e;
+    while((e=nextent(__NULL__)))
+        remove(e);
 
-	memfree(g_sprays);
-	memfree(g_models);
-	memfree(games);
+    memfree(g_sprays);
+    memfree(g_models);
+    memfree(games);
 
-	cr_closeconnection();
+    cr_closeconnection();
 }
 
 /* called every frame, influenced by cl_idlefps */
 void
 m_draw(vector screensize)
 {
-	static float oldtime;
+    static float oldtime;
 
-	frametime = time - oldtime;
+    frametime = time - oldtime;
 
-	/* don't attempt to draw unless we're done loading everything */
-	if (g_initialized == false) {
-		return;
-	}
+    /* don't attempt to draw unless we're done loading everything */
+    if (g_initialized == false) {
+        return;
+    }
 
-	/* to prevent TCP timeouts */
-	menu_chatrooms_keepalive();
+    /* to prevent TCP timeouts */
+    menu_chatrooms_keepalive();
 
-	if (Platform_Draw(screensize) == false) {
-		return;
-	}
+    if (Platform_Draw(screensize) == false) {
+        return;
+    }
 
-	Background_Draw((g_vidsize / 2) - [320,240], [640,480], false);
+    Background_Draw((g_vidsize / 2) - [320,240], [640,480], false);
 
-	#if 0
-	/* water mark for version info */
-	const string ver = "Nuclide (build " __DATE__ ")";
-	drawfont = Font_GetID(font_console);
+    #if 0
+    /* water mark for version info */
+    const string ver = "Nuclide (build " __DATE__ ")";
+    drawfont = Font_GetID(font_console);
 
-	WLabel_Static(640 - 8 - stringwidth(ver, TRUE, [12,12]),
-				  466,
-				  ver,
-				  12, 12,
-				  [1.0f,1.0f,1.0f],
-				  0.5f, 0, font_console);
-	#endif
+    WLabel_Static(640 - 8 - stringwidth(ver, TRUE, [12,12]),
+                  466,
+                  ver,
+                  12, 12,
+                  [1.0f,1.0f,1.0f],
+                  0.5f, 0, font_console);
+    #endif
 
-	/* draw the actual widgets */
-	main_draw();
+    /* draw the actual widgets */
+    main_draw();
 
-	/* did the server disconnect us?...*/
-	if (Error_ServerDisconnected() == true) {
-		serverDisconnect = true;
-	}
+    /* did the server disconnect us?...*/
+    if (Error_ServerDisconnected() == true) {
+        serverDisconnect = true;
+    }
 
-	/* if that happened, throw up a panel with an OK button. */
-	if (serverDisconnect == true) {
-		main_dgDisconnect.Draw();
-		Widget_Draw(main_dgDisconnect);
-		WField_Static(162, 180, "Disconnected", 320, 260,
-						col_prompt_text, 1.0f, 2, font_label_p);
-		WField_Static(162, 220, Error_GetDisconnectReason(), 320, 260,
-					col_prompt_title, 1.0f, 2, font_label_p);
-	}
+    /* if that happened, throw up a panel with an OK button. */
+    if (serverDisconnect == true) {
+        main_dgDisconnect.Draw();
+        Widget_Draw(main_dgDisconnect);
+        WField_Static(162, 180, "Disconnected", 320, 260,
+                        col_prompt_text, 1.0f, 2, font_label_p);
+        WField_Static(162, 220, Error_GetDisconnectReason(), 320, 260,
+                    col_prompt_title, 1.0f, 2, font_label_p);
+    }
 
-	oldtime = time;
+    oldtime = time;
 }
 
 float
 Menu_InputEvent(float evtype, float scanx, float chary, float devid)
 {
-	g_input_received = true;
+    g_input_received = true;
 
-	switch (evtype) {
-	case IE_KEYDOWN:
-		if (chary == K_ESCAPE) {
-			if (clientstate() == 2 && !g_background) {
-				m_toggle(0);
-			}
-		} else if (chary == K_TOUCH) {
-			/* hack for touchscreens. */
-			evtype = IE_KEYDOWN;
-			chary = K_MOUSE1;
-			main_input(evtype, scanx, chary, devid);
-			evtype = IE_KEYUP;
-			chary = K_MOUSE1;
-		}
-		break;
-	case IE_MOUSEABS:
-		g_vecMousePos[0] = scanx;
-		g_vecMousePos[1] = chary;
-		break;
-	case IE_MOUSEDELTA:
-		g_vecMousePos[0] += scanx;
-		g_vecMousePos[1] += chary;
-		break;
-	}
+    switch (evtype) {
+    case IE_KEYDOWN:
+        if (chary == K_ESCAPE) {
+            if (clientstate() == 2 && !g_background) {
+                m_toggle(0);
+            }
+        } else if (chary == K_TOUCH) {
+            /* hack for touchscreens. */
+            evtype = IE_KEYDOWN;
+            chary = K_MOUSE1;
+            main_input(evtype, scanx, chary, devid);
+            evtype = IE_KEYUP;
+            chary = K_MOUSE1;
+        }
+        break;
+    case IE_MOUSEABS:
+        g_vecMousePos[0] = scanx;
+        g_vecMousePos[1] = chary;
+        break;
+    case IE_MOUSEDELTA:
+        g_vecMousePos[0] += scanx;
+        g_vecMousePos[1] += chary;
+        break;
+    }
 
-	if (serverDisconnect)
-		Widget_Input(main_dgDisconnect, evtype, scanx, chary, devid);
-	else
-		main_input(evtype, scanx, chary, devid);
+    if (serverDisconnect)
+        Widget_Input(main_dgDisconnect, evtype, scanx, chary, devid);
+    else
+        main_input(evtype, scanx, chary, devid);
 
-	return (1);
+    return (1);
 }
 
 void
 m_display(void)
 {
-	g_active = TRUE;
-	setkeydest(KEY_MENU);
-	setmousetarget(TARGET_MENU);
-	setcursormode(TRUE, "gfx/icon16/cursor");
+    g_active = TRUE;
+    setkeydest(KEY_MENU);
+    setmousetarget(TARGET_MENU);
+    setcursormode(TRUE, "gfx/icon16/cursor");
 }
 
 /*
@@ -212,10 +212,10 @@ m_hide
 void
 m_hide(void)
 {
-	g_active = FALSE;
-	setkeydest(KEY_GAME);
-	setmousetarget(TARGET_CLIENT);
-	setcursormode(FALSE);
+    g_active = FALSE;
+    setkeydest(KEY_GAME);
+    setmousetarget(TARGET_CLIENT);
+    setcursormode(FALSE);
 }
 
 /*
@@ -226,28 +226,28 @@ m_toggle
 void
 m_toggle(float fMode)
 {
-	if (fMode == FALSE) {
-		m_hide();
-	} else {
-		m_display();
-	}
+    if (fMode == FALSE) {
+        m_hide();
+    } else {
+        m_display();
+    }
 }
 
 float
 m_consolecommand(string cmd)
 {
-	int c = (int)tokenize(cmd);
-	switch (argv(0)) {
-	case "menu_updates":
-		g_menupage = PAGE_UPDATES;
-		m_intro_skip();
-		break;
-	case "menu_customgame":
-		g_menupage = PAGE_CUSTOMGAME;
-		m_intro_skip();
-		break;
-	default:
-		return Platform_ConsoleCommand(cmd, c);
-	}
-	return (1);
+    int c = (int)tokenize(cmd);
+    switch (argv(0)) {
+    case "menu_updates":
+        g_menupage = PAGE_UPDATES;
+        m_intro_skip();
+        break;
+    case "menu_customgame":
+        g_menupage = PAGE_CUSTOMGAME;
+        m_intro_skip();
+        break;
+    default:
+        return Platform_ConsoleCommand(cmd, c);
+    }
+    return (1);
 }

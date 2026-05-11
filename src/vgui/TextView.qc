@@ -26,103 +26,103 @@ class
 vguiTextView:vguiWidget
 {
 public:
-	void vguiTextView(void);
+    void vguiTextView(void);
 
-	/* overrides */
-	virtual void Spawned(void);
-	virtual void Draw(void);
-	virtual bool Input(float, float, float, float);
-	nonvirtual void AddLine(string);
-	nonvirtual void Clear(void);
-	nonvirtual int LineCount(void);
+    /* overrides */
+    virtual void Spawned(void);
+    virtual void Draw(void);
+    virtual bool Input(float, float, float, float);
+    nonvirtual void AddLine(string);
+    nonvirtual void Clear(void);
+    nonvirtual int LineCount(void);
 
 private:
-	vguiColor m_frameColor;
-	string m_conInstance;
+    vguiColor m_frameColor;
+    string m_conInstance;
 };
 
 void
 vguiTextView::vguiTextView(void)
 {
-	m_frameColor = __NULL__;
-	m_conInstance = __NULL__;
+    m_frameColor = __NULL__;
+    m_conInstance = __NULL__;
 }
 
 
 void
 vguiTextView::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	m_frameColor = spawn(vguiColor);
-	m_frameColor. SetColorWithAlpha([0,0,0], 0.0f);
+    m_frameColor = spawn(vguiColor);
+    m_frameColor. SetColorWithAlpha([0,0,0], 0.0f);
 
-	string conName = sprintf("UIBuffer_%d", num_for_edict(this));
+    string conName = sprintf("UIBuffer_%d", num_for_edict(this));
 
-	/* required to 'spawn' the console! */
-	con_printf(conName, "\n");
+    /* required to 'spawn' the console! */
+    con_printf(conName, "\n");
 
-	/* set up parameters */
-	con_getset(conName, "hidden", "1");
- 	con_getset(conName, "forceutf8", "1");
+    /* set up parameters */
+    con_getset(conName, "hidden", "1");
+    con_getset(conName, "forceutf8", "1");
 
-	m_conInstance = con_getset(conName, "name", conName);
+    m_conInstance = con_getset(conName, "name", conName);
 }
 
 void
 vguiTextView::Draw(void)
 {
-	vguiTheme ourTheme = GetTheme();
-	ourTheme.DrawTextBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
-	drawfont = g_fntDefault.iID;
-	float xPos = m_parent.m_vecOrigin[0] + m_vecOrigin[0] + 4;
-	float yPos = m_parent.m_vecOrigin[1] + m_vecOrigin[1] + 4;
-	float wSize = m_vecSize[0] - 8;
-	float wHeight = m_vecSize[1] - 8;
-	drawsetcliparea(xPos, yPos, wSize, wHeight);
-	con_draw(m_conInstance, [xPos, yPos], [wSize, wHeight], g_fntDefault.iScaleY);
-	drawresetcliparea();
+    vguiTheme ourTheme = GetTheme();
+    ourTheme.DrawTextBackground(m_parent.m_vecOrigin + m_vecOrigin, m_vecSize, VGUI_STATE_NORMAL);
+    drawfont = g_fntDefault.iID;
+    float xPos = m_parent.m_vecOrigin[0] + m_vecOrigin[0] + 4;
+    float yPos = m_parent.m_vecOrigin[1] + m_vecOrigin[1] + 4;
+    float wSize = m_vecSize[0] - 8;
+    float wHeight = m_vecSize[1] - 8;
+    drawsetcliparea(xPos, yPos, wSize, wHeight);
+    con_draw(m_conInstance, [xPos, yPos], [wSize, wHeight], g_fntDefault.iScaleY);
+    drawresetcliparea();
 }
 
 float
 vguiTextView::Input(float type, float x, float y, float devid)
 {
-	bool mouseIsHovering = false;
+    bool mouseIsHovering = false;
 
-	if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
-		mouseIsHovering = true;
-	}
+    if (Util_MouseAbove(g_vecMousePos, m_parent.m_vecOrigin + m_vecOrigin, m_vecSize)) {
+        mouseIsHovering = true;
+    }
 
-	con_input(m_conInstance, IE_FOCUS, 1, -1, 0);
+    con_input(m_conInstance, IE_FOCUS, 1, -1, 0);
 
-	/* only forward inputs when mouse updates happen, or some direct key presses */
-	if (type == IE_MOUSEABS || type == IE_MOUSEDELTA) {
-		float xPos = g_vecMousePos[0] - (m_parent.m_vecOrigin[0] + m_vecOrigin[0] + 4);
-		float yPos = g_vecMousePos[1] - (m_parent.m_vecOrigin[1] + m_vecOrigin[1] + 4);
-		con_input(m_conInstance, IE_MOUSEABS, xPos, yPos, 0);
-	}
+    /* only forward inputs when mouse updates happen, or some direct key presses */
+    if (type == IE_MOUSEABS || type == IE_MOUSEDELTA) {
+        float xPos = g_vecMousePos[0] - (m_parent.m_vecOrigin[0] + m_vecOrigin[0] + 4);
+        float yPos = g_vecMousePos[1] - (m_parent.m_vecOrigin[1] + m_vecOrigin[1] + 4);
+        con_input(m_conInstance, IE_MOUSEABS, xPos, yPos, 0);
+    }
 
-	if (type == IE_KEYUP || (type == IE_KEYDOWN && mouseIsHovering == true)) {
-		con_input(m_conInstance, type, x, y, 0);
-	}
+    if (type == IE_KEYUP || (type == IE_KEYDOWN && mouseIsHovering == true)) {
+        con_input(m_conInstance, type, x, y, 0);
+    }
 
-	return super::Input(type, x, y, devid);
+    return super::Input(type, x, y, devid);
 }
 
 void
 vguiTextView::AddLine(string line)
 {
-	con_printf(m_conInstance, strcat(line, "\n"));
+    con_printf(m_conInstance, strcat(line, "\n"));
 }
 
 void
 vguiTextView::Clear(void)
 {
-	con_getset(m_conInstance, "clear");
+    con_getset(m_conInstance, "clear");
 }
 
 int
 vguiTextView::LineCount(void)
 {
-	return (int)stof(con_getset(m_conInstance, "linecount"));
+    return (int)stof(con_getset(m_conInstance, "linecount"));
 }

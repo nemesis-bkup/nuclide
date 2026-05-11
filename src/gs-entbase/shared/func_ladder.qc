@@ -32,58 +32,58 @@ class
 func_ladder:ncRenderableEntity
 {
 public:
-	void func_ladder(void);
+    void func_ladder(void);
 
-	virtual void Respawn(void);
+    virtual void Respawn(void);
 
 #ifdef SERVER
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Trigger(entity, triggermode_t);
 #endif
 
 private:
-	entity m_collisionEntity;
+    entity m_collisionEntity;
 };
 
 void
 func_ladder::func_ladder(void)
 {
-	m_collisionEntity = __NULL__;
+    m_collisionEntity = __NULL__;
 }
 
 #ifdef SERVER
 void
 func_ladder::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		SetFrame(0);
-		break;
-	case TRIG_ON:
-		SetFrame(1);
-		break;
-	default:
-		SetFrame(1 - frame);
-	}
+    switch (state) {
+    case TRIG_OFF:
+        SetFrame(0);
+        break;
+    case TRIG_ON:
+        SetFrame(1);
+        break;
+    default:
+        SetFrame(1 - frame);
+    }
 }
 #endif
 
 void
 func_ladder::Respawn(void)
 {
-	super::Respawn();
+    super::Respawn();
 
-	/* func_ladder volumes are solid. CONTENT_LADDER volumes usually aren't. */
-	if (!m_collisionEntity && STRING_SET(model)) {
-		m_collisionEntity = spawn();
-		m_collisionEntity.solid = SOLID_BSP;
-		setmodel(m_collisionEntity, model);
-		setorigin(m_collisionEntity, origin);
-		m_collisionEntity.effects = EF_NODRAW;
-	}
+    /* func_ladder volumes are solid. CONTENT_LADDER volumes usually aren't. */
+    if (!m_collisionEntity && STRING_SET(model)) {
+        m_collisionEntity = spawn();
+        m_collisionEntity.solid = SOLID_BSP;
+        setmodel(m_collisionEntity, model);
+        setorigin(m_collisionEntity, origin);
+        m_collisionEntity.effects = EF_NODRAW;
+    }
 
-	SetMovetype(MOVETYPE_NONE);
-	SetFrame(0);
-	Hide();
-	SetSolid(SOLID_BSP);
-	SetSkin(CONTENT_LADDER);
+    SetMovetype(MOVETYPE_NONE);
+    SetFrame(0);
+    Hide();
+    SetSolid(SOLID_BSP);
+    SetSkin(CONTENT_LADDER);
 }

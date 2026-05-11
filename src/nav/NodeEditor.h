@@ -22,37 +22,37 @@
 class
 ncNodeEditor
 {
-	/** Links node wp towards w2. */
-	nonvirtual void LinkNodes(graphNode_t *, graphNode_t *);
-	/** Unlinks node wp from going towards w2. */
-	nonvirtual void UnlinkNodes(graphNode_t *, graphNode_t *);
-	/* Unlinks a single node from its neighbors. */
-	nonvirtual void UnlinkNode(graphNode_t *wp);
-	/** Returns the id of the closest node in a node graph. */
-	nonvirtual int FindClosestNode(vector);
-	/** Saves the specified nodegraph to disk with the specified filename. */
-	nonvirtual bool SaveFile(string);
-	/** Loads the nodegraph from the specified filename off disk. */
-	nonvirtual bool ReadFile(string, bool);
-	/** Flushes the nodegraph being passed. */
-	nonvirtual void Flush(void);
+    /** Links node wp towards w2. */
+    nonvirtual void LinkNodes(graphNode_t *, graphNode_t *);
+    /** Unlinks node wp from going towards w2. */
+    nonvirtual void UnlinkNodes(graphNode_t *, graphNode_t *);
+    /* Unlinks a single node from its neighbors. */
+    nonvirtual void UnlinkNode(graphNode_t *wp);
+    /** Returns the id of the closest node in a node graph. */
+    nonvirtual int FindClosestNode(vector);
+    /** Saves the specified nodegraph to disk with the specified filename. */
+    nonvirtual bool SaveFile(string);
+    /** Loads the nodegraph from the specified filename off disk. */
+    nonvirtual bool ReadFile(string, bool);
+    /** Flushes the nodegraph being passed. */
+    nonvirtual void Flush(void);
 
-	nonvirtual void Cmd(void);
-	nonvirtual void DrawDebugInfo(void);
+    nonvirtual void Cmd(void);
+    nonvirtual void DrawDebugInfo(void);
 
 private:
-	nonvirtual void AutoLink(int wpidx);
-	nonvirtual void CreateNode(entity ePlayer, int iAutoLink);
-	nonvirtual void DeleteNode(int iID);
-	nonvirtual void SetRadius(int iID, float flRadValue);
-	nonvirtual void LinkFlag(int linkFlag);
-	nonvirtual void Unlink(void);
-	nonvirtual void UnlinkTwo(void);
-	nonvirtual void HelperSpawns(void);
-	nonvirtual void GoToPoint(entity pl);
-	nonvirtual void ConnectOne(void);
-	nonvirtual void ConnectTwo(void);
-	nonvirtual void LoadCurrentMapNavMesh(void);
+    nonvirtual void AutoLink(int wpidx);
+    nonvirtual void CreateNode(entity ePlayer, int iAutoLink);
+    nonvirtual void DeleteNode(int iID);
+    nonvirtual void SetRadius(int iID, float flRadValue);
+    nonvirtual void LinkFlag(int linkFlag);
+    nonvirtual void Unlink(void);
+    nonvirtual void UnlinkTwo(void);
+    nonvirtual void HelperSpawns(void);
+    nonvirtual void GoToPoint(entity pl);
+    nonvirtual void ConnectOne(void);
+    nonvirtual void ConnectTwo(void);
+    nonvirtual void LoadCurrentMapNavMesh(void);
 };
 
 /** @} */ // end of nav

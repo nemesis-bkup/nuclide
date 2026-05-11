@@ -96,12 +96,12 @@ http://articles.thewavelength.net/230/
 //#define DYNAMIC_SENTENCES
 
 #ifdef DYNAMIC_SENTENCES
-	string *g_sentences;
-	int g_sentences_count;
+    string *g_sentences;
+    int g_sentences_count;
 #else
-	#define SENTENCES_LIMIT 1536
-	string g_sentences[SENTENCES_LIMIT];
-	int g_sentences_count;
+    #define SENTENCES_LIMIT 1536
+    string g_sentences[SENTENCES_LIMIT];
+    int g_sentences_count;
 #endif
 
 /** Returns a string of sample for a given sentence. */

@@ -18,7 +18,7 @@
 void
 StartFrame(void)
 {
-	ncServerGame::StartFrame();
+    ncServerGame::StartFrame();
 }
 
 /** Called when the client-slot is being prepared for a player.
@@ -30,7 +30,7 @@ The `self` global is the connecting client in question.
 void
 ClientConnect(void)
 {
-	ncServerGame::ClientConnect((ncSpectator)self);
+    ncServerGame::ClientConnect((ncSpectator)self);
 }
 
 /** Called when a player leaves the server. At the end of the function the
@@ -40,7 +40,7 @@ This means the fields will still be accessible inside of this function.
 void
 ClientDisconnect(void)
 {
-	ncServerGame::ClientDisconnect((ncSpectator)self);
+    ncServerGame::ClientDisconnect((ncSpectator)self);
 }
 
 /** Called by the `kill` console command.
@@ -49,7 +49,7 @@ The `self` global is the client issuing the command.
 void
 ClientKill(void)
 {
-	ncServerGame::ClientKill((ncSpectator)self);
+    ncServerGame::ClientKill((ncSpectator)self);
 }
 
 /** This is run every frame on every spectator.
@@ -58,7 +58,7 @@ The `self` global refers to one of any given amount of spectator.
 void
 SpectatorThink(void)
 {
-	ncServerGame::SpectatorThink((ncSpectator)self);
+    ncServerGame::SpectatorThink((ncSpectator)self);
 }
 
 /** Called when a ncSpectator joins the server.
@@ -67,7 +67,7 @@ The `self` global is the connecting ncSpectator in question.
 void
 SpectatorConnect(void)
 {
-	ncServerGame::SpectatorConnect((ncSpectator)self);
+    ncServerGame::SpectatorConnect((ncSpectator)self);
 }
 
 /** Called when a ncSpectator leaves the server.
@@ -77,7 +77,7 @@ Attributes cleared when this function is done executing.
 void
 SpectatorDisconnect(void)
 {
-	ncServerGame::SpectatorDisconnect((ncSpectator)self);
+    ncServerGame::SpectatorDisconnect((ncSpectator)self);
 }
 
 /** Called when a player enters the game, having fully connected and loaded into
@@ -89,12 +89,12 @@ past levels for the player in question.
 void
 PutClientInServer(void)
 {
-	if (fileExists("progs/player.mdl")) {
-		setmodel(self, "progs/player.mdl");
-		self.modelindex = 0;
-	}
+    if (fileExists("progs/player.mdl")) {
+        setmodel(self, "progs/player.mdl");
+        self.modelindex = 0;
+    }
 
-	ncServerGame::PutClientInServer((ncPlayer)self);
+    ncServerGame::PutClientInServer((ncPlayer)self);
 }
 
 /** Run before game physics have taken place.
@@ -104,7 +104,7 @@ times the amount of players in a given game.
 void
 PlayerPreThink(void)
 {
-	ncServerGame::PlayerPreThink((ncPlayer)self);
+    ncServerGame::PlayerPreThink((ncPlayer)self);
 }
 
 /** Run after game physics have taken place.
@@ -114,7 +114,7 @@ times the amount of players in a given game.
 void
 PlayerPostThink(void)
 {
-	ncServerGame::PlayerPostThink((ncPlayer)self);
+    ncServerGame::PlayerPostThink((ncPlayer)self);
 }
 
 /** Called when we spawn in a new map (both single and multiplayer) with no level
@@ -124,11 +124,11 @@ The `self` global does not refer to anything.
 void
 SetNewParms(void)
 {
-	InitPrint("Setting New Level Parameters");
+    InitPrint("Setting New Level Parameters");
 
-	if (g_grMode) {
-		g_grMode.LevelNewParms();
-	}
+    if (g_grMode) {
+        g_grMode.LevelNewParms();
+    }
 }
 
 /** Called whenever a single-player level change is about to happen, carrying
@@ -141,24 +141,24 @@ allocated for every client.
 void
 SetChangeParms(void)
 {
-	ncPlayer ourPlayer = (ncPlayer)self;
+    ncPlayer ourPlayer = (ncPlayer)self;
 
-	if ((cvars.GetString("g_gametype") != "singleplayer") || (serverinfo.GetString("mode") != "singleplayer")) {
-		ncLog("Reset client %d (Name: %S, Class %s)", num_for_edict(ourPlayer), ourPlayer.netname, ourPlayer.classname);
-		g_grMode.LevelNewParms();
+    if ((cvars.GetString("g_gametype") != "singleplayer") || (serverinfo.GetString("mode") != "singleplayer")) {
+        ncLog("Reset client %d (Name: %S, Class %s)", num_for_edict(ourPlayer), ourPlayer.netname, ourPlayer.classname);
+        g_grMode.LevelNewParms();
 
-		if (clienttype(ourPlayer) == CLIENTTYPE_BOT) {
-			dropclient(ourPlayer);
-		}
+        if (clienttype(ourPlayer) == CLIENTTYPE_BOT) {
+            dropclient(ourPlayer);
+        }
 
-		return;
-	}
+        return;
+    }
 
-	ncLog("Transitioning client %d (Name: %S, Class %s)", num_for_edict(ourPlayer), ourPlayer.netname, ourPlayer.classname);
+    ncLog("Transitioning client %d (Name: %S, Class %s)", num_for_edict(ourPlayer), ourPlayer.netname, ourPlayer.classname);
 
-	if (g_grMode) {
-		g_grMode.LevelChangeParms(ourPlayer);
-	}
+    if (g_grMode) {
+        g_grMode.LevelChangeParms(ourPlayer);
+    }
 }
 
 /** Run whenever an input packet by a client has been received.
@@ -169,39 +169,39 @@ with the input_X globals being set to the appropriate data.
 void
 SV_RunClientCommand(void)
 {
-	ncClient cl = (ncClient)self;
+    ncClient cl = (ncClient)self;
 
-	if (g_mapEntitiesLoaded == false) {
-		return;
-	}
+    if (g_mapEntitiesLoaded == false) {
+        return;
+    }
 
-	if (!is.Player(cl)) {
-		return;
-	}
+    if (!is.Player(cl)) {
+        return;
+    }
 
-	trigger_auto_trigger();
+    trigger_auto_trigger();
 
-	if (g_menuBackgroundMapMode == true) {
-		return;
-	}
+    if (g_menuBackgroundMapMode == true) {
+        return;
+    }
 
-	CheatersLament((ncPlayer)cl, input_angles, input_buttons, input_timelength);
-	cl.v_angle = input_angles;
+    CheatersLament((ncPlayer)cl, input_angles, input_buttons, input_timelength);
+    cl.v_angle = input_angles;
 
-	/* FIXME: before a splitscreen player disconnects, it often sends
-	   one last SV_RunClientCommand which causes an error if we don't
-	   check these two methods here */
-	if (cl.SharedInputFrame)
-		cl.SharedInputFrame();
-	if (cl.ServerInputFrame)
-		cl.ServerInputFrame();
+    /* FIXME: before a splitscreen player disconnects, it often sends
+       one last SV_RunClientCommand which causes an error if we don't
+       check these two methods here */
+    if (cl.SharedInputFrame)
+        cl.SharedInputFrame();
+    if (cl.ServerInputFrame)
+        cl.ServerInputFrame();
 
-	if (cl.gotData == false) {
-		BreakModel_SendClientData(cl);
-		cl.gotData = true;
-	}
+    if (cl.gotData == false) {
+        BreakModel_SendClientData(cl);
+        cl.gotData = true;
+    }
 
-	cl.impulse = 0;
+    cl.impulse = 0;
 }
 
 /** Any 'cmd' from the client get sent here and handled.
@@ -213,25 +213,25 @@ Notable examples of client cmd's involve the chat system.
 void
 SV_ParseClientCommand(string cmd)
 {
-	int argc;
-	ncClient theClient = (ncClient)self;
+    int argc;
+    ncClient theClient = (ncClient)self;
 
-	if (g_menuBackgroundMapMode == true) {
-		return;
-	}
+    if (g_menuBackgroundMapMode == true) {
+        return;
+    }
 
-	ncAddonManager::ClientCommand(theClient, cmd);
+    ncAddonManager::ClientCommand(theClient, cmd);
 
-	/* give the game-mode a chance to override us */
-	if (g_grMode) {
-		if (g_grMode.ClientCommand(theClient, cmd) == true) {
-			return;
-		}
-	}
+    /* give the game-mode a chance to override us */
+    if (g_grMode) {
+        if (g_grMode.ClientCommand(theClient, cmd) == true) {
+            return;
+        }
+    }
 
-	argc = (int)tokenize(cmd);
+    argc = (int)tokenize(cmd);
 
-	Cmd_ParseClientCommand(theClient, cmd, argc);
+    Cmd_ParseClientCommand(theClient, cmd, argc);
 }
 
 /** Called when the QC module gets loaded.
@@ -240,13 +240,13 @@ So avoid calling spawn() related functions here. */
 void
 init(float prevprogs)
 {
-	ncServerGame::Init();
+    ncServerGame::Init();
 }
 
 void
 SV_Shutdown(void)
 {
-	ncServerGame::Shutdown();
+    ncServerGame::Shutdown();
 }
 
 /** Called by the engine when we're ready to spawn entities.
@@ -255,7 +255,7 @@ Before this, we are not able to spawn, touch or allocate any entity slots.
 void
 initents(void)
 {
-	ncServerGame::InitEnts();
+    ncServerGame::InitEnts();
 }
 
 /** Any command executed on the server (either tty, rcon or `sv`) gets
@@ -270,34 +270,34 @@ The client-side equivalent is `CSQC_ConsoleCommand` (src/client/entry.qc)
 float
 ConsoleCmd(string cmd)
 {
-	ncPlayer pl;
+    ncPlayer pl;
 
-	/* some sv commands can only be executed by a player in-world */
-	if (!self) {
-		other = world;
+    /* some sv commands can only be executed by a player in-world */
+    if (!self) {
+        other = world;
 
-		while ((other = nextent(other))) {
-			if (clienttype(other) == CLIENTTYPE_REAL) {
-				self = other;
-				break;
-			}
-		}
-	}
+        while ((other = nextent(other))) {
+            if (clienttype(other) == CLIENTTYPE_REAL) {
+                self = other;
+                break;
+            }
+        }
+    }
 
-	pl = (ncPlayer)self;
+    pl = (ncPlayer)self;
 
-	ncAddonManager::ConsoleCommand(pl, cmd);
+    ncAddonManager::ConsoleCommand(pl, cmd);
 
-	/* give the game-mode a chance to override us */
-	if (g_grMode) {
-		if (g_grMode.ConsoleCommand(pl, cmd) == TRUE) {
-			return (1);
-		}
-	}
+    /* give the game-mode a chance to override us */
+    if (g_grMode) {
+        if (g_grMode.ConsoleCommand(pl, cmd) == TRUE) {
+            return (1);
+        }
+    }
 
-	/* time to handle commands that apply to all games */
-	tokenize(cmd);
-	return Cmd_ParseServerCommand();
+    /* time to handle commands that apply to all games */
+    tokenize(cmd);
+    return Cmd_ParseServerCommand();
 }
 
 /** Returns TRUE if the server can pause the server when the 'pause' command
@@ -306,19 +306,19 @@ is being executed.
 float
 SV_ShouldPause(float newstatus)
 {
-	if (g_menuBackgroundMapMode == true) {
-		return (0);
-	}
+    if (g_menuBackgroundMapMode == true) {
+        return (0);
+    }
 
-	if (cvars.GetBool("pausable") == true) {
-		return (1);
-	}
+    if (cvars.GetBool("pausable") == true) {
+        return (1);
+    }
 
-	if (cvars.GetFloat("sv_playerslots") > 1) {
-		return (0);
-	}
+    if (cvars.GetFloat("sv_playerslots") > 1) {
+        return (0);
+    }
 
-	return (newstatus);
+    return (newstatus);
 }
 
 /** Called by the engine when we're loading a savegame file.
@@ -329,7 +329,7 @@ the passed file handle.
 void
 SV_PerformLoad(float fh, float entcount, float playerslots)
 {
-	ncSessionManager::RestoreStateFromHandle(fh, entcount, playerslots);
+    ncSessionManager::RestoreStateFromHandle(fh, entcount, playerslots);
 }
 
 /** Called when we are saving our game. We only get passed a file handle
@@ -339,7 +339,7 @@ into it.
 void
 SV_PerformSave(float fh, float entcount, float playerslots)
 {
-	ncSessionManager::SaveStateToHandle(fh, entcount, playerslots);
+    ncSessionManager::SaveStateToHandle(fh, entcount, playerslots);
 }
 
 /** Called by the engine to check with us if a spawn function exists.
@@ -350,14 +350,14 @@ to remove in case we won't initialize it.
 void
 CheckSpawn(void() spawnfunc)
 {
-	ncEntity ent = (ncEntity)self;
-	string desiredClass = ent.classname;
+    ncEntity ent = (ncEntity)self;
+    string desiredClass = ent.classname;
 
-	/* cancel out early */
-	if (ent == world) {
-		worldspawn();
-		return;
-	}
+    /* cancel out early */
+    if (ent == world) {
+        worldspawn();
+        return;
+    }
 
-	ncMapDelegate::SpawnEntityWithSpawnData(desiredClass, __fullspawndata, self, spawnfunc);
+    ncMapDelegate::SpawnEntityWithSpawnData(desiredClass, __fullspawndata, self, spawnfunc);
 }

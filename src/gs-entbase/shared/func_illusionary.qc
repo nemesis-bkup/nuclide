@@ -36,10 +36,10 @@ class
 func_illusionary:ncRenderableEntity
 {
 public:
-	void func_illusionary(void);
+    void func_illusionary(void);
 
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
 };
 
 void
@@ -50,33 +50,33 @@ func_illusionary::func_illusionary(void)
 void
 func_illusionary::Trigger(entity act, triggermode_t state)
 {
-	switch (state) {
-	case TRIG_OFF:
-		SetSkin(0);
-		break;
-	case TRIG_ON:
-		SetSkin(1);
-		break;
-	default:
-		SetSkin(1-skin);
-	}
+    switch (state) {
+    case TRIG_OFF:
+        SetSkin(0);
+        break;
+    case TRIG_ON:
+        SetSkin(1);
+        break;
+    default:
+        SetSkin(1-skin);
+    }
 }
 
 void
 func_illusionary::Respawn(void)
 {
-	/* reset the visual parameters */
-	super::Respawn();
+    /* reset the visual parameters */
+    super::Respawn();
 
-	/* func_illusionary specifics */
-	SetMovetype(MOVETYPE_NONE);
-	SetSolid(SOLID_NOT);
-	SetSkin(0);
-	ClearAngles();
+    /* func_illusionary specifics */
+    SetMovetype(MOVETYPE_NONE);
+    SetSolid(SOLID_NOT);
+    SetSkin(0);
+    ClearAngles();
 
-	// TODO: Add support for (skin) -1 = Empty, -7 = Volumetric light
-	if (GetSkin() < 0) {
-		SetSkin(0);
-	}
+    // TODO: Add support for (skin) -1 = Empty, -7 = Volumetric light
+    if (GetSkin() < 0) {
+        SetSkin(0);
+    }
 }
 #endif

@@ -31,40 +31,40 @@ var vector g_vectorCacheUp;
 
 void AngleVectors ( vector angles )
 {
-	float angle;
-	float sr, sp, sy, cr, cp, cy;
-	
-	angle = angles[1] * (M_PI*2 / 360);
-	sy = sin(angle);
-	cy = cos(angle);
-	angle = angles[0] * (M_PI*2 / 360);
-	sp = sin(angle);
-	cp = cos(angle);
-	angle = angles[2] * (M_PI*2 / 360);
-	sr = sin(angle);
-	cr = cos(angle);
+    float angle;
+    float sr, sp, sy, cr, cp, cy;
+    
+    angle = angles[1] * (M_PI*2 / 360);
+    sy = sin(angle);
+    cy = cos(angle);
+    angle = angles[0] * (M_PI*2 / 360);
+    sp = sin(angle);
+    cp = cos(angle);
+    angle = angles[2] * (M_PI*2 / 360);
+    sr = sin(angle);
+    cr = cos(angle);
 
-	v_forward[0] = cp*cy;
-	v_forward[1] = cp*sy;
-	v_forward[2] = -sp;
+    v_forward[0] = cp*cy;
+    v_forward[1] = cp*sy;
+    v_forward[2] = -sp;
 
-	v_right[0] = (-1*sr*sp*cy+-1*cr*-sy);
-	v_right[1] = (-1*sr*sp*sy+-1*cr*cy);
-	v_right[2] = -1*sr*cp;
+    v_right[0] = (-1*sr*sp*cy+-1*cr*-sy);
+    v_right[1] = (-1*sr*sp*sy+-1*cr*cy);
+    v_right[2] = -1*sr*cp;
 
-	v_up[0] = (cr*sp*cy+-sr*-sy);
-	v_up[1] = (cr*sp*sy+-sr*cy);
-	v_up[2] = cr*cp;
+    v_up[0] = (cr*sp*cy+-sr*-sy);
+    v_up[1] = (cr*sp*sy+-sr*cy);
+    v_up[2] = cr*cp;
 }
 
 static void
 anglesMake(vector targetAngle)
 {
-	AngleVectors(targetAngle);
-	g_vectorCacheLast = targetAngle;
-	g_vectorCacheForward = v_forward;
-	g_vectorCacheRight = v_right;
-	g_vectorCacheUp = v_up;
+    AngleVectors(targetAngle);
+    g_vectorCacheLast = targetAngle;
+    g_vectorCacheForward = v_forward;
+    g_vectorCacheRight = v_right;
+    g_vectorCacheUp = v_up;
 }
 
 /** Calculates the forward vector of a set of euler-angles.
@@ -75,11 +75,11 @@ Will use a cached result to speed up queries.
 vector
 anglesToForward(vector targetAngle)
 {
-	if (targetAngle != g_vectorCacheLast) {
-		anglesMake(targetAngle);
-	}
+    if (targetAngle != g_vectorCacheLast) {
+        anglesMake(targetAngle);
+    }
 
-	return (g_vectorCacheForward);
+    return (g_vectorCacheForward);
 }
 
 /** Calculates the right vector of a set of euler-angles.
@@ -90,11 +90,11 @@ Will use a cached result to speed up queries.
 vector
 anglesToRight(vector targetAngle)
 {
-	if (targetAngle != g_vectorCacheLast) {
-		anglesMake(targetAngle);
-	}
+    if (targetAngle != g_vectorCacheLast) {
+        anglesMake(targetAngle);
+    }
 
-	return (g_vectorCacheRight);
+    return (g_vectorCacheRight);
 }
 
 /** Calculates the up vector of a set of euler-angles.
@@ -105,11 +105,11 @@ Will use a cached result to speed up queries.
 vector
 anglesToUp(vector targetAngle)
 {
-	if (targetAngle != g_vectorCacheLast) {
-		anglesMake(targetAngle);
-	}
+    if (targetAngle != g_vectorCacheLast) {
+        anglesMake(targetAngle);
+    }
 
-	return (g_vectorCacheUp);
+    return (g_vectorCacheUp);
 }
 
 /** Calculates the squared distance between two points. This is a lot faster than distance() calls, but does not reflect in-game units. Use it for any distance check you need to be fast.
@@ -120,10 +120,10 @@ anglesToUp(vector targetAngle)
 float
 distanceSquared(vector pointA, vector pointB)
 {
-	float diffX = pointA[0] - pointB[0];
-	float diffY = pointA[1] - pointB[1];
-	float diffZ = pointA[2] - pointB[2];
-	return (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ);
+    float diffX = pointA[0] - pointB[0];
+    float diffY = pointA[1] - pointB[1];
+    float diffZ = pointA[2] - pointB[2];
+    return (diffX * diffX) + (diffY * diffY) + (diffZ * diffZ);
 }
 
 /** Calculates the distance between two points.
@@ -134,7 +134,7 @@ distanceSquared(vector pointA, vector pointB)
 float
 distance(vector pointA, vector pointB)
 {
-	return sqrt(distanceSquared(pointA, pointB));
+    return sqrt(distanceSquared(pointA, pointB));
 }
 
 /** Calculates the distance between two vectors, ignoring the height difference between them.
@@ -145,9 +145,9 @@ distance(vector pointA, vector pointB)
 float
 distance2D(vector pointA, vector pointB)
 {
-	float diffX = pointA[0] - pointB[0];
-	float diffY = pointA[1] - pointB[1];
-	return sqrt((diffX * diffX) + (diffY * diffY));
+    float diffX = pointA[0] - pointB[0];
+    float diffY = pointA[1] - pointB[1];
+    return sqrt((diffX * diffX) + (diffY * diffY));
 }
 
 /** Figure out which point is the closest between two options.
@@ -159,9 +159,9 @@ distance2D(vector pointA, vector pointB)
 bool
 closer(vector referencePoint, vector pointA, vector pointB)
 {
-	float distanceA = distanceSquared(referencePoint, pointA);
-	float distanceB = distanceSquared(referencePoint, pointA);
-	return (distanceA < distanceB) ? true : false;
+    float distanceA = distanceSquared(referencePoint, pointA);
+    float distanceB = distanceSquared(referencePoint, pointA);
+    return (distanceA < distanceB) ? true : false;
 }
 
 /** Calculates a set of angles from a given vector.
@@ -171,9 +171,9 @@ closer(vector referencePoint, vector pointA, vector pointB)
 vector
 combineAngles(vector angleA, vector angleB)
 {
-	makevectors(angleA);
-	rotatevectorsbyangle(angleB);
-	return vectoangles(v_forward, v_up);
+    makevectors(angleA);
+    rotatevectorsbyangle(angleB);
+    return vectoangles(v_forward, v_up);
 }
 
 /** Calculates accurate length of a given vector.
@@ -183,16 +183,16 @@ combineAngles(vector angleA, vector angleB)
 float
 length(vector toCalculate)
 {
-	static vector lastInput = g_vec_null;
-	static float lastOutput = 0.0f;
+    static vector lastInput = g_vec_null;
+    static float lastOutput = 0.0f;
 
-	if (toCalculate == lastInput) {
-		return lastOutput;
-	}
+    if (toCalculate == lastInput) {
+        return lastOutput;
+    }
 
-	lastInput = toCalculate;
-	lastOutput = vlen(toCalculate);
-	return lastOutput;
+    lastInput = toCalculate;
+    lastOutput = vlen(toCalculate);
+    return lastOutput;
 }
 
 /** Calculates the length of a given vector using a dot product.
@@ -202,7 +202,7 @@ length(vector toCalculate)
 float
 lengthSquared(vector target)
 {
-	return (target[0] * target[0]) + (target[1] * target[1]) + (target[2] * target[2]);
+    return (target[0] * target[0]) + (target[1] * target[1]) + (target[2] * target[2]);
 }
 
 /** Calculate the dot product of two vectors.
@@ -213,7 +213,7 @@ lengthSquared(vector target)
 float
 vectorDot(vector vectorA, vector vectorB)
 {
-	return dotproduct(vectorA, vectorB);
+    return dotproduct(vectorA, vectorB);
 }
 
 /** Calculates an interpolated (linear) point between two points.
@@ -225,15 +225,15 @@ vectorDot(vector vectorA, vector vectorB)
 vector
 vectorLerp(vector fromVector, vector toVector, float lerpFraction)
 {
-	static float vectorLerp_Lerp( float fA, float fB, float fPercent) {
-		return (fA * (1 - fPercent)) + (fB * fPercent);
-	}
+    static float vectorLerp_Lerp( float fA, float fB, float fPercent) {
+        return (fA * (1 - fPercent)) + (fB * fPercent);
+    }
 
-	vector outputVector = g_vec_null;
-	outputVector[0] = vectorLerp_Lerp(fromVector[0], toVector[0], lerpFraction);
-	outputVector[1] = vectorLerp_Lerp(fromVector[1], toVector[1], lerpFraction);
-	outputVector[2] = vectorLerp_Lerp(fromVector[2], toVector[2], lerpFraction);
-	return outputVector;
+    vector outputVector = g_vec_null;
+    outputVector[0] = vectorLerp_Lerp(fromVector[0], toVector[0], lerpFraction);
+    outputVector[1] = vectorLerp_Lerp(fromVector[1], toVector[1], lerpFraction);
+    outputVector[2] = vectorLerp_Lerp(fromVector[2], toVector[2], lerpFraction);
+    return outputVector;
 }
 
 /** Calculates a normalized version of a given vector.
@@ -243,16 +243,16 @@ vectorLerp(vector fromVector, vector toVector, float lerpFraction)
 vector
 vectorNormalize(vector toNormalize)
 {
-	static vector lastInput = g_vec_null;
-	static vector lastOutput = g_vec_null;
+    static vector lastInput = g_vec_null;
+    static vector lastOutput = g_vec_null;
 
-	if (toNormalize == lastInput) {
-		return lastOutput;
-	}
+    if (toNormalize == lastInput) {
+        return lastOutput;
+    }
 
-	lastInput = toNormalize;
-	lastOutput = normalize(toNormalize);
-	return lastOutput;
+    lastInput = toNormalize;
+    lastOutput = normalize(toNormalize);
+    return lastOutput;
 }
 
 /** Calculates a set of angles from a given vector.
@@ -262,16 +262,16 @@ vectorNormalize(vector toNormalize)
 vector
 vectorToAngles(vector toAngles)
 {
-	static vector lastInput = g_vec_null;
-	static vector lastOutput = g_vec_null;
+    static vector lastInput = g_vec_null;
+    static vector lastOutput = g_vec_null;
 
-	if (toAngles == lastInput) {
-		return lastOutput;
-	}
+    if (toAngles == lastInput) {
+        return lastOutput;
+    }
 
-	lastInput = toAngles;
-	lastOutput = fixAngle(vectoangles(toAngles));
-	return lastOutput;
+    lastInput = toAngles;
+    lastOutput = fixAngle(vectoangles(toAngles));
+    return lastOutput;
 }
 
 /** Calculates a set of angles from a given vector, with roll support.
@@ -282,18 +282,18 @@ vectorToAngles(vector toAngles)
 vector
 vectorToAnglesRoll(vector forwardDir, vector rollDir)
 {
-	static vector lastInput = g_vec_null;
-	static vector lastInput2 = g_vec_null;
-	static vector lastOutput = g_vec_null;
+    static vector lastInput = g_vec_null;
+    static vector lastInput2 = g_vec_null;
+    static vector lastOutput = g_vec_null;
 
-	if (forwardDir == lastInput && rollDir == lastInput2) {
-		return lastOutput;
-	}
+    if (forwardDir == lastInput && rollDir == lastInput2) {
+        return lastOutput;
+    }
 
-	lastInput = forwardDir;
-	lastInput2 = rollDir;
-	lastOutput = fixAngle(vectoangles(forwardDir, rollDir));
-	return lastOutput;
+    lastInput = forwardDir;
+    lastInput2 = rollDir;
+    lastOutput = fixAngle(vectoangles(forwardDir, rollDir));
+    return lastOutput;
 }
 
 /** Lerps between two angles.
@@ -305,9 +305,9 @@ vectorToAnglesRoll(vector forwardDir, vector rollDir)
 vector
 lerpAngleVector(vector inputAngle, vector endAngle, float lerpAmount)
 {
-	vector currentDir = anglesToForward(inputAngle);
-	vector desiredDir = anglesToForward(endAngle);
-	return vectorToAngles(vectorLerp(currentDir, desiredDir, lerpAmount));
+    vector currentDir = anglesToForward(inputAngle);
+    vector desiredDir = anglesToForward(endAngle);
+    return vectorToAngles(vectorLerp(currentDir, desiredDir, lerpAmount));
 }
 
 /**
@@ -318,7 +318,7 @@ of entity A 'looking' at entity B. */
 vector
 dirFromTarget(vector lookingEnt, vector targetEnt)
 {
-	return anglesToForward(vectorToAngles(targetEnt - lookingEnt)); 
+    return anglesToForward(vectorToAngles(targetEnt - lookingEnt)); 
 }
 
 /** @} */ // end of common

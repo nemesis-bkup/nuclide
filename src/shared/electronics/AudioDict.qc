@@ -17,8 +17,8 @@
 void
 ncAudioDict::ncAudioDict(void)
 {
-	m_audioName = g_string_null;
-	m_audioInfo = g_string_null;
-	m_audioPreview = g_string_null;
-	m_audioTrack = g_string_null;
+    m_audioName = g_string_null;
+    m_audioInfo = g_string_null;
+    m_audioPreview = g_string_null;
+    m_audioTrack = g_string_null;
 }

@@ -39,3 +39,11 @@ But if you're worried about keeping up with changes, you may want to depend on t
 - ![](map_go.png) [MapC](@ref mapC) handles server-side **map-oriented** tasks and logic.
 - ![](script_go.png) [RuleC](@ref ruleC) is responsible for the shared, **global set of game-rules**.
 
+## Why QuakeC?
+
+- High level, game tailored
+- Architecture independent
+- Low-dependency
+- Faster than interpreted languages
+
+And of course a rich history than one should be happy to share with many other great games and projects.

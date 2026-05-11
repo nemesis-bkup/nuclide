@@ -22,18 +22,18 @@ void Commandmenu_Close(void);
 static void
 CMD_testLight(void)
 {
-	float p;
-	string cubeTexture = argv(1);
+    float p;
+    string cubeTexture = argv(1);
 
-	if (STRING_SET(cubeTexture)) {
-		p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0, cubeTexture);
-		dynamiclight_set(p, LFIELD_ANGLES, g_view.GetCameraAngle());
-		dynamiclight_set(p, LFIELD_FLAGS, LFLAG_NORMALMODE | LFLAG_REALTIMEMODE | LFLAG_SHADOWMAP);
-		dynamiclight_set(p, LFIELD_STYLE, 64);
-	} else {
-		p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0);
-		dynamiclight_set(p, LFIELD_STYLE, 2);
-	}
+    if (STRING_SET(cubeTexture)) {
+        p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0, cubeTexture);
+        dynamiclight_set(p, LFIELD_ANGLES, g_view.GetCameraAngle());
+        dynamiclight_set(p, LFIELD_FLAGS, LFLAG_NORMALMODE | LFLAG_REALTIMEMODE | LFLAG_SHADOWMAP);
+        dynamiclight_set(p, LFIELD_STYLE, 64);
+    } else {
+        p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0);
+        dynamiclight_set(p, LFIELD_STYLE, 2);
+    }
 
 
 }
@@ -41,35 +41,35 @@ CMD_testLight(void)
 static void
 CMD_testSpotLight(void)
 {
-	float p;
-	string cubeTexture = argv(1);
+    float p;
+    string cubeTexture = argv(1);
 
-	if (STRING_SET(cubeTexture)) {
-		point_spotlight spot = spawn(point_spotlight);
-		spot.SetOrigin(g_view.GetCameraOrigin());
-		spot.SetAngles(g_view.GetCameraAngle());
-		spot.m_iState = 1;
-		spot.SetBeamLength(500.0f);
-		spot.SetBeamWidth(256.0f);
-		spot.SetRenderColor([255,255,255]);
-		spot.SetGlowMaterial("textures/sfx/spot_flare");
-		spot.SetBeamMaterial("textures/sfx/spot_cone");
-		spot.drawmask = MASK_ENGINE;
-		spot.m_nuclideFlags |= VFL_VIDREMOVE;
-		spot.SetLightStyle(64);
+    if (STRING_SET(cubeTexture)) {
+        point_spotlight spot = spawn(point_spotlight);
+        spot.SetOrigin(g_view.GetCameraOrigin());
+        spot.SetAngles(g_view.GetCameraAngle());
+        spot.m_iState = 1;
+        spot.SetBeamLength(500.0f);
+        spot.SetBeamWidth(256.0f);
+        spot.SetRenderColor([255,255,255]);
+        spot.SetGlowMaterial("textures/sfx/spot_flare");
+        spot.SetBeamMaterial("textures/sfx/spot_cone");
+        spot.drawmask = MASK_ENGINE;
+        spot.m_nuclideFlags |= VFL_VIDREMOVE;
+        spot.SetLightStyle(64);
 
-		env_glow glow = spawn(env_glow);
-		glow.SetOrigin(g_view.GetCameraOrigin());
-		glow.SetAngles(g_view.GetCameraAngle());
-		glow.m_strMaterial = "textures/sfx/flare1";
-		glow.drawmask = MASK_ENGINE;
-		glow.SetRenderMode(RM_GLOW);
-		glow.ReloadVideoResources();
-		glow.m_nuclideFlags |= VFL_VIDREMOVE;
-	} else {
-		p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0);
-		dynamiclight_set(p, LFIELD_STYLE, 2);
-	}
+        env_glow glow = spawn(env_glow);
+        glow.SetOrigin(g_view.GetCameraOrigin());
+        glow.SetAngles(g_view.GetCameraAngle());
+        glow.m_strMaterial = "textures/sfx/flare1";
+        glow.drawmask = MASK_ENGINE;
+        glow.SetRenderMode(RM_GLOW);
+        glow.ReloadVideoResources();
+        glow.m_nuclideFlags |= VFL_VIDREMOVE;
+    } else {
+        p = dynamiclight_spawnstatic2(g_view.GetCameraOrigin(), 512, [1,1,1], 0);
+        dynamiclight_set(p, LFIELD_STYLE, 2);
+    }
 
 
 }
@@ -77,62 +77,62 @@ CMD_testSpotLight(void)
 static void
 CMD_testPointLight(void)
 {
-	makevectors(g_view.GetCameraAngle());
-	traceline(g_view.GetCameraOrigin(), g_view.GetCameraOrigin() + (v_forward * 4096.0f), MOVE_NORMAL, pSeat->m_ePlayer);
-	dynamiclight_spawnstatic2(trace_endpos + (v_forward * -16.0f), 1024, [1,1,1]);
+    makevectors(g_view.GetCameraAngle());
+    traceline(g_view.GetCameraOrigin(), g_view.GetCameraOrigin() + (v_forward * 4096.0f), MOVE_NORMAL, pSeat->m_ePlayer);
+    dynamiclight_spawnstatic2(trace_endpos + (v_forward * -16.0f), 1024, [1,1,1]);
 }
 
 static void
 CMD_dev_modeltest(void)
 {
-	string modelName = argv(1);
+    string modelName = argv(1);
 
-	if (STRING_SET(modelName)) {
-		entity mt = spawn();
-		mt.drawmask = MASK_ENGINE;
-		setmodel(mt, argv(1));
-		setsize(mt, [0,0,0], [0,0,0]);
-		setorigin(mt, g_view.GetCameraOrigin());
-		mt.angles = g_view.GetCameraAngle();
-		mt.angles[0] = mt.angles[2] = 0;
-	}
+    if (STRING_SET(modelName)) {
+        entity mt = spawn();
+        mt.drawmask = MASK_ENGINE;
+        setmodel(mt, argv(1));
+        setsize(mt, [0,0,0], [0,0,0]);
+        setorigin(mt, g_view.GetCameraOrigin());
+        mt.angles = g_view.GetCameraAngle();
+        mt.angles[0] = mt.angles[2] = 0;
+    }
 }
 
 static void
 CMD_dev_sunpos(void)
 {
-	vector sunpos, sunang;
-	vector lepos, leang;
+    vector sunpos, sunang;
+    vector lepos, leang;
 
-	makevectors(g_view.GetCameraAngle());
-	sunpos = v_forward * -1;
-	sunang = vectoangles(sunpos);
+    makevectors(g_view.GetCameraAngle());
+    sunpos = v_forward * -1;
+    sunang = vectoangles(sunpos);
 
-	makevectors(g_view.GetCameraAngle());
-	lepos = v_forward * -1;
-	leang = vectoangles(lepos);
-	leang[1] -= 180;
-	leang[0] *= -1;
+    makevectors(g_view.GetCameraAngle());
+    lepos = v_forward * -1;
+    leang = vectoangles(lepos);
+    leang[1] -= 180;
+    leang[0] *= -1;
 
-	localcmd(sprintf("r_shadows_throwdirection %v\n", sunpos));
-	print(sprintf("env_sun: pitch: %d; angle: %d\n", -sunang[0], sunang[1]));
-	print(sprintf("light_environment: sunangle: %d; pitch: %d\n", leang[1], leang[0]));
+    ncCommand("r_shadows_throwdirection %v", sunpos);
+    printf("env_sun: pitch: %d; angle: %d\n", -sunang[0], sunang[1]);
+    printf("light_environment: sunangle: %d; pitch: %d\n", leang[1], leang[0]);
 }
 
 static void
 CMD_vote(void)
 {
-	if (argv(1) == "yes") {
-		sendevent("VoteY", "");
-	} else if (argv(1) == "no") {
-		sendevent("VoteN", "");
-	}
+    if (argv(1) == "yes") {
+        sendevent("VoteY", "");
+    } else if (argv(1) == "no") {
+        sendevent("VoteN", "");
+    }
 }
 
 static void
 CMD_getpos(void)
 {
-	printf("setpos %v;setang -%v\n", g_view.GetCameraOrigin(), g_view.GetCameraAngle());
+    printf("setpos %v;setang -%v\n", g_view.GetCameraOrigin(), g_view.GetCameraAngle());
 }
 
 static void
@@ -145,212 +145,216 @@ CMD_setang(void)
 static void
 CMD_titles_test(void)
 {
-	GameMessage_Setup(argv(1), 0);
+    GameMessage_Setup(argv(1), 0);
 }
 
 static void
 CMD_way_menu(void)
 {
-	Way_Autoload();
-	Textmenu_Call("WAY_MENU");
+    Way_Autoload();
+    Textmenu_Call("WAY_MENU");
 }
 
 static void
 CMD_view_geomtest(void)
 {
-	printf("geomset %s %s\n", argv(1), argv(2));
-	//Weapons_SetGeomset(sprintf("geomset %s %s\n", argv(1), argv(2)));
+    printf("geomset %s %s\n", argv(1), argv(2));
+    //Weapons_SetGeomset(sprintf("geomset %s %s\n", argv(1), argv(2)));
 }
 
 static void
 CMD_player_geomtest(void)
 {
-	setcustomskin(pSeat->m_ePlayer, "", sprintf("geomset %s %s\n", argv(1), argv(2)));
+    setcustomskin(pSeat->m_ePlayer, "", sprintf("geomset %s %s\n", argv(1), argv(2)));
 }
 
 void
 CMD_Cleardecals(void)
 {
-	for (entity e = world; (e = find(e, ::classname, "tempdecal"));) {
-		ncDecal dcl = (ncDecal)e;
-		dcl.m_strShader = "";
-	}
+    for (entity e = world; (e = find(e, ::classname, "tempdecal"));) {
+        ncDecal dcl = (ncDecal)e;
+        dcl.m_strShader = "";
+    }
 }
 
 /* Wishlist: list size and potential vmem usage */
 static void
 CMD_ListModels(void)
 {
-	string tmp;
-	int i = 0i;
-	int actual_count = 0i;
+    string tmp;
+    int i = 0i;
+    int actual_count = 0i;
 
-	for (i = -4096; i < 4096; i++) {
-		tmp = modelnameforindex(i);
+    for (i = -4096; i < 4096; i++) {
+        tmp = modelnameforindex(i);
 
-		if (strlen(tmp) > 1) {
-			printf("%i %s\n", i, tmp);
-			actual_count++;
-		}
-	}
+        if (strlen(tmp) > 1) {
+            printf("%i %s\n", i, tmp);
+            actual_count++;
+        }
+    }
 
-	printf("\t%i total models loaded\n", actual_count);
+    printf("\t%i total models loaded\n", actual_count);
 }
 
 /* Wishlist: list size and samplerate/bitdepth */
 static void
 CMD_ListSounds(void)
 {
-	string tmp;
-	int i = 0i;
-	int actual_count = 0i;
-	float length;
-	float total_length = 0.0f;
+    string tmp;
+    int i = 0i;
+    int actual_count = 0i;
+    float length;
+    float total_length = 0.0f;
 
-	for (i = 0; i < 4096; i++) {
-		tmp = soundnameforindex(i);
-		length = soundlength(tmp);
+    for (i = 0; i < 4096; i++) {
+        tmp = soundnameforindex(i);
+        length = soundlength(tmp);
 
-		if (strlen(tmp) > 1) {
-			printf("%i %s (%f seconds)\n", i, tmp, length);
-			actual_count++;
-			total_length += length;
-		}
-	}
-	printf("\t%i total samples loaded\n", actual_count);
-	printf("\t%f seconds worth of samples\n", total_length);
+        if (strlen(tmp) > 1) {
+            printf("%i %s (%f seconds)\n", i, tmp, length);
+            actual_count++;
+            total_length += length;
+        }
+    }
+    printf("\t%i total samples loaded\n", actual_count);
+    printf("\t%f seconds worth of samples\n", total_length);
 }
 
 static void
 CMD_ListParticles(void)
 {
-	string tmp;
-	int i = 0i;
-	int actual_count = 0i;
+    string tmp;
+    int i = 0i;
+    int actual_count = 0i;
 
-	for (i = -4096; i < 4096; i++) {
-		tmp = particleeffectquery(i, 0);
+    for (i = -4096; i < 4096; i++) {
+        tmp = particleeffectquery(i, 0);
 
-		if (strlen(tmp) > 1) {
-			printf("%i %s\n", i, tmp);
-			actual_count++;
-		}
-	}
-	printf("\t%i total particles loaded\n", actual_count);
+        if (strlen(tmp) > 1) {
+            printf("%i %s\n", i, tmp);
+            actual_count++;
+        }
+    }
+    printf("\t%i total particles loaded\n", actual_count);
 }
 
 static void
 CMD_ListTitles(void)
 {
-	int i = 0i;
+    int i = 0i;
 
-	for (i = 0; i < g_titles_count; i++) {
-		printf("%s, (x: %d, y: %d)\n",
-			g_titles[i].m_strName, g_titles[i].m_flPosX, g_titles[i].m_flPosY);
-		printf("\teffect: %i, fade-in: %f, fade-out: %f\n",
-			g_titles[i].m_iEffect, g_titles[i].m_flFadeIn, g_titles[i].m_flFadeOut);
-		printf("\thold-time: %f, fx-time: %f\n",
-			g_titles[i].m_flHoldTime, g_titles[i].m_flFXTime);
-		printf("\tcolor 1: %v, color 2: %v\n",
-			g_titles[i].m_vecColor1, g_titles[i].m_vecColor2);
-	}
-	printf("\t%i total titles loaded\n", g_titles_count);
+    for (i = 0; i < g_titles_count; i++) {
+        printf("%s, (x: %d, y: %d)\n",
+            g_titles[i].m_strName, g_titles[i].m_flPosX, g_titles[i].m_flPosY);
+        printf("\teffect: %i, fade-in: %f, fade-out: %f\n",
+            g_titles[i].m_iEffect, g_titles[i].m_flFadeIn, g_titles[i].m_flFadeOut);
+        printf("\thold-time: %f, fx-time: %f\n",
+            g_titles[i].m_flHoldTime, g_titles[i].m_flFXTime);
+        printf("\tcolor 1: %v, color 2: %v\n",
+            g_titles[i].m_vecColor1, g_titles[i].m_vecColor2);
+    }
+    printf("\t%i total titles loaded\n", g_titles_count);
 }
 
 static void
 CMD_ListModelFramegroups(void)
 {
-	string modelName = argv(1);
-	float modelIndex = getmodelindex(modelName);
-	string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
-	string temp = "";
+    string modelName = argv(1);
+    float modelIndex = getmodelindex(modelName);
+    string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
+    string temp = "";
 
-	printf("// model: %S\n", modelName);
+    printf("// model: %S\n", modelName);
 
-	print("typedef enum {\n");
-	for (int i = 0; i < modelframecount(modelIndex); i++) {
-		temp = frametoname(modelIndex, i);
-		printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
-	}
-	print("} framegroups_e;\n");
+    print("typedef enum {\n");
+    for (int i = 0; i < modelframecount(modelIndex); i++) {
+        temp = frametoname(modelIndex, i);
+        printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
+    }
+    print("} framegroups_e;\n");
 
-	print("// as macros\n");
-	for (int i = 0; i < modelframecount(modelIndex); i++) {
-		temp = frametoname(modelIndex, i);
-		printf("#define %s %i\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
-	}
+    print("// as macros\n");
+    for (int i = 0; i < modelframecount(modelIndex); i++) {
+        temp = frametoname(modelIndex, i);
+        printf("#define %s %i\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
+    }
 }
 
 static void
 CMD_ListModelFramesAsGroups(void)
 {
-	string modelName = argv(1);
-	float modelIndex = getmodelindex(modelName);
-	string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
-	string temp = "";
+    string modelName = argv(1);
+    float modelIndex = getmodelindex(modelName);
+    string modelPrefix = basename(Util_ChangeExtension(modelName, ""));
+    string temp = "";
 
-	printf("// model: %S\n", modelName);
+    printf("// model: %S\n", modelName);
 
-	print("typedef enum {\n");
-	for (int i = 0; i < modelframecount(modelIndex); i++) {
-		temp = frametoname(modelIndex, i);
-		printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
-	}
-	print("} framegroups_e;\n");
+    print("typedef enum {\n");
+    for (int i = 0; i < modelframecount(modelIndex); i++) {
+        temp = frametoname(modelIndex, i);
+        printf("\t%s = %i,\n", strtoupper(strcat(modelPrefix, "_", temp)), i);
+    }
+    print("} framegroups_e;\n");
 }
 
 static void
 CMD_csvMatDump(void)
 {
-	filestream csvFile;
-	filestream outFile;
-	string temp;
+    filestream csvFile;
+    filestream outFile;
+    string temp;
 
-	csvFile = fopen(argv(1), FILE_READ);
-	outFile = fopen(argv(2), FILE_WRITE);
+    csvFile = fopen(argv(1), FILE_READ);
+    outFile = fopen(argv(2), FILE_WRITE);
 
-	if (csvFile < 0) {
-		ncError("");
-		return;
-	}
+    if (csvFile < 0) {
+        ncError("");
+        return;
+    }
 
-	if (outFile < 0) {
-		ncError("");
-		return;
-	}
+    if (outFile < 0) {
+        ncError("");
+        return;
+    }
 
-	while ((temp = fgets(csvFile))) {
-		int tokens = tokenizebyseparator(temp, ",");
-		string textureName = argv(0);
-		string arg2 = argv(1);
-		string arg3 = argv(2);
-		string arg4 = argv(3);
-		string arg5 = argv(4);
-		string arg6 = argv(5);
-		string materialName = Materials_SurfDataForTexture(textureName);
+    while ((temp = fgets(csvFile))) {
+        int tokens = tokenizebyseparator(temp, ",");
+        string textureName = argv(0);
+        string arg2 = argv(1);
+        string arg3 = argv(2);
+        string arg4 = argv(3);
+        string arg5 = argv(4);
+        string arg6 = argv(5);
+        string materialName = Materials_SurfDataForTexture(textureName);
 
-		if (!STRING_SET(materialName)) {
-			fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, "default"));
-		} else {
-			fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, materialName));
-		}
-	}
+        if (!STRING_SET(materialName)) {
+            fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, "default"));
+        } else {
+            fputs(outFile, sprintf("%s,%s,%s,%s,%s,%s,%s\n", textureName, arg2, arg3, arg4, arg5, arg6, materialName));
+        }
+    }
 
-	fclose(csvFile);
-	fclose(outFile);
+    fclose(csvFile);
+    fclose(outFile);
 }
 
 void
 ncWeapon_SelectWeapon(ncWeapon nextWeapon)
 {
-	if (!nextWeapon) {
-		pSeat->m_iHUDWeaponSelected = 0i;
-		return;
-	}
+    if (!nextWeapon) {
+        pSeat->m_iHUDWeaponSelected = 0i;
+        return;
+    }
 
-	/* this gets passed in ncPlayer::ClientInputFrame() to the server */
-	pSeat->m_iHUDWeaponSelected = nextWeapon.GetSharedID();
-	pSeat->m_flHUDWeaponSelectTime = time + 0.5f;
+    if (pSeat->m_showInterface == true) {
+        return;
+    }
+
+    /* this gets passed in ncPlayer::ClientInputFrame() to the server */
+    pSeat->m_iHUDWeaponSelected = nextWeapon.GetSharedID();
+    pSeat->m_flHUDWeaponSelectTime = time + 0.5f;
 }
 
 void
@@ -364,679 +368,714 @@ CMD_zoneAdd(string zoneName)
         zoneName = "Unnamed Zone";
     }
 
-    localcmd(sprintf("cmd zoneAdd %S\n", zoneName));
+    ncCommand("cmd zoneAdd %S", zoneName);
+}
+
+static void
+CMD_ListClientEntities(void)
+{
+    entity e = world;
+    int mapSpawnedCount = 0i;
+    int gameSpawnedCount = 0i;
+
+    while ((e = nextent(e))) {
+        if (e.entnum) {
+            mapSpawnedCount++;
+            printf("\t^2(%d, %d) %s %v (owner: %d; model: %d)\n", num_for_edict(e), e.entnum, e.classname, e.origin, num_for_edict(e.owner), e.modelindex);
+        } else {
+            gameSpawnedCount++;
+            printf("\t^3(%d) %s %v (owner: %d; model: %d)\n", num_for_edict(e), e.classname, e.origin, num_for_edict(e.owner), e.modelindex);
+        }
+    }
+
+    printf("^2Server-spawned: %i; ^3Client spawned: %i; ^7Total: %i\n", mapSpawnedCount, gameSpawnedCount, mapSpawnedCount + gameSpawnedCount);
 }
 
 bool
 Cmd_Parse(string sCMD)
 {
-	ncClient localPlayer = (ncClient)pSeat->m_ePlayer;
+    ncClient localPlayer = (ncClient)pSeat->m_ePlayer;
 
-	static void Cmd_Parse_HudCmd(int i, string sCMD) {
-		Textmenu_Input(i);
+    static void Cmd_Parse_HudCmd(int i, string sCMD) {
+        Textmenu_Input(i);
 
-		if (!Textmenu_IsActive()) {
-			HUD_ConsoleCommand(sCMD);
-		}
-	}
+        if (!Textmenu_IsActive()) {
+            HUD_ConsoleCommand(sCMD);
+        }
+    }
 
-	tokenize(sCMD);
+    tokenize(sCMD);
 
-	switch (argv(0)) {
+    switch (argv(0)) {
     case "zoneAdd":
         CMD_zoneAdd(argv(1));
         break;
-	case "slot1":
-		Cmd_Parse_HudCmd(0, sCMD);
-		break;
-	case "slot2":
-		Cmd_Parse_HudCmd(1, sCMD);
-		break;
-	case "slot3":
-		Cmd_Parse_HudCmd(2, sCMD);
-		break;
-	case "slot4":
-		Cmd_Parse_HudCmd(3, sCMD);
-		break;
-	case "slot5":
-		Cmd_Parse_HudCmd(4, sCMD);
-		break;
-	case "slot6":
-		Cmd_Parse_HudCmd(5, sCMD);
-		break;
-	case "slot7":
-		Cmd_Parse_HudCmd(6, sCMD);
-		break;
-	case "slot8":
-		Cmd_Parse_HudCmd(7, sCMD);
-		break;
-	case "slot9":
-		Cmd_Parse_HudCmd(8, sCMD);
-		break;
-	case "slot10":
-		Cmd_Parse_HudCmd(9, sCMD);
-		break;
+    case "slot1":
+        Cmd_Parse_HudCmd(0, sCMD);
+        break;
+    case "slot2":
+        Cmd_Parse_HudCmd(1, sCMD);
+        break;
+    case "slot3":
+        Cmd_Parse_HudCmd(2, sCMD);
+        break;
+    case "slot4":
+        Cmd_Parse_HudCmd(3, sCMD);
+        break;
+    case "slot5":
+        Cmd_Parse_HudCmd(4, sCMD);
+        break;
+    case "slot6":
+        Cmd_Parse_HudCmd(5, sCMD);
+        break;
+    case "slot7":
+        Cmd_Parse_HudCmd(6, sCMD);
+        break;
+    case "slot8":
+        Cmd_Parse_HudCmd(7, sCMD);
+        break;
+    case "slot9":
+        Cmd_Parse_HudCmd(8, sCMD);
+        break;
+    case "slot10":
+        Cmd_Parse_HudCmd(9, sCMD);
+        break;
 
-	case "listFramegroups":
-		CMD_ListModelFramegroups();
-		break;
-	case "listFramesAsGroups":
-		CMD_ListModelFramesAsGroups();
-		break;
-	case "listTitles":
-		CMD_ListTitles();
-		break;
-	case "listModels":
-		CMD_ListModels();
-		break;
-	case "listSounds":
-		CMD_ListSounds();
-		break;
-	case "listParticles":
-		CMD_ListParticles();
-		break;
-	case "listClientSoundDef":
-		SoundDef_DebugList();
-		break;
-	case "listServerSoundDef":
-		localcmd("sv listSoundDef\n");
-		break;
-	case "clearDecals":
-		CMD_Cleardecals();
-		break;
-	case "testLight":
-		CMD_testLight();
-		break;
-	case "testPointLight":
-		CMD_testPointLight();
-		break;
-	case "dev_modeltest":
-		CMD_dev_modeltest();
-		break;
-	case "dev_sunpos":
-		CMD_dev_sunpos();
-		break;
-	case "vote":
-		CMD_vote();
-		break;
-	case "getpos":
-		CMD_getpos();
-		break;
-	case "setang":
-		CMD_setang();
-		break;
-	case "callvote":
-		sendevent("CallVote", "s", substring(sCMD, 9, strlen(sCMD)-9));
-		break;
-	case "+zoomin":
-		pSeat->m_iZoomed = true;
-		break;
-	case "-zoomin":
-		pSeat->m_iZoomed = false;
-		break;
-	case "toggleZoom":
-		pSeat->m_iZoomed = !pSeat->m_iZoomed;
-		break;
-	case "buildcubemaps":
-		CMap_Build();
-		break;
-	case "titles_test":
-		CMD_titles_test();
-		break;
-	case "+attack2":
-		pSeat->m_iInputAttack2 = true;
-		break;
-	case "-attack2":
-		pSeat->m_iInputAttack2 = false;
-		break;
-	case "+reload":
-		pSeat->m_iInputReload = true;
-		break;
-	case "-reload":
-		pSeat->m_iInputReload = false;
-		break;
-	case "+activate":
-	case "+use":
-		pSeat->m_iInputUse = true;
-		break;
-	case "-activate":
-	case "-use":
-		pSeat->m_iInputUse = false;
-		break;
-	case "+duck":
-		if (autocvar_pm_crouchToggle == true)
-			pSeat->m_iInputDuck = 1 - pSeat->m_iInputDuck;
-		else
-			pSeat->m_iInputDuck = TRUE;
+    case "listFramegroups":
+        CMD_ListModelFramegroups();
+        break;
+    case "listFramesAsGroups":
+        CMD_ListModelFramesAsGroups();
+        break;
+    case "listTitles":
+        CMD_ListTitles();
+        break;
+    case "listModels":
+        CMD_ListModels();
+        break;
+    case "listSounds":
+        CMD_ListSounds();
+        break;
+    case "listParticles":
+        CMD_ListParticles();
+        break;
+    case "listClientSoundDef":
+        SoundDef_DebugList();
+        break;
+    case "listServerSoundDef":
+        ncCommand("sv listSoundDef");
+        break;
+    case "clearDecals":
+        CMD_Cleardecals();
+        break;
+    case "testLight":
+        CMD_testLight();
+        break;
+    case "testPointLight":
+        CMD_testPointLight();
+        break;
+    case "dev_modeltest":
+        CMD_dev_modeltest();
+        break;
+    case "dev_sunpos":
+        CMD_dev_sunpos();
+        break;
+    case "vote":
+        CMD_vote();
+        break;
+    case "getpos":
+        CMD_getpos();
+        break;
+    case "setang":
+        CMD_setang();
+        break;
+    case "callvote":
+        sendevent("CallVote", "s", substring(sCMD, 9, strlen(sCMD)-9));
+        break;
+    case "+zoomin":
+        pSeat->m_iZoomed = true;
+        break;
+    case "-zoomin":
+        pSeat->m_iZoomed = false;
+        break;
+    case "toggleZoom":
+        pSeat->m_iZoomed = !pSeat->m_iZoomed;
+        break;
+    case "buildcubemaps":
+        CMap_Build();
+        break;
+    case "titles_test":
+        CMD_titles_test();
+        break;
+    case "+attack2":
+        pSeat->m_iInputAttack2 = true;
+        break;
+    case "-attack2":
+        pSeat->m_iInputAttack2 = false;
+        break;
+    case "+reload":
+        pSeat->m_iInputReload = true;
+        break;
+    case "-reload":
+        pSeat->m_iInputReload = false;
+        break;
+    case "+activate":
+    case "+use":
+        pSeat->m_iInputUse = true;
+        break;
+    case "-activate":
+    case "-use":
+        pSeat->m_iInputUse = false;
+        break;
+    case "+duck":
+        if (autocvar_pm_crouchToggle == true)
+            pSeat->m_iInputDuck = 1 - pSeat->m_iInputDuck;
+        else
+            pSeat->m_iInputDuck = TRUE;
 
-		pSeat->m_bSpecInput = true;
-		break;
-	case "-duck":
-		if (autocvar_pm_crouchToggle == false)
-			pSeat->m_iInputDuck = FALSE;
+        pSeat->m_bSpecInput = true;
+        break;
+    case "-duck":
+        if (autocvar_pm_crouchToggle == false)
+            pSeat->m_iInputDuck = FALSE;
 
-		pSeat->m_bSpecInput = false;
-		break;
-	case "+prone":
-		pSeat->m_iInputProne = true;
-		break;
-	case "-prone":
-		pSeat->m_iInputProne = false;
-		break;
-	case "+sprint":
-		pSeat->m_iSprinting = true;
-		break;
-	case "-sprint":
-		pSeat->m_iSprinting = false;
-		break;
-	case "+leanleft":
-		pSeat->m_iLeanDir = -1;
-		break;
-	case "-leanleft":
-		pSeat->m_iLeanDir = 0;
-		break;
-	case "+leanright":
-		pSeat->m_iLeanDir = 1;
-		break;
-	case "-leanright":
-		pSeat->m_iLeanDir = 0;
-		break;
-	case "goprone":
-		pSeat->m_dForceStance = STANCE_PRONE;
-		break;
-	case "gocrouch":
-		pSeat->m_dForceStance = STANCE_CROUCH;
-		break;
-	case "+gostand":
-		if (pSeat->m_dForceStance != STANCE_DEFAULT) {
-			pSeat->m_dForceStance = STANCE_DEFAULT;
-		} else {
-			pSeat->m_iInputJump = true;
-		}
-		break;
-	case "-gostand":
-		pSeat->m_iInputJump = false;
-		break;
-	case "weapnext":
-		ncWeapon_SelectWeapon(localPlayer.GetNextWeapon());
-		break;
-	case "weapprev":
-		ncWeapon_SelectWeapon(localPlayer.GetPreviousWeapon());
-		break;
-	case "weaplast":
-		ncWeapon_SelectWeapon(localPlayer.GetLastWeapon());
-		break;
-	case "+showscores":
-		pSeat->m_iScoresVisible = TRUE;
-		break;
-	case "-showscores":
-		pSeat->m_iScoresVisible = FALSE;
-		break;
-	case "way_menu":
-		CMD_way_menu();
-		break;
-	case "addChatLine":
-		CSQC_Parse_Print(argv(1), PRINT_CHAT);
-		break;
-	case "addGopherLine":
-		vguiTool_Gopher::AddGopherLine(argv(1), argv(2), argv(3), argv(4), argv(5));
-		break;
-	case "addGopherText":
-		vguiTool_Gopher::AddGopherText(stoi(argv(1)), argv(2));
-		break;
-	case "addFingerLine":
-		vguiTool_Finger::AddFingerLine(argv(1));
-		break;
-	case "view_geomtest":
-		CMD_view_geomtest();
-		break;
-	case "player_geomtest":
-		CMD_player_geomtest();
-		break;
-	case "motd":
-		print(MOTD_GetTextBody());
-		break;
+        pSeat->m_bSpecInput = false;
+        break;
+    case "+prone":
+        pSeat->m_iInputProne = true;
+        break;
+    case "-prone":
+        pSeat->m_iInputProne = false;
+        break;
+    case "+sprint":
+        pSeat->m_iSprinting = true;
+        break;
+    case "-sprint":
+        pSeat->m_iSprinting = false;
+        break;
+    case "+leanleft":
+        pSeat->m_iLeanDir = -1;
+        break;
+    case "-leanleft":
+        pSeat->m_iLeanDir = 0;
+        break;
+    case "+leanright":
+        pSeat->m_iLeanDir = 1;
+        break;
+    case "-leanright":
+        pSeat->m_iLeanDir = 0;
+        break;
+    case "goprone":
+        pSeat->m_dForceStance = STANCE_PRONE;
+        break;
+    case "gocrouch":
+        pSeat->m_dForceStance = STANCE_CROUCH;
+        break;
+    case "+gostand":
+        if (pSeat->m_dForceStance != STANCE_DEFAULT) {
+            pSeat->m_dForceStance = STANCE_DEFAULT;
+        } else {
+            pSeat->m_iInputJump = true;
+        }
+        break;
+    case "-gostand":
+        pSeat->m_iInputJump = false;
+        break;
+    case "weapnext":
+        ncWeapon_SelectWeapon(localPlayer.GetNextWeapon());
+        break;
+    case "weapprev":
+        ncWeapon_SelectWeapon(localPlayer.GetPreviousWeapon());
+        break;
+    case "weaplast":
+        ncWeapon_SelectWeapon(localPlayer.GetLastWeapon());
+        break;
+    case "+showscores":
+        pSeat->m_iScoresVisible = TRUE;
+        break;
+    case "-showscores":
+        pSeat->m_iScoresVisible = FALSE;
+        break;
+    case "way_menu":
+        CMD_way_menu();
+        break;
+    case "addChatLine":
+        CSQC_Parse_Print(argv(1), PRINT_CHAT);
+        break;
+    case "addGopherLine":
+        vguiTool_Gopher::AddGopherLine(argv(1), argv(2), argv(3), argv(4), argv(5));
+        break;
+    case "addGopherText":
+        vguiTool_Gopher::AddGopherText(stoi(argv(1)), argv(2));
+        break;
+    case "addFingerLine":
+        vguiTool_Finger::AddFingerLine(argv(1));
+        break;
+    case "listClientEntities":
+        CMD_ListClientEntities();
+        break;
+    case "view_geomtest":
+        CMD_view_geomtest();
+        break;
+    case "player_geomtest":
+        CMD_player_geomtest();
+        break;
+    case "motd":
+        print(MOTD_GetTextBody());
+        break;
 
-	/* XR binds, engine binds them currently */
-	case "+attack_left":
-		pSeat->m_bMoveForward = true;
-		break;
-	case "-attack_left":
-		pSeat->m_bMoveForward = false;
-		break;
-	case "+menu_left":
-		break;
-	case "-menu_left":
-		break;
-	case "+attack_right":
-		pSeat->m_iInputAttack = true;
-		break;
-	case "-attack_right":
-		pSeat->m_iInputAttack = false;
-		break;
+    /* XR binds, engine binds them currently */
+    case "+attack_left":
+        pSeat->m_bMoveForward = true;
+        break;
+    case "-attack_left":
+        pSeat->m_bMoveForward = false;
+        break;
+    case "+menu_left":
+        break;
+    case "-menu_left":
+        break;
+    case "+attack_right":
+        pSeat->m_iInputAttack = true;
+        break;
+    case "-attack_right":
+        pSeat->m_iInputAttack = false;
+        break;
 
-	case "+menu_right":
-		pSeat->m_iInputReload = true;
-		break;
-	case "-menu_right":
-		pSeat->m_iInputReload = false;
-		break;
+    case "+menu_right":
+        pSeat->m_iInputReload = true;
+        break;
+    case "-menu_right":
+        pSeat->m_iInputReload = false;
+        break;
 
-	/* client aliases for server commands */
-	case "addBot":
-	case "kickAllBots":
-	case "killAllBots":
-	case "resetAllBotsGoals":
-	case "killClass":
-	case "killMovables":
-	case "trigger":
-	case "input":
-	case "listBotProfiles":
-	case "listMapTweaks":
-	case "listTargets":
-	case "teleport":
-	case "teleportToClass":
-	case "respawnEntities":
-	case "spawnDef":
-	case "nodeAdd":
-	case "nodeDel":
-	case "nodeFlags":
-	case "nodeLink":
-	case "nodeRadius":
-	case "nodeOffset":
-	case "nodeUnlink":
-	case "traceMaterial":
-	case "listEntitySpawnData":
-	case "listEntities":
-	case "listEntitiesByClass":
-	case "listEntityData":
-	case "listEntitiesByTarget":
-	case "listZones":
-	case "addon":
+    /* client aliases for server commands */
+    case "addBot":
+    case "kickAllBots":
+    case "killAllBots":
+    case "resetAllBotsGoals":
+    case "killClass":
+    case "killMovables":
+    case "trigger":
+    case "input":
+    case "listBotProfiles":
+    case "listMapTweaks":
+    case "listTargets":
+    case "teleport":
+    case "teleportToClass":
+    case "respawnEntities":
+    case "spawnDef":
+    case "nodeAdd":
+    case "nodeDel":
+    case "nodeFlags":
+    case "nodeLink":
+    case "nodeRadius":
+    case "nodeOffset":
+    case "nodeUnlink":
+    case "traceMaterial":
+    case "listEntitySpawnData":
+    case "listEntities":
+    case "listServerEntities":
+    case "listEntitiesByClass":
+    case "listEntityData":
+    case "listEntitiesByTarget":
+    case "listZones":
+    case "addon":
     case "findTarget":
     case "unlockDoors":
-		localcmd(sprintf("sv %s\n", sCMD));
-		break;
-	/* client aliases for client commands */
-	case "setpos":
-	case "listInventory":
-	case "giveInventoryItem":
-	case "removeInventoryItem":
-	case "removeAllInventoryItems":
-	case "listAmmo":
-	case "joinTeam":
+        ncCommand("sv %s", sCMD);
+        break;
+    /* client aliases for client commands */
+    case "setpos":
+    case "listInventory":
+    case "giveInventoryItem":
+    case "removeInventoryItem":
+    case "removeAllInventoryItems":
+    case "listAmmo":
+    case "joinTeam":
 
-	case "ent_create":
-	case "ent_fire":
-	case "ent_remove":
-	case "ent_remove_all":
-	case "ent_teleport":
+    case "ent_create":
+    case "ent_fire":
+    case "ent_remove":
+    case "ent_remove_all":
+    case "ent_teleport":
     case "zoneDelete":
-		localcmd(sprintf("cmd %s\n", sCMD));
-		break;
+        ncCommand("cmd %s", sCMD);
+        break;
 
-	case "listClientEntityDef":
-		EntityDef_DebugList();
-		break;
-	case "listEntityDef":
-	case "listServerEntityDef":
-		localcmd("sv listEntityDef\n");
-		break;
+    case "listClientEntityDef":
+        EntityDef_DebugList();
+        break;
+    case "listEntityDef":
+    case "listServerEntityDef":
+        ncCommand("sv listEntityDef");
+        break;
 
-	case "bobup":
-		break;
-	case "bobdn":
-		break;
+    case "bobup":
+        break;
+    case "bobdn":
+        break;
 
-	case "+commandmenu":
-		Commandmenu_Open();
-		break;
-	case "-commandmenu":
-		Commandmenu_Close();
-		break;
-	case "ragdollCreate":
-		ncRagdoll_Create(argv(1));
-		break;
+    case "+commandmenu":
+        Commandmenu_Open();
+        break;
+    case "-commandmenu":
+        Commandmenu_Close();
+        break;
+    case "ragdollCreate":
+        ncRagdoll_Create(argv(1));
+        break;
 
-	/* can be overriden as well */
-	case "showClassSelectionMenu":
-		VGUI_ShowClassSelectionMenu(userinfo.GetInteger(pSeat->m_ePlayer, "*team"));
-		break;
-	case "showTeamSelectionMenu":
-		VGUI_ShowTeamSelectionMenu();
-		break;
-	case "+showInterface":
-		pSeat->m_showInterface = true;
-		break;
-	case "-showInterface":
-		pSeat->m_showInterface = false;
-		break;
-	case "toggleInterface":
-		pSeat->m_showInterface = !pSeat->m_showInterface;
-		break;
-	case "showModelSpawner":
-		VGUI_ModelSpawner(g_uiDesktop);
-		break;
-	case "showMOTD":
-		VGUI_ShowMOTD(g_uiDesktop, true);
-		break;
-	case "showPlayerList":
-		VGUI_PlayerList(g_uiDesktop);
-		break;
-	case "showServerInfo":
-		VGUI_ShowServerInfo(g_uiDesktop);
-		break;
-	case "showSunEditor":
-		VGUI_ShowSunEditor();
-		break;
-	case "reloadClientLocale":
-		Locale_Reload();
-		break;
-	case "reloadClientInventory":
-		ncUserEntityManager::IndexClientInventory();
-		break;
-	case "showEditor":
-		VGUI_ShowEditor();
-		break;
-	case "listUserInfo":
-		g_userInfo.DebugPrint();
-		break;
-	case "textMenuOpen":
-		Textmenu_Open(argv(1));
-		break;
-	case "textMenuClose":
-		Textmenu_Hide();
-		break;
-	case "vguiMenuOpen":
-		VGUI_CreateMenuFromDict(argv(1));
-		break;
-	case "vguiMenuClose":
-		VGUI_CloseMenu();
-		break;
-	case "trMenuOpen":
-		vguiScriptedView newMenu = vguiScriptedView::CreateFromMenuFile(g_uiDesktop, argv(1));
-		break;
-	case "trMenuClose":
-	   	vguiScriptedView::CloseAll();
-		break;
-	case "runApp":
-		vguiApp_Delegate::RunApplicationFromProgs(argv(1), argv(2));
-		break;
-	case "runWebApp":
-		vguiDesktop ourDesktop = (vguiDesktop)edict_num(stof(argv(1)));
+    /* can be overriden as well */
+    case "showClassSelectionMenu":
+        VGUI_ShowClassSelectionMenu(userinfo.GetInteger(pSeat->m_ePlayer, "*team"));
+        break;
+    case "showTeamSelectionMenu":
+        VGUI_ShowTeamSelectionMenu();
+        break;
+    case "+showInterface":
+        pSeat->m_showInterface = true;
+        break;
+    case "-showInterface":
+        pSeat->m_showInterface = false;
+        break;
+    case "toggleInterface":
+        pSeat->m_showInterface = !pSeat->m_showInterface;
+        break;
+    case "showMOTD":
+        VGUI_ShowMOTD(g_uiDesktop, true);
+        break;
+    case "showPlayerList":
+        VGUI_PlayerList(g_uiDesktop);
+        break;
+    case "showServerInfo":
+        VGUI_ShowServerInfo(g_uiDesktop);
+        break;
+    case "showSunEditor":
+        VGUI_ShowSunEditor();
+        break;
+    case "reloadClientLocale":
+        Locale_Reload();
+        break;
+    case "reloadClientInventory":
+        ncUserEntityManager::IndexClientInventory();
+        break;
+    case "showEditor":
+        VGUI_ShowEditor();
+        break;
+    case "listUserInfo":
+        g_userInfo.DebugPrint();
+        break;
+    case "textMenuOpen":
+        Textmenu_Open(argv(1));
+        break;
+    case "textMenuClose":
+        Textmenu_Hide();
+        break;
+    case "vguiMenuOpen":
+        VGUI_CreateMenuFromDict(argv(1));
+        break;
+    case "vguiMenuClose":
+        VGUI_CloseMenu();
+        break;
+    case "trMenuOpen":
+        vguiScriptedView newMenu = vguiScriptedView::CreateFromMenuFile(g_uiDesktop, argv(1));
+        break;
+    case "trMenuClose":
+        vguiScriptedView::CloseAll();
+        break;
+    //case "runApp":
+    //    vguiApp_Delegate::RunApplicationFromProgs(argv(1), argv(2));
+        //    break;
+    case "runDictApp":
+        vguiDesktop ourDesktop = (vguiDesktop)edict_num(stof(argv(1)));
+        string appDict = argv(2);
+        ourDesktop.OpenDictApp(appDict);
+        break;
+    case "runInternalApp":
+        vguiDesktop ourDesktop = (vguiDesktop)edict_num(stof(argv(1)));
+        string appName = argv(2);
+        string appIcon = argv(3);
+        string appSpawnClass = argv(4);
+        vector appResolution = [stof(argv(5)), stof(argv(6))];
+        ourDesktop.OpenInternalApp(appName, appIcon, appSpawnClass, appResolution);
+        break;
+    case "runWebApp":
+        vguiDesktop ourDesktop = (vguiDesktop)edict_num(stof(argv(1)));
 
-		string appName = argv(2);
-		string appIcon = argv(3);
-		string appURL = argv(4);
-		vector appResolution = [stof(argv(5)), stof(argv(6))];
-		bool captureMouse = stof(argv(7));
-		bool isResizable = stof(argv(8));
+        string appName = argv(2);
+        string appIcon = argv(3);
+        string appURL = argv(4);
+        vector appResolution = [stof(argv(5)), stof(argv(6))];
+        bool captureMouse = stof(argv(7));
+        bool isResizable = stof(argv(8));
 
-		ourDesktop.OpenWebApp(appName, appIcon, appURL, appResolution, captureMouse, isResizable);
-		break;
+        ourDesktop.OpenWebApp(appName, appIcon, appURL, appResolution, captureMouse, isResizable);
+        break;
 
-	case "objectSpawn":
-		string objectName = argv(1);
-		string objectOrg = argv(2);
-		string objectAng = argv(3);
-		ncDict objectDict = ncDict::LoadDeclFromFile(objectName, sprintf("objects/%s.object", objectName));
-		string objectTitle = objectDict.GetString("name");
-		string objectFile = objectDict.GetString("model");
-		string colorMod = objectDict.GetString("color");
-		string scaleMod = objectDict.GetString("scale");
-		string newMins = objectDict.GetString("mins");
-		string newMaxs = objectDict.GetString("maxs");
-		string gui64 = objectDict.GetString("gui_base64");
-		string guiOrg = objectDict.GetString("gui_origin");
-		string guiAng = objectDict.GetString("gui_angles");
-		string guiScale = objectDict.GetString("gui_scale");
-		string guiRes = objectDict.GetString("gui_res");
+    case "objectSpawn":
+        string objectName = argv(1);
+        string objectOrg = argv(2);
+        string objectAng = argv(3);
+        ncDict objectDict = ncDict::LoadDeclFromFile(objectName, sprintf("objects/%s.object", objectName));
+        string objectTitle = objectDict.GetString("name");
+        string objectFile = objectDict.GetString("model");
+        string colorMod = objectDict.GetString("color");
+        string scaleMod = objectDict.GetString("scale");
+        string newMins = objectDict.GetString("mins");
+        string newMaxs = objectDict.GetString("maxs");
+        string gui64 = objectDict.GetString("gui_base64");
+        string guiOrg = objectDict.GetString("gui_origin");
+        string guiAng = objectDict.GetString("gui_angles");
+        string guiScale = objectDict.GetString("gui_scale");
+        string guiRes = objectDict.GetString("gui_res");
 
-		if (!STRING_SET(colorMod)) {
-			colorMod = "1 1 1";
-		}
+        if (!STRING_SET(colorMod)) {
+            colorMod = "1 1 1";
+        }
 
-		if (!STRING_SET(scaleMod)) {
-			scaleMod = "1";
-		}
+        if (!STRING_SET(scaleMod)) {
+            scaleMod = "1";
+        }
 
-		if (!STRING_SET(newMins)) {
-			newMins = "-16 -16 0";
-		}
+        if (!STRING_SET(newMins)) {
+            newMins = "-16 -16 0";
+        }
 
-		if (!STRING_SET(newMaxs)) {
-			newMaxs = "16 16 16";
-		}
+        if (!STRING_SET(newMaxs)) {
+            newMaxs = "16 16 16";
+        }
 
-		//localcmd(sprintf("echo cmd placeObject %S %S %S %S %S %S %S %S %S %S %S\n", objectName, objectFile, colorMod, scaleMod, newMins, newMaxs, gui64, guiOrg, guiAng, guiScale, guiRes));
+        //localcmd(sprintf("echo cmd placeObject %S %S %S %S %S %S %S %S %S %S %S\n", objectName, objectFile, colorMod, scaleMod, newMins, newMaxs, gui64, guiOrg, guiAng, guiScale, guiRes));
 
-		localcmd(sprintf("cmd placeObject %S %S ", objectName, objectFile));
-		localcmd(sprintf("%S %S %S %S ", colorMod, scaleMod, newMins, newMaxs ));
-		localcmd(sprintf("%S %S %S %S %S\n", gui64, guiOrg, guiAng, guiScale, guiRes));
+        localcmd(sprintf("cmd placeObject %S %S ", objectName, objectFile));
+        localcmd(sprintf("%S %S %S %S ", colorMod, scaleMod, newMins, newMaxs ));
+        localcmd(sprintf("%S %S %S %S %S\n", gui64, guiOrg, guiAng, guiScale, guiRes));
         localcmd(sprintf("wait;wait;cmd moveObject \"%s\" \"%s\"\n",objectOrg, objectAng));
-		break;
-	case "reloadTextDecl":
-		break;
-	case "reloadVideoDecl":
-		break;
-	case "reloadAudioDecl":
-		break;
-	case "reloadAppDecl":
-		break;
-	case "reloadPictureDecl":
-		break;
+        break;
+    case "reloadTextDecl":
+        break;
+    case "reloadVideoDecl":
+        break;
+    case "reloadAudioDecl":
+        break;
+    case "reloadAppDecl":
+        break;
+    case "reloadPictureDecl":
+        break;
 
-	case "csvMatDump":
-		CMD_csvMatDump();
-		break;
-	default:
-		return HUD_ConsoleCommand(sCMD);
-	}
-	return (true);
+    case "csvMatDump":
+        CMD_csvMatDump();
+        break;
+    default:
+        return HUD_ConsoleCommand(sCMD);
+    }
+    return (true);
 }
 
 void
 Cmd_Init(void)
 {
-	InitStart();
-	registercommand("showClassSelectionMenu");
-	registercommand("showTeamSelectionMenu");
-	registercommand("showDesktop");
-	registercommand("showMOTD");
-	registercommand("showModelSpawner");
-	registercommand("showPlayerList");
-	registercommand("showServerInfo");
-	registercommand("showEditor");
-	registercommand("showSunEditor");
-	registercommand("+showInterface");
-	registercommand("-showInterface");
-	registercommand("toggleInterface");
+    InitStart();
+    registercommand("showClassSelectionMenu");
+    registercommand("showTeamSelectionMenu");
+    registercommand("showDesktop");
+    registercommand("showMOTD");
+    registercommand("showPlayerList");
+    registercommand("showServerInfo");
+    registercommand("showEditor");
+    registercommand("showSunEditor");
+    registercommand("+showInterface");
+    registercommand("-showInterface");
+    registercommand("toggleInterface");
 
-	registercommand("runApp");
-	registercommand("runWebApp");
+    registercommand("runApp");
+    registercommand("runWebApp");
 
-	/* developer/debug commands */
-	registercommand("killAllBots");
-	registercommand("killClass");
-	registercommand("killMovables");
-	registercommand("findTarget");
-	registercommand("listAmmo");
-	registercommand("listBotProfiles");
-	registercommand("listClientEntityDef");
-	registercommand("listClientSoundDef");
-	registercommand("listEntityData");
-	registercommand("listEntityDef");
-	registercommand("listEntities");
-	registercommand("listEntitiesByClass");
-	registercommand("listEntitySpawnData");
-	registercommand("listFramegroups");
-	registercommand("listFramesAsGroups");
-	registercommand("listInventory");
-	registercommand("listMapTweaks");
-	registercommand("listModels");
-	registercommand("listParticles");
-	registercommand("listServerEntityDef");
-	registercommand("listServerSoundDef");
-	registercommand("listEntitiesByTarget");
-	registercommand("listSounds");
-	registercommand("listTargets");
-	registercommand("listTitles");
-	registercommand("ragdollCreate");
-	registercommand("traceMaterial");
+    /* developer/debug commands */
+    registercommand("killAllBots");
+    registercommand("killClass");
+    registercommand("killMovables");
+    registercommand("findTarget");
+    registercommand("listAmmo");
+    registercommand("listBotProfiles");
+    registercommand("listClientEntityDef");
+    registercommand("listClientSoundDef");
+    registercommand("listEntityData");
+    registercommand("listEntityDef");
+    registercommand("listServerEntities");
+    registercommand("listClientEntities");
+    registercommand("listEntities");
+    registercommand("listEntitiesByClass");
+    registercommand("listEntitySpawnData");
+    registercommand("listFramegroups");
+    registercommand("listFramesAsGroups");
+    registercommand("listInventory");
+    registercommand("listMapTweaks");
+    registercommand("listModels");
+    registercommand("listParticles");
+    registercommand("listServerEntityDef");
+    registercommand("listServerSoundDef");
+    registercommand("listEntitiesByTarget");
+    registercommand("listSounds");
+    registercommand("listTargets");
+    registercommand("listTitles");
+    registercommand("ragdollCreate");
+    registercommand("traceMaterial");
 
-	/* server commands */
-	registercommand("addBot");
-	registercommand("kickAllBots");
-	registercommand("addon");
-	registercommand("input");
-	registercommand("resetAllBotsGoals");
-	registercommand("respawnEntities");
-	registercommand("spawnDef");
-	registercommand("teleport");
-	registercommand("teleportToClass");
-	registercommand("trigger");
+    /* server commands */
+    registercommand("addBot");
+    registercommand("kickAllBots");
+    registercommand("addon");
+    registercommand("input");
+    registercommand("resetAllBotsGoals");
+    registercommand("respawnEntities");
+    registercommand("spawnDef");
+    registercommand("teleport");
+    registercommand("teleportToClass");
+    registercommand("trigger");
 
-	/* nav editing */
-	registercommand("nodeAdd");
-	registercommand("nodeDel");
-	registercommand("nodeFlags");
-	registercommand("nodeLink");
-	registercommand("nodeRadius");
-	registercommand("nodeOffset");
-	registercommand("nodeUnlink");
+    /* nav editing */
+    registercommand("nodeAdd");
+    registercommand("nodeDel");
+    registercommand("nodeFlags");
+    registercommand("nodeLink");
+    registercommand("nodeRadius");
+    registercommand("nodeOffset");
+    registercommand("nodeUnlink");
 
-	registercommand("clearDecals");
-	registercommand("testLight");
-	registercommand("testPointLight");
-	registercommand("getpos");
-	registercommand("setpos");
-	registercommand("setang");
-	registercommand("dev_sentence");
-	registercommand("titles_test");
-	registercommand("buildcubemaps");
-	registercommand("dev_sunpos");
-	registercommand("view_geomtest");
-	registercommand("player_geomtest");
-	registercommand("way_menu");
-	registercommand("dev_explode");
-	registercommand("dev_modeltest");
+    registercommand("clearDecals");
+    registercommand("testLight");
+    registercommand("testPointLight");
+    registercommand("getpos");
+    registercommand("setpos");
+    registercommand("setang");
+    registercommand("dev_sentence");
+    registercommand("titles_test");
+    registercommand("buildcubemaps");
+    registercommand("dev_sunpos");
+    registercommand("view_geomtest");
+    registercommand("player_geomtest");
+    registercommand("way_menu");
+    registercommand("dev_explode");
+    registercommand("dev_modeltest");
 
-	/* basic actions */
-	registercommand("+attack");
-	registercommand("-attack");
-	registercommand("+attack2");
-	registercommand("-attack2");
-	registercommand("+reload");
-	registercommand("-reload");
-	registercommand("+activate");
-	registercommand("-activate");
-	registercommand("+use");
-	registercommand("-use");
-	registercommand("+duck");
-	registercommand("-duck");
-	registercommand("+prone");
-	registercommand("-prone");
-	registercommand("goprone");
-	registercommand("gocrouch");
-	registercommand("+gostand");
-	registercommand("-gostand");
-	registercommand("+sprint");
-	registercommand("-sprint");
-	registercommand("+leanleft");
-	registercommand("-leanleft");
-	registercommand("+leanright");
-	registercommand("-leanright");
-	registercommand("weapnext");
-	registercommand("weapprev");
+    /* basic actions */
+    registercommand("+attack");
+    registercommand("-attack");
+    registercommand("+attack2");
+    registercommand("-attack2");
+    registercommand("+reload");
+    registercommand("-reload");
+    registercommand("+activate");
+    registercommand("-activate");
+    registercommand("+use");
+    registercommand("-use");
+    registercommand("+duck");
+    registercommand("-duck");
+    registercommand("+prone");
+    registercommand("-prone");
+    registercommand("goprone");
+    registercommand("gocrouch");
+    registercommand("+gostand");
+    registercommand("-gostand");
+    registercommand("+sprint");
+    registercommand("-sprint");
+    registercommand("+leanleft");
+    registercommand("-leanleft");
+    registercommand("+leanright");
+    registercommand("-leanright");
+    registercommand("weapnext");
+    registercommand("weapprev");
 
-	registercommand("giveInventoryItem");
-	registercommand("removeInventoryItem");
-	registercommand("removeAllInventoryItems");
+    registercommand("giveInventoryItem");
+    registercommand("removeInventoryItem");
+    registercommand("removeAllInventoryItems");
 
-	/* voting */
-	registercommand("vote");
-	registercommand("callvote");
+    /* voting */
+    registercommand("vote");
+    registercommand("callvote");
 
-	/* teamplay */
-	registercommand("joinTeam");
+    /* teamplay */
+    registercommand("joinTeam");
 
-	/* motd */
-	registercommand("motd");
+    /* motd */
+    registercommand("motd");
 
-	/* hud weapon selection system */
-	registercommand("slot1");
-	registercommand("slot2");
-	registercommand("slot3");
-	registercommand("slot4");
-	registercommand("slot5");
-	registercommand("slot6");
-	registercommand("slot7");
-	registercommand("slot8");
-	registercommand("slot9");
-	registercommand("slot10");
+    /* hud weapon selection system */
+    registercommand("slot1");
+    registercommand("slot2");
+    registercommand("slot3");
+    registercommand("slot4");
+    registercommand("slot5");
+    registercommand("slot6");
+    registercommand("slot7");
+    registercommand("slot8");
+    registercommand("slot9");
+    registercommand("slot10");
 
-	/* commandmenu */
-	registercommand("+commandmenu");
-	registercommand("-commandmenu");
+    /* commandmenu */
+    registercommand("+commandmenu");
+    registercommand("-commandmenu");
 
-	/* scoreboard */
-	registercommand("+showscores");
-	registercommand("-showscores");
+    /* scoreboard */
+    registercommand("+showscores");
+    registercommand("-showscores");
 
-	/* meant to be hidden */
-	registercommand("addChatLine");
+    /* meant to be hidden */
+    registercommand("addChatLine");
 
-	/* Requested by Slacer */
-	registercommand("+zoomin");
-	registercommand("-zoomin");
-	registercommand("toggleZoom");
+    /* Requested by Slacer */
+    registercommand("+zoomin");
+    registercommand("-zoomin");
+    registercommand("toggleZoom");
 
-	/* text menu */
-	registercommand("textMenuOpen");
-	registercommand("textMenuClose");
+    /* text menu */
+    registercommand("textMenuOpen");
+    registercommand("textMenuClose");
 
-	/* vgui menu */
-	registercommand("vguiMenuOpen");
-	registercommand("vguiMenuClose");
+    /* vgui menu */
+    registercommand("vguiMenuOpen");
+    registercommand("vguiMenuClose");
 
-	/* trinity menu */
-	registercommand("trMenuOpen");
-	registercommand("trMenuClose");
+    /* trinity menu */
+    registercommand("trMenuOpen");
+    registercommand("trMenuClose");
 
-	/* XR binds, temporady until the engine standardizes things */
-	registercommand("+attack_left");
-	registercommand("-attack_left");
-	registercommand("+attack_right");
-	registercommand("-attack_right");
-	registercommand("+menu_left");
-	registercommand("-menu_left");
-	registercommand("+menu_right");
-	registercommand("-menu_right");
-	registercommand("reloadClientLocale");
-	registercommand("reloadClientInventory");
+    /* XR binds, temporady until the engine standardizes things */
+    registercommand("+attack_left");
+    registercommand("-attack_left");
+    registercommand("+attack_right");
+    registercommand("-attack_right");
+    registercommand("+menu_left");
+    registercommand("-menu_left");
+    registercommand("+menu_right");
+    registercommand("-menu_right");
+    registercommand("reloadClientLocale");
+    registercommand("reloadClientInventory");
 
-	registercommand("reloadTextDecl");
-	registercommand("reloadVideoDecl");
-	registercommand("reloadAudioDecl");
-	registercommand("reloadAppDecl");
-	registercommand("reloadPictureDecl");
+    registercommand("reloadTextDecl");
+    registercommand("reloadVideoDecl");
+    registercommand("reloadAudioDecl");
+    registercommand("reloadAppDecl");
+    registercommand("reloadPictureDecl");
 
-	/* Source Engine compat */
-	registercommand("ent_create");
-	registercommand("ent_fire");
-	registercommand("ent_remove");
-	registercommand("ent_remove_all");
-	registercommand("ent_teleport");
+    /* Source Engine compat */
+    registercommand("ent_create");
+    registercommand("ent_fire");
+    registercommand("ent_remove");
+    registercommand("ent_remove_all");
+    registercommand("ent_teleport");
 
 
-	registercommand("listUserInfo");
+    registercommand("listUserInfo");
 
-	registercommand("csvMatDump");
-	registercommand("objectSpawn");
-	registercommand("unlockDoors");
-	registercommand("zoneAdd");
-	registercommand("zoneDelete");
-	registercommand("listZones");
+    registercommand("csvMatDump");
+    registercommand("objectSpawn");
+    registercommand("unlockDoors");
+    registercommand("zoneAdd");
+    registercommand("zoneDelete");
+    registercommand("listZones");
 
-	InitEnd();
+    InitEnd();
 }

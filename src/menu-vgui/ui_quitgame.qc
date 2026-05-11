@@ -18,51 +18,51 @@ int g_iQuitGameInitialized;
 
 void UI_QuitGame_Show ( void )
 {
-	static vguiPanel winQuitGame;
-	static vguiLabel lblSure;
-	static vguiButton btnQuit;
-	static vguiButton btnCancel;
+    static vguiPanel winQuitGame;
+    static vguiLabel lblSure;
+    static vguiButton btnQuit;
+    static vguiButton btnCancel;
 
-	static void QuitGame_Yes ( void ) {
-		winQuitGame.Hide();
-		localcmd( "quit\n" );
-	}
-	static void QuitGame_No ( void ) {
-		winQuitGame.Hide();
-	}
-	if ( !g_iQuitGameInitialized ) {
-		g_iQuitGameInitialized = TRUE;
-		winQuitGame = spawn( vguiPanel );
-		winQuitGame.SetTitle( "Quit Game" );
-		winQuitGame.SetSize( '256 128' );
-		winQuitGame.SetIcon( "gfx/icon16/stop" );
-		g_uiDesktop.Add( winQuitGame );
+    static void QuitGame_Yes ( void ) {
+        winQuitGame.Hide();
+        localcmd( "quit\n" );
+    }
+    static void QuitGame_No ( void ) {
+        winQuitGame.Hide();
+    }
+    if ( !g_iQuitGameInitialized ) {
+        g_iQuitGameInitialized = TRUE;
+        winQuitGame = spawn( vguiPanel );
+        winQuitGame.SetTitle( "Quit Game" );
+        winQuitGame.SetSize( '256 128' );
+        winQuitGame.SetIcon( "gfx/icon16/stop" );
+        g_uiDesktop.Add( winQuitGame );
 
-		btnQuit = spawn( vguiButton );
-		btnQuit.SetTitle( "Quit" );
-		btnQuit.SetSize( '64 24' );
-		btnQuit.SetPos( winQuitGame.GetSize() - '152 32' );
-		
-		btnCancel = spawn( vguiButton );
-		btnCancel.SetTitle( "Cancel" );
-		btnCancel.SetSize( '64 24' );
-		btnCancel.SetPos( winQuitGame.GetSize() - '80 32' );
+        btnQuit = spawn( vguiButton );
+        btnQuit.SetTitle( "Quit" );
+        btnQuit.SetSize( '64 24' );
+        btnQuit.SetPos( winQuitGame.GetSize() - '152 32' );
+        
+        btnCancel = spawn( vguiButton );
+        btnCancel.SetTitle( "Cancel" );
+        btnCancel.SetSize( '64 24' );
+        btnCancel.SetPos( winQuitGame.GetSize() - '80 32' );
 
-		lblSure = spawn( vguiLabel );
-		lblSure.SetTitle( "Do you wish to stop playing now?" );
-		lblSure.SetSize( '256 16' );
-		lblSure.SetPos( '0 48' );
-		lblSure.SetAlignment(AF_NONE);
+        lblSure = spawn( vguiLabel );
+        lblSure.SetTitle( "Do you wish to stop playing now?" );
+        lblSure.SetSize( '256 16' );
+        lblSure.SetPos( '0 48' );
+        lblSure.SetAlignment(AF_NONE);
 
-		btnQuit.SetFunc( QuitGame_Yes );
-		btnCancel.SetFunc( QuitGame_No );
+        btnQuit.SetFunc( QuitGame_Yes );
+        btnCancel.SetFunc( QuitGame_No );
 
-		winQuitGame.Add( btnQuit );
-		winQuitGame.Add( btnCancel );
-		winQuitGame.Add( lblSure );
-	}
+        winQuitGame.Add( btnQuit );
+        winQuitGame.Add( btnCancel );
+        winQuitGame.Add( lblSure );
+    }
 
-	vguiTheme::PlaySound("window-question");
-	winQuitGame.Show();
-	winQuitGame.SetPos( ( g_vidsize / 2 ) - ( winQuitGame.GetSize() / 2 ) );
+    vguiTheme::PlaySound("window-question");
+    winQuitGame.Show();
+    winQuitGame.SetPos( ( g_vidsize / 2 ) - ( winQuitGame.GetSize() / 2 ) );
 }

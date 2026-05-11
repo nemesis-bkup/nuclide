@@ -16,7 +16,7 @@
 
 enumflags
 {
-	GTF_ALLPLAYERS
+    GTF_ALLPLAYERS
 };
 
 /*! \brief Server-Entity: Custom Text Message Display */
@@ -54,189 +54,192 @@ class
 game_text:ncPointTrigger
 {
 public:
-	void game_text(void);
-	
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity, string, string);
+    void game_text(void);
+
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity, string, string);
 
 private:
-	vector m_vecColor1;
-	vector m_vecColor2;
-	float m_flPosX;
-	float m_flPosY;
-	float m_flFadeIn;
-	float m_flFadeOut;
-	float m_flHoldTime;
-	float m_flFXTime;
-	int m_iChannel;
-	int m_iEffect;
+    vector m_vecColor1;
+    vector m_vecColor2;
+    float m_flPosX;
+    float m_flPosY;
+    float m_flFadeIn;
+    float m_flFadeOut;
+    float m_flHoldTime;
+    float m_flFXTime;
+    int m_iChannel;
+    int m_iEffect;
 };
 
 void
 game_text::game_text(void)
 {
-	m_vecColor1 = [0.0f, 0.0f, 0.0f];
-	m_vecColor2 = [0.0f, 0.0f, 0.0f];
-	m_flPosX = 0.0f;
-	m_flPosY = 0.0f;
-	m_flFadeIn = 0.0f;
-	m_flFadeOut = 0.0f;
-	m_flHoldTime = 0.0f;
-	m_flFXTime = 0.0f;
-	m_iChannel = 0i;
-	m_iEffect = 0i;
+    m_vecColor1 = [0.0f, 0.0f, 0.0f];
+    m_vecColor2 = [0.0f, 0.0f, 0.0f];
+    m_flPosX = 0.0f;
+    m_flPosY = 0.0f;
+    m_flFadeIn = 0.0f;
+    m_flFadeOut = 0.0f;
+    m_flHoldTime = 0.0f;
+    m_flFXTime = 0.0f;
+    m_iChannel = 0i;
+    m_iEffect = 0i;
 }
 
 void
 game_text::Save(float handle)
 {
-	super::Save(handle);
-	SaveVector(handle, "m_vecColor1", m_vecColor1);
-	SaveVector(handle, "m_vecColor2", m_vecColor2);
-	SaveFloat(handle, "m_flPosX", m_flPosX);
-	SaveFloat(handle, "m_flPosY", m_flPosY);
-	SaveFloat(handle, "m_flFadeIn", m_flFadeIn);
-	SaveFloat(handle, "m_flFadeOut", m_flFadeOut);
-	SaveFloat(handle, "m_flHoldTime", m_flHoldTime);
-	SaveFloat(handle, "m_flFXTime", m_flFXTime);
-	SaveInt(handle, "m_iChannel", m_iChannel);
-	SaveInt(handle, "m_iEffect", m_iEffect);
+    super::Save(handle);
+    SaveVector(handle, "m_vecColor1", m_vecColor1);
+    SaveVector(handle, "m_vecColor2", m_vecColor2);
+    SaveFloat(handle, "m_flPosX", m_flPosX);
+    SaveFloat(handle, "m_flPosY", m_flPosY);
+    SaveFloat(handle, "m_flFadeIn", m_flFadeIn);
+    SaveFloat(handle, "m_flFadeOut", m_flFadeOut);
+    SaveFloat(handle, "m_flHoldTime", m_flHoldTime);
+    SaveFloat(handle, "m_flFXTime", m_flFXTime);
+    SaveInt(handle, "m_iChannel", m_iChannel);
+    SaveInt(handle, "m_iEffect", m_iEffect);
 }
 
 void
 game_text::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_vecColor1":
-		m_vecColor1 = ReadVector(setValue);
-		break;
-	case "m_vecColor2":
-		m_vecColor2 = ReadVector(setValue);
-		break;
-	case "m_flPosX":
-		m_flPosX = ReadFloat(setValue);
-		break;
-	case "m_flPosY":
-		m_flPosY = ReadFloat(setValue);
-		break;
-	case "m_flFadeIn":
-		m_flFadeIn = ReadFloat(setValue);
-		break;
-	case "m_flFadeOut":
-		m_flFadeOut = ReadFloat(setValue);
-		break;
-	case "m_flHoldTime":
-		m_flHoldTime = ReadFloat(setValue);
-		break;
-	case "m_flFXTime":
-		m_flFXTime = ReadFloat(setValue);
-		break;
-	case "m_iChannel":
-		m_iChannel = ReadInt(setValue);
-		break;
-	case "m_iEffect":
-		m_iEffect = ReadInt(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_vecColor1":
+        m_vecColor1 = ReadVector(setValue);
+        break;
+    case "m_vecColor2":
+        m_vecColor2 = ReadVector(setValue);
+        break;
+    case "m_flPosX":
+        m_flPosX = ReadFloat(setValue);
+        break;
+    case "m_flPosY":
+        m_flPosY = ReadFloat(setValue);
+        break;
+    case "m_flFadeIn":
+        m_flFadeIn = ReadFloat(setValue);
+        break;
+    case "m_flFadeOut":
+        m_flFadeOut = ReadFloat(setValue);
+        break;
+    case "m_flHoldTime":
+        m_flHoldTime = ReadFloat(setValue);
+        break;
+    case "m_flFXTime":
+        m_flFXTime = ReadFloat(setValue);
+        break;
+    case "m_iChannel":
+        m_iChannel = ReadInt(setValue);
+        break;
+    case "m_iEffect":
+        m_iEffect = ReadInt(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 game_text::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "x":
-		m_flPosX = stof(setValue);
-		break;
-	case "y":
-		m_flPosY = stof(setValue);
-		break;
-	case "effect":
-		m_iEffect = stoi(setValue);
-		break;
-	case "color":
-		m_vecColor1 = stov(setValue);
-		break;
-	case "color2":
-		m_vecColor2 = stov(setValue);
-		break;
-	case "fadein":
-		m_flFadeIn = stof(setValue);
-		break;
-	case "fadeout":
-		m_flFadeOut = stof(setValue);
-		break;
-	case "holdtime":
-		m_flHoldTime = stof(setValue);
-		break;
-	case "fxtime":
-		m_flFXTime = stof(setValue);
-		break;
-	case "channel":
-		m_iChannel = stoi(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "x":
+        m_flPosX = stof(setValue);
+        break;
+    case "y":
+        m_flPosY = stof(setValue);
+        break;
+    case "effect":
+        m_iEffect = stoi(setValue);
+        break;
+    case "color":
+        m_vecColor1 = stov(setValue);
+        break;
+    case "color2":
+        m_vecColor2 = stov(setValue);
+        break;
+    case "fadein":
+        m_flFadeIn = stof(setValue);
+        break;
+    case "fadeout":
+        m_flFadeOut = stof(setValue);
+        break;
+    case "holdtime":
+        m_flHoldTime = stof(setValue);
+        break;
+    case "fxtime":
+        m_flFXTime = stof(setValue);
+        break;
+    case "channel":
+        m_iChannel = stoi(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 game_text::Trigger(entity act, triggermode_t state)
 {
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_TEXT_STRING);
-	WriteByte(MSG_MULTICAST, m_iChannel);
-	WriteString(MSG_MULTICAST, GetTriggerMessage());
-	WriteFloat(MSG_MULTICAST, m_flPosX);
-	WriteFloat(MSG_MULTICAST, m_flPosY);
-	WriteByte(MSG_MULTICAST, m_iEffect);
-	WriteByte(MSG_MULTICAST, m_vecColor1[0]);
-	WriteByte(MSG_MULTICAST, m_vecColor1[1]);
-	WriteByte(MSG_MULTICAST, m_vecColor1[2]);
-	WriteByte(MSG_MULTICAST, m_vecColor2[0]);
-	WriteByte(MSG_MULTICAST, m_vecColor2[1]);
-	WriteByte(MSG_MULTICAST, m_vecColor2[2]);
-	WriteFloat(MSG_MULTICAST, m_flFadeIn);
-	WriteFloat(MSG_MULTICAST, m_flFadeOut);
-	WriteFloat(MSG_MULTICAST, m_flHoldTime);
-	WriteFloat(MSG_MULTICAST, m_flFXTime);
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_TEXT_STRING);
+    WriteByte(MSG_MULTICAST, m_iChannel);
+    WriteString(MSG_MULTICAST, GetTriggerMessage());
+    WriteFloat(MSG_MULTICAST, m_flPosX);
+    WriteFloat(MSG_MULTICAST, m_flPosY);
+    WriteByte(MSG_MULTICAST, m_iEffect);
+    WriteByte(MSG_MULTICAST, m_vecColor1[0]);
+    WriteByte(MSG_MULTICAST, m_vecColor1[1]);
+    WriteByte(MSG_MULTICAST, m_vecColor1[2]);
+    WriteByte(MSG_MULTICAST, m_vecColor2[0]);
+    WriteByte(MSG_MULTICAST, m_vecColor2[1]);
+    WriteByte(MSG_MULTICAST, m_vecColor2[2]);
+    WriteFloat(MSG_MULTICAST, m_flFadeIn);
+    WriteFloat(MSG_MULTICAST, m_flFadeOut);
+    WriteFloat(MSG_MULTICAST, m_flHoldTime);
+    WriteFloat(MSG_MULTICAST, m_flFXTime);
 
-	if (HasSpawnFlags(GTF_ALLPLAYERS)) {
-		msg_entity = this;
-		multicast(origin, MULTICAST_ALL);
-	} else {
-		msg_entity = act;
-		multicast(origin, MULTICAST_ONE_R);
-	}
+    if (HasSpawnFlags(GTF_ALLPLAYERS)) {
+        msg_entity = this;
+        multicast(origin, MULTICAST_ALL);
+        EntLog("printing %S to all", GetTriggerMessage());
+    } else {
+        msg_entity = act;
+        multicast(origin, MULTICAST_ONE_R);
+        EntLog("printing %S to %s (%d)", GetTriggerMessage(), act.netname, num_for_edict(act));
+    }
+
 }
 
 void
 game_text::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "Display":
-		Trigger(eAct, TRIG_ON);
-		break;
-	case "SetText":
-		SpawnKey("message", strData);
-		break;
-	case "SetPosX":
-		m_flPosX = ReadFloat(strData);
-		break;
-	case "SetPosY":
-		m_flPosY = ReadFloat(strData);
-		break;
-	case "SetTextColor":
-		m_vecColor1 = ReadVector(strData);
-		break;
-	case "SetTextColor2":
-		m_vecColor2 = ReadVector(strData);
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "display":
+        Trigger(eAct, TRIG_ON);
+        break;
+    case "settext":
+        SpawnKey("message", strData);
+        break;
+    case "setposx":
+        m_flPosX = ReadFloat(strData);
+        break;
+    case "setposy":
+        m_flPosY = ReadFloat(strData);
+        break;
+    case "settextcolor":
+        m_vecColor1 = ReadVector(strData);
+        break;
+    case "settextcolor2":
+        m_vecColor2 = ReadVector(strData);
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }

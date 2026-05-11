@@ -38,11 +38,11 @@ class
 trigger_playerfreeze:ncBrushTrigger
 {
 public:
-	void trigger_playerfreeze(void);
-	
-	virtual void Respawn(void);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void customphysics(void);
+    void trigger_playerfreeze(void);
+    
+    virtual void Respawn(void);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void customphysics(void);
 };
 
 void
@@ -53,43 +53,43 @@ trigger_playerfreeze::trigger_playerfreeze(void)
 void
 trigger_playerfreeze::Respawn(void)
 {
-	SetValue(0i);
+    SetValue(0i);
 }
 
 void
 trigger_playerfreeze::Trigger(entity act, triggermode_t state)
 {
-	int value = GetValue(this);
+    int value = GetValue(this);
 
-	if (GetMaster(act) == false) {
-		return;
-	}
+    if (GetMaster(act) == false) {
+        return;
+    }
 
-	value = 1 - value;
+    value = 1 - value;
 
-	if (value == 0) {
-		SetValue(0i);
-		EntLog("Unfreezing players.");
+    if (value == 0) {
+        SetValue(0i);
+        EntLog("Unfreezing players.");
 
-		/* force unfreeze */
-		for (entity f = world; (f = next.Player(f));) {
-			f.m_nuclideFlags &= ~VFL_FROZEN;
-		}
-	} else {
-		SetValue(1i);
-		EntLog("Freezing players.");
-	}
+        /* force unfreeze */
+        for (entity f = world; (f = next.Player(f));) {
+            f.m_nuclideFlags &= ~VFL_FROZEN;
+        }
+    } else {
+        SetValue(1i);
+        EntLog("Freezing players.");
+    }
 }
 
 void
 trigger_playerfreeze::customphysics(void)
 {
-	if (GetValue(this) == 0) {
-		return;
-	}
+    if (GetValue(this) == 0) {
+        return;
+    }
 
-	/* some games might unset this flag every single frame */
-	for (entity f = world; (f = next.Player(f));) {
-		f.m_nuclideFlags |= VFL_FROZEN;
-	}
+    /* some games might unset this flag every single frame */
+    for (entity f = world; (f = next.Player(f));) {
+        f.m_nuclideFlags |= VFL_FROZEN;
+    }
 }

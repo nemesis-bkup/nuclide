@@ -30,11 +30,11 @@ This is a work in progress.
 /** Data for an achievement definition. */
 typedef struct
 {
-	int m_iID; /**< Unique numeric ID of an achievement. */
-	string m_strName; /**< Name of the achivement. */
-	string m_strDescription; /**< Description of the achivement. */
-	int m_iAchieved; /**< Indicator if it's been achieved or not. */
-	string m_strMaterial; /**< An image or icon depicting the achivement. */
+    int m_iID; /**< Unique numeric ID of an achievement. */
+    string m_strName; /**< Name of the achivement. */
+    string m_strDescription; /**< Description of the achivement. */
+    int m_iAchieved; /**< Indicator if it's been achieved or not. */
+    string m_strMaterial; /**< An image or icon depicting the achivement. */
 } achievement_t;
 
 /** Unlock an achievement.

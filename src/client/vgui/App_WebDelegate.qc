@@ -17,15 +17,15 @@
 class
 vguiApp_WebDelegate:vguiWindow
 {
-	void vguiApp_WebDelegate(void);
-	virtual void Spawned(void);
+    void vguiApp_WebDelegate(void);
+    virtual void Spawned(void);
 
-	nonvirtual vguiWindow NewWebAppWindow(string appName, string appIcon, string webURL, vector initialResolution, bool capturesMouse, bool isResizable);
-	nonvirtual void WebApp_Resized(void);
+    nonvirtual vguiWindow NewWebAppWindow(string appName, string appIcon, string webURL, vector initialResolution, bool capturesMouse, bool isResizable);
+    nonvirtual void WebApp_Resized(void);
 
 private:
 
-	vguiWebView webView;
+    vguiWebView webView;
 };
 
 void
@@ -36,15 +36,15 @@ vguiApp_WebDelegate::vguiApp_WebDelegate(void)
 void
 vguiApp_WebDelegate::WebApp_Resized(void)
 {
-	vector windowSize = GetSize();
-	webView.SetSize( [windowSize[0]-16, windowSize[1]-40] );
+    vector windowSize = GetSize();
+    webView.SetSize( [windowSize[0]-16, windowSize[1]-40] );
 }
 
 
 vguiWindow
 vguiApp_WebDelegate::NewWebAppWindow(string appName, string appIcon, string webURL, vector initialResolution, bool capturesMouse, bool isResizable)
 {
-	vguiApp_WebDelegate newWindow = spawn(vguiApp_WebDelegate);
+    vguiApp_WebDelegate newWindow = spawn(vguiApp_WebDelegate);
 
     if (STRING_SET(appName)) {
         newWindow.SetTitle( appName );
@@ -54,39 +54,39 @@ vguiApp_WebDelegate::NewWebAppWindow(string appName, string appIcon, string webU
         newWindow.SetIcon( appIcon );
     }
 
-	newWindow.webView.LoadRequest(webURL);
-	newWindow.SetSize( initialResolution + [16,40] );
-	newWindow.webView.SetSize( initialResolution );
+    newWindow.webView.LoadRequest(webURL);
+    newWindow.SetSize( initialResolution + [16,40] );
+    newWindow.webView.SetSize( initialResolution );
 
-	if (isResizable) {
-		newWindow.SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
-		newWindow.CallOnResize(WebApp_Resized);
-	}
+    if (isResizable) {
+        newWindow.SetStyleMask( vguiWindowStyleDefault | vguiWindowResizeable );
+        newWindow.CallOnResize(WebApp_Resized);
+    }
 
-	if (capturesMouse) {
-		newWindow.webView.m_focusLocked = true;
-	} else {
-		newWindow.webView.m_focusLocked = true;
-	}
+    if (capturesMouse) {
+        newWindow.webView.m_focusLocked = true;
+    } else {
+        newWindow.webView.m_focusLocked = true;
+    }
 
-	ncLogAlways("Created WebApp %S with dimensions %d x %d", appName, initialResolution[0], initialResolution[1]);
-	return (newWindow);
+    ncLogAlways("Created WebApp %S with dimensions %d x %d", appName, initialResolution[0], initialResolution[1]);
+    return (newWindow);
 }
 
 void
 vguiApp_WebDelegate::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	classname = "vguiWindow";
-	SetTitle( "WebApp" );
-	SetSize( [640,480] );
-	SetIcon( "gfx/icon16/world" );
-	SetMaxSize( [9999,9999] );
+    classname = "vguiWindow";
+    SetTitle( "WebApp" );
+    SetSize( [640,480] );
+    SetIcon( "gfx/icon16/world" );
+    SetMaxSize( [9999,9999] );
 
-	webView = spawn( vguiWebView );
-	webView.SetSize( [640-16, 480-40] );
-	webView.SetPos( [8, 32] );
+    webView = spawn( vguiWebView );
+    webView.SetSize( [640-16, 480-40] );
+    webView.SetPos( [8, 32] );
 
-	Add( webView );
+    Add( webView );
 }

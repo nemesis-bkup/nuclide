@@ -38,150 +38,150 @@ class
 env_muzzleflash:ncEntity
 {
 public:
-	void env_muzzleflash(void);
+    void env_muzzleflash(void);
 
 #ifdef SERVER
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string, string);
-	virtual void Input(entity, string, string);
-	virtual void Trigger(entity, triggermode_t);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string, string);
+    virtual void Input(entity, string, string);
+    virtual void Trigger(entity, triggermode_t);
 #endif
 
 #ifdef CLIENT
-	virtual float predraw(void);
+    virtual float predraw(void);
 #endif
 
 private:
-	string m_strAttachmentName;
-	int m_iAttachment;
-	ncRenderableEntity m_eOwner;
-	string m_strModel;
-	string m_strParticle;
-	entity m_eMuzzler; /* lol */
-	bool m_forceAdditive;
+    string m_strAttachmentName;
+    int m_iAttachment;
+    ncRenderableEntity m_eOwner;
+    string m_strModel;
+    string m_strParticle;
+    entity m_eMuzzler; /* lol */
+    bool m_forceAdditive;
 };
 
 void
 env_muzzleflash::env_muzzleflash(void)
 {
-	m_iAttachment = 0i;
-	m_eOwner = __NULL__;
-	m_strModel = __NULL__;
-	m_strParticle = __NULL__;
-	m_eMuzzler = __NULL__;
-	scale = 1.0f;
-	m_forceAdditive = false;
+    m_iAttachment = 0i;
+    m_eOwner = __NULL__;
+    m_strModel = __NULL__;
+    m_strParticle = __NULL__;
+    m_eMuzzler = __NULL__;
+    scale = 1.0f;
+    m_forceAdditive = false;
 }
 
 #ifdef SERVER
 void
 env_muzzleflash::Save(float handle)
 {
-	super::Save(handle);
-	SaveString(handle, "m_strAttachmentName", m_strAttachmentName);
-	SaveInt(handle, "m_iAttachment", m_iAttachment);
-	SaveEntity(handle, "m_eOwner", m_eOwner);
-	SaveString(handle, "m_strModel", m_strModel);
-	SaveString(handle, "m_strParticle", m_strParticle);
-	SaveEntity(handle, "m_eMuzzler", m_eMuzzler);
-	SaveBool(handle, "m_forceAdditive", m_forceAdditive);
+    super::Save(handle);
+    SaveString(handle, "m_strAttachmentName", m_strAttachmentName);
+    SaveInt(handle, "m_iAttachment", m_iAttachment);
+    SaveEntity(handle, "m_eOwner", m_eOwner);
+    SaveString(handle, "m_strModel", m_strModel);
+    SaveString(handle, "m_strParticle", m_strParticle);
+    SaveEntity(handle, "m_eMuzzler", m_eMuzzler);
+    SaveBool(handle, "m_forceAdditive", m_forceAdditive);
 }
 
 void
 env_muzzleflash::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_strAttachmentName":
-		m_strAttachmentName = ReadString(setValue);
-		break;
-	case "m_iAttachment":
-		m_iAttachment = ReadInt(setValue);
-		break;
-	case "m_eOwner":
-		m_eOwner = (ncRenderableEntity)ReadEntity(setValue);
-		break;
-	case "m_strModel":
-		m_strModel = ReadString(setValue);
-		break;
-	case "m_strParticle":
-		m_strParticle = ReadString(setValue);
-		break;
-	case "m_eMuzzler":
-		m_eMuzzler = ReadEntity(setValue);
-		break;
-	case "m_forceAdditive":
-		m_forceAdditive = ReadBool(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_strAttachmentName":
+        m_strAttachmentName = ReadString(setValue);
+        break;
+    case "m_iAttachment":
+        m_iAttachment = ReadInt(setValue);
+        break;
+    case "m_eOwner":
+        m_eOwner = (ncRenderableEntity)ReadEntity(setValue);
+        break;
+    case "m_strModel":
+        m_strModel = ReadString(setValue);
+        break;
+    case "m_strParticle":
+        m_strParticle = ReadString(setValue);
+        break;
+    case "m_eMuzzler":
+        m_eMuzzler = ReadEntity(setValue);
+        break;
+    case "m_forceAdditive":
+        m_forceAdditive = ReadBool(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 env_muzzleflash::SpawnKey(string keyName, string setValue)
 {
-	switch (keyName) {
-	case "parentname":
-		m_parent = ReadString(setValue);
-		break;
-	case "parentattachment":
-		m_strAttachmentName = ReadString(setValue);
-		break;
-	case "attachment":
-		m_iAttachment = ReadInt(setValue);
-		break;
-	case "scale":
-		scale = ReadFloat(setValue);
-		break;
-	case "model":
-		model = ReadString(setValue);
-		break;
-	case "additive":
-		m_forceAdditive = ReadBool(setValue);
-		break;
-	default:
-		super::SpawnKey(keyName, setValue);
-		break;
-	}
+    switch (keyName) {
+    case "parentname":
+        m_parent = ReadString(setValue);
+        break;
+    case "parentattachment":
+        m_strAttachmentName = ReadString(setValue);
+        break;
+    case "attachment":
+        m_iAttachment = ReadInt(setValue);
+        break;
+    case "scale":
+        scale = ReadFloat(setValue);
+        break;
+    case "model":
+        model = ReadString(setValue);
+        break;
+    case "additive":
+        m_forceAdditive = ReadBool(setValue);
+        break;
+    default:
+        super::SpawnKey(keyName, setValue);
+        break;
+    }
 }
 
 void
 env_muzzleflash::Input(entity eAct, string strKey, string setValue)
 {
-	switch (strKey) {
-	case "Fire":
-		Trigger(eAct, TRIG_TOGGLE);
-		break;
-	default:
-		super::Input(eAct, strKey, setValue);
-	}
+    switch (strKey) {
+    case "fire":
+        Trigger(eAct, TRIG_TOGGLE);
+        break;
+    default:
+        super::Input(eAct, strKey, setValue);
+    }
 }
 
 void
 env_muzzleflash::Trigger(entity theActivator, triggermode_t triggerState)
 {
-	ncEntity targetEnt = __NULL__;
-	vector targetPosition = GetOrigin();
+    ncEntity targetEnt = __NULL__;
+    vector targetPosition = GetOrigin();
 
-	if (STRING_SET(m_parent)) {
-		targetEnt = (ncEntity)find(world, ::targetname, m_parent);
+    if (STRING_SET(m_parent)) {
+        targetEnt = (ncEntity)find(world, ::targetname, m_parent);
 
-		if (!targetEnt) {
-			EntWarning("Entity specified but not found.");
-			return;
-		}
-	}
+        if (!targetEnt) {
+            EntWarning("Entity specified but not found.");
+            return;
+        }
+    }
 
-	WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-	WriteByte(MSG_MULTICAST, EV_MUZZLEFLASH);
-	WriteEntity(MSG_MULTICAST, targetEnt);
-	WriteByte(MSG_MULTICAST, m_iAttachment);
-	WriteFloat(MSG_MULTICAST, scale);
-	WriteShort(MSG_MULTICAST, getmodelindex(model));
+    WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+    WriteByte(MSG_MULTICAST, EV_MUZZLEFLASH);
+    WriteEntity(MSG_MULTICAST, targetEnt);
+    WriteByte(MSG_MULTICAST, m_iAttachment);
+    WriteFloat(MSG_MULTICAST, scale);
+    WriteShort(MSG_MULTICAST, getmodelindex(model));
 
-	msg_entity = this;
-	multicast(origin, MULTICAST_PVS);
+    msg_entity = this;
+    multicast(origin, MULTICAST_PVS);
 }
 #endif
 
@@ -191,105 +191,105 @@ var vector autocvar_cg_muzzleDLightColor = [1,0.45,0];
 float
 env_muzzleflash::predraw(void)
 {
-	vector muzzlePos;
+    vector muzzlePos;
 
-	if (m_iAttachment) {
-		muzzlePos = gettaginfo(m_eOwner, (float)m_iAttachment);
-	} else {
-		muzzlePos = origin;
-	}
+    if (m_iAttachment) {
+        muzzlePos = gettaginfo(m_eOwner, (float)m_iAttachment);
+    } else {
+        muzzlePos = origin;
+    }
 
-	if (autocvar_cg_muzzleDLight == true) {
-		float p = dynamiclight_add(muzzlePos, 150, autocvar_cg_muzzleDLightColor);
-		dynamiclight_set(p, LFIELD_STYLE, 64);
-	}
+    if (autocvar_cg_muzzleDLight == true) {
+        float p = dynamiclight_add(muzzlePos, 150, autocvar_cg_muzzleDLightColor);
+        dynamiclight_set(p, LFIELD_STYLE, 64);
+    }
 
-	setorigin(this, muzzlePos);
+    setorigin(this, muzzlePos);
 
-	if (m_forceAdditive) {
-	 	effects = EF_ADDITIVE;
-	}
+    if (m_forceAdditive) {
+        effects = EF_ADDITIVE;
+    }
 
-	angles = m_eOwner.angles;
-	addentity(this);
-	alpha -= frametime * 16.0f;
+    angles = m_eOwner.angles;
+    addentity(this);
+    alpha -= frametime * 16.0f;
 
-	if (m_eOwner.alpha == 0.0f) {
-		alpha = 0.0f;
-	}
+    if (m_eOwner.alpha == 0.0f) {
+        alpha = 0.0f;
+    }
 
-	if (alpha <= 0.0) {
-		Destroy();
-	}
+    if (alpha <= 0.0) {
+        Destroy();
+    }
 
-	return (PREDRAW_NEXT);
+    return (PREDRAW_NEXT);
 }
 
 /* basically re-implementing TE_BEAMCYLINDER*/
 void
 EV_MuzzleFlash_Parse(void)
 {
-	env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
+    env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
 
-	tempMuzzle.m_eOwner = (ncRenderableEntity)findfloat(world, entnum, readentitynum());
-	tempMuzzle.m_iAttachment = readbyte();
-	tempMuzzle.scale = readfloat();
-	tempMuzzle.modelindex = readshort();
-	tempMuzzle.alpha = 1.0f;
+    tempMuzzle.m_eOwner = (ncRenderableEntity)findfloat(world, entnum, readentitynum());
+    tempMuzzle.m_iAttachment = readbyte();
+    tempMuzzle.scale = readfloat();
+    tempMuzzle.modelindex = readshort();
+    tempMuzzle.alpha = 1.0f;
 
-	setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
-	setsize(tempMuzzle, [0,0,0], [0,0,0]);
-	tempMuzzle.drawmask = MASK_GLOWS;
+    setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
+    setsize(tempMuzzle, [0,0,0], [0,0,0]);
+    tempMuzzle.drawmask = MASK_GLOWS;
 }
 
 void
 EV_MuzzleFlash_Create(entity muzzleOwner, int attachmentID, float muzzleScale, int muzzleModel)
 {
-	env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
+    env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
 
-	tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
-	tempMuzzle.m_iAttachment = attachmentID;
-	tempMuzzle.scale = muzzleScale;
-	tempMuzzle.alpha = 1.0f;
-	tempMuzzle.modelindex = muzzleModel;
-	setmodel(tempMuzzle, modelnameforindex(muzzleModel));
+    tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
+    tempMuzzle.m_iAttachment = attachmentID;
+    tempMuzzle.scale = muzzleScale;
+    tempMuzzle.alpha = 1.0f;
+    tempMuzzle.modelindex = muzzleModel;
+    setmodel(tempMuzzle, modelnameforindex(muzzleModel));
 
-	setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
-	setsize(tempMuzzle, [0,0,0], [0,0,0]);
-	tempMuzzle.drawmask = MASK_GLOWS;
+    setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
+    setsize(tempMuzzle, [0,0,0], [0,0,0]);
+    tempMuzzle.drawmask = MASK_GLOWS;
 }
 
 void
 EV_MuzzleFlash_CreateAdditive(entity muzzleOwner, int attachmentID, float muzzleScale, int muzzleModel)
 {
-	env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
+    env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
 
-	tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
-	tempMuzzle.m_iAttachment = attachmentID;
-	tempMuzzle.scale = muzzleScale;
-	tempMuzzle.alpha = 1.0f;
-	tempMuzzle.modelindex = muzzleModel;
-	tempMuzzle.m_forceAdditive = true;
-	setmodel(tempMuzzle, modelnameforindex(muzzleModel));
+    tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
+    tempMuzzle.m_iAttachment = attachmentID;
+    tempMuzzle.scale = muzzleScale;
+    tempMuzzle.alpha = 1.0f;
+    tempMuzzle.modelindex = muzzleModel;
+    tempMuzzle.m_forceAdditive = true;
+    setmodel(tempMuzzle, modelnameforindex(muzzleModel));
 
-	setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
-	setsize(tempMuzzle, [0,0,0], [0,0,0]);
-	tempMuzzle.drawmask = MASK_GLOWS;
+    setorigin(tempMuzzle, tempMuzzle.m_eOwner.origin);
+    setsize(tempMuzzle, [0,0,0], [0,0,0]);
+    tempMuzzle.drawmask = MASK_GLOWS;
 }
 
 void
 EV_MuzzleFlash_CreateAtPos(entity muzzleOwner, vector pos, float muzzleScale, int muzzleModel)
 {
-	env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
+    env_muzzleflash tempMuzzle = spawn(env_muzzleflash);
 
-	tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
-	tempMuzzle.scale = muzzleScale;
-	tempMuzzle.alpha = 1.0f;
-	tempMuzzle.modelindex = muzzleModel;
-	setmodel(tempMuzzle, modelnameforindex(muzzleModel));
+    tempMuzzle.m_eOwner = (ncRenderableEntity)muzzleOwner;
+    tempMuzzle.scale = muzzleScale;
+    tempMuzzle.alpha = 1.0f;
+    tempMuzzle.modelindex = muzzleModel;
+    setmodel(tempMuzzle, modelnameforindex(muzzleModel));
 
-	setorigin(tempMuzzle, pos);
-	setsize(tempMuzzle, [0,0,0], [0,0,0]);
-	tempMuzzle.drawmask = MASK_GLOWS;
+    setorigin(tempMuzzle, pos);
+    setsize(tempMuzzle, [0,0,0], [0,0,0]);
+    tempMuzzle.drawmask = MASK_GLOWS;
 }
 #endif

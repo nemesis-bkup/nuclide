@@ -65,164 +65,164 @@ class
 func_areaportal:ncEntity
 {
 public:
-	void func_areaportal(void);
-	
-	/* overrides */
-	virtual void Spawned(void);
-	virtual void SpawnKey(string,string);
-	virtual void Trigger(entity, triggermode_t);
-	virtual void Input(entity,string,string);
-	virtual void Save(float);
-	virtual void Restore(string, string);
-	
-	nonvirtual void PortalOpen(void);
-	nonvirtual void PortalClose(void);
+    void func_areaportal(void);
+    
+    /* overrides */
+    virtual void Spawned(void);
+    virtual void SpawnKey(string,string);
+    virtual void Trigger(entity, triggermode_t);
+    virtual void Input(entity,string,string);
+    virtual void Save(float);
+    virtual void Restore(string, string);
+    
+    nonvirtual void PortalOpen(void);
+    nonvirtual void PortalClose(void);
 
 private:
-	bool m_bPortalState;
-	bool m_bStartOpen;
-	int m_iPortalNumber; /* Source Engine only */
-	bool m_bSourcePortal;
+    bool m_bPortalState;
+    bool m_bStartOpen;
+    int m_iPortalNumber; /* Source Engine only */
+    bool m_bSourcePortal;
 };
 
 void
 func_areaportal::func_areaportal(void)
 {
-	m_bPortalState = true;
-	m_bStartOpen = false;
-	m_iPortalNumber = 0i;
-	m_bSourcePortal = false;
+    m_bPortalState = true;
+    m_bStartOpen = false;
+    m_iPortalNumber = 0i;
+    m_bSourcePortal = false;
 }
 
 void
 func_areaportal::Save(float handle)
 {
-	super::Save(handle);
-	SaveBool(handle, "m_bPortalState", m_bPortalState);
-	SaveBool(handle, "m_bStartOpen", m_bStartOpen);
-	SaveInt(handle, "m_iPortalNumber", m_iPortalNumber);
-	SaveBool(handle, "m_bSourcePortal", m_bSourcePortal);
+    super::Save(handle);
+    SaveBool(handle, "m_bPortalState", m_bPortalState);
+    SaveBool(handle, "m_bStartOpen", m_bStartOpen);
+    SaveInt(handle, "m_iPortalNumber", m_iPortalNumber);
+    SaveBool(handle, "m_bSourcePortal", m_bSourcePortal);
 }
 
 void
 func_areaportal::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "m_bPortalState":
-		m_bPortalState = ReadBool(setValue);
-		break;
-	case "m_bStartOpen":
-		m_bStartOpen = ReadBool(setValue);
-		break;
-	case "m_iPortalNumber":
-		m_iPortalNumber = ReadInt(setValue);
-		break;
-	case "m_bSourcePortal":
-		m_bSourcePortal = ReadBool(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "m_bPortalState":
+        m_bPortalState = ReadBool(setValue);
+        break;
+    case "m_bStartOpen":
+        m_bStartOpen = ReadBool(setValue);
+        break;
+    case "m_iPortalNumber":
+        m_iPortalNumber = ReadInt(setValue);
+        break;
+    case "m_bSourcePortal":
+        m_bSourcePortal = ReadBool(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 func_areaportal::Spawned(void)
 {
-	super::Spawned();
+    super::Spawned();
 
-	SetModel(GetSpawnString("model"));
-	SetOrigin(GetSpawnVector("origin"));
-	Hide();
-	SetSolid(SOLID_NOT);
+    SetModel(GetSpawnString("model"));
+    SetOrigin(GetSpawnVector("origin"));
+    Hide();
+    SetSolid(SOLID_NOT);
 
-	if (m_bSourcePortal) {
-		style = (float)m_iPortalNumber;
-	} else {
-		style = 0;
-	}
+    if (m_bSourcePortal) {
+        style = (float)m_iPortalNumber;
+    } else {
+        style = 0;
+    }
 
-	if (m_bStartOpen == false) {
-		PortalClose();
-	} else {
-		PortalOpen();
-	}
+    if (m_bStartOpen == false) {
+        PortalClose();
+    } else {
+        PortalOpen();
+    }
 }
 
 void
 func_areaportal::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "StartOpen":
-		m_bStartOpen = ReadBool(setValue);
-		break;
-	case "portalnumber":
-		m_iPortalNumber = ReadInt(setValue);
-		m_bSourcePortal = true;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "StartOpen":
+        m_bStartOpen = ReadBool(setValue);
+        break;
+    case "portalnumber":
+        m_iPortalNumber = ReadInt(setValue);
+        m_bSourcePortal = true;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 func_areaportal::Trigger(entity act, triggermode_t state)
 {
-	if (state == TRIG_OFF) {
-		PortalClose();
-	} else if (state == TRIG_ON) {
-		PortalOpen();
-	} else {
-		if (m_bPortalState == true) {
-			PortalClose();
-		} else {
-			PortalOpen();
-		}
-	}
+    if (state == TRIG_OFF) {
+        PortalClose();
+    } else if (state == TRIG_ON) {
+        PortalOpen();
+    } else {
+        if (m_bPortalState == true) {
+            PortalClose();
+        } else {
+            PortalOpen();
+        }
+    }
 }
 
 void
 func_areaportal::Input(entity eAct, string strInput, string strData)
 {
-	switch (strInput) {
-	case "TurnOn":
-	case "Open":
-		Trigger(eAct, TRIG_ON);
-		break;
-	case "TurnOff":
-	case "Close":
-		Trigger(eAct, TRIG_OFF);
-		break;
-	case "Toggle":
-		Trigger(eAct, TRIG_TOGGLE);
-		break;
-	default:
-		super::Input(eAct, strInput, strData);
-	}
+    switch (strInput) {
+    case "turnon":
+    case "open":
+        Trigger(eAct, TRIG_ON);
+        break;
+    case "turnoff":
+    case "close":
+        Trigger(eAct, TRIG_OFF);
+        break;
+    case "toggle":
+        Trigger(eAct, TRIG_TOGGLE);
+        break;
+    default:
+        super::Input(eAct, strInput, strData);
+    }
 }
 
 void
 func_areaportal::PortalOpen(void)
 {
-	m_bPortalState = true;
-	setorigin(this, origin);
-	openportal(this, AREAPORTAL_OPEN);
+    m_bPortalState = true;
+    setorigin(this, origin);
+    openportal(this, AREAPORTAL_OPEN);
 
-	if (m_bSourcePortal) {
-		EntLog("Opening areaportal %d at %v", style, WorldSpaceCenter());
-	} else {
-		EntLog("Opening areaportal at %v", WorldSpaceCenter());
-	}
+    if (m_bSourcePortal) {
+        EntLog("Opening areaportal %d at %v", style, WorldSpaceCenter());
+    } else {
+        EntLog("Opening areaportal at %v", WorldSpaceCenter());
+    }
 }
 
 void
 func_areaportal::PortalClose(void)
 {
-	m_bPortalState = false;
-	setorigin(this, origin);
-	openportal(this, AREAPORTAL_CLOSED);
+    m_bPortalState = false;
+    setorigin(this, origin);
+    openportal(this, AREAPORTAL_CLOSED);
 
-	if (m_bSourcePortal) {
-		EntLog("Closing areaportal %d at %v", style, WorldSpaceCenter());
-	} else {
-		EntLog("Closing areaportal at %v", WorldSpaceCenter());
-	}
+    if (m_bSourcePortal) {
+        EntLog("Closing areaportal %d at %v", style, WorldSpaceCenter());
+    } else {
+        EntLog("Closing areaportal at %v", WorldSpaceCenter());
+    }
 }

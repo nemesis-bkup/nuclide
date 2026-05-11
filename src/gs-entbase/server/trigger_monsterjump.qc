@@ -35,85 +35,85 @@ class
 trigger_monsterjump:ncBrushTrigger
 {
 public:
-	void trigger_monsterjump(void);
-	
-	virtual void Respawn(void);
-	virtual void Touch(entity);
-	virtual void Save(float);
-	virtual void Restore(string,string);
-	virtual void SpawnKey(string,string);
+    void trigger_monsterjump(void);
+    
+    virtual void Respawn(void);
+    virtual void Touch(entity);
+    virtual void Save(float);
+    virtual void Restore(string,string);
+    virtual void SpawnKey(string,string);
 
 private:
-	float m_jumpSpeed;
-	float m_jumpHeight;
+    float m_jumpSpeed;
+    float m_jumpHeight;
 };
 
 void
 trigger_monsterjump::trigger_monsterjump(void)
 {
-	m_jumpSpeed = 0.0f;
-	m_jumpHeight = 0.0f;
+    m_jumpSpeed = 0.0f;
+    m_jumpHeight = 0.0f;
 }
 
 void
 trigger_monsterjump::SpawnKey(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "speed":
-		m_jumpSpeed = ReadFloat(setValue);
-		break;
-	case "height":
-		m_jumpHeight = ReadFloat(setValue);
-		break;
-	default:
-		super::SpawnKey(strKey, setValue);
-	}
+    switch (strKey) {
+    case "speed":
+        m_jumpSpeed = ReadFloat(setValue);
+        break;
+    case "height":
+        m_jumpHeight = ReadFloat(setValue);
+        break;
+    default:
+        super::SpawnKey(strKey, setValue);
+    }
 }
 
 void
 trigger_monsterjump::Save(float handle)
 {
-	super::Save(handle);
-	SaveFloat(handle, "jumpSpeed", m_jumpSpeed);
-	SaveFloat(handle, "jumpHeight", m_jumpHeight);
+    super::Save(handle);
+    SaveFloat(handle, "jumpSpeed", m_jumpSpeed);
+    SaveFloat(handle, "jumpHeight", m_jumpHeight);
 }
 
 void
 trigger_monsterjump::Restore(string strKey, string setValue)
 {
-	switch (strKey) {
-	case "jumpSpeed":
-		m_jumpSpeed = ReadFloat(setValue);
-		break;
-	case "jumpHeight":
-		m_jumpHeight = ReadFloat(setValue);
-		break;
-	default:
-		super::Restore(strKey, setValue);
-	}
+    switch (strKey) {
+    case "jumpSpeed":
+        m_jumpSpeed = ReadFloat(setValue);
+        break;
+    case "jumpHeight":
+        m_jumpHeight = ReadFloat(setValue);
+        break;
+    default:
+        super::Restore(strKey, setValue);
+    }
 }
 
 void
 trigger_monsterjump::Respawn(void)
 {
-	InitBrushTrigger();
+    InitBrushTrigger();
 }
 
 void
 trigger_monsterjump::Touch(entity touchingEntity)
 {
-	vector targetVelocity = g_vec_null;
+    vector targetVelocity = g_vec_null;
 
-	if (!(touchingEntity.flags & FL_MONSTER)) {
-		return;
-	}
+    if (!(touchingEntity.flags & FL_MONSTER)) {
+        return;
+    }
 
-	if (GetMaster(touchingEntity) == false) {
-		return;
-	}
+    if (GetMaster(touchingEntity) == false) {
+        return;
+    }
 
-	ncMonster theMonster = (ncMonster)touchingEntity;
-	targetVelocity = theMonster.GetForward() * m_jumpSpeed;
-	targetVelocity[2] += m_jumpHeight;
-	theMonster.SetVelocity(targetVelocity);
+    ncMonster theMonster = (ncMonster)touchingEntity;
+    targetVelocity = theMonster.GetForward() * m_jumpSpeed;
+    targetVelocity[2] += m_jumpHeight;
+    theMonster.SetVelocity(targetVelocity);
 }

@@ -28,46 +28,46 @@ Therefore it's not a true ncUserEntity.
 class ncUserEntity_Graffiti:ncEntity
 {
 public:
-	void ncUserEntity_Graffiti(void);
+    void ncUserEntity_Graffiti(void);
 
-	virtual float predraw(void);
-	virtual void ReloadVideoResources(void);
+    virtual float predraw(void);
+    virtual void ReloadVideoResources(void);
 
 private:
-	vector m_vecColor;
-	vector m_vecPosition;
-	vector m_vecAngles;
-	int m_iOwnerID;
-	string m_strName;
-	string m_m_strPath;
-	bool m_bInitialized;
-	bool m_bMonochrome;
+    vector m_vecColor;
+    vector m_vecPosition;
+    vector m_vecAngles;
+    int m_iOwnerID;
+    string m_strName;
+    string m_m_strPath;
+    bool m_bInitialized;
+    bool m_bMonochrome;
 };
 
 void Spray_Parse(void);
 
 
 const string g_spray_mat_1 = \
-	"{\n" \
-		"cull disable\n" \
-		"polygonOffset\n" \
-		"{\n" \
-			"map $rt:%s\n" \
-			"blendfunc GL_SRC_COLOR GL_ONE_MINUS_SRC_COLOR\n" \
-			"rgbGen vertex\n" \
-		"}\n" \
-	"}";
+    "{\n" \
+        "cull disable\n" \
+        "polygonOffset\n" \
+        "{\n" \
+            "map $rt:%s\n" \
+            "blendfunc GL_SRC_COLOR GL_ONE_MINUS_SRC_COLOR\n" \
+            "rgbGen vertex\n" \
+        "}\n" \
+    "}";
 
 const string g_spray_mat_0 = \
-	"{\n" \
-		"cull disable\n" \
-		"polygonOffset\n" \
-		"{\n" \
-			"map $rt:%s\n" \
-			"blendfunc blend\n" \
-			"rgbGen vertex\n" \
-		"}\n" \
-	"}";
+    "{\n" \
+        "cull disable\n" \
+        "polygonOffset\n" \
+        "{\n" \
+            "map $rt:%s\n" \
+            "blendfunc blend\n" \
+            "rgbGen vertex\n" \
+        "}\n" \
+    "}";
 
 #endif
 

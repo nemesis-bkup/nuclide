@@ -25,20 +25,20 @@
 /** Flags for 2D drawing operations. */
 typedef enum
 {
-	DRAWFLAG_NORMAL = 0, /**< The default. */
-	DRAWFLAG_ADDITIVE, /**< Render with an additive blend mode. */
-	DRAWFLAG_MODULATE, /**< Not implemented in FTEQW. */
-	DRAWFLAG_2XMODULATE /**< Not implemented in FTEQW. */
+    DRAWFLAG_NORMAL = 0, /**< The default. */
+    DRAWFLAG_ADDITIVE, /**< Render with an additive blend mode. */
+    DRAWFLAG_MODULATE, /**< Not implemented in FTEQW. */
+    DRAWFLAG_2XMODULATE /**< Not implemented in FTEQW. */
 } drawflag_t;
 
 /** Defines the valid alignment flags for text fields.
 @sa Font_DrawField */
 typedef enumflags
 {
-	AF_LEFT,
-	AF_TOP,
-	AF_RIGHT,
-	AF_BOTTOM
+    AF_LEFT,
+    AF_TOP,
+    AF_RIGHT,
+    AF_BOTTOM
 } alignflags_t;
 #define AF_NONE 0
 #define AF_DEFAULT (AF_TOP | AF_LEFT)
@@ -47,13 +47,13 @@ typedef enumflags
 /** Representation of a font. */
 typedef struct
 {
-	int iID;	/**< Internal ID, will be passed to 'drawfont' before rendering text. */
-	int iScaleX; /**< Suggested maximum width of a character in the font. */
-	int iScaleY; /**< Maximum height of a chracter in the font. */
-	vector vecColor; /**< Suggested default color of the font. */
-	float flAlpha; /**< Suggested default alpha of the font. */
-	int iFlags;	/**< Rendering flags that the font posesses. @sa drawflag_t */
-	string hexColor;
+    int iID;    /**< Internal ID, will be passed to 'drawfont' before rendering text. */
+    int iScaleX; /**< Suggested maximum width of a character in the font. */
+    int iScaleY; /**< Maximum height of a chracter in the font. */
+    vector vecColor; /**< Suggested default color of the font. */
+    float flAlpha; /**< Suggested default alpha of the font. */
+    int iFlags; /**< Rendering flags that the font posesses. @sa drawflag_t */
+    string hexColor;
 } font_s;
 
 /** Load a desired .font definition into memory.
