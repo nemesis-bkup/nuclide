@@ -126,7 +126,7 @@ PMoveCustom_Categorize(void)
         vector vecDelta = normalize(ladderpos - self.origin);
         float flFov = vecDelta * v_forward;
 
-			/* we're facing it... */
+        /* we're facing it... */
 		if (flFov > 0.0f) {
 			inladder = true;
 		}

@@ -302,7 +302,7 @@ ncPlayer::Physics_CheckJump(float premove)
 
 	if (input_buttons & INPUT_JUMP && premove) {
 		/* always zero out gravity to prevent elevators / jump boost in corners */
-			velocity[2] = 0;
+        velocity[2] = 0;
 
         Physics_Jump();
         RemoveFlags(FL_ONGROUND);

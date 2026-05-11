@@ -12,9 +12,9 @@
  * WHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER
  * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- */
+*/
 
-noref.vector v_angle;
+noref .vector v_angle;
 
 /** This entity class represents every player client.
 
@@ -138,7 +138,7 @@ With the above definitions, the crowbar will select the activities for `act_aim_
 @ingroup baseclass
 */
 class
-		ncPlayer : ncSpectator
+ncPlayer:ncSpectator
 {
 public:
     void ncPlayer(void);
