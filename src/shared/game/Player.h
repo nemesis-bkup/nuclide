@@ -327,9 +327,8 @@ private:
     int m_friendlyFireDamageDealt;
 #endif
 
-    entity m_holdingEntity;
-
-
+	entity m_holdingEntity;
+	float m_flStuckTime;
 
     virtual void Event_DrawWeapon(void);
     virtual void Event_FireWeapon(void);

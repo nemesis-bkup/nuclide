@@ -300,10 +300,9 @@ ncPlayer::Physics_CheckJump(float premove)
         if (HasFlags(FL_JUMPRELEASED) == false)
             return;
 
-    if (input_buttons & INPUT_JUMP && premove) {
-        if (velocity[2] < 0) {
-            velocity[2] = 0;
-        }
+	if (input_buttons & INPUT_JUMP && premove) {
+		/* always zero out gravity to prevent elevators / jump boost in corners */
+        velocity[2] = 0;
 
         Physics_Jump();
         RemoveFlags(FL_ONGROUND);
@@ -608,10 +607,11 @@ ncPlayer::Physics_InputPostMove(void)
 void
 ncPlayer::Physics_Run(void)
 {
-    float flFallVel = (flags & FL_ONGROUND) ? 0 : -velocity[2];
-    float flBaseVel =  m_pmoveBaseVelocity[2];
-    bool wasOnGround = (flags & FL_ONGROUND) ? true : false;
-    bool sprintFail = false;
+	float flFallVel = (flags & FL_ONGROUND) ? 0 : -velocity[2];
+	float flBaseVel =  m_pmoveBaseVelocity[2];
+	float maxFall = 1024.0f;
+	bool wasOnGround = (flags & FL_ONGROUND) ? true : false;
+	bool sprintFail = false;
 
     saved_input_movevalues = input_movevalues;
     saved_input_buttons = input_buttons;
@@ -653,22 +653,28 @@ ncPlayer::Physics_Run(void)
     Physics_Prone();
     Physics_CheckJump(TRUE);
 
-    if (autocvar(pm_enginepmove, 0) > 0) {
-        /* fast engine-side player physics */
-        runstandardplayerphysics(this);
-    } else {
-        /* QuakeC powered physics (slow, but more customizable) */
-        PMoveCustom_RunPlayerPhysics(this);
-    }
+	if (autocvar(pm_enginepmove, 0) > 0) {
+		/* fast engine-side player physics */
+		runstandardplayerphysics(this);
+	} else {
+		/* QuakeC powered physics (slow, but more customizable) */
+		PMoveCustom_RunPlayerPhysics(this);
+	}
+
+	 /* prevents gravity from building up to lethal damage when stuck in corner */
+	if (!(flags & FL_ONGROUND) && velocity[2] < -maxFall)
+		velocity[2] = -maxFall;
 
     Physics_CheckJump(FALSE);
 
-    if (wasOnGround == false && (flags & FL_ONGROUND)) {
-        if (waterlevel != 0) {
-            flFallVel = 0;
-        }
-        Physics_Fall(flFallVel - flBaseVel);
-    }
+	if (wasOnGround == false && (flags & FL_ONGROUND)) {
+		if (waterlevel != 0) {
+			flFallVel = 0;
+		}
+		/* cap velocity for current landing */
+		flFallVel = min(flFallVel, maxFall);
+		Physics_Fall(flFallVel - flBaseVel);
+	}
 
     input_movevalues = saved_input_movevalues;
     input_buttons = saved_input_buttons;

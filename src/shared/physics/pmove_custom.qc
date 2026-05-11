@@ -83,22 +83,43 @@ PMoveCustom_Categorize(void)
     if (self.m_pmoveBaseVelocity[2] > 0)
         self.flags &= ~FL_ONGROUND;
 
-    /* ladder content testing */
-    makevectors(self.v_angle);
-    vector ladderTestDir = crossproduct([0,0,1],v_right) * 0.5f;
-    /* using this instead of v_forward so that player doesn't fall off
-     * the ladder while facing straight up */
-    int oldhitcontents = self.hitcontentsmaski;
-    self.hitcontentsmaski = CONTENTBIT_FTELADDER;
-    tracebox(self.origin, self.mins, self.maxs, self.origin + ladderTestDir, MOVE_NORMAL, self);
-    self.hitcontentsmaski = oldhitcontents;
+	/* ladder content testing */
+	makevectors(self.v_angle);
+	/* using this instead of v_forward so that player doesn't fall off
+	 * the ladder while facing straight up */
+	vector ladderForward = crossproduct([0,0,1], v_right);
+	int oldhitcontents = self.hitcontentsmaski;
 
-    /* if set, you need to directly face the ladder or else you'll fall right off */
+	/* gives surface normal and trace_ent */
+	self.hitcontentsmaski = CONTENTBIT_FTELADDER;
+	tracebox(self.origin, self.mins, self.maxs,
+	         self.origin + ladderForward * 4.0f, MOVE_NORMAL, self);
+	self.hitcontentsmaski = oldhitcontents;
+
+	bool hitLadder = ((trace_endcontentsi & CONTENTBIT_FTELADDER) != 0);
+	vector ladderHitNormal = trace_plane_normal;
+	entity ladderHitEnt = trace_ent;
+
+	/* fallback when pressed against wall */
+	if (!hitLadder) {
+		for (float d = 1.0f; d <= 8.0f && !hitLadder; d += 1.0f) {
+			vector test = self.origin + ladderForward * d;
+			if (PMoveCustom_Contents(test) & CONTENTBIT_FTELADDER) {
+				hitLadder = true;
+				/* noo plane normal :L */
+				if (vlen(ladderHitNormal) < 0.001f) {
+					ladderHitNormal = -ladderForward;
+				}
+			}
+		}
+	}
+/* if set, you need to directly face the ladder or else you'll fall right off */
 #ifdef LADDERFACING
-    if (trace_endcontentsi & CONTENTBIT_FTELADDER) {
-        /* place the ladder into a virtual space */
-        vector ladderpos = trace_ent.absmin + (0.5f * (trace_ent.absmax - trace_ent.absmin));
-        ladderpos[2] = self.origin[2];
+	/* place the ladder into a virtual space */
+	if (hitLadder && ladderHitEnt && ladderHitEnt != world) {
+		vector ladderpos = ladderHitEnt.absmin +
+		                   (0.5f * (ladderHitEnt.absmax - ladderHitEnt.absmin));
+		ladderpos[2] = self.origin[2];
 
         /* test our view angles against them */
         makevectors(input_angles);
@@ -106,20 +127,27 @@ PMoveCustom_Categorize(void)
         float flFov = vecDelta * v_forward;
 
         /* we're facing it... */
-        if (flFov > 0.0f) {
-            inladder = true;
-        }
-    }
+		if (flFov > 0.0f) {
+			inladder = true;
+		}
+	} else if (hitLadder) {
+		inladder = true;
+	}
 
     if (inladder) {
 #else
-    if (trace_endcontentsi & CONTENTBIT_FTELADDER) {
+	if (hitLadder) {
 #endif
-        self.m_pmoveLadderNormal = trace_plane_normal;
-        self.m_nuclideFlags |= VFL_ONLADDER;        
-    } else {
-        self.m_nuclideFlags &= ~VFL_ONLADDER;
-    }
+		/* we found the ladder */
+		if (vlen(ladderHitNormal) > 0.001f) {
+			self.m_pmoveLadderNormal = ladderHitNormal;
+		} else {
+			self.m_pmoveLadderNormal = -ladderForward;
+		}
+		self.m_nuclideFlags |= VFL_ONLADDER;
+	} else {
+		self.m_nuclideFlags &= ~VFL_ONLADDER;
+	}
 
     testPos = self.origin + [0, 0, self.mins[2] + 4];
     contents = PMoveCustom_Contents(testPos);
@@ -512,37 +540,24 @@ PMoveCustom_Fix_Origin(void)
         }
     }
 
-#if 0
-    /* still not done */
-    for (z = 0; z < 3; z++) {
-        norg = oorg;
-        norg[z] = oorg[z] + 0.25;
-        tracebox(norg, self.mins, self.maxs, norg, MOVE_NORMAL, self);
-        if (!trace_startsolid) {
-            self.origin = norg;
-            return (1);
-        }
-        
-        norg = oorg;
-        norg[z] = oorg[z] - 0.25;
-        tracebox(norg, self.mins, self.maxs, norg, MOVE_NORMAL, self);
-        if (!trace_startsolid) {
-            self.origin = norg;
-            return (1);
-        }
-    }
+	/* nudge out of corners */
+	for (z = 0; z < 3; z++) {
+		norg = oorg;
+		norg[z] = oorg[z] + 0.25;
+		tracebox(norg, self.mins, self.maxs, norg, MOVE_NORMAL, self);
+		if (!trace_startsolid) {
+			self.origin = norg;
+			return (1);
+		}
 
-    for (z = 0; z < 64; z++) {
-        norg = oorg;
-        norg[2] += z * 0.125;
-        tracebox(norg, self.mins, self.maxs, norg, MOVE_NORMAL, self);
-        if (!trace_startsolid) {
-            tracebox(norg, self.mins, self.maxs, norg + [0,0,18], MOVE_NORMAL, self);
-            self.origin = norg;
-            return (1);
-        }
-    }
-#endif
+		norg = oorg;
+		norg[z] = oorg[z] - 0.25;
+		tracebox(norg, self.mins, self.maxs, norg, MOVE_NORMAL, self);
+		if (!trace_startsolid) {
+			self.origin = norg;
+			return (1);
+		}
+	}
 
     return (0);
 }
@@ -551,11 +566,12 @@ PMoveCustom_Fix_Origin(void)
 void
 PMoveCustom_Move(void)
 {
-    vector dest;
-    vector saved_plane;
-    float stepped;
-    float move_time;
-    float i;
+	vector startPos = self.origin;
+	vector dest;
+	vector saved_plane;
+	float stepped;
+	float move_time;
+	float i;
 
     /* noclippers don't need any of the below since they don't collide with anything */
     if (self.movetype == MOVETYPE_NOCLIP) {
@@ -572,12 +588,14 @@ PMoveCustom_Move(void)
 
         tracebox(self.origin, self.mins, self.maxs, dest, MOVE_NORMAL, self);
 
-        if (trace_startsolid) {
-            if (!PMoveCustom_Fix_Origin()) {
-                return;
-            }
-            continue;
-        }
+		if (trace_startsolid) {
+			if (!PMoveCustom_Fix_Origin()) {
+				/* Completely stuck */
+				self.velocity[2] = 0;
+				return;
+			}
+			continue;
+		}
 
         /* move us into place */
         self.origin = trace_endpos;
@@ -671,14 +689,25 @@ PMoveCustom_Move(void)
             return;
         }
 
-        /*if (trace_startsolid) {
-            if (!PMoveCustom_Fix_Origin()) {
-                return;
-            }
-        }*/
-        PMoveCustom_DoTouch(trace_ent);
-        self.groundentity = trace_ent;
-    }
+		/*if (trace_startsolid) {
+			if (!PMoveCustom_Fix_Origin()) {
+				return;
+			}
+		}*/
+		PMoveCustom_DoTouch(trace_ent);
+		self.groundentity = trace_ent;
+	}
+
+	 /* corner death protection: checks if we are wedged between walls so gravity doesnt accumulate */
+	if (!(self.flags & FL_ONGROUND) && !(self.m_nuclideFlags & VFL_ONLADDER) && self.velocity[2] < -100.0f) 
+	{
+		float movedZ    = startPos[2] - self.origin[2];         
+		float expectedZ = -self.velocity[2] * input_timelength;
+		if (movedZ < expectedZ * 0.1f) 
+		{
+			self.velocity[2] = 0;
+		}
+	}
 }
 
 void

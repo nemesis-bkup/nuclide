@@ -276,7 +276,12 @@ CSQC_Update2D(float w, float h, bool focus)
     ncPlayer cl = (ncPlayer)pSeat->m_ePlayer;
     self = cl;
 
-    if (Util_GetMaxPlayers() > 1 && !VGUI_Active() && (rules.InIntermission() || (!cl.IsFakeSpectator() && cl.IsDead()))) {
+	/* Close scoreboard if kicked, disconnected, or in the menu. */
+    bool isBackground = (serverkeyfloat("background") == 1);
+	if (serverkey("constate") != "active" || isBackground)
+		pSeat->m_iScoresVisible = FALSE;
+
+    if (!isBackground && Util_GetMaxPlayers() > 1 && !VGUI_Active() && (rules.InIntermission() || (!cl.IsFakeSpectator() && cl.IsDead()))) {
         HUD_DrawIntermission();
         Textmenu_Draw();
         if (g_hideScores == false) {
@@ -288,7 +293,7 @@ CSQC_Update2D(float w, float h, bool focus)
         GameText_Draw();
         PointMessage_Draw();
 
-        if (rules.InIntermission() == true) {
+        if (!isBackground && rules.InIntermission() == true) {
             HUD_DrawIntermission();
         } else {
             if (cl.IsSpectator() == false) {

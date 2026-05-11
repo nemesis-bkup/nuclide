@@ -45,25 +45,26 @@ ncPlayer::ncPlayer(void)
     m_friendlyFireDamageDealt = 0i;
 #endif
 
-    health = 0;
-    sndindex_idle = 0;
-    viewzoom = 0;
-    m_timeUntilNextAttack = 0.0f;
-    m_timeUntilNextIdle = 0.0f;
-    m_timeUntilReloaded = 0.0f;
-    m_timeSinceJump = 0.0f;
-    m_timeSinceTeleport = 0.0f;
-    m_punchAngle = g_vec_null;
-    m_punchVelocity = g_vec_null;
-    m_weaponAnimSequence = 0i;
-    m_weaponAnimTime = 0.0f;
-    activeweapon = 0;
-    m_itemList_net = 0;
-    vehicle = 0;
-    m_pmoveHookVelocity = g_vec_null;
-    m_pmoveVars = 0;
-    m_holdingEntity = 0;
-    m_pmoveLadderNormal = g_vec_null;
+	health = 0;
+	sndindex_idle = 0;
+	viewzoom = 0;
+	m_timeUntilNextAttack = 0.0f;
+	m_timeUntilNextIdle = 0.0f;
+	m_timeUntilReloaded = 0.0f;
+	m_timeSinceJump = 0.0f;
+	m_timeSinceTeleport = 0.0f;
+	m_punchAngle = g_vec_null;
+	m_punchVelocity = g_vec_null;
+	m_weaponAnimSequence = 0i;
+	m_weaponAnimTime = 0.0f;
+	activeweapon = 0;
+	m_itemList_net = 0;
+	vehicle = 0;
+	m_pmoveHookVelocity = g_vec_null;
+	m_pmoveVars = 0;
+	m_holdingEntity = 0;
+	m_pmoveLadderNormal = g_vec_null;
+	m_flStuckTime = 0.0f;
 }
 
 ncWeapon
