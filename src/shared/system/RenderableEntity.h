@@ -231,6 +231,11 @@ private:
     float m_fiJointMuzzle; /* World Model only */
     float m_fiJointBarrel; /* View Model only */
 
+    /* viewmodel custom positioning */
+    vector m_gunPos;
+    vector m_gunAngles;
+    float  m_gunScale;
+
     nonvirtual void _UpdateGeomset();
 #endif
 };

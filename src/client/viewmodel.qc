@@ -197,6 +197,13 @@ View_DrawViewModel(void)
         m_eViewModelL.m_muzzOffset = m_eViewModel.m_muzzOffset = m_eViewModel.GetSubDefVector(pl.m_activeWeapon.m_weaponLastFireInfo, "muzzleOffset");
         m_eViewModelL.m_muzzRelativeOffset = m_eViewModel.m_muzzRelativeOffset = m_eViewModel.GetSubDefVector(pSeat->m_weaponFireInfo, "muzzleRelativeOffset");
 
+        // viewmodel custom decl positioning
+        m_eViewModelL.m_gunPos = m_eViewModel.m_gunPos = m_eViewModel.GetSubDefVector(pSeat->m_weaponClass, "gunPos");
+        m_eViewModelL.m_gunAngles = m_eViewModel.m_gunAngles = m_eViewModel.GetSubDefVector(pSeat->m_weaponClass, "gunAngles");
+
+        float _scale = m_eViewModel.GetSubDefFloat(pSeat->m_weaponClass, "gunScale");
+        m_eViewModelL.m_gunScale = m_eViewModel.m_gunScale = _scale > 0.0f ? _scale : 1.0f;
+
         setsize(m_eViewModelL, [0,0,0], [0,0,0]);
         setsize(m_eViewModel, [0,0,0], [0,0,0]);
 
@@ -233,7 +240,6 @@ View_DrawViewModel(void)
         return;
     }
 
-
     makevectors(currentAngle);
 
     if (autocvar_cg_viewmodelLag == 0)
@@ -261,11 +267,14 @@ View_DrawViewModel(void)
 
     /* apply to the left side */
     m_eViewModel.angles += [pSeat->m_flZoomTime * 16, 0, 0];
+    m_eViewModel.angles += m_eViewModel.m_gunAngles; // decl angles
     m_eViewModelL.angles = m_eViewModel.angles;
+
     m_eViewModelL.colormap = m_eViewModel.colormap = pSeat->m_ePlayer.colormap;
 
     /* now apply the scale hack */
-    m_eViewModelL.scale = m_eViewModel.scale = autocvar_cg_viewmodelScale;
+    float newscale = autocvar_cg_viewmodelScale * m_eViewModel.m_gunScale;
+    m_eViewModelL.scale = m_eViewModel.scale = newscale;
 
     if (cl.IsSpectator() || ncXRManager::Available(cl) == false) {
         m_eViewModelL.origin = g_view.GetCameraOrigin();
@@ -274,6 +283,8 @@ View_DrawViewModel(void)
         m_eViewModelL.origin += (v_right * cvar("cg_gunY"));
         m_eViewModelL.origin += (v_up * cvar("cg_gunZ"));
         m_eViewModel.origin = m_eViewModelL.origin;
+
+        m_eViewModel.origin += m_eViewModel.m_gunPos; // decl position
 
         if (cl.IsSpectator()) {
             m_eViewModelL.angles = m_eViewModel.angles = currentAngle;
