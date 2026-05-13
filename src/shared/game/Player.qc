@@ -145,12 +145,12 @@ ncPlayer::SharedInputFrame(void)
 
         if (nextWeapon != m_activeWeapon) {
             if (nextWeapon && HasExactItem(nextWeapon)) {
-                ncWeapon oldWeapon = m_activeWeapon;
+                m_lastWeapon = m_activeWeapon;
                 m_activeWeapon = nextWeapon;
                 m_activeWeapon._SwitchedToCallback();
 
-                if (oldWeapon) {
-                    oldWeapon._SwitchedFromCallback();
+                if (m_lastWeapon) {
+                    m_lastWeapon._SwitchedFromCallback();
                 }
             }
         }
@@ -421,6 +421,7 @@ ncPlayer::ProcessInput(void)
     }
 
     if (wasfreed(m_activeWeapon) || is.Weapon(m_activeWeapon) != true) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon = __NULL__;
         return;
     }
@@ -1107,6 +1108,9 @@ ncPlayer::PredictPostFrame(void)
         m_ammoTypes[i] = m_ammoTypes_net[i];
     }
 
+    if (m_activeWeapon)
+        m_lastWeapon = m_activeWeapon;
+
     if (activeweapon != 0) {
         m_activeWeapon = (ncWeapon)findentity(world, ::entnum, activeweapon);
     } else {
@@ -1404,6 +1408,7 @@ ncPlayer::MakeTempSpectator(void)
     armor = 0;
 
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon.Destroy();
         m_activeWeapon = __NULL__;
     }
@@ -1545,6 +1550,7 @@ ncPlayer::EvaluateEntity(void)
 
     EVALUATE_FIELD(m_itemList, PLAYER_ITEMS)
     EVALUATE_FIELD(m_activeWeapon, PLAYER_WEAPON)
+    EVALUATE_FIELD(m_lastWeapon, PLAYER_WEAPON)
     EVALUATE_VECTOR(origin, 0, PLAYER_ORIGIN)
     EVALUATE_VECTOR(origin, 1, PLAYER_ORIGIN)
     EVALUATE_VECTOR(origin, 2, PLAYER_ORIGIN)
@@ -1654,6 +1660,7 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 
     SENDENTITY_ENTITY(m_itemList, PLAYER_ITEMS)
     SENDENTITY_ENTITY(m_activeWeapon, PLAYER_WEAPON)
+    SENDENTITY_ENTITY(m_lastWeapon, PLAYER_WEAPON)
 
     SENDENTITY_COORD(origin[0], PLAYER_ORIGIN)
     SENDENTITY_COORD(origin[1], PLAYER_ORIGIN)

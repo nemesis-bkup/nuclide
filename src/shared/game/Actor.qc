@@ -40,8 +40,9 @@ ncActor::ncActor(void)
     m_itemStart = 0;
     m_currentStamina = 0.0f;
     m_activeWeapon_net = 0;
-    m_activeWeapon = __NULL__;
-    m_firstWeapon = __NULL__;
+    m_activeWeapon  = __NULL__;
+    m_firstWeapon   = __NULL__;
+    m_lastWeapon    = __NULL__;
 
     for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
         m_ammoTypes[i] = 0i;
@@ -364,6 +365,7 @@ ncActor::Save(float handle)
     SaveFloat(handle, "currentStamina", m_currentStamina);
     SaveEntity(handle, "itemList", m_itemList);
     SaveEntity(handle, "activeWeapon", m_activeWeapon);
+    SaveEntity(handle, "lastWeapon", m_lastWeapon);
     SaveEntity(handle, "firstWeapon", m_firstWeapon);
     SaveBool(handle, "_isActor", _isActor);
 
@@ -408,6 +410,9 @@ ncActor::Restore(string keyName, string setValue)
         break;
     case "activeWeapon":
         m_activeWeapon = (ncWeapon)ReadEntity(setValue);
+        break;
+    case "lastWeapon":
+        m_lastWeapon = (ncWeapon)ReadEntity(setValue);
         break;
     case "followingEntity":
         m_followingEntity = ReadEntity(setValue);
@@ -1573,6 +1578,7 @@ ncActor::AddedItemCallback(ncItem itemAdded)
 #ifdef SERVER
     if (!m_activeWeapon) {
         if (is.Weapon(itemAdded)) {
+            m_lastWeapon = __NULL__;
             SwitchToExactWeapon((ncWeapon)itemAdded);
         }
     }
@@ -1792,6 +1798,7 @@ ncActor::SwitchToBestWeapon(bool ignoreActive)
 
     if (bestWeapon) {
         if (bestWeapon != m_activeWeapon) {
+            m_lastWeapon = m_activeWeapon;
             SwitchToExactWeapon((ncWeapon)bestWeapon);
         }
     }
@@ -1913,6 +1920,7 @@ ncItem
 ncActor::DropCurrentWeapon(void)
 {
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         return DropItem(m_activeWeapon);
     }
     return (__NULL__);
@@ -2015,6 +2023,7 @@ ncActor::RemoveNamedItem(string itemName)
 
         /* is this our active weapon? */
         if (m_activeWeapon == linkedList) {
+            m_lastWeapon = m_activeWeapon;
             m_activeWeapon._SwitchedFromCallback();
             m_activeWeapon = __NULL__;
         }
@@ -2054,6 +2063,7 @@ ncActor::RemoveAllItems(bool ignoreWeapons)
         if (!(ignoreWeapons && is.Weapon(linkedList) == true)) {
             /* is this our active weapon? give it a chance to do work first */
             if (m_activeWeapon == linkedList) {
+                m_lastWeapon = m_activeWeapon;
                 m_activeWeapon._SwitchedFromCallback();
                 m_activeWeapon = __NULL__;
             }
@@ -2097,6 +2107,7 @@ ncActor::RemoveAllWeapons(void)
         if (is.Weapon(linkedList) == true) {
             /* is this our active weapon? give it a chance to do work first */
             if (m_activeWeapon == linkedList) {
+                m_lastWeapon = m_activeWeapon;
                 m_activeWeapon._SwitchedFromCallback();
                 m_activeWeapon = __NULL__;
             }
@@ -2144,6 +2155,7 @@ ncActor::SwitchToWeapon(string weaponName)
 
         /* we already have the item. */
         if (linkedList.declclass == weaponName) {
+            if (m_activeWeapon) m_lastWeapon = m_lastWeapon;
             SwitchToExactWeapon((ncWeapon)linkedList);
         }
 
@@ -2159,7 +2171,10 @@ ncActor::SwitchToExactWeapon(ncWeapon item)
     }
 
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon._SwitchedFromCallback();
+    } else {
+        m_lastWeapon = __NULL__;
     }
 
     m_activeWeapon = item;
@@ -2313,8 +2328,7 @@ ncActor::GetPreviousWeapon(void)
 ncWeapon
 ncActor::GetLastWeapon(void)
 {
-    /* TODO: Finish this */
-    return (m_activeWeapon);
+    return (m_lastWeapon);
 }
 
 void

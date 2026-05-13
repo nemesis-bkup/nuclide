@@ -341,6 +341,7 @@ private:
 /* for now here to make debugging easier */
 .ncItem m_itemList;
 .ncWeapon m_activeWeapon;
+.ncWeapon m_lastWeapon;
 .ncWeapon m_firstWeapon;
 .bool _isActor;
 

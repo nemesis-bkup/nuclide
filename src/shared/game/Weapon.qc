@@ -61,6 +61,7 @@ ncWeapon::_AddedCallback(void)
 
     /* we have no active weapon, and this is our pick */
     if (!ourOwner.m_activeWeapon) {
+        ourOwner.m_lastWeapon = __NULL__;
         ourOwner.SwitchToExactWeapon(this);
     }
 
