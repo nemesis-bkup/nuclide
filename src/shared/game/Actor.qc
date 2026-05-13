@@ -37,9 +37,11 @@ ncActor::ncActor(void)
 
     m_itemList = __NULL__;
     activeweapon = 0;
+    lastweapon = 0;
     m_itemStart = 0;
     m_currentStamina = 0.0f;
     m_activeWeapon_net = 0;
+    m_lastWeapon_net = 0;
     m_activeWeapon  = __NULL__;
     m_firstWeapon   = __NULL__;
     m_lastWeapon    = __NULL__;
@@ -361,6 +363,7 @@ ncActor::Save(float handle)
     SaveString(handle, "mindset", m_mindset);
     SaveFloat(handle, "weaponCookingTime", m_weaponCookingTime);
     SaveFloat(handle, "activeweapon", activeweapon);
+    SaveFloat(handle, "lastweapon", lastweapon);
     SaveFloat(handle, "itemStart", m_itemStart);
     SaveFloat(handle, "currentStamina", m_currentStamina);
     SaveEntity(handle, "itemList", m_itemList);
@@ -431,6 +434,9 @@ ncActor::Restore(string keyName, string setValue)
         break;
     case "activeweapon":
         activeweapon = ReadFloat(setValue);
+        break;
+    case "lastweapon":
+        lastweapon = ReadFloat(setValue);
         break;
     case "itemStart":
         m_itemStart = ReadFloat(setValue);

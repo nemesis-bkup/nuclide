@@ -475,6 +475,9 @@ ncPlayer::Physics_InputPreMove(void)
     if (activeweapon == 0) {
         m_activeWeapon = __NULL__;
     }
+    if (lastweapon == 0) {
+        m_lastWeapon = __NULL__;
+    }
     if (m_itemStart == 0) {
         m_itemList = __NULL__;
     }

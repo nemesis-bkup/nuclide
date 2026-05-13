@@ -58,6 +58,7 @@ ncPlayer::ncPlayer(void)
 	m_weaponAnimSequence = 0i;
 	m_weaponAnimTime = 0.0f;
 	activeweapon = 0;
+	lastweapon = 0;
 	m_itemList_net = 0;
 	vehicle = 0;
 	m_pmoveHookVelocity = g_vec_null;
@@ -890,6 +891,7 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
     READENTITY_BYTE(m_renderAmount, PLAYER_MODELINDEX)
     READENTITY_ENTNUM(m_itemStart, PLAYER_ITEMS)
     READENTITY_ENTNUM(activeweapon, PLAYER_WEAPON)
+    READENTITY_ENTNUM(lastweapon, PLAYER_WEAPON)
     READENTITY_COORD(origin[0], PLAYER_ORIGIN)
     READENTITY_COORD(origin[1], PLAYER_ORIGIN)
     READENTITY_COORD(origin[2], PLAYER_ORIGIN)
@@ -1035,6 +1037,7 @@ ncPlayer::PredictPreFrame(void)
     SAVE_STATE(m_spectatingFlags)
     SAVE_STATE(sndindex_idle)
     SAVE_STATE(activeweapon)
+    SAVE_STATE(lastweapon)
 
     for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
         m_ammoTypes_net[i] = m_ammoTypes[i];
@@ -1089,6 +1092,7 @@ ncPlayer::PredictPostFrame(void)
     /* make sure to relink these */
     ROLL_BACK(vehicle_entnum)
     ROLL_BACK(activeweapon)
+    ROLL_BACK(lastweapon)
     ROLL_BACK(m_itemList)
 
     if (m_animationManager) {
@@ -1108,8 +1112,8 @@ ncPlayer::PredictPostFrame(void)
         m_ammoTypes[i] = m_ammoTypes_net[i];
     }
 
-    if (m_activeWeapon)
-        m_lastWeapon = m_activeWeapon;
+    if (m_activeWeapon) m_lastWeapon = m_activeWeapon;
+    if (activeweapon) lastweapon = activeweapon;
 
     if (activeweapon != 0) {
         m_activeWeapon = (ncWeapon)findentity(world, ::entnum, activeweapon);
@@ -1152,6 +1156,7 @@ ncPlayer::Save(float handle)
     SaveEntity(handle, "m_pmoveVars", m_pmoveVars);
     SaveEntity(handle, "vehicle", vehicle);
     SaveFloat(handle, "activeweapon", activeweapon);
+    SaveFloat(handle, "lastweapon", lastweapon);
     SaveFloat(handle, "colormap", colormap);
     SaveFloat(handle, "friction", friction);
     SaveFloat(handle, "speedmod", speedmod);
@@ -1207,6 +1212,9 @@ ncPlayer::Restore(string keyName, string setValue)
         break;
     case "activeweapon":
         activeweapon = ReadFloat(setValue);
+        break;
+    case "lastweapon":
+        lastweapon = ReadFloat(setValue);
         break;
     case "colormap":
         colormap = ReadFloat(setValue);
