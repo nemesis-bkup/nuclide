@@ -997,7 +997,7 @@ ncWeapon::IsEmpty(void)
 
 void
 ncWeapon::Draw(void)
-{    
+{
     SwitchFireInfo(m_weaponLastFireInfo);
 
     float drawAnimation = -1;

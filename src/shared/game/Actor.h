@@ -301,7 +301,6 @@ private:
 
     /* networking/prediction */
     ncWeapon m_activeWeapon_net;
-    ncWeapon m_lastWeapon_net;
 
     /* non-state heavy cached values, reloaded frequently. */
     ncSoundDict m_sndStepLadderLeft;

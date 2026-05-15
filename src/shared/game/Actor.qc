@@ -41,7 +41,6 @@ ncActor::ncActor(void)
     m_itemStart = 0;
     m_currentStamina = 0.0f;
     m_activeWeapon_net = 0;
-    m_lastWeapon_net = 0;
     m_activeWeapon  = __NULL__;
     m_firstWeapon   = __NULL__;
     m_lastWeapon    = __NULL__;
