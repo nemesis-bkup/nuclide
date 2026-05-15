@@ -1584,7 +1584,6 @@ ncActor::AddedItemCallback(ncItem itemAdded)
 #ifdef SERVER
     if (!m_activeWeapon) {
         if (is.Weapon(itemAdded)) {
-            m_lastWeapon = __NULL__;
             SwitchToExactWeapon((ncWeapon)itemAdded);
         }
     }
@@ -1804,7 +1803,6 @@ ncActor::SwitchToBestWeapon(bool ignoreActive)
 
     if (bestWeapon) {
         if (bestWeapon != m_activeWeapon) {
-            m_lastWeapon = m_activeWeapon;
             SwitchToExactWeapon((ncWeapon)bestWeapon);
         }
     }
@@ -2161,7 +2159,6 @@ ncActor::SwitchToWeapon(string weaponName)
 
         /* we already have the item. */
         if (linkedList.declclass == weaponName) {
-            if (m_activeWeapon) m_lastWeapon = m_lastWeapon;
             SwitchToExactWeapon((ncWeapon)linkedList);
         }
 

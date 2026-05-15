@@ -146,13 +146,16 @@ ncPlayer::SharedInputFrame(void)
 
         if (nextWeapon != m_activeWeapon) {
             if (nextWeapon && HasExactItem(nextWeapon)) {
-                m_lastWeapon = m_activeWeapon;
+                // set last weapon, unless last weapon is the active weapon
+                if (m_lastWeapon != m_activeWeapon)
+                    m_lastWeapon = m_activeWeapon;
+
+                // last weapon switch from callback
+                m_lastWeapon._SwitchedFromCallback();
+
+                // set new active weapon, and switch to callback
                 m_activeWeapon = nextWeapon;
                 m_activeWeapon._SwitchedToCallback();
-
-                if (m_lastWeapon) {
-                    m_lastWeapon._SwitchedFromCallback();
-                }
             }
         }
     }
@@ -1112,14 +1115,19 @@ ncPlayer::PredictPostFrame(void)
         m_ammoTypes[i] = m_ammoTypes_net[i];
     }
 
-    if (m_activeWeapon) m_lastWeapon = m_activeWeapon;
-    if (activeweapon) lastweapon = activeweapon;
+    // save our last wep before we change
+    ncWeapon _lastwep = m_activeWeapon;
 
+    // change the active weapon
     if (activeweapon != 0) {
         m_activeWeapon = (ncWeapon)findentity(world, ::entnum, activeweapon);
     } else {
         m_activeWeapon = __NULL__;
     }
+    
+    // set our last weapon used
+    if (_lastwep && _lastwep != m_activeWeapon)
+        m_lastWeapon = _lastwep;
 
     if (vehicle_entnum != 0) {
         vehicle = findentity(world, ::entnum, vehicle_entnum);

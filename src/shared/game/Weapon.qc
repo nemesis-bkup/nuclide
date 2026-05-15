@@ -61,7 +61,6 @@ ncWeapon::_AddedCallback(void)
 
     /* we have no active weapon, and this is our pick */
     if (!ourOwner.m_activeWeapon) {
-        ourOwner.m_lastWeapon = __NULL__;
         ourOwner.SwitchToExactWeapon(this);
     }
 
@@ -998,7 +997,7 @@ ncWeapon::IsEmpty(void)
 
 void
 ncWeapon::Draw(void)
-{
+{    
     SwitchFireInfo(m_weaponLastFireInfo);
 
     float drawAnimation = -1;
