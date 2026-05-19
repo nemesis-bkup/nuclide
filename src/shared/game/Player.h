@@ -291,6 +291,7 @@ private:
      * effects of some bits. Such as invisibility, quad, etc.
      * also, modders probably want 32 bits for items. */
     NETWORKED_FLOAT_N(activeweapon)
+    NETWORKED_FLOAT_N(lastweapon)
     ncItem m_itemList_net;
     int m_ammoTypes_net[MAX_AMMO_TYPES];
 

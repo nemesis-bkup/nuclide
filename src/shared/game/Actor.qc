@@ -37,11 +37,14 @@ ncActor::ncActor(void)
 
     m_itemList = __NULL__;
     activeweapon = 0;
+    lastweapon = 0;
     m_itemStart = 0;
     m_currentStamina = 0.0f;
     m_activeWeapon_net = 0;
-    m_activeWeapon = __NULL__;
-    m_firstWeapon = __NULL__;
+    m_lastWeapon_net = 0;
+    m_activeWeapon  = __NULL__;
+    m_firstWeapon   = __NULL__;
+    m_lastWeapon    = __NULL__;
 
     for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
         m_ammoTypes[i] = 0i;
@@ -360,10 +363,12 @@ ncActor::Save(float handle)
     SaveString(handle, "mindset", m_mindset);
     SaveFloat(handle, "weaponCookingTime", m_weaponCookingTime);
     SaveFloat(handle, "activeweapon", activeweapon);
+    SaveFloat(handle, "lastweapon", lastweapon);
     SaveFloat(handle, "itemStart", m_itemStart);
     SaveFloat(handle, "currentStamina", m_currentStamina);
     SaveEntity(handle, "itemList", m_itemList);
     SaveEntity(handle, "activeWeapon", m_activeWeapon);
+    SaveEntity(handle, "lastWeapon", m_lastWeapon);
     SaveEntity(handle, "firstWeapon", m_firstWeapon);
     SaveBool(handle, "_isActor", _isActor);
 
@@ -409,6 +414,9 @@ ncActor::Restore(string keyName, string setValue)
     case "activeWeapon":
         m_activeWeapon = (ncWeapon)ReadEntity(setValue);
         break;
+    case "lastWeapon":
+        m_lastWeapon = (ncWeapon)ReadEntity(setValue);
+        break;
     case "followingEntity":
         m_followingEntity = ReadEntity(setValue);
         break;
@@ -426,6 +434,9 @@ ncActor::Restore(string keyName, string setValue)
         break;
     case "activeweapon":
         activeweapon = ReadFloat(setValue);
+        break;
+    case "lastweapon":
+        lastweapon = ReadFloat(setValue);
         break;
     case "itemStart":
         m_itemStart = ReadFloat(setValue);
@@ -1913,6 +1924,7 @@ ncItem
 ncActor::DropCurrentWeapon(void)
 {
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         return DropItem(m_activeWeapon);
     }
     return (__NULL__);
@@ -2015,6 +2027,7 @@ ncActor::RemoveNamedItem(string itemName)
 
         /* is this our active weapon? */
         if (m_activeWeapon == linkedList) {
+            m_lastWeapon = m_activeWeapon;
             m_activeWeapon._SwitchedFromCallback();
             m_activeWeapon = __NULL__;
         }
@@ -2054,6 +2067,7 @@ ncActor::RemoveAllItems(bool ignoreWeapons)
         if (!(ignoreWeapons && is.Weapon(linkedList) == true)) {
             /* is this our active weapon? give it a chance to do work first */
             if (m_activeWeapon == linkedList) {
+                m_lastWeapon = m_activeWeapon;
                 m_activeWeapon._SwitchedFromCallback();
                 m_activeWeapon = __NULL__;
             }
@@ -2097,6 +2111,7 @@ ncActor::RemoveAllWeapons(void)
         if (is.Weapon(linkedList) == true) {
             /* is this our active weapon? give it a chance to do work first */
             if (m_activeWeapon == linkedList) {
+                m_lastWeapon = m_activeWeapon;
                 m_activeWeapon._SwitchedFromCallback();
                 m_activeWeapon = __NULL__;
             }
@@ -2159,7 +2174,10 @@ ncActor::SwitchToExactWeapon(ncWeapon item)
     }
 
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon._SwitchedFromCallback();
+    } else {
+        m_lastWeapon = __NULL__;
     }
 
     m_activeWeapon = item;
@@ -2313,8 +2331,7 @@ ncActor::GetPreviousWeapon(void)
 ncWeapon
 ncActor::GetLastWeapon(void)
 {
-    /* TODO: Finish this */
-    return (m_activeWeapon);
+    return (m_lastWeapon);
 }
 
 void

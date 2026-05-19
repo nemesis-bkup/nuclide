@@ -58,6 +58,7 @@ ncPlayer::ncPlayer(void)
 	m_weaponAnimSequence = 0i;
 	m_weaponAnimTime = 0.0f;
 	activeweapon = 0;
+	lastweapon = 0;
 	m_itemList_net = 0;
 	vehicle = 0;
 	m_pmoveHookVelocity = g_vec_null;
@@ -145,13 +146,16 @@ ncPlayer::SharedInputFrame(void)
 
         if (nextWeapon != m_activeWeapon) {
             if (nextWeapon && HasExactItem(nextWeapon)) {
-                ncWeapon oldWeapon = m_activeWeapon;
+                // set last weapon, unless last weapon is the active weapon
+                if (m_lastWeapon != m_activeWeapon)
+                    m_lastWeapon = m_activeWeapon;
+
+                // last weapon switch from callback
+                m_lastWeapon._SwitchedFromCallback();
+
+                // set new active weapon, and switch to callback
                 m_activeWeapon = nextWeapon;
                 m_activeWeapon._SwitchedToCallback();
-
-                if (oldWeapon) {
-                    oldWeapon._SwitchedFromCallback();
-                }
             }
         }
     }
@@ -421,6 +425,7 @@ ncPlayer::ProcessInput(void)
     }
 
     if (wasfreed(m_activeWeapon) || is.Weapon(m_activeWeapon) != true) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon = __NULL__;
         return;
     }
@@ -889,6 +894,7 @@ ncPlayer::ReceiveEntity(float isNew, float flChanged)
     READENTITY_BYTE(m_renderAmount, PLAYER_MODELINDEX)
     READENTITY_ENTNUM(m_itemStart, PLAYER_ITEMS)
     READENTITY_ENTNUM(activeweapon, PLAYER_WEAPON)
+    READENTITY_ENTNUM(lastweapon, PLAYER_WEAPON)
     READENTITY_COORD(origin[0], PLAYER_ORIGIN)
     READENTITY_COORD(origin[1], PLAYER_ORIGIN)
     READENTITY_COORD(origin[2], PLAYER_ORIGIN)
@@ -1034,6 +1040,7 @@ ncPlayer::PredictPreFrame(void)
     SAVE_STATE(m_spectatingFlags)
     SAVE_STATE(sndindex_idle)
     SAVE_STATE(activeweapon)
+    SAVE_STATE(lastweapon)
 
     for (int i = 0i; i < MAX_AMMO_TYPES; i++) {
         m_ammoTypes_net[i] = m_ammoTypes[i];
@@ -1088,6 +1095,7 @@ ncPlayer::PredictPostFrame(void)
     /* make sure to relink these */
     ROLL_BACK(vehicle_entnum)
     ROLL_BACK(activeweapon)
+    ROLL_BACK(lastweapon)
     ROLL_BACK(m_itemList)
 
     if (m_animationManager) {
@@ -1107,11 +1115,19 @@ ncPlayer::PredictPostFrame(void)
         m_ammoTypes[i] = m_ammoTypes_net[i];
     }
 
+    // save our last wep before we change
+    ncWeapon _lastwep = m_activeWeapon;
+
+    // change the active weapon
     if (activeweapon != 0) {
         m_activeWeapon = (ncWeapon)findentity(world, ::entnum, activeweapon);
     } else {
         m_activeWeapon = __NULL__;
     }
+    
+    // set our last weapon used
+    if (_lastwep && _lastwep != m_activeWeapon)
+        m_lastWeapon = _lastwep;
 
     if (vehicle_entnum != 0) {
         vehicle = findentity(world, ::entnum, vehicle_entnum);
@@ -1148,6 +1164,7 @@ ncPlayer::Save(float handle)
     SaveEntity(handle, "m_pmoveVars", m_pmoveVars);
     SaveEntity(handle, "vehicle", vehicle);
     SaveFloat(handle, "activeweapon", activeweapon);
+    SaveFloat(handle, "lastweapon", lastweapon);
     SaveFloat(handle, "colormap", colormap);
     SaveFloat(handle, "friction", friction);
     SaveFloat(handle, "speedmod", speedmod);
@@ -1203,6 +1220,9 @@ ncPlayer::Restore(string keyName, string setValue)
         break;
     case "activeweapon":
         activeweapon = ReadFloat(setValue);
+        break;
+    case "lastweapon":
+        lastweapon = ReadFloat(setValue);
         break;
     case "colormap":
         colormap = ReadFloat(setValue);
@@ -1404,6 +1424,7 @@ ncPlayer::MakeTempSpectator(void)
     armor = 0;
 
     if (m_activeWeapon) {
+        m_lastWeapon = m_activeWeapon;
         m_activeWeapon.Destroy();
         m_activeWeapon = __NULL__;
     }
@@ -1545,6 +1566,7 @@ ncPlayer::EvaluateEntity(void)
 
     EVALUATE_FIELD(m_itemList, PLAYER_ITEMS)
     EVALUATE_FIELD(m_activeWeapon, PLAYER_WEAPON)
+    EVALUATE_FIELD(m_lastWeapon, PLAYER_WEAPON)
     EVALUATE_VECTOR(origin, 0, PLAYER_ORIGIN)
     EVALUATE_VECTOR(origin, 1, PLAYER_ORIGIN)
     EVALUATE_VECTOR(origin, 2, PLAYER_ORIGIN)
@@ -1654,6 +1676,7 @@ ncPlayer::SendEntity(entity ePEnt, float flChanged)
 
     SENDENTITY_ENTITY(m_itemList, PLAYER_ITEMS)
     SENDENTITY_ENTITY(m_activeWeapon, PLAYER_WEAPON)
+    SENDENTITY_ENTITY(m_lastWeapon, PLAYER_WEAPON)
 
     SENDENTITY_COORD(origin[0], PLAYER_ORIGIN)
     SENDENTITY_COORD(origin[1], PLAYER_ORIGIN)

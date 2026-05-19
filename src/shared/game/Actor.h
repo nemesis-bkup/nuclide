@@ -294,12 +294,14 @@ private:
     /* These are defined in side defs\*.def, ammo_types and ammo_names */
     int m_ammoTypes[MAX_AMMO_TYPES];
     float activeweapon;
+    float lastweapon;
     NETWORKED_FLOAT(m_itemStart)
     NETWORKED_FLOAT(m_currentStamina)
     float m_weaponCookingTime;
 
     /* networking/prediction */
     ncWeapon m_activeWeapon_net;
+    ncWeapon m_lastWeapon_net;
 
     /* non-state heavy cached values, reloaded frequently. */
     ncSoundDict m_sndStepLadderLeft;
@@ -341,6 +343,7 @@ private:
 /* for now here to make debugging easier */
 .ncItem m_itemList;
 .ncWeapon m_activeWeapon;
+.ncWeapon m_lastWeapon;
 .ncWeapon m_firstWeapon;
 .bool _isActor;
 
