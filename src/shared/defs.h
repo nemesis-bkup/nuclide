@@ -230,13 +230,17 @@ crossprint(string m)
 
 #if 1
 __wrap string
-precache_model(string m)
+precache_model(string mname)
 {
-    if (!STRING_SET(m)) {
-        return ("");
-    }
+    if (mname != "") /* not empty */
+        if (substring(mname, 0, 1) != "*") /* not a brush */
+            if not(whichpack(mname)) { /* not present on disk */
+                ncError("no file %S", mname);
+                return prior("");
+            }
 
-    return prior(m);
+
+    return prior(mname);
 }
 #endif
 
@@ -245,7 +249,7 @@ precache_sound(string sample)
 {
     if (sample != "") /* not empty */
         if not(whichpack(strcat("sound/", sample))) { /* not present on disk */
-            ncError("SFX sample %S does not exist.", sample);
+            ncError("no file %S", sample);
             return "misc/missing.wav";
         }
 
@@ -344,10 +348,17 @@ setmodel(entity ent, string mname)
 {
     if (mname != "") /* not empty */
     if (substring(mname, 0, 1) != "*") /* not a brush */
-        if not(whichpack(mname)) /* not present on disk */
-            return prior(ent, "models/error.vvm");
+        if not(whichpack(mname)) { /* not present on disk */
+            ncError("no file %S", mname);
+            prior(ent, "models/error.vvm");
 
-    return prior(ent, mname);
+            /* we want to make the actual model name visible in r_showfields */
+            /*ent.model = strcat("^1ERROR:", , "^7");*/
+            ent.model = mname;
+            return;
+        }
+
+    prior(ent, mname);
 }
 
 .float removed;

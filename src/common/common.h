@@ -501,7 +501,9 @@ CallSpawnfuncByName(entity target, string className)
     self = oldSelf;
 }
 
-.string spawnclass;
-.float team_info;
+
+noref .string classname;
+noref .string spawnclass;
+noref .float team_info;
 
 /** @} */ // end of common
