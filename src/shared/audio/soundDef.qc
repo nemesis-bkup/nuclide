@@ -297,7 +297,7 @@ SoundDef_PrecacheFile(string fileName)
         return false;
     }
 
-    SndLog("Precaching SOURCE ENGINE file %S", fileName);
+    SndLog("caching SOURCE ENGINE file %S", fileName);
 
     while ((lineStream = fgets(scriptFile))) {
         /* when we found it, quit */
@@ -395,11 +395,11 @@ SoundDef_Precache(string shader)
         return -1i;
     }
 
-    SndLog("Precaching SoundDef %S", shader);
+    SndLog("caching %S", shader);
 
     /* check if it's already cached */
     newSound = SoundDef_FindSoundByName(shader);
-    
+
     if (newSound) {
         return (int)SoundDef_GetSoundIDByName(shader);
     }
@@ -644,6 +644,10 @@ SoundDef_GetID(string defName)
 void
 SoundDef_Update(entity target, int channel, int sample, float volume)
 {
+    if (sample == -1i) {
+        return;
+    }
+
     ncSoundDict newSound = ncSoundDict::SoundForID(sample);
     newSound.UpdateChannelVolumeOnEntity(target, channel, volume);
 }
