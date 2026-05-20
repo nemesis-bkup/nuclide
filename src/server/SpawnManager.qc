@@ -29,7 +29,7 @@ Spawn_ObserverCam(ncPlayer pl)
 
     if (eCamera) {
         pl.origin = eCamera.origin;
-        
+
         if (eCamera.target) {
             eTarget = find(world, ::targetname, eCamera.target);
             if (eTarget) {
@@ -40,7 +40,7 @@ Spawn_ObserverCam(ncPlayer pl)
     } else {
         /* can't find a camera? CS chooses to pick a spawnpoint instead */
         eCamera = find (world, ::classname, "info_player_start");
-        
+
         if (eCamera) {
             pl.origin = eCamera.origin;
             pl.angles = eCamera.angles;
@@ -95,7 +95,7 @@ Return a point in the map that's both 'random' and also not too close to any
 living player.
 =================
 */
-entity Spawn_SelectRandom(string cname) 
+entity Spawn_SelectRandom(string cname)
 {
     static entity lastspot;
     entity spot = world;
@@ -111,7 +111,7 @@ entity Spawn_SelectRandom(string cname)
     }
 
     if (max <= 0) {
-        print(sprintf("^1Error: %s is not present on this map.\n", cname));
+        ncError("%S is not present on this map", cname);
         return __NULL__;
     }
 
@@ -145,7 +145,7 @@ entity Spawn_SelectRandom(string cname)
 
     /* still not found any */
     if (spot == __NULL__) {
-        error(sprintf("Spawn_SelectRandom: no %s on level", cname));
+        ncError("No %S on level", cname);
         return (__NULL__);
     }
 
@@ -158,7 +158,7 @@ void
 Spawn_TeleportToSpawn(entity targetEnt)
 {
     string desiredSpawn = teams.SpawnPoint((int)targetEnt.team);
-    
+
     ncLog("desired spawn %s for client %d (Name: %S, Team: %d)", desiredSpawn, num_for_edict(targetEnt), targetEnt.netname, targetEnt.team);
 
     /* singleplayer */
@@ -178,6 +178,8 @@ Spawn_TeleportToSpawn(entity targetEnt)
         if (spawnPoint) {
             targetEnt.origin = spawnPoint.origin;
             targetEnt.angles = spawnPoint.angles;
+            targetEnt.v_angle = spawnPoint.v_angle;
+            targetEnt.velocity = g_vec_null;
             setorigin_safe(targetEnt, targetEnt.origin);
 
             WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
@@ -198,6 +200,7 @@ Spawn_TeleportToSpawn(entity targetEnt)
         targetEnt.origin = spawnPoint.origin;
         targetEnt.angles = spawnPoint.angles;
         targetEnt.v_angle = spawnPoint.v_angle;
+        targetEnt.velocity = g_vec_null;
         setorigin_safe(targetEnt, targetEnt.origin);
 
         WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
