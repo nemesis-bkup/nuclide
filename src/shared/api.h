@@ -582,6 +582,8 @@ precacheAPI_t precache; /**< Access precacheAPI_t functions using this variable.
 typedef struct
 {
     void Play(string soundDef, float level = 75, float pitch = 100, float volume = 100, float channel = CHAN_AUTO);
+    void PlayOnEntity(string soundDef, entity target);
+    void PlayOnEntityChannel(string soundDef, entity target, float channel = CHAN_AUTO);
 } soundAPI_t;
 soundAPI_t soundKit; /**< Access soundAPI_t functions using this variable. */
 
@@ -864,6 +866,8 @@ _shared_main(void)
     precache.SpriteFrame = linkToSharedProgs("SHPF_precache_SpriteFrame");
 
     soundKit.Play = linkToSharedProgs("SHPF_sounds_Play");
+    soundKit.PlayOnEntity = linkToSharedProgs("SHPF_sounds_PlayOnEntity");
+    soundKit.PlayOnEntityChannel = linkToSharedProgs("SHPF_sounds_PlayOnEntityChannel");
 
     weaponInfo.Type = linkToSharedProgs("SHPF_weaponInfo_Type");
     weaponInfo.StartAmmo = linkToSharedProgs("SHPF_weaponInfo_StartAmmo");

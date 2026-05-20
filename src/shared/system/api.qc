@@ -936,8 +936,6 @@ spawnClass(string className, vector desiredPos)
 
     newEntity.classname = className;
     newEntity.SetOrigin(desiredPos);
-    newEntity.Spawn();
-    newEntity.SetOrigin(desiredPos);
 #endif
 
     return (newEntity);
@@ -1264,6 +1262,24 @@ void
 SHPF_sounds_Play(string soundDef, float level = 75, float pitch = 100, float volume = 100, float channel = CHAN_AUTO)
 {
 
+}
+
+void
+SHPF_sounds_PlayOnEntity(string soundDef, entity targetEntity)
+{
+    if (targetEntity) {
+        ncSoundDict targetSound = ncSoundDict::SoundForName(soundDef);
+        targetSound.PlayOnEntity(targetEntity);
+    }
+}
+
+void
+SHPF_sounds_PlayOnEntityChannel(string soundDef, entity targetEntity, float channel = CHAN_AUTO)
+{
+    if (targetEntity) {
+        ncSoundDict targetSound = ncSoundDict::SoundForName(soundDef);
+        targetSound.PlayOnEntityChannel(targetEntity, channel);
+    }
 }
 
 float
