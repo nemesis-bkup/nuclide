@@ -223,6 +223,13 @@ public:
     /** Turns towards the specified position. */
     nonvirtual void TurnToPos(vector);
 
+
+    /** Saves an sound reference key/value pair to a filehandle. */
+    nonvirtual void SaveSound(float,string,ncSoundDict);
+
+    /* Reads a sound reference from a name. */
+    nonvirtual ncSoundDict ReadSound(string inputString);
+
     /* gets */
     /** Returns a bitfield of the active effects running on the entity. */
     nonvirtual __int32 GetEffects(void);

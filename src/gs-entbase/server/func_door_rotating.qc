@@ -78,7 +78,6 @@ public:
     void func_door_rotating(void);
 
     /* overrides */
-    virtual void Spawned(void);
     virtual void SpawnKey(string,string);
     virtual void Save(float);
     virtual void Restore(string,string);
@@ -103,10 +102,10 @@ public:
 
 private:
     string targetClose;
-    string m_strSndStop;
-    string m_strSndOpen;
-    string m_strSndClose;
-    string m_strLockedSfx;
+    ncSoundDict m_sndStop;
+    ncSoundDict m_sndOpen;
+    ncSoundDict m_sndClose;
+    ncSoundDict m_sndLockedSfx;
     float m_flSoundWait;
     float m_flDistance;
     float m_flSpeed;
@@ -149,10 +148,10 @@ void
 func_door_rotating::func_door_rotating(void)
 {
     targetClose = __NULL__;
-    m_strSndStop = __NULL__;
-    m_strSndOpen = __NULL__;
-    m_strSndClose = __NULL__;
-    m_strLockedSfx = __NULL__;
+    m_sndStop = __NULL__;
+    m_sndOpen = __NULL__;
+    m_sndClose = __NULL__;
+    m_sndLockedSfx = __NULL__;
     m_flSoundWait = 0.0f;
     m_iDamage = 0i;
     m_bLocked = false;
@@ -170,10 +169,10 @@ func_door_rotating::Save(float handle)
 {
     super::Save(handle);
     SaveString(handle, "targetClose", targetClose);
-    SaveString(handle, "m_strSndStop", m_strSndStop);
-    SaveString(handle, "m_strSndOpen", m_strSndOpen);
-    SaveString(handle, "m_strSndClose", m_strSndClose);
-    SaveString(handle, "m_strLockedSfx", m_strLockedSfx);
+    SaveSound(handle, "m_sndStop", m_sndStop);
+    SaveSound(handle, "m_sndOpen", m_sndOpen);
+    SaveSound(handle, "m_sndClose", m_sndClose);
+    SaveSound(handle, "m_sndLockedSfx", m_sndLockedSfx);
     SaveFloat(handle, "m_flSoundWait", m_flSoundWait);
     SaveFloat(handle, "m_flDistance", m_flDistance);
     SaveFloat(handle, "m_flSpeed", m_flSpeed);
@@ -193,17 +192,17 @@ func_door_rotating::Restore(string strKey, string setValue)
     case "targetClose":
         targetClose = ReadString(setValue);
         break;
-    case "m_strSndStop":
-        m_strSndStop = ReadString(setValue);
+    case "m_sndStop":
+        m_sndStop = ReadSound(setValue);
         break;
-    case "m_strSndOpen":
-        m_strSndOpen = ReadString(setValue);
+    case "m_sndOpen":
+        m_sndOpen = ReadSound(setValue);
         break;
-    case "m_strSndClose":
-        m_strSndClose = ReadString(setValue);
+    case "m_sndClose":
+        m_sndClose = ReadSound(setValue);
         break;
-    case "m_strLockedSfx":
-        m_strLockedSfx = ReadString(setValue);
+    case "m_sndLockedSfx":
+        m_sndLockedSfx = ReadSound(setValue);
         break;
     case "m_flSoundWait":
         m_flSoundWait = ReadFloat(setValue);
@@ -238,17 +237,6 @@ func_door_rotating::Restore(string strKey, string setValue)
     default:
         super::Restore(strKey, setValue);
     }
-}
-
-void
-func_door_rotating::Spawned(void)
-{
-    super::Spawned();
-
-    precache.Sound(m_strSndOpen);
-    precache.Sound(m_strSndClose);
-    precache.Sound(m_strSndStop);
-    precache.Sound(m_strLockedSfx);
 }
 
 void
@@ -310,7 +298,7 @@ func_door_rotating::Respawn(void)
     if (HasTargetname() || m_flDistance == 0.0) {
         m_bCanTouch = false;
 
-        if (m_flDistance == 0.0 || m_strLockedSfx != __NULL__) {
+        if (m_flDistance == 0.0 || m_sndLockedSfx != __NULL__) {
             m_bLocked = true;
         } else {
             m_bLocked = false;
@@ -329,26 +317,26 @@ func_door_rotating::SpawnKey(string strKey, string setValue)
         m_flSpeed = stof(setValue);
         break;
     case "snd_open":
-        m_strSndOpen = setValue;
+        m_sndOpen = ReadSound(setValue);
         break;
     case "snd_close":
-        m_strSndClose = setValue;
+        m_sndClose = ReadSound(setValue);
         break;
     case "noise1":
-        m_strSndOpen = m_strSndClose = setValue;
+        m_sndOpen = m_sndClose = ReadSound(setValue);
         break;
     case "snd_stop":
     case "noise2":
-        m_strSndStop = setValue;
+        m_sndStop = ReadSound(setValue);
         break;
     /* GoldSrc compat */
     case "movesnd":
         x = stoi(setValue); /* sanitize */
-        m_strSndOpen = m_strSndClose = sprintf("func_door_rotating.move_%i", x);
+        m_sndOpen = m_sndClose = ReadSound(sprintf("func_door_rotating.move_%i", x));
         break;
     case "stopsnd":
         x = stoi(setValue); /* sanitize */
-        m_strSndStop = sprintf("func_door_rotating.stop_%i", x);
+        m_sndStop = ReadSound(sprintf("func_door_rotating.stop_%i", x));
         break;
     case "distance":
         m_flDistance = stof(setValue);
@@ -368,7 +356,7 @@ func_door_rotating::SpawnKey(string strKey, string setValue)
         if (x == 0i)
             break;
 
-        m_strLockedSfx = sprintf("func_button.hlsfx_%i", x+1i);
+        m_sndLockedSfx = ReadSound(sprintf("func_button.hlsfx_%i", x+1i));
         break;
     default:
         super::SpawnKey(strKey, setValue);
@@ -396,8 +384,8 @@ func_door_rotating::MoverFinishesMoving(void)
     }
 
     if (GetMoverState() == MOVER_POS1) {
-        if (m_strSndStop) {
-            StartSoundDef(m_strSndStop, CHAN_VOICE, true);
+        if (m_sndStop) {
+            m_sndStop.PlayOnEntityChannel(this, CHAN_VOICE);
         } else {
             StartSound("common/null.wav", CHAN_VOICE, 0, true);
         }
@@ -410,8 +398,8 @@ func_door_rotating::MoverFinishesMoving(void)
             }
         }
     } else if (GetMoverState() == MOVER_POS2) {
-        if (m_strSndStop) {
-            StartSoundDef(m_strSndStop, CHAN_VOICE, true);
+        if (m_sndStop) {
+            m_sndStop.PlayOnEntityChannel(this, CHAN_VOICE);
         } else {
             StartSound("common/null.wav", CHAN_VOICE, 0, true);
         }
@@ -428,16 +416,16 @@ func_door_rotating::MoverStartsMoving(void)
 {
     if (GetMoverState() == MOVER_2TO1) {
         if (!HasSpawnFlags(SF_DOOR_SILENT)) {
-            if (m_strSndClose) {
-                StartSoundDef(m_strSndClose, CHAN_VOICE, true);
+            if (m_sndClose) {
+                m_sndClose.PlayOnEntityChannel(this, CHAN_VOICE);
             } else {
                 StartSound("common/null.wav", CHAN_VOICE, 0, true);
             }
         }
     } else if (GetMoverState() == MOVER_1TO2) {
         if (!HasSpawnFlags(SF_DOOR_SILENT)) {
-            if (m_strSndOpen) {
-                StartSoundDef(m_strSndOpen, CHAN_VOICE, true);
+            if (m_sndOpen) {
+                m_sndOpen.PlayOnEntityChannel(this, CHAN_VOICE);
             } else {
                 StartSound("common/null.wav", CHAN_VOICE, 0, true);
             }
@@ -536,7 +524,7 @@ func_door_rotating::Touch(entity eToucher)
         /* only bother playing the locked sound when the door is closed. */
         if (GetMoverState() == MOVER_POS1) {
             if (m_flSoundWait < time) {
-                StartSoundDef(m_strLockedSfx, CHAN_VOICE, true);
+                m_sndLockedSfx.PlayOnEntityChannel(this, CHAN_VOICE);
             }
 
             m_flSoundWait = time + 0.3f;

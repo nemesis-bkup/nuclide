@@ -69,6 +69,20 @@ ncEntity::Spawned(void)
 #endif
 }
 
+void
+ncEntity::SaveSound(float handle, string key, ncSoundDict targ)
+{
+    fputs(handle, sprintf("%S \"%s\"\n", key, targ.name));
+}
+
+ncSoundDict
+ncEntity::ReadSound(string inputString)
+{
+    string soundName = ReadString(inputString);
+    precache.Sound(soundName);
+    return ncSoundDict::SoundForName(soundName);
+}
+
 bool
 ncEntity::HasModel(void)
 {
@@ -528,7 +542,7 @@ ncEntity::RestoreAngles(void)
 
     if (!STRING_SET(spawnAngleString)) {
         spawnAngles[1] = GetSpawnFloat("angle");
-        
+
         if (legacyMangle != g_vec_null) {
             spawnAngles = legacyMangle;
         }
@@ -1650,7 +1664,7 @@ ncEntity::Input(entity eAct, string strInput, string strData)
         break;
     case "shockwave":
         int c = tokenize(strData);
-        
+
         WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
         WriteByte(MSG_MULTICAST, EV_BEAMCYLINDER);
         WriteCoord(MSG_MULTICAST, origin[0]);
@@ -1831,7 +1845,7 @@ ncEntity::IntersectsWith(entity check)
 bool
 ncEntity::StartSound(string strSample, float channel, float flags, bool broadcast)
 {
-    if not (whichpack(strcat("sound/", strSample))) 
+    if not (whichpack(strcat("sound/", strSample)))
         return (false);
 
     if (broadcast) {
