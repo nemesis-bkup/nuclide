@@ -144,6 +144,8 @@ public:
     virtual void TalkDenyFollow(void);
 
     nonvirtual void SetSentencePitch(float);
+    nonvirtual void Unfollow(void);
+    nonvirtual ncActor FollowingEntity(void);
 #endif
 
 #ifdef CLIENT

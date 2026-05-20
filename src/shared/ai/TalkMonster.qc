@@ -582,6 +582,12 @@ void
 ncTalkMonster::FollowPlayer(void)
 {
     float flPlayerDist;
+
+    if (health <= 0) {
+        Unfollow();
+        return;
+    }
+
     input_angles = vectoangles(m_useFollowChain.origin - origin);
             input_angles[0] = 0;
             input_angles[1] = fixAngleDelta(input_angles[1]);
@@ -598,7 +604,7 @@ ncTalkMonster::FollowPlayer(void)
 
     /* Give up after 1024 units */
     if (flPlayerDist > m_flMaxFollowDistance) {
-        m_followingEntity = world;
+        Unfollow();
         ncMonsterLog("Maximum follow distance reached. Will stop following.");
     } else if (flPlayerDist >= m_flFollowDistance) {
         /* we only allow speed changes every second, avoid jitter */
@@ -726,7 +732,7 @@ ncTalkMonster::FollowChain(void)
     }
     /* Deal with the hostage losing its rescuer (death) */
     if (m_followingEntity.health <= 0) {
-        m_followingEntity = world;
+        Unfollow();
     }
 }
 
@@ -757,14 +763,26 @@ ncTalkMonster::Respawn(void)
 {
     super::Respawn();
 
-    RouteClear();
-    m_followingEntity = world;
-    m_useFollowChain = world;
+    Unfollow();
     PlayerUse = OnPlayerUse;
 
     if (m_bFollowOnUse) {
         m_iFlags |= MONSTER_CANFOLLOW;
     }
+}
+
+ncActor
+ncTalkMonster::FollowingEntity(void)
+{
+    return (m_followingEntity);
+}
+
+void
+ncTalkMonster::Unfollow(void)
+{
+    RouteClear();
+    m_followingEntity = world;
+    m_useFollowChain = world;
 }
 
 void
@@ -790,8 +808,7 @@ ncTalkMonster::OnPlayerUse(void)
         m_useLastAtPosition = m_followingEntity.origin;
     } else {
         TalkUnfollow();
-        m_followingEntity = world;
-        RouteClear();
+        Unfollow();
     }
 }
 
