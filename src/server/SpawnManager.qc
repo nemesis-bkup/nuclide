@@ -62,7 +62,7 @@ float Spawn_PlayerRange(entity spot) {
     float bestdist;
     float dist;
 
-    bestdist = 9999999;
+    bestdist = MAX_DISTANCE;
 
     for (pl = world; (pl = next.Player(pl));) {
         if (pl->health <= 0) {

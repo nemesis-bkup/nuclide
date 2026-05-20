@@ -209,7 +209,7 @@ void
 ncAVReceiver::UpdateVideoOutputs(void)
 {
     ncAVTransmitter findTransmitter = world;
-    float bestDist = 99999;
+    float bestDist = MAX_DISTANCE;
 
     /* find the closest transmitter source */
     for (ncAVTransmitter receiverEnum = 0; (receiverEnum = (ncAVTransmitter)find(receiverEnum, ::classname, "ncAVTransmitter"));) {

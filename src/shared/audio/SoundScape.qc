@@ -872,7 +872,7 @@ EFX_UpdateListener(ncView playerView)
     vector camPos = playerView.GetCameraOrigin();
     vector camAngle = playerView.GetCameraAngle();
     ncSoundScape bestScape = __NULL__;
-    float bestDistance = 999999.0f;
+    float bestDistance = MAX_DISTANCE;
 
     if (lastScape) {
     //  printf("%s: %v: %v; %v\n", lastScape.classname, lastScape.origin, camPos, camAngle);

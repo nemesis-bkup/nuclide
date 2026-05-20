@@ -149,6 +149,33 @@ EV_Shake(void)
 }
 
 void
+CL_TraceDebug(vector startOrg, vector endOrg)
+{
+    static float EV_TraceDebug_Draw(void) {
+        R_BeginPolygon("", 0, 0);
+        R_PolygonVertex(self.origin, [0,1], [0,1,0], 1.0f);
+        R_PolygonVertex(self.angles, [1,1], [1,0,0], 1.0f);
+        R_EndPolygon();
+        return PREDRAW_NEXT;
+    }
+    static void EV_TraceDebug_Destroy(void) {
+        remove(self);
+    }
+
+    vector startOrg, endOrg;
+    entity traceRep;
+
+    traceRep = spawn();
+    traceRep.predraw = EV_TraceDebug_Draw;
+    traceRep.drawmask = MASK_ENGINE;
+    traceRep.think = EV_TraceDebug_Destroy;
+    traceRep.nextthink = time + 4.0f;
+
+    traceRep.origin = startOrg;
+    traceRep.angles = endOrg;
+}
+
+void
 EV_TraceDebug(void)
 {
     static float EV_TraceDebug_Draw(void) {
@@ -173,14 +200,7 @@ EV_TraceDebug(void)
     endOrg[1] = readcoord();
     endOrg[2] = readcoord();
 
-    traceRep = spawn();
-    traceRep.predraw = EV_TraceDebug_Draw;
-    traceRep.drawmask = MASK_ENGINE;
-    traceRep.think = EV_TraceDebug_Destroy;
-    traceRep.nextthink = time + 4.0f;
-
-    traceRep.origin = startOrg;
-    traceRep.angles = endOrg;
+    CL_TraceDebug(startOrg, endOrg);
 }
 
 void

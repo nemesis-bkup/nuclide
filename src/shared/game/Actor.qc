@@ -843,7 +843,7 @@ ncActor::Input(entity eAct, string strInput, string strData)
         break;
     case "targetnearestplayer":
         ncEntity firstPlayer = __NULL__;
-        float bestDist = 99999.0f;
+        float bestDist = MAX_DISTANCE;
 
         for (entity pl = world; (pl = findfloat(pl, ::_isPlayer, 1));) {
             float currentDist = distance(pl.origin, this.origin);

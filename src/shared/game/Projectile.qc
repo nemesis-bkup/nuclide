@@ -929,6 +929,7 @@ ncProjectile::_LaunchHitscan(vector startPos, vector launchDir, float dmgMultipl
 
     m_eMultiTarget = __NULL__;
     m_iMultiValue = 0;
+    angles = launchDir;
 
     while (m_iShots > 0) {
         vecDir = anglesToForward(launchDir);
@@ -998,7 +999,7 @@ ncProjectile::_ApplyDamage(void)
     damageDecl.AddKey("push", ftos(pushForce));
     damageDecl.AddKey("location", vtos(m_hitLocation));
     vector dmgDir = anglesToForward(angles);
-    m_eMultiTarget.Damage(this, owner, damageDecl, m_flDmgMultiplier, vectorNormalize(angles), m_hitLocation);
+    m_eMultiTarget.Damage(this, owner, damageDecl, m_flDmgMultiplier, dmgDir, m_hitLocation);
     remove(damageDecl);
 
     m_eMultiTarget = __NULL__;

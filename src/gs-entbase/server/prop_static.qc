@@ -47,7 +47,7 @@ prop_static:ncRenderableEntity
 {
 public:
     void prop_static(void);
-    
+
     virtual void Respawn(void);
 
 };
@@ -63,6 +63,6 @@ prop_static::Respawn(void)
     super::Respawn();
     SetSolid(SOLID_NOT);
     SetMovetype(MOVETYPE_NONE);
-    SetSize([-999999,-999999,-999999], [999999,999999,999999]);
+    SetSize([-MAX_DISTANCE,-MAX_DISTANCE,-MAX_DISTANCE], [MAX_DISTANCE,MAX_DISTANCE,MAX_DISTANCE]);
     pvsflags = PVSF_NOTRACECHECK | PVSF_NOREMOVE;
 }

@@ -190,7 +190,7 @@ ncSquadMonster::FindSquadNearMe(float searchRadius)
         if (searchResult.classname == classname) {
             ncSquadMonster squadMember = (ncSquadMonster)searchResult;
 
-            /* we found someone, they may not be in a squad (that's ok!) 
+            /* we found someone, they may not be in a squad (that's ok!)
                as they will then create one. */
             squadMember.AddToSquad(this);
             return;
@@ -276,7 +276,7 @@ ncSquadMonster::GetNearestSquadMember(void)
     ncSquadMonster member = __NULL__;
     ncSquadMonster nearestMember = __NULL__;
     float dist = 0.0f;
-    float nearestDist = 99999.0f;
+    float nearestDist = MAX_DISTANCE;
     ncSquadMonster startMember;
 
     if (InSquad() == false)

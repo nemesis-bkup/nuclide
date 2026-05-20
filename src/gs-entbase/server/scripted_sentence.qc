@@ -260,7 +260,7 @@ scripted_sentence::Trigger(entity act, triggermode_t unused)
 
     if (!spe) {
         /* time to look for a classname instead */
-        float closest = 9999999;
+        float closest = MAX_DISTANCE;
 
         for (entity c = world; (c = find(c, ::classname, m_strSpeaker));) {
             float rad;

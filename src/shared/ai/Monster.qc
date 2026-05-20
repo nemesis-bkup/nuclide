@@ -3094,7 +3094,7 @@ ncMonster_FindClosestPlayer(entity target)
     float bestdist;
     float dist;
 
-    bestdist = 9999999;
+    bestdist = MAX_DISTANCE;
 
     for (entity e = world; (e = next.Player(e));) {
         /* hack: don't ever return dead players. they're invisible. */

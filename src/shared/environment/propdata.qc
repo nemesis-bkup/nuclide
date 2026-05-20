@@ -966,6 +966,15 @@ BreakModel_SpawnID(vector smins, vector smaxs, vector dir, float speed, int coun
         speed = 200;
     }
 
+#if 0
+    vector debugOrg;
+    debugOrg[0] = smins[0] + ( 0.5 * ( smaxs[0] - smins[0] ) );
+    debugOrg[1] = smins[1] + ( 0.5 * ( smaxs[1] - smins[1] ) );
+    debugOrg[2] = smins[2] + ( 0.5 * ( smaxs[2] - smins[2] ) );
+
+    CL_TraceDebug(debugOrg, debugOrg + (dir * speed));
+#endif
+
     //print(sprintf("breaking into %i models\n", modelcount));
 
     for (int i = 0; i < count; i++) {
@@ -1104,10 +1113,18 @@ BreakModel_SpawnIndex(vector smins, vector smaxs, vector dir, float speed, int c
     } else {
         usePhysics = true;
     }
-
     if (speed < 200) {
         speed = 200;
     }
+
+#if 0
+    vector debugOrg;
+    debugOrg[0] = smins[0] + ( 0.5 * ( smaxs[0] - smins[0] ) );
+    debugOrg[1] = smins[1] + ( 0.5 * ( smaxs[1] - smins[1] ) );
+    debugOrg[2] = smins[2] + ( 0.5 * ( smaxs[2] - smins[2] ) );
+
+    CL_TraceDebug(debugOrg, debugOrg + (dir * speed));
+#endif
 
     //print(sprintf("breaking into %i models\n", modelcount));
 

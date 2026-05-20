@@ -119,7 +119,7 @@ ncBot::UseButton(void)
     float bestDist;
     func_button bestButton = __NULL__;
 
-    bestDist = COST_INFINITE;
+    bestDist = MAX_DISTANCE;
     for (entity e = world; (e = find(e, ::classname, "func_button"));) {
         float dist;
         vector pos;

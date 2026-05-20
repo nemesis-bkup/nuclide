@@ -212,7 +212,7 @@ ncZoneManager::SaveZonesToFile(string fileName)
 void
 ncZoneManager::DeleteNearPoint(vector pointLocation)
 {
-    float closestDist = 99999;
+    float closestDist = MAX_DISTANCE;
     ncZone closestZone = __NULL__;
 
     for (ncZone vars = __NULL__;(vars = (ncZone)find(vars, ::classname, "ncZone"));) {

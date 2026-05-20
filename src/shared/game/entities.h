@@ -118,7 +118,7 @@ Entity_FindClosest(entity startTarget, string className)
     float bestdist;
     float dist;
 
-    bestdist = 9999999;
+    bestdist = MAX_DISTANCE;
 
     for (entity e = world; (e = find(e, classname, className));) {
         dist = vlen(startTarget.origin - e.origin);

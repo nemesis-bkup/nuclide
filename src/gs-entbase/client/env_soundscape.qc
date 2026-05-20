@@ -37,7 +37,7 @@ class env_soundscape:ncEntity
 {
 public:
     void env_soundscape(void);
-    
+
     virtual void Respawn(void);
     virtual void SpawnKey(string,string);
     virtual bool CanSpawn(bool);
@@ -65,7 +65,7 @@ env_soundscape::SpawnKey(string strField, string strKey)
     switch (strField) {
     case "shader":
         m_iShader = SoundDef_Precache(strKey);
-        
+
         if (m_iShader == -1) {
             Destroy();
         }
@@ -121,10 +121,10 @@ DSP_UpdateSoundscape(ncView playerView)
 
     g_entSoundScape = __NULL__;
 
-    float bestdist = 999999;
+    float bestdist = MAX_DISTANCE;
     for (entity e = world; (e = find(e, classname, "env_soundscape"));) {
         env_soundscape scape = (env_soundscape)e;
-        
+
         other = world;
         traceline(scape.origin, vecPlayer, MOVE_OTHERONLY, scape);
         if (trace_fraction < 1.0f) {

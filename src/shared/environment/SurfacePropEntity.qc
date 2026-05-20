@@ -591,7 +591,7 @@ ncSurfacePropEntity::Input(entity entityActivator, string inputName, string data
         ncDict damageDecl = spawn(ncDict);
         float damagePoints = stof(dataField);
         damageDecl.AddKey("damage", dataField);
-        Damage(entityActivator, entityActivator, damageDecl, 1.0, g_vec_null, GetOrigin());
+        Damage(entityActivator, entityActivator, damageDecl, 1.0, anglesToForward(GetAngles()), GetOrigin());
         remove(damageDecl);
         break;
     default:

@@ -47,7 +47,7 @@ func_brush:ncRenderableEntity
 {
 public:
     void func_brush(void);
-    
+
     virtual void Save(float);
     virtual void Restore(string,string);
     virtual void Respawn(void);
@@ -165,8 +165,6 @@ func_brush::Trigger(entity act, triggermode_t state)
             SetModel(GetSpawnString("model"));
     }
 }
-
-#define MAX_DIST 999999
 
 void
 func_static(void)
